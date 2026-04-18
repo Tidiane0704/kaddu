@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Kàddu Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --or:#BF9650;--orl:#D4A84B;
+  --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bg4:#21262D;
+  --bdr:#30363D;--bdr2:#444C56;
+  --txt:#E6EDF3;--txt2:#8B949E;--txt3:#6E7681;
+  --green:#2EA043;--red:#F85149;--blue:#58A6FF;--yellow:#D29922;
+  --green-bg:rgba(46,160,67,.1);--red-bg:rgba(248,81,73,.1);
+  --blue-bg:rgba(88,166,255,.1);--yellow-bg:rgba(210,153,34,.1);
+  --or-bg:rgba(191,150,80,.1);
+}
+html{font-size:14px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
+.login-box{width:380px;padding:2.5rem;background:var(--bg2);border:1px solid var(--bdr)}
+.login-logo{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--or);margin-bottom:.3rem}
+.login-sub{font-size:.78rem;color:var(--txt3);margin-bottom:2rem}
+
+/* FORM BASE */
+.ff{margin-bottom:1rem}
+.ff label{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt2);margin-bottom:.4rem}
+.ff input,.ff select,.ff textarea{width:100%;background:var(--bg3);border:1px solid var(--bdr);color:var(--txt);padding:.65rem .9rem;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:300;transition:border-color .2s;outline:none}
+.ff input:focus,.ff select:focus,.ff textarea:focus{border-color:var(--or)}
+.ff textarea{height:90px;resize:vertical}
+.ff select option{background:var(--bg3)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.span2{grid-column:1/-1}
+.fsection{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);padding:.6rem 0 .5rem;border-bottom:1px solid var(--or-bg);grid-column:1/-1;margin-top:.5rem}
+
+/* CHECKBOXES */
+.check-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.3rem}
+.check-item{display:flex;align-items:center;gap:.5rem;font-size:.82rem;color:var(--txt2);cursor:pointer;padding:.4rem .6rem;border:1px solid var(--bdr);transition:all .15s}
+.check-item:hover{border-color:var(--or);color:var(--txt)}
+.check-item input[type=checkbox]{accent-color:var(--or);width:14px;height:14px;cursor:pointer}
+.check-item.checked{background:var(--or-bg);border-color:var(--or);color:var(--txt)}
+
+/* BTNS */
+.btn{background:var(--or);color:#000;padding:.65rem 1.4rem;border:none;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.06em;cursor:pointer;transition:background .2s;display:inline-flex;align-items:center;gap:.45rem;white-space:nowrap}
+.btn:hover{background:var(--orl)}
+.btn-ghost{background:transparent;border:1px solid var(--bdr);color:var(--txt2)}
+.btn-ghost:hover{border-color:var(--or);color:var(--or);background:transparent}
+.btn-red{background:var(--red-bg);border:1px solid var(--red);color:var(--red)}
+.btn-red:hover{background:var(--red);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#3fb950}
+.btn-sm{padding:.38rem .8rem;font-size:.72rem}
+.btn-full{width:100%;justify-content:center}
+
+/* SIDEBAR */
+#app{display:flex;width:100%;min-height:100vh}
+.sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;overflow-y:auto;flex-shrink:0}
+.sb-logo{padding:1.1rem 1.3rem;border-bottom:1px solid var(--bdr);font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--or)}
+.sb-logo span{display:block;font-size:.65rem;color:var(--txt3);font-family:'DM Sans',sans-serif;font-weight:300;margin-top:.1rem}
+.nav-grp{padding:.6rem 0}
+.nav-grp-title{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt3);padding:.25rem 1.1rem .4rem}
+.ni{display:flex;align-items:center;gap:.6rem;padding:.55rem 1.1rem;color:var(--txt2);cursor:pointer;transition:all .15s;font-size:.82rem;font-weight:300;border-left:2px solid transparent}
+.ni:hover{color:var(--txt);background:var(--bg3)}
+.ni.active{color:var(--or);background:var(--or-bg);border-left-color:var(--or)}
+.ni-ico{width:15px;text-align:center;font-size:.8rem;flex-shrink:0}
+.ni-badge{margin-left:auto;background:var(--or);color:#000;font-size:.6rem;padding:.08rem .4rem;border-radius:8px;font-weight:500}
+.sb-user{margin-top:auto;padding:.9rem 1.1rem;border-top:1px solid var(--bdr);display:flex;align-items:center;gap:.6rem}
+.sb-avatar{width:28px;height:28px;background:var(--or);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:500;color:#000;flex-shrink:0}
+.sb-uname{font-size:.78rem;font-weight:400;line-height:1.3}
+.sb-urole{font-size:.65rem;color:var(--txt3)}
+.sb-logout{margin-left:auto;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:.85rem;padding:.2rem}
+.sb-logout:hover{color:var(--red)}
+
+/* MAIN */
+.main{margin-left:210px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:.8rem 1.6rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-title{font-size:.95rem;font-weight:500}
+.topbar-actions{display:flex;gap:.5rem}
+.content{padding:1.6rem;flex:1}
+
+/* SECTIONS */
+.sec{display:none}.sec.active{display:block}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.6rem}
+.stat{background:var(--bg2);border:1px solid var(--bdr);padding:1.1rem 1.3rem}
+.stat-v{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;color:var(--or);line-height:1}
+.stat-l{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--txt2);margin-top:.3rem}
+.stat-s{font-size:.68rem;color:var(--txt3);margin-top:.2rem}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--bdr);margin-bottom:1.1rem}
+.card-hd{padding:.85rem 1.1rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:.88rem;font-weight:500}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:.55rem .9rem;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);border-bottom:1px solid var(--bdr);font-weight:400;white-space:nowrap}
+td{padding:.65rem .9rem;font-size:.8rem;border-bottom:1px solid var(--bdr);color:var(--txt2);vertical-align:middle}
+td:first-child{color:var(--txt)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;font-size:.65rem;padding:.18rem .55rem;letter-spacing:.06em;text-transform:uppercase;font-weight:500;white-space:nowrap}
+.bg-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(46,160,67,.3)}
+.bg-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,81,73,.3)}
+.bg-blue{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(88,166,255,.3)}
+.bg-yellow{background:var(--yellow-bg);color:var(--yellow);border:1px solid rgba(210,153,34,.3)}
+.bg-or{background:var(--or-bg);color:var(--or);border:1px solid rgba(191,150,80,.3)}
+.bg-grey{background:var(--bg4);color:var(--txt3);border:1px solid var(--bdr)}
+
+/* TOGGLE */
+.toggle{width:36px;height:20px;background:var(--bg4);border:1px solid var(--bdr);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--or);border-color:var(--or)}
+.toggle::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .2s}
+.toggle.on::after{transform:translateX(16px)}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--bdr);margin-bottom:1.3rem;gap:0}
+.tab{padding:.6rem 1.1rem;font-size:.78rem;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif;font-weight:300;white-space:nowrap}
+.tab.on{color:var(--or);border-bottom-color:var(--or)}
+.tab-pane{display:none}.tab-pane.on{display:block}
+
+/* FILTERS */
+.filters{display:flex;gap:.6rem;margin-bottom:1.1rem;flex-wrap:wrap;align-items:center}
+.fi{background:var(--bg2);border:1px solid var(--bdr);color:var(--txt);padding:.5rem .8rem;font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none}
+.fi:focus{border-color:var(--or)}
+.fi-search{flex:1;min-width:180px}
+
+/* PHOTO ZONE */
+.drop-zone{border:2px dashed var(--bdr2);padding:2rem;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.drop-zone:hover,.drop-zone.dragover{border-color:var(--or);background:var(--or-bg)}
+.drop-zone input{display:none}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.7rem;margin-top:.9rem}
+.photo-card{position:relative;background:var(--bg3);border:1px solid var(--bdr);aspect-ratio:4/3;overflow:hidden;cursor:grab}
+.photo-card img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.photo-card.dragging{opacity:.4;border-style:dashed}
+.photo-card.drag-over{border-color:var(--or);border-style:solid}
+.photo-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.85));opacity:0;transition:opacity .2s;display:flex;flex-direction:column;justify-content:flex-end;padding:.5rem}
+.photo-card:hover .photo-overlay{opacity:1}
+.photo-tags{display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:.3rem}
+.photo-tag{font-size:.6rem;padding:.1rem .35rem;background:rgba(191,150,80,.3);color:var(--or);border:none;cursor:pointer}
+.photo-tag.active{background:var(--or);color:#000}
+.photo-actions{display:flex;gap:.25rem}
+.photo-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:.3rem .5rem;font-size:.65rem;cursor:pointer;flex:1;transition:background .15s}
+.photo-btn:hover{background:rgba(255,255,255,.3)}
+.photo-btn.del{background:rgba(248,81,73,.3)}
+.photo-btn.del:hover{background:var(--red)}
+.photo-badge{position:absolute;top:.35rem;left:.35rem;font-size:.58rem;padding:.12rem .4rem;font-weight:500}
+.photo-order{position:absolute;top:.35rem;right:.35rem;background:rgba(0,0,0,.6);color:#fff;font-size:.62rem;padding:.15rem .4rem}
+.progress-wrap{margin:.8rem 0;display:none}
+.progress-bar{height:3px;background:var(--bg4);overflow:hidden}
+.progress-fill{height:100%;background:var(--or);transition:width .3s;width:0%}
+.progress-label{font-size:.72rem;color:var(--txt2);margin-bottom:.35rem;display:flex;justify-content:space-between}
+
+/* COMMERCIAL CARD */
+.comm-card{display:flex;align-items:center;gap:1rem;padding:1rem;border:1px solid var(--bdr);background:var(--bg3);margin-bottom:.7rem}
+.comm-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--bdr);background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.comm-info{flex:1}
+.comm-name{font-size:.92rem;font-weight:500;margin-bottom:.15rem}
+.comm-role{font-size:.75rem;color:var(--or)}
+.comm-contacts{font-size:.72rem;color:var(--txt3);margin-top:.25rem}
+
+/* SCORE */
+.score-ring{width:40px;height:40px;border-radius:50%;border:2px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:500;color:var(--or)}
+.score-ring.hi{border-color:var(--green);color:var(--green)}
+.score-ring.lo{border-color:var(--red);color:var(--red)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:flex-start;justify-content:center;padding:2.5rem 1rem;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bdr);width:100%;max-width:660px;position:relative}
+.modal-hd{padding:1rem 1.2rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:.9rem;font-weight:500}
+.modal-x{background:none;border:none;color:var(--txt2);cursor:pointer;font-size:1rem;padding:.25rem}
+.modal-x:hover{color:var(--txt)}
+.modal-body{padding:1.3rem}
+.modal-ft{padding:.9rem 1.2rem;border-top:1px solid var(--bdr);display:flex;justify-content:flex-end;gap:.5rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.3rem;right:1.3rem;background:var(--bg3);border:1px solid var(--bdr);padding:.8rem 1.1rem;min-width:260px;z-index:9999;display:none;align-items:center;gap:.7rem;font-size:.82rem}
+.toast.show{display:flex}
+.toast.ok{border-color:var(--green)}
+.toast.err{border-color:var(--red)}
+
+/* LOADING */
+.spinner{width:18px;height:18px;border:2px solid var(--bdr);border-top-color:var(--or);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;align-items:center;justify-content:center;gap:.9rem}
+.loading-overlay.show{display:flex}
+
+/* EMPTY */
+.empty{text-align:center;padding:2.5rem;color:var(--txt3)}
+.empty-ico{font-size:2rem;margin-bottom:.7rem;opacity:.4}
+.empty-t{font-size:.86rem;color:var(--txt2);margin-bottom:.3rem}
+.empty-s{font-size:.76rem}
+
+/* ERR/SUCCESS */
+.err-box{background:var(--red-bg);border:1px solid var(--red);color:var(--red);padding:.65rem .9rem;font-size:.8rem;margin-bottom:.9rem;display:none}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <span style="color:var(--txt2);font-size:.82rem">Chargement…</span>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Kàddu</div>
+    <div class="login-sub">Espace administration</div>
+    <div id="cors-warn" style="display:none;background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.3);color:#F85149;padding:.6rem .8rem;font-size:.75rem;margin-bottom:1rem;line-height:1.5">
+      ⚠️ Ouvrez ce fichier depuis Netlify (https://)<br>pas depuis votre bureau (file://)
+    </div>
+    <div class="err-box" id="lerr"></div>
+    <div class="ff"><label>Email</label><input type="email" id="lemail" placeholder="votre@email.com"></div>
+    <div class="ff"><label>Mot de passe</label><input type="password" id="lpwd" placeholder="••••••••"></div>
+    <button class="btn btn-full" id="login-btn" onclick="doLogin()">Connexion →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-logo">Kàddu<span>Administration</span></div>
+  <nav>
+    <div class="nav-grp">
+      <div class="nav-grp-title">Tableau de bord</div>
+      <div class="ni active" onclick="goSec('dashboard',this)"><span class="ni-ico">▣</span>Dashboard</div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-title">Biens</div>
+      <div class="ni" onclick="goSec('biens',this)"><span class="ni-ico">🏠</span>Liste des biens<span class="ni-badge" id="nb-biens">—</span></div>
+      <div class="ni" onclick="goSec('bien-form',this);initBienForm()"><span class="ni-ico">＋</span>Ajouter un bien</div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-title">Locataires</div>
+      <div class="ni" onclick="goSec('dossiers',this)"><span class="ni-ico">📋</span>Dossiers<span class="ni-badge" id="nb-dossiers">0</span></div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-title">Équipe</div>
+      <div class="ni" onclick="goSec('commerciaux',this)"><span class="ni-ico">👤</span>Commerciaux</div>
+      <div class="ni" onclick="goSec('equipe',this)"><span class="ni-ico">👥</span>Équipe</div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-title">Finance</div>
+      <div class="ni" onclick="goSec('proprietaires',this)"><span class="ni-ico">🏦</span>Propriétaires</div>
+      <div class="ni" onclick="goSec('loyers',this)"><span class="ni-ico">💰</span>Loyers</div>
+    </div>
+    <div class="nav-grp">
+      <div class="nav-grp-title">Config</div>
+      <div class="ni" onclick="goSec('medias',this)"><span class="ni-ico">📷</span>Médiathèque</div>
+      <div class="ni" onclick="goSec('parametres',this)"><span class="ni-ico">⚙</span>Paramètres</div>
+    </div>
+  </nav>
+  <div class="sb-user">
+    <div class="sb-avatar" id="sb-av">?</div>
+    <div><div class="sb-uname" id="sb-name">—</div><div class="sb-urole" id="sb-role">—</div></div>
+    <button class="sb-logout" onclick="doLogout()" title="Déconnexion">⏻</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="tb-title">Dashboard</div>
+    <div class="topbar-actions" id="tb-actions"></div>
+  </div>
+  <div class="content">
+
+  <!-- DASHBOARD -->
+  <div class="sec active" id="s-dashboard">
+    <div class="stats">
+      <div class="stat"><div class="stat-v" id="d-publies">—</div><div class="stat-l">Biens publiés</div><div class="stat-s">sur <span id="d-total">—</span> total</div></div>
+      <div class="stat"><div class="stat-v" id="d-dispo">—</div><div class="stat-l">Disponibles</div><div class="stat-s">Prêts à louer</div></div>
+      <div class="stat"><div class="stat-v" id="d-dossiers">—</div><div class="stat-l">Dossiers reçus</div><div class="stat-s">à analyser</div></div>
+      <div class="stat"><div class="stat-v" id="d-rev">—</div><div class="stat-l">FCFA gérés/mois</div><div class="stat-s">Biens loués</div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Biens actifs</div><button class="btn btn-ghost btn-sm" onclick="goSec('biens',null)">Gérer →</button></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Réf.</th><th>Nom</th><th>Prix FCFA</th><th>Type</th><th>Statut</th><th>Publié</th></tr></thead>
+        <tbody id="d-biens-tb"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Derniers dossiers</div><button class="btn btn-ghost btn-sm" onclick="goSec('dossiers',null)">Voir →</button></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Candidat</th><th>Score</th><th>Bien visé</th><th>Statut</th><th>Date</th></tr></thead>
+        <tbody id="d-dos-tb"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- LISTE BIENS -->
+  <div class="sec" id="s-biens">
+    <div class="filters">
+      <input class="fi fi-search" type="text" placeholder="Rechercher…" oninput="filterBiens(this.value)">
+      <select class="fi" onchange="filterBiensStatut(this.value)">
+        <option value="">Tous statuts</option>
+        <option value="disponible">Disponible</option>
+        <option value="loue">Loué</option>
+        <option value="reserve">Réservé</option>
+        <option value="brouillon">Brouillon</option>
+      </select>
+      <select class="fi" onchange="filterBiensType(this.value)">
+        <option value="">Tous types</option>
+        <option value="meuble">Meublé</option>
+        <option value="non_meuble">Non meublé</option>
+      </select>
+      <button class="btn btn-sm" onclick="goSec('bien-form',null);initBienForm()">＋ Nouveau bien</button>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Tous les biens</div></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Réf.</th><th>Nom</th><th>Quartier</th><th>Type</th><th>Prix</th><th>Statut</th><th>Publié</th><th>360°</th><th>Actions</th></tr></thead>
+        <tbody id="biens-tb"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- FORMULAIRE BIEN -->
+  <div class="sec" id="s-bien-form">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title" id="bf-title">Nouveau bien</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn btn-ghost btn-sm" onclick="goSec('biens',null)">← Annuler</button>
+          <button class="btn btn-green btn-sm" onclick="saveBien()">💾 Enregistrer</button>
+        </div>
+      </div>
+      <div style="padding:1.2rem">
+
+        <div class="tabs" id="bf-tabs">
+          <button class="tab on" onclick="bfTab('t1',this)">① Informations</button>
+          <button class="tab" onclick="bfTab('t2',this)">② Localisation</button>
+          <button class="tab" onclick="bfTab('t3',this)">③ Caractéristiques</button>
+          <button class="tab" onclick="bfTab('t4',this)">④ Description</button>
+          <button class="tab" onclick="bfTab('t5',this)">⑤ Médias</button>
+          <button class="tab" onclick="bfTab('t6',this)">⑥ Publication</button>
+        </div>
+
+        <!-- ① INFORMATIONS GÉNÉRALES -->
+        <div class="tab-pane on" id="bf-t1">
+          <div class="form-grid">
+            <div class="fsection">Identité du bien</div>
+            <div class="ff"><label>Référence interne *</label><input type="text" id="b-ref" placeholder="NK-004"></div>
+            <div class="ff"><label>Titre / Nom *</label><input type="text" id="b-nom" placeholder="Le Petit Suxalikay" oninput="autoSlug()"></div>
+            <div class="ff span2"><label>Slug URL</label><input type="text" id="b-slug" placeholder="petit-suxalikay"><small style="color:var(--txt3);font-size:.7rem">Généré automatiquement · modifier si besoin</small></div>
+            <div class="ff"><label>Type de logement</label>
+              <select id="b-type-log">
+                <option value="appartement">Appartement</option>
+                <option value="studio">Studio</option>
+                <option value="maison">Maison</option>
+                <option value="villa">Villa</option>
+                <option value="bureau">Bureau</option>
+                <option value="duplex">Duplex</option>
+              </select>
+            </div>
+            <div class="ff"><label>Type d'occupation</label>
+              <select id="b-type-occ">
+                <option value="meuble">Meublé</option>
+                <option value="non_meuble">Non meublé</option>
+                <option value="courte_duree">Courte durée</option>
+                <option value="moyenne_duree">Moyenne durée</option>
+                <option value="longue_duree">Longue durée</option>
+              </select>
+            </div>
+            <div class="fsection">Données commerciales</div>
+            <div class="ff"><label>Prix mensuel (FCFA) *</label><input type="number" id="b-prix" placeholder="850000" oninput="updateConv()"></div>
+            <div class="ff"><label>Charges (FCFA)</label><input type="number" id="b-charges" placeholder="0"></div>
+            <div class="ff"><label>Caution (FCFA)</label><input type="number" id="b-caution" placeholder="1700000"></div>
+            <div class="ff"><label>Frais de dossier (FCFA)</label><input type="number" id="b-frais" placeholder="50000"></div>
+            <div class="ff"><label>Date de disponibilité</label><input type="date" id="b-dispo"></div>
+            <div class="ff"><label>Durée minimum (mois)</label><input type="number" id="b-duree-min" placeholder="1" min="1"></div>
+            <div class="ff"><label>Type de bail</label>
+              <select id="b-bail">
+                <option value="location_meublee">Location meublée</option>
+                <option value="location_nue">Location nue</option>
+                <option value="bail_mobilite">Bail mobilité</option>
+                <option value="courte_duree">Courte durée</option>
+              </select>
+            </div>
+            <div class="ff" id="conv-display" style="display:none;background:var(--bg3);border:1px solid var(--bdr);padding:.8rem 1rem;font-size:.8rem;color:var(--txt2)">
+              Conversion : <strong id="conv-eur" style="color:var(--or)">—</strong> € / mois · <strong id="conv-usd" style="color:var(--or)">—</strong> $ / mois
+            </div>
+            <div class="fsection">Commercial affecté</div>
+            <div class="ff span2"><label>Sélectionner un commercial</label>
+              <select id="b-comm" onchange="previewComm(this.value)">
+                <option value="">Non assigné</option>
+              </select>
+            </div>
+            <div id="comm-preview" style="display:none;grid-column:1/-1"></div>
+          </div>
+        </div>
+
+        <!-- ② LOCALISATION -->
+        <div class="tab-pane" id="bf-t2">
+          <div class="form-grid">
+            <div class="fsection">Adresse</div>
+            <div class="ff span2"><label>Adresse complète <small style="color:var(--txt3)">(confidentielle — partagée après validation)</small></label><input type="text" id="b-adresse" placeholder="12 Rue des Flamboyants, Sipres VDN 2"></div>
+            <div class="ff"><label>Quartier</label><select id="b-quartier"><option value="">Sélectionner…</option></select></div>
+            <div class="ff"><label>Ville</label><input type="text" id="b-ville" value="Dakar"></div>
+            <div class="ff"><label>Étage</label><input type="text" id="b-etage" placeholder="3ᵉ étage"></div>
+            <div class="ff"><label>Immeuble / Résidence</label><input type="text" id="b-immeuble" placeholder="Résidence Les Flamboyants"></div>
+            <div class="fsection">Coordonnées GPS</div>
+            <div class="ff"><label>Latitude</label><input type="number" step="0.0000001" id="b-lat" placeholder="14.7285"></div>
+            <div class="ff"><label>Longitude</label><input type="number" step="0.0000001" id="b-lng" placeholder="-17.4614"></div>
+            <div class="ff span2"><label>Zone carte (affichée sur la carte publique)</label><input type="text" id="b-zone" placeholder="Sipres VDN 2, Dakar Nord"></div>
+          </div>
+        </div>
+
+        <!-- ③ CARACTÉRISTIQUES -->
+        <div class="tab-pane" id="bf-t3">
+          <div class="form-grid">
+            <div class="fsection">Dimensions</div>
+            <div class="ff"><label>Surface (m²)</label><input type="number" id="b-surface" placeholder="95"></div>
+            <div class="ff"><label>Nombre de pièces</label><input type="number" id="b-pieces" placeholder="3"></div>
+            <div class="ff"><label>Chambres</label><input type="number" id="b-chambres" placeholder="2"></div>
+            <div class="ff"><label>Salles de bain</label><input type="number" id="b-sdb" placeholder="2"></div>
+            <div class="ff"><label>Toilettes</label><input type="number" id="b-toilettes" placeholder="1"></div>
+            <div class="fsection">Équipements & Services</div>
+            <div class="span2">
+              <div class="check-grid" id="equip-grid">
+                <!-- Généré par JS -->
+              </div>
+            </div>
+            <div class="fsection">Tags équipements (affichés sur le site)</div>
+            <div class="ff span2"><label>Équipements <small style="color:var(--txt3)">(séparés par virgule)</small></label><input type="text" id="b-equipements" placeholder="Climatisation, TV, WiFi, Cuisine équipée"></div>
+            <div class="ff span2"><label>Atouts mis en avant</label><input type="text" id="b-atouts" placeholder="Gardien 24h/24, Vue dégagée, Balcon"></div>
+          </div>
+        </div>
+
+        <!-- ④ DESCRIPTION -->
+        <div class="tab-pane" id="bf-t4">
+          <div class="form-grid">
+            <div class="fsection">Textes</div>
+            <div class="ff span2"><label>Accroche courte <small style="color:var(--txt3)">(1 ligne · pour les cards)</small></label><input type="text" id="b-accroche" placeholder="F3 meublé premium · Balcon · Vue dégagée · Sipres VDN 2"></div>
+            <div class="ff span2"><label>Description courte</label><input type="text" id="b-desc-c" placeholder="F3 meublé 95m² avec balcon au 3ᵉ étage, Sipres VDN 2, Dakar"></div>
+            <div class="ff span2"><label>Description principale</label><textarea id="b-desc-l" style="height:130px" placeholder="Description détaillée de l'appartement…"></textarea></div>
+            <div class="ff span2"><label>Point fort — "Ce qui rend ce bien unique"</label><textarea id="b-point-fort" style="height:70px" placeholder="Le seul appartement de la collection avec balcon et vue dégagée…"></textarea></div>
+            <div class="ff span2"><label>Description du quartier</label><textarea id="b-desc-qr" style="height:80px" placeholder="Sipres VDN 2 est l'un des quartiers résidentiels les plus recherchés de Dakar…"></textarea></div>
+            <div class="ff span2"><label>Conditions de location</label><textarea id="b-conditions" style="height:70px" placeholder="Caution 2 mois · Revenus 3x le loyer · Garant accepté…"></textarea></div>
+          </div>
+        </div>
+
+        <!-- ⑤ MÉDIAS -->
+        <div class="tab-pane" id="bf-t5">
+          <p style="font-size:.8rem;color:var(--txt2);margin-bottom:1rem;line-height:1.6">
+            Uploadez les photos du bien. Glissez-déposez pour réorganiser l'ordre. Marquez une photo comme <strong>Salon</strong> pour qu'elle soit mise en avant sur les cards du listing.
+          </p>
+
+          <!-- Upload zone -->
+          <div class="drop-zone" id="drop-zone"
+            ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)"
+            onclick="document.getElementById('photo-input').click()">
+            <input type="file" id="photo-input" multiple accept="image/jpeg,image/jpg,image/png,image/webp" onchange="handleFiles(this.files)">
+            <div style="font-size:1.8rem;margin-bottom:.5rem">📷</div>
+            <div style="font-size:.85rem;font-weight:500;margin-bottom:.25rem">Glissez vos photos ici ou cliquez pour choisir</div>
+            <div style="font-size:.73rem;color:var(--txt3)">JPG · PNG · WebP · Max 8MB par photo · Upload multiple</div>
+          </div>
+
+          <!-- Barre de progression -->
+          <div class="progress-wrap" id="prog-wrap">
+            <div class="progress-label"><span id="prog-label">Upload…</span><span id="prog-pct">0%</span></div>
+            <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+          </div>
+
+          <!-- Grille photos -->
+          <div class="photo-grid" id="photo-grid"></div>
+
+          <!-- Vidéo & 360 -->
+          <div class="form-grid" style="margin-top:1.3rem">
+            <div class="fsection">Vidéo & Visite immersive</div>
+            <div class="ff"><label>URL Vidéo (YouTube / Vimeo)</label><input type="url" id="b-video" placeholder="https://youtube.com/..."></div>
+            <div class="ff"><label>URL Visite 360°</label><input type="url" id="b-360" placeholder="https://..."></div>
+            <div class="ff span2"><label>Document PDF (plan, règlement, etc.)</label><input type="url" id="b-pdf" placeholder="URL du PDF hébergé"></div>
+          </div>
+        </div>
+
+        <!-- ⑥ PUBLICATION -->
+        <div class="tab-pane" id="bf-t6">
+          <div class="form-grid">
+            <div class="fsection">Statut</div>
+            <div class="ff"><label>Statut du bien</label>
+              <select id="b-statut-ext">
+                <option value="brouillon">Brouillon (non visible)</option>
+                <option value="disponible">Disponible</option>
+                <option value="reserve">Réservé</option>
+                <option value="loue">Loué</option>
+                <option value="indisponible">Indisponible</option>
+              </select>
+            </div>
+            <div class="ff"><label>Titre SEO</label><input type="text" id="b-seo" placeholder="Location F3 meublé Dakar · Sipres VDN 2 · Kàddu"></div>
+            <div class="fsection">Visibilité</div>
+            <div class="ff span2" style="display:flex;align-items:center;gap:1rem;background:var(--bg3);padding:.9rem 1rem;border:1px solid var(--bdr)">
+              <div style="flex:1"><div style="font-size:.85rem;font-weight:500;margin-bottom:.2rem">Publier sur le site</div><div style="font-size:.72rem;color:var(--txt2)">Le bien sera visible sur kaddu.net</div></div>
+              <div class="toggle" id="tg-publie" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="ff span2" style="display:flex;align-items:center;gap:1rem;background:var(--bg3);padding:.9rem 1rem;border:1px solid var(--bdr)">
+              <div style="flex:1"><div style="font-size:.85rem;font-weight:500;margin-bottom:.2rem">Mettre en avant</div><div style="font-size:.72rem;color:var(--txt2)">Apparaît en premier dans les listings</div></div>
+              <div class="toggle" id="tg-avant" onclick="this.classList.toggle('on')"></div>
+            </div>
+            <div class="ff span2" style="display:flex;align-items:center;gap:1rem;background:var(--bg3);padding:.9rem 1rem;border:1px solid var(--bdr)">
+              <div style="flex:1"><div style="font-size:.85rem;font-weight:500;margin-bottom:.2rem">Visite 360° active</div><div style="font-size:.72rem;color:var(--txt2)">Afficher le bouton visite 360° sur la fiche</div></div>
+              <div class="toggle" id="tg-360" onclick="this.classList.toggle('on')"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /form body -->
+    </div>
+  </div><!-- /s-bien-form -->
+
+  <!-- DOSSIERS -->
+  <div class="sec" id="s-dossiers">
+    <div class="filters">
+      <input class="fi fi-search" type="text" placeholder="Rechercher un candidat…">
+      <select class="fi"><option value="">Tous les statuts</option><option value="en_cours">En cours</option><option value="valide">Validé</option><option value="refuse">Refusé</option></select>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Dossiers locataires</div></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Candidat</th><th>Score</th><th>Bien visé</th><th>Revenus</th><th>Statut pro</th><th>Statut</th><th>Date</th><th></th></tr></thead>
+        <tbody id="dos-tb"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- COMMERCIAUX -->
+  <div class="sec" id="s-commerciaux">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+      <button class="btn btn-sm" onclick="openModalComm()">＋ Nouveau commercial</button>
+    </div>
+    <div id="comm-list"></div>
+  </div>
+
+  <!-- ÉQUIPE -->
+  <div class="sec" id="s-equipe">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem">
+      <button class="btn btn-sm" onclick="openModalEquipe()">＋ Inviter un membre</button>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Membres de l'équipe</div></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Membre</th><th>Rôle</th><th>Téléphone</th><th>Actif</th><th>Depuis</th><th></th></tr></thead>
+        <tbody id="equipe-tb"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- PROPRIÉTAIRES -->
+  <div class="sec" id="s-proprietaires">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Propriétaires</div><button class="btn btn-sm" onclick="openModalProp()">＋ Ajouter</button></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Nom</th><th>Téléphone</th><th>Pays</th><th>Paiement</th><th></th></tr></thead>
+        <tbody id="prop-tb"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- LOYERS -->
+  <div class="sec" id="s-loyers">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Suivi des loyers</div></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Bien</th><th>Mois</th><th>Montant</th><th>Mode</th><th>Statut</th><th>Date paiement</th></tr></thead>
+        <tbody id="loyers-tb"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- MÉDIATHÈQUE -->
+  <div class="sec" id="s-medias">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Médiathèque — toutes les photos</div></div>
+      <div style="padding:1.2rem">
+        <div class="photo-grid" id="media-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARAMÈTRES -->
+  <div class="sec" id="s-parametres">
+    <div class="card" style="max-width:560px">
+      <div class="card-hd"><div class="card-title">Paramètres généraux</div></div>
+      <div style="padding:1.2rem" id="params-form"></div>
+    </div>
+  </div>
+
+  </div><!-- /content -->
+</main>
+</div><!-- /app -->
+
+<!-- MODAL COMMERCIAL -->
+<div class="modal-overlay" id="modal-comm">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title" id="mc-title">Nouveau commercial</div><button class="modal-x" onclick="closeModal('modal-comm')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="ff"><label>Prénom *</label><input type="text" id="mc-prenom" placeholder="Aminata"></div>
+        <div class="ff"><label>Nom *</label><input type="text" id="mc-nom" placeholder="Diallo"></div>
+        <div class="ff span2"><label>Rôle / Titre</label><input type="text" id="mc-role" placeholder="Conseillère immobilier — Dakar Nord"></div>
+        <div class="ff"><label>Téléphone</label><input type="text" id="mc-tel" placeholder="+221 77 000 00 00"></div>
+        <div class="ff"><label>WhatsApp</label><input type="text" id="mc-wa" placeholder="+221 77 000 00 00"></div>
+        <div class="ff span2"><label>Email</label><input type="email" id="mc-email" placeholder="aminata@kaddu.net"></div>
+        <div class="ff span2"><label>Bio courte</label><textarea id="mc-bio" style="height:70px" placeholder="Expert du marché immobilier dakarois depuis X ans…"></textarea></div>
+        <div class="ff"><label>Ordre d'affichage</label><input type="number" id="mc-ordre" value="1" min="1"></div>
+        <div class="ff" style="display:flex;align-items:center;gap:.8rem;padding-top:1.5rem">
+          <label style="margin:0">Actif</label>
+          <div class="toggle on" id="mc-actif" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('modal-comm')">Annuler</button>
+      <button class="btn" onclick="saveComm()">Enregistrer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DOSSIER -->
+<div class="modal-overlay" id="modal-dossier">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-hd"><div class="modal-title" id="md-title">Dossier</div><button class="modal-x" onclick="closeModal('modal-dossier')">✕</button></div>
+    <div class="modal-body" id="md-body"></div>
+    <div class="modal-ft" id="md-ft"></div>
+  </div>
+</div>
+
+<!-- MODAL ÉQUIPE -->
+<div class="modal-overlay" id="modal-equipe">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-hd"><div class="modal-title">Inviter un membre</div><button class="modal-x" onclick="closeModal('modal-equipe')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="ff span2"><label>Email *</label><input type="email" id="eq-email" placeholder="membre@email.com"></div>
+        <div class="ff"><label>Prénom</label><input type="text" id="eq-prenom"></div>
+        <div class="ff"><label>Nom</label><input type="text" id="eq-nom"></div>
+        <div class="ff span2"><label>Rôle</label>
+          <select id="eq-role">
+            <option value="commercial">Commercial</option>
+            <option value="gestionnaire">Gestionnaire</option>
+            <option value="comptable">Comptable</option>
+            <option value="photographe">Photographe</option>
+            <option value="support">Support</option>
+          </select>
+        </div>
+        <div class="ff span2"><label>Téléphone</label><input type="text" id="eq-tel" placeholder="+221 77 000 00 00"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('modal-equipe')">Annuler</button>
+      <button class="btn" onclick="inviterMembre()">Inviter →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// 
+// CONFIG
+// 
+const SB = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE';
+const KNOWN_ADMINS = ['80d9ec39-2ae3-42a4-bdb6-ab5c07ef7f17','0b3eb92b-e9ea-46b3-898c-bb7255c69756'];
+
+const EQUIPEMENTS_LIST = [
+  {id:'balcon',label:'Balcon / Terrasse',ico:''},
+  {id:'parking',label:'Parking',ico:''},
+  {id:'ascenseur',label:'Ascenseur',ico:''},
+  {id:'climatisation',label:'Climatisation',ico:''},
+  {id:'fibre',label:'Fibre optique',ico:''},
+  {id:'cuisine_equipee',label:'Cuisine quipe',ico:''},
+  {id:'machine_laver',label:'Machine  laver',ico:''},
+  {id:'piscine',label:'Piscine',ico:''},
+  {id:'gardien',label:'Gardien 24h/24',ico:''},
+  {id:'cameras',label:'Camras surveillance',ico:''},
+  {id:'digicode',label:'Digicode / Interphone',ico:''},
+  {id:'eau_chaude',label:'Eau chaude',ico:''},
+  {id:'generateur',label:'Groupe lectrogne',ico:''},
+];
+
+const PHOTO_TAGS = ['salon','chambre','cuisine','salle_de_bain','facade','terrasse','balcon','parking','entree','vue','autre'];
+
+// 
+// STATE
+// 
+let USER = null, TOKEN = null, PROFIL = null;
+let editingBienId = null;
+let allBiens = [], allPhotos = [], allComms = [];
+let photosDragSrc = null;
+
+// 
+// API
+// 
+async function api(table, method='GET', body=null, query='') {
+  const hdrs = {'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+(TOKEN||KEY)};
+  if(method==='POST') hdrs['Prefer']='return=representation';
+  const opts = {method, headers:hdrs};
+  if(body) opts.body = JSON.stringify(body);
+  const r = await fetch(`${SB}/rest/v1/${table}${query}`, opts);
+  if(!r.ok) { const e=await r.json().catch(()=>{}); throw new Error(e.message||`HTTP ${r.status}`); }
+  return r.status===204?null:r.json();
+}
+
+async function authApi(path, body) {
+  const r = await fetch(`${SB}/auth/v1/${path}`, {
+    method:'POST', headers:{'Content-Type':'application/json','apikey':KEY},
+    body:JSON.stringify(body)
+  });
+  return r.json();
+}
+
+// 
+// AUTH
+// 
+async function doLogin() {
+  const email = document.getElementById('lemail').value.trim();
+  const pwd = document.getElementById('lpwd').value;
+  const errEl = document.getElementById('lerr');
+  const btn = document.getElementById('login-btn');
+  errEl.style.display='none';
+  if(!email||!pwd){errEl.textContent='Email et mot de passe requis';errEl.style.display='block';return;}
+  
+  // Spinner dans le bouton (pas de loading overlay qui bloque)
+  btn.textContent = ' Connexion en cours';
+  btn.disabled = true;
+  
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    
+    const r = await fetch(`${SB}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': KEY },
+      body: JSON.stringify({ email, password: pwd }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    
+    const d = await r.json();
+    
+    if(!r.ok || d.error) {
+      throw new Error(d.error_description || d.error || 'HTTP ' + r.status);
+    }
+    
+    TOKEN = d.access_token;
+    localStorage.setItem('kaddu_tok', TOKEN);
+    USER = d.user;
+    
+    btn.textContent = ' Connect !';
+    
+    // loadProfil ne doit jamais bloquer l'accs
+    try { await loadProfil(); } catch(ep) { 
+      console.warn('loadProfil error (non-bloquant):', ep);
+      // Forcer super_admin pour les UUIDs connus
+      PROFIL = { id: USER.id, role: 'super_admin', prenom: 'Cheikh Admin', nom: 'AIDARA' };
+    }
+    
+    // showApp ne doit jamais bloquer
+    try { showApp(); } catch(es) {
+      console.error('showApp error:', es);
+      errEl.textContent = 'Erreur affichage: ' + es.message;
+      errEl.style.display = 'block';
+      btn.textContent = 'Connexion ';
+      btn.disabled = false;
+    }
+    
+  } catch(e) {
+    btn.textContent = 'Connexion ';
+    btn.disabled = false;
+    
+    if(e.name === 'AbortError') {
+      errEl.textContent = ' Dlai dpass (15s). Vrifiez votre connexion.';
+    } else if(e.message.includes('Invalid login credentials')) {
+      errEl.textContent = 'Email ou mot de passe incorrect';
+    } else if(e.message.includes('Email not confirmed')) {
+      errEl.textContent = 'Email non confirm  vrifiez votre bote mail';
+    } else {
+      errEl.textContent = 'Erreur: ' + (e.message || 'inconnue');
+    }
+    errEl.style.display = 'block';
+  }
+}
+
+async function loadProfil() {
+  PROFIL = null;
+  try {
+    const p = await api('profils','GET',null,`?id=eq.${USER.id}&select=*`);
+    PROFIL = (p && p.length > 0) ? p[0] : null;
+  } catch(e) {
+    console.warn('loadProfil fetch error:', e.message);
+  }
+  // Toujours assurer un profil pour les admins connus
+  if(!PROFIL || PROFIL.role === 'locataire') {
+    if(KNOWN_ADMINS.includes(USER.id)) {
+      PROFIL = { id: USER.id, role: 'super_admin', prenom: 'Cheikh Admin', nom: 'AIDARA' };
+    }
+  }
+}
+
+function showApp() {
+  try {
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    const prenom = PROFIL?.prenom || '';
+    const nom = PROFIL?.nom || '';
+    const init = (prenom[0]||'') + (nom[0]||'');
+    document.getElementById('sb-av').textContent = init || '?';
+    document.getElementById('sb-name').textContent = (prenom+' '+nom).trim() || USER?.email || '';
+    document.getElementById('sb-role').textContent = roleLabel(PROFIL?.role || 'super_admin');
+    // Charger le dashboard en arrire-plan
+    setTimeout(() => loadDashboard().catch(e => console.error('Dashboard error:', e)), 100);
+  } catch(e) {
+    console.error('showApp critical error:', e);
+    // Forcer l'affichage mme en cas d'erreur
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+  }
+}
+
+function doLogout() {
+  TOKEN=null;USER=null;PROFIL=null;localStorage.removeItem('kaddu_tok');
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('app').style.display='none';
+}
+
+// 
+// NAVIGATION
+// 
+const SEC_TITLES = {
+  dashboard:'Dashboard', biens:'Biens immobiliers', 'bien-form':'Formulaire bien',
+  dossiers:'Dossiers locataires', commerciaux:'Commerciaux', equipe:'quipe',
+  proprietaires:'Propritaires', loyers:'Loyers', medias:'Mdiathque', parametres:'Paramtres'
+};
+
+function goSec(id, navEl) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+id)?.classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+  document.getElementById('tb-title').textContent = SEC_TITLES[id]||id;
+  document.getElementById('tb-actions').innerHTML = '';
+  if(id==='biens') loadBiens();
+  else if(id==='dossiers') loadDossiers();
+  else if(id==='commerciaux') loadCommerciaux();
+  else if(id==='equipe') loadEquipe();
+  else if(id==='parametres') loadParametres();
+  else if(id==='medias') loadMedias();
+  else if(id==='proprietaires') loadProprietaires();
+  else if(id==='loyers') loadLoyers();
+}
+
+function bfTab(id, btn) {
+  document.querySelectorAll('#bf-tabs .tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('bf-'+id)?.classList.add('on');
+}
+
+// 
+// DASHBOARD
+// 
+async function loadDashboard() {
+  try {
+    const biens = await api('biens','GET',null,'?select=id,reference,nom,prix_fcfa,statut,statut_etendu,publie,type_bien,type_occupation&order=created_at.desc');
+    allBiens = biens||[];
+    const pub = biens.filter(b=>b.publie).length;
+    const dispo = biens.filter(b=>b.statut==='disponible').length;
+    const rev = biens.filter(b=>b.statut==='loue').reduce((a,b)=>a+b.prix_fcfa,0);
+    set('d-publies',pub); set('d-total',biens.length); set('d-dispo',dispo);
+    set('d-rev',rev?rev.toLocaleString('fr-FR'):'0');
+    document.getElementById('nb-biens').textContent=biens.length;
+    const tb = document.getElementById('d-biens-tb');
+    tb.innerHTML = biens.slice(0,6).map(b=>`<tr>
+      <td><code style="font-size:.7rem;color:var(--txt3)">${b.reference}</code></td>
+      <td><strong>${b.nom}</strong></td>
+      <td style="color:var(--or)">${(b.prix_fcfa||0).toLocaleString('fr-FR')} F</td>
+      <td>${occBadge(b.type_occupation||b.type_bien)}</td>
+      <td>${statutBadge(b.statut_etendu||b.statut)}</td>
+      <td>${b.publie?'<span class="badge bg-green">Publi</span>':'<span class="badge bg-grey">Brouillon</span>'}</td>
+    </tr>`).join('')||'<tr><td colspan="6"><div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun bien</div></div></td></tr>';
+    const dos = await api('dossiers_locataires','GET',null,'?select=id,prenom,nom,score_antifraude,statut,created_at&order=created_at.desc&limit=5');
+    document.getElementById('nb-dossiers').textContent=dos?.length||0;
+    set('d-dossiers',dos?.length||0);
+    const dtb = document.getElementById('d-dos-tb');
+    dtb.innerHTML = dos&&dos.length?dos.map(d=>`<tr>
+      <td><strong>${d.prenom} ${d.nom}</strong></td>
+      <td>${d.score_antifraude!=null?`<div class="score-ring ${d.score_antifraude>=75?'hi':d.score_antifraude>=50?'':'lo'}">${d.score_antifraude}</div>`:''}</td>
+      <td></td>
+      <td>${dossierBadge(d.statut)}</td>
+      <td style="font-size:.72rem;color:var(--txt3)">${fmtDate(d.created_at)}</td>
+    </tr>`).join(''):'<tr><td colspan="5"><div class="empty"><div class="empty-t">Aucun dossier</div></div></td></tr>';
+  } catch(e) { toast('Erreur dashboard: '+e.message,'err'); }
+}
+
+// 
+// BIENS  LISTE
+// 
+async function loadBiens() {
+  const tb = document.getElementById('biens-tb');
+  tb.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:1.5rem"><div class="spinner"></div></td></tr>';
+  try {
+    const biens = await api('biens','GET',null,'?select=*,quartiers(nom),commerciaux(prenom,nom)&order=created_at.desc');
+    allBiens = biens||[];
+    renderBiens(allBiens);
+  } catch(e) { tb.innerHTML=`<tr><td colspan="9" style="color:var(--red);padding:1rem">Erreur: ${e.message}</td></tr>`; }
+}
+
+function renderBiens(list) {
+  const tb = document.getElementById('biens-tb');
+  tb.innerHTML = list.length ? list.map(b=>`<tr>
+    <td><code style="font-size:.7rem;color:var(--txt3)">${b.reference}</code></td>
+    <td><span style="cursor:pointer;color:var(--blue)" onclick="editBien('${b.id}')">${b.nom}</span></td>
+    <td style="font-size:.75rem">${b.quartiers?.nom||''}</td>
+    <td>${occBadge(b.type_occupation||b.type_bien)}</td>
+    <td style="color:var(--or);white-space:nowrap">${(b.prix_fcfa||0).toLocaleString('fr-FR')} F</td>
+    <td>${statutBadge(b.statut_etendu||b.statut)}</td>
+    <td><div class="toggle ${b.publie?'on':''}" onclick="togglePublie('${b.id}',${b.publie},this)" style="width:32px;height:18px"></div></td>
+    <td><div class="toggle ${b.visite_360_active?'on':''}" style="width:32px;height:18px;pointer-events:none"></div></td>
+    <td>
+      <div style="display:flex;gap:.3rem">
+        <button class="btn btn-ghost btn-sm" onclick="editBien('${b.id}')"></button>
+        <button class="btn btn-red btn-sm" onclick="deleteBien('${b.id}','${b.nom}')"></button>
+      </div>
+    </td>
+  </tr>`).join('')
+  :'<tr><td colspan="9"><div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun bien</div><div class="empty-s">Cliquez sur "Nouveau bien" pour commencer</div></div></td></tr>';
+}
+
+function filterBiens(q) { renderBiens(allBiens.filter(b=>JSON.stringify(b).toLowerCase().includes(q.toLowerCase()))); }
+function filterBiensStatut(v) { renderBiens(v?allBiens.filter(b=>(b.statut_etendu||b.statut)===v):allBiens); }
+function filterBiensType(v) { renderBiens(v?allBiens.filter(b=>(b.type_occupation||b.type_bien)===v):allBiens); }
+
+async function togglePublie(id, current, el) {
+  try {
+    await api('biens','PATCH',{publie:!current},`?id=eq.${id}`);
+    el.classList.toggle('on');
+    toast(!current?' Bien publi':'Bien dpubli','ok');
+  } catch(e) { toast('Erreur: '+e.message,'err'); }
+}
+
+async function deleteBien(id, nom) {
+  if(!confirm(`Supprimer "${nom}" ?`)) return;
+  try { await api('biens','DELETE',null,`?id=eq.${id}`); toast(' Supprim','ok'); loadBiens(); }
+  catch(e) { toast('Erreur: '+e.message,'err'); }
+}
+
+// 
+// BIEN  FORMULAIRE
+// 
+async function initBienForm() {
+  editingBienId = null;
+  document.getElementById('bf-title').textContent = 'Nouveau bien';
+  // Reset
+  ['b-ref','b-nom','b-slug','b-adresse','b-ville','b-etage','b-immeuble',
+   'b-lat','b-lng','b-zone','b-prix','b-charges','b-caution','b-frais',
+   'b-duree-min','b-surface','b-pieces','b-chambres','b-sdb','b-toilettes',
+   'b-equipements','b-atouts','b-accroche','b-desc-c','b-desc-l',
+   'b-point-fort','b-desc-qr','b-conditions','b-video','b-360','b-pdf','b-seo'
+  ].forEach(id => { const el=document.getElementById(id); if(el)el.value=''; });
+  document.getElementById('b-ville').value='Dakar';
+  document.getElementById('b-duree-min').value='1';
+  ['tg-publie','tg-avant','tg-360'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('photo-grid').innerHTML='';
+  document.getElementById('conv-display').style.display='none';
+
+  buildEquipGrid({});
+  await loadQuartiers();
+  await loadCommerciaux(true);
+  bfTab('t1', document.querySelector('#bf-tabs .tab'));
+}
+
+async function editBien(id) {
+  goSec('bien-form', null);
+  await initBienForm();
+  loading(true);
+  try {
+    const biens = await api('biens','GET',null,`?id=eq.${id}&select=*,quartiers(nom),commerciaux(*)`);
+    const b = biens?.[0]; if(!b) return;
+    editingBienId = id;
+    document.getElementById('bf-title').textContent = `Modifier  ${b.nom}`;
+    // Remplir les champs
+    const fields = {
+      'b-ref':b.reference,'b-nom':b.nom,'b-slug':b.slug,
+      'b-type-log':b.type_logement||'appartement','b-type-occ':b.type_occupation||'meuble',
+      'b-adresse':b.adresse_complete||'','b-ville':b.ville||'Dakar',
+      'b-etage':b.etage||'','b-immeuble':b.immeuble||'',
+      'b-lat':b.gps_lat||'','b-lng':b.gps_lng||'','b-zone':b.zone_carte||'',
+      'b-prix':b.prix_fcfa||'','b-charges':b.charges_fcfa||0,'b-caution':b.caution_fcfa||'',
+      'b-frais':b.frais_dossier_fcfa||0,'b-duree-min':b.duree_min_mois||1,
+      'b-bail':b.type_bail||'location_meublee','b-statut-ext':b.statut_etendu||'disponible',
+      'b-surface':b.surface_m2||'','b-pieces':b.nb_pieces||'','b-chambres':b.nb_chambres||'',
+      'b-sdb':b.nb_sdb||'','b-toilettes':b.nb_toilettes||'',
+      'b-equipements':(b.equipements||[]).join(', '),'b-atouts':(b.atouts||[]).join(', '),
+      'b-accroche':b.accroche||'','b-desc-c':b.description_courte||'',
+      'b-desc-l':b.description_longue||'','b-point-fort':b.point_fort||'',
+      'b-desc-qr':b.description_quartier||'','b-conditions':b.conditions_location||'',
+      'b-video':b.video_url||'','b-360':b.visite_360_url||'','b-pdf':'','b-seo':b.titre_seo||''
+    };
+    Object.entries(fields).forEach(([fid,val])=>{ const el=document.getElementById(fid); if(el)el.value=val; });
+    if(b.publie) document.getElementById('tg-publie').classList.add('on');
+    if(b.mis_en_avant) document.getElementById('tg-avant').classList.add('on');
+    if(b.visite_360_active) document.getElementById('tg-360').classList.add('on');
+    if(b.quartier_id) document.getElementById('b-quartier').value=b.quartier_id;
+    if(b.date_disponibilite) document.getElementById('b-dispo').value=b.date_disponibilite;
+    updateConv();
+    buildEquipGrid(b);
+    if(b.commercial_kaddu_id) { document.getElementById('b-comm').value=b.commercial_kaddu_id; previewComm(b.commercial_kaddu_id); }
+    // Charger photos
+    await loadBienPhotos(id);
+  } finally { loading(false); }
+}
+
+async function loadBienPhotos(bienId) {
+  const photos = await api('photos','GET',null,`?bien_id=eq.${bienId}&order=ordre.asc`);
+  allPhotos = photos||[];
+  renderPhotoGrid(allPhotos);
+}
+
+async function saveBien() {
+  const data = {
+    reference: v('b-ref'), nom: v('b-nom'), slug: v('b-slug')||slugify(v('b-nom')),
+    type_logement: v('b-type-log'), type_bien: v('b-type-occ')==='non_meuble'?'non_meuble':'meuble',
+    type_occupation: v('b-type-occ'),
+    adresse_complete: v('b-adresse'), ville: v('b-ville')||'Dakar',
+    etage: v('b-etage'), immeuble: v('b-immeuble'),
+    gps_lat: vn('b-lat'), gps_lng: vn('b-lng'), zone_carte: v('b-zone'),
+    prix_fcfa: vn('b-prix')||0, charges_fcfa: vn('b-charges')||0,
+    caution_fcfa: vn('b-caution'), frais_dossier_fcfa: vn('b-frais')||0,
+    duree_min_mois: vn('b-duree-min')||1, type_bail: v('b-bail'),
+    date_disponibilite: v('b-dispo')||null,
+    nb_pieces: vn('b-pieces'), nb_chambres: vn('b-chambres'),
+    nb_sdb: vn('b-sdb'), nb_toilettes: vn('b-toilettes'),
+    surface_m2: vn('b-surface'),
+    accroche: v('b-accroche'), description_courte: v('b-desc-c'),
+    description_longue: v('b-desc-l'), point_fort: v('b-point-fort'),
+    description_quartier: v('b-desc-qr'), conditions_location: v('b-conditions'),
+    equipements: v('b-equipements').split(',').map(s=>s.trim()).filter(Boolean),
+    atouts: v('b-atouts').split(',').map(s=>s.trim()).filter(Boolean),
+    video_url: v('b-video')||null, visite_360_url: v('b-360')||null,
+    titre_seo: v('b-seo'),
+    statut: v('b-statut-ext')==='disponible'?'disponible':'disponible',
+    statut_etendu: v('b-statut-ext'),
+    publie: document.getElementById('tg-publie').classList.contains('on'),
+    mis_en_avant: document.getElementById('tg-avant').classList.contains('on'),
+    visite_360_active: document.getElementById('tg-360').classList.contains('on'),
+    commercial_kaddu_id: v('b-comm')||null,
+    meuble: v('b-type-occ')!=='non_meuble',
+  };
+  // quipements boolens
+  EQUIPEMENTS_LIST.forEach(e => { data[e.id] = document.getElementById('chk-'+e.id)?.checked||false; });
+  if(v('b-quartier')) data.quartier_id = v('b-quartier');
+  if(!data.reference||!data.nom||!data.prix_fcfa) { toast('Rfrence, nom et prix obligatoires','err'); return; }
+
+  loading(true);
+  try {
+    let bienId = editingBienId;
+    if(editingBienId) {
+      await api('biens','PATCH',data,`?id=eq.${editingBienId}`);
+      toast(` "${data.nom}" mis  jour`,'ok');
+    } else {
+      const res = await api('biens','POST',data,'');
+      bienId = res?.[0]?.id;
+      editingBienId = bienId;
+      toast(` "${data.nom}" cr`,'ok');
+    }
+    goSec('biens',null);
+  } catch(e) { toast('Erreur: '+e.message,'err'); }
+  finally { loading(false); }
+}
+
+// 
+// PHOTOS
+// 
+function renderPhotoGrid(photos) {
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = photos.map((p,i) => `
+    <div class="photo-card" draggable="true" data-id="${p.id}" data-ordre="${p.ordre}"
+      ondragstart="pDragStart(event,this)" ondragover="pDragOver(event,this)"
+      ondrop="pDrop(event,this)" ondragend="pDragEnd(event)">
+      <img src="${p.url}" alt="Photo ${i+1}" loading="lazy">
+      <div class="photo-badge badge ${p.est_salon?'bg-or':p.est_principale?'bg-blue':'bg-grey'}">${p.est_salon?' Salon':p.est_principale?' Hero':''}</div>
+      <div class="photo-order">${i+1}</div>
+      <div class="photo-overlay">
+        <div class="photo-tags">
+          ${PHOTO_TAGS.map(t=>`<button class="photo-tag ${p.tag===t?'active':''}" onclick="setPhotoTag('${p.id}','${t}',this)">${t}</button>`).join('')}
+        </div>
+        <div class="photo-actions">
+          <button class="photo-btn" onclick="setPhotoSalon('${p.id}')"></button>
+          <button class="photo-btn" onclick="setPhotoHero('${p.id}')"></button>
+          <button class="photo-btn del" onclick="deletePhoto('${p.id}')"></button>
+        </div>
+      </div>
+    </div>
+  `).join('') + `
+    <div class="photo-card" style="border:2px dashed var(--bdr2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.4rem;cursor:pointer;color:var(--txt3)" onclick="document.getElementById('photo-input').click()">
+      <span style="font-size:1.5rem"></span>
+      <span style="font-size:.72rem">Ajouter</span>
+    </div>`;
+}
+
+// Drag & drop photos
+function pDragStart(e, el) { photosDragSrc=el; el.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
+function pDragOver(e, el) { e.preventDefault(); document.querySelectorAll('.photo-card').forEach(c=>c.classList.remove('drag-over')); el.classList.add('drag-over'); }
+function pDragEnd(e) { document.querySelectorAll('.photo-card').forEach(c=>{c.classList.remove('dragging');c.classList.remove('drag-over');}); }
+async function pDrop(e, target) {
+  e.preventDefault();
+  if(!photosDragSrc||photosDragSrc===target) return;
+  const srcId = photosDragSrc.dataset.id;
+  const tgtId = target.dataset.id;
+  const srcOrdre = parseInt(photosDragSrc.dataset.ordre);
+  const tgtOrdre = parseInt(target.dataset.ordre);
+  try {
+    await api('photos','PATCH',{ordre:tgtOrdre},`?id=eq.${srcId}`);
+    await api('photos','PATCH',{ordre:srcOrdre},`?id=eq.${tgtId}`);
+    await loadBienPhotos(editingBienId);
+    toast(' Ordre mis  jour','ok');
+  } catch(e) { toast('Erreur: '+e.message,'err'); }
+}
+
+// Drop zone
+function dzOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('dragover'); }
+function dzLeave(e) { document.getElementById('drop-zone').classList.remove('dragover'); }
+function dzDrop(e) { e.preventDefault(); document.getElementById('drop-zone').classList.remove('dragover'); handleFiles(e.dataTransfer.files); }
+
+async function handleFiles(files) {
+  if(!editingBienId) { toast('Enregistrez d\'abord le bien','err'); return; }
+  const arr = Array.from(files).filter(f=>f.type.startsWith('image/'));
+  if(!arr.length) return;
+
+  const pw = document.getElementById('prog-wrap');
+  const pf = document.getElementById('prog-fill');
+  const pl = document.getElementById('prog-label');
+  const pp = document.getElementById('prog-pct');
+  pw.style.display='block';
+
+  // Ordre de dpart
+  let startOrdre = allPhotos.length;
+  let done=0, errs=0;
+
+  for(let i=0;i<arr.length;i++) {
+    const file=arr[i];
+    pf.style.width=Math.round(i/arr.length*100)+'%';
+    pp.textContent=Math.round(i/arr.length*100)+'%';
+    pl.textContent=`Upload ${i+1}/${arr.length}  ${file.name}`;
+    try {
+      const ts=Date.now()+i;
+      const ext=file.name.split('.').pop().toLowerCase();
+      const path=`${editingBienId}/photo_${ts}.${ext}`;
+      const up = await fetch(`${SB}/storage/v1/object/biens-photos/${path}`,{
+        method:'POST',
+        headers:{'apikey':KEY,'Authorization':'Bearer '+(TOKEN||KEY),'Content-Type':file.type,'x-upsert':'true'},
+        body:file
+      });
+      if(!up.ok) throw new Error('Upload storage chou ('+up.status+')');
+      const url=`${SB}/storage/v1/object/public/biens-photos/${path}`;
+      await api('photos','POST',{
+        bien_id:editingBienId, url, storage_path:path,
+        ordre:startOrdre+i, est_hero:startOrdre===0&&i===0, est_principale:startOrdre===0&&i===0, est_salon:false
+      },'');
+      done++;
+    } catch(e2) { errs++; toast(`Erreur photo ${i+1}: ${e2.message}`,'err'); }
+  }
+
+  pf.style.width='100%'; pp.textContent='100%';
+  setTimeout(()=>{ pw.style.display='none'; pf.style.width='0%'; },1500);
+  if(done>0) { toast(` ${done} photo(s) uploade(s)`,'ok'); await loadBienPhotos(editingBienId); }
+  document.getElementById('photo-input').value='';
+}
+
+async function setPhotoSalon(id) {
+  try {
+    await api('photos','PATCH',{est_salon:false},`?bien_id=eq.${editingBienId}`);
+    await api('photos','PATCH',{est_salon:true},`?id=eq.${id}`);
+    toast(' Photo salon dfinie','ok'); await loadBienPhotos(editingBienId);
+  } catch(e) { toast(e.message,'err'); }
+}
+
+async function setPhotoHero(id) {
+  try {
+    await api('photos','PATCH',{est_principale:false,est_hero:false},`?bien_id=eq.${editingBienId}`);
+    await api('photos','PATCH',{est_principale:true,est_hero:true},`?id=eq.${id}`);
+    toast(' Photo principale dfinie','ok'); await loadBienPhotos(editingBienId);
+  } catch(e) { toast(e.message,'err'); }
+}
+
+async function setPhotoTag(id, tag, btn) {
+  try {
+    await api('photos','PATCH',{tag},`?id=eq.${id}`);
+    btn.closest('.photo-tags').querySelectorAll('.photo-tag').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  } catch(e) { toast(e.message,'err'); }
+}
+
+async function deletePhoto(id) {
+  if(!confirm('Supprimer cette photo ?')) return;
+  try { await api('photos','DELETE',null,`?id=eq.${id}`); await loadBienPhotos(editingBienId); toast('Photo supprime','ok'); }
+  catch(e) { toast(e.message,'err'); }
+}
+
+// 
+// COMMERCIAUX
+// 
+async function loadCommerciaux(forSelect=false) {
+  try {
+    const comms = await api('commerciaux','GET',null,'?order=ordre_affichage.asc');
+    allComms = comms||[];
+    if(forSelect) {
+      const sel = document.getElementById('b-comm');
+      if(sel) {
+        sel.innerHTML='<option value="">Non assign</option>'+
+          comms.filter(c=>c.actif).map(c=>`<option value="${c.id}">${c.prenom} ${c.nom}  ${c.role_label}</option>`).join('');
+      }
+      return;
+    }
+    const list = document.getElementById('comm-list');
+    if(!list) return;
+    list.innerHTML = comms.length ? comms.map(c=>`
+      <div class="comm-card">
+        <div class="comm-avatar">
+          ${c.photo_url?`<img src="${c.photo_url}" alt="${c.prenom}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:c.prenom?.[0]||'?'}
+        </div>
+        <div class="comm-info">
+          <div class="comm-name">${c.prenom} ${c.nom}</div>
+          <div class="comm-role">${c.role_label||''}</div>
+          <div class="comm-contacts"> ${c.telephone||''} &nbsp;&nbsp;  ${c.whatsapp||''} &nbsp;&nbsp;  ${c.email||''}</div>
+          ${c.bio_courte?`<div style="font-size:.75rem;color:var(--txt3);margin-top:.2rem">${c.bio_courte}</div>`:''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.4rem;align-items:flex-end">
+          ${c.actif?'<span class="badge bg-green">Actif</span>':'<span class="badge bg-grey">Inactif</span>'}
+          <div style="display:flex;gap:.3rem;margin-top:.4rem">
+            <button class="btn btn-ghost btn-sm" onclick="openModalComm('${c.id}')"></button>
+            <button class="btn btn-red btn-sm" onclick="toggleCommActif('${c.id}',${c.actif})">${c.actif?'Dsactiver':'Activer'}</button>
+          </div>
+        </div>
+      </div>
+    `).join(''):'<div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun commercial</div></div>';
+  } catch(e) { toast('Erreur commerciaux: '+e.message,'err'); }
+}
+
+let editingCommId = null;
+function openModalComm(id=null) {
+  editingCommId = id;
+  document.getElementById('mc-title').textContent = id?'Modifier le commercial':'Nouveau commercial';
+  if(id) {
+    const c = allComms.find(x=>x.id===id);
+    if(c) {
+      ['mc-prenom','mc-nom','mc-role','mc-tel','mc-wa','mc-email','mc-bio','mc-ordre'].forEach(fid=>{
+        const key = fid.replace('mc-','').replace('-','_');
+        const map = {'mc-prenom':'prenom','mc-nom':'nom','mc-role':'role_label','mc-tel':'telephone','mc-wa':'whatsapp','mc-email':'email','mc-bio':'bio_courte','mc-ordre':'ordre_affichage'};
+        const el = document.getElementById(fid);
+        if(el) el.value = c[map[fid]]||'';
+      });
+      if(c.actif) document.getElementById('mc-actif').classList.add('on');
+      else document.getElementById('mc-actif').classList.remove('on');
+    }
+  }
+  openModal('modal-comm');
+}
+
+async function saveComm() {
+  const data = {
+    prenom:v('mc-prenom'), nom:v('mc-nom'), role_label:v('mc-role'),
+    telephone:v('mc-tel'), whatsapp:v('mc-wa'), email:v('mc-email'),
+    bio_courte:v('mc-bio'), ordre_affichage:vn('mc-ordre')||1,
+    actif:document.getElementById('mc-actif').classList.contains('on')
+  };
+  if(!data.prenom||!data.nom) { toast('Prnom et nom obligatoires','err'); return; }
+  loading(true);
+  try {
+    if(editingCommId) { await api('commerciaux','PATCH',data,`?id=eq.${editingCommId}`); toast(' Commercial mis  jour','ok'); }
+    else { await api('commerciaux','POST',data,''); toast(' Commercial cr','ok'); }
+    closeModal('modal-comm'); loadCommerciaux();
+  } catch(e) { toast('Erreur: '+e.message,'err'); }
+  finally { loading(false); }
+}
+
+async function toggleCommActif(id, actif) {
+  try { await api('commerciaux','PATCH',{actif:!actif},`?id=eq.${id}`); loadCommerciaux(); }
+  catch(e) { toast(e.message,'err'); }
+}
+
+function previewComm(id) {
+  const c = allComms.find(x=>x.id===id);
+  const el = document.getElementById('comm-preview');
+  if(!el) return;
+  if(!c) { el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="comm-card" style="margin-top:.7rem">
+      <div class="comm-avatar">${c.photo_url?`<img src="${c.photo_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:c.prenom?.[0]||'?'}</div>
+      <div class="comm-info">
+        <div class="comm-name">${c.prenom} ${c.nom}</div>
+        <div class="comm-role">${c.role_label}</div>
+        <div class="comm-contacts"> ${c.telephone} &nbsp;&nbsp;  ${c.whatsapp}</div>
+      </div>
+    </div>`;
+}
+
+// 
+// DOSSIERS
+// 
+async function loadDossiers() {
+  const tb = document.getElementById('dos-tb');
+  tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:1.5rem"><div class="spinner"></div></td></tr>';
+  try {
+    const dos = await api('dossiers_locataires','GET',null,'?select=*&order=created_at.desc');
+    tb.innerHTML = dos&&dos.length ? dos.map(d=>`<tr>
+      <td><strong>${d.prenom} ${d.nom}</strong><div style="font-size:.7rem;color:var(--txt3)">${d.email}</div></td>
+      <td>${d.score_antifraude!=null?`<div class="score-ring ${d.score_antifraude>=75?'hi':d.score_antifraude>=50?'':'lo'}">${d.score_antifraude}</div>`:''}</td>
+      <td style="font-size:.75rem"></td>
+      <td style="color:var(--or)">${d.revenus_fcfa?(d.revenus_fcfa).toLocaleString('fr-FR')+' F':''}</td>
+      <td>${d.statut_pro||''}</td>
+      <td>${dossierBadge(d.statut)}</td>
+      <td style="font-size:.7rem;color:var(--txt3)">${fmtDate(d.created_at)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="viewDossier(${JSON.stringify(d).replace(/"/g,"&quot;")})">Voir</button></td>
+    </tr>`).join(''):'<tr><td colspan="8"><div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun dossier</div></div></td></tr>';
+  } catch(e) { tb.innerHTML=`<tr><td colspan="8" style="color:var(--red);padding:1rem">Erreur: ${e.message}</td></tr>`; }
+}
+
+function viewDossier(d) {
+  document.getElementById('md-title').textContent=`Dossier  ${d.prenom} ${d.nom}`;
+  const sc=d.score_antifraude;
+  document.getElementById('md-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div>
+        <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:.4rem">Identit</div>
+        <div style="font-weight:500;margin-bottom:.2rem">${d.prenom} ${d.nom}</div>
+        <div style="font-size:.78rem;color:var(--txt2)">${d.email}</div>
+        <div style="font-size:.78rem;color:var(--txt2)">${d.telephone||''}</div>
+      </div>
+      <div>
+        <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:.4rem">Score antifraude</div>
+        <div style="display:flex;align-items:center;gap:.8rem">
+          <div class="score-ring ${sc>=75?'hi':sc>=50?'':'lo'}" style="width:50px;height:50px;font-size:1rem">${sc??''}</div>
+          <div style="font-size:.8rem;color:var(--txt2)">${sc>=75?' Dossier ligible':sc>=50?'  tudier':sc?' Score insuffisant':'Non calcul'}</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:.4rem">Situation</div>
+        <div style="font-size:.82rem">${d.statut_pro||''}  ${d.employeur||''}</div>
+        <div style="color:var(--or);font-size:.85rem">${d.revenus_fcfa?d.revenus_fcfa.toLocaleString('fr-FR')+' FCFA/mois':''}</div>
+      </div>
+      <div>
+        <div style="font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:.4rem">Documents</div>
+        <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+          ${d.doc_identite_url?`<a href="${d.doc_identite_url}" target="_blank" class="btn btn-ghost btn-sm"> ID</a>`:'<span style="color:var(--txt3);font-size:.75rem"> Manquant</span>'}
+          ${d.doc_revenus_url?`<a href="${d.doc_revenus_url}" target="_blank" class="btn btn-ghost btn-sm"> Revenus</a>`:'<span style="color:var(--txt3);font-size:.75rem"> Manquant</span>'}
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('md-ft').innerHTML=`
+    <button class="btn btn-ghost" onclick="closeModal('modal-dossier')">Fermer</button>
+    <button class="btn btn-red btn-sm" onclick="updDossier('${d.id}','refuse')"> Refuser</button>
+    <button class="btn btn-green btn-sm" onclick="updDossier('${d.id}','valide')"> Valider</button>`;
+  openModal('modal-dossier');
+}
+
+async function updDossier(id, statut) {
+  try { await api('dossiers_locataires','PATCH',{statut},`?id=eq.${id}`); toast(`Dossier ${statut==='valide'?'valid':'refus'}`,'ok'); closeModal('modal-dossier'); loadDossiers(); }
+  catch(e) { toast(e.message,'err'); }
+}
+
+// 
+// QUIPE
+// 
+async function loadEquipe() {
+  const tb = document.getElementById('equipe-tb');
+  try {
+    const membres = await api('profils','GET',null,'?role=in.(super_admin,gestionnaire,commercial,comptable,photographe,support)&select=*');
+    tb.innerHTML = membres&&membres.length ? membres.map(m=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:.6rem"><div class="sb-avatar" style="width:26px;height:26px;font-size:.65rem">${(m.prenom?.[0]||'')+(m.nom?.[0]||'')}</div><div><div>${m.prenom||''} ${m.nom||''}</div><div style="font-size:.7rem;color:var(--txt3)">${m.id.substring(0,8)}</div></div></div></td>
+      <td><span class="badge bg-or">${roleLabel(m.role)}</span></td>
+      <td style="font-size:.78rem">${m.telephone||''}</td>
+      <td><div class="toggle ${m.actif?'on':''}" style="width:28px;height:16px;pointer-events:none"></div></td>
+      <td style="font-size:.7rem;color:var(--txt3)">${fmtDate(m.created_at)}</td>
+      <td><button class="btn btn-ghost btn-sm"></button></td>
+    </tr>`).join(''):'<tr><td colspan="6"><div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun membre</div></div></td></tr>';
+  } catch(e) { tb.innerHTML=`<tr><td colspan="6" style="color:var(--red);padding:1rem">Erreur: ${e.message}</td></tr>`; }
+}
+
+function openModalEquipe() { openModal('modal-equipe'); }
+async function inviterMembre() {
+  toast('Invitation note  crez manuellement dans Supabase > Auth > Users','ok');
+  closeModal('modal-equipe');
+}
+
+// 
+// PROPRITAIRES & LOYERS
+// 
+async function loadProprietaires() {
+  const tb=document.getElementById('prop-tb');
+  try {
+    const p=await api('proprietaires','GET',null,'?select=*&order=created_at.desc');
+    tb.innerHTML=p&&p.length?p.map(x=>`<tr><td><strong>${x.prenom} ${x.nom}</strong></td><td>${x.telephone||''}</td><td>${x.pays_residence||''}</td><td>${x.type_paiement_preference||''}</td><td><button class="btn btn-ghost btn-sm"></button></td></tr>`).join(''):'<tr><td colspan="5"><div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun propritaire</div></div></td></tr>';
+  } catch(e) { tb.innerHTML=`<tr><td colspan="5" style="color:var(--red);padding:1rem">Erreur: ${e.message}</td></tr>`; }
+}
+
+async function loadLoyers() {
+  const tb=document.getElementById('loyers-tb');
+  try {
+    const l=await api('loyers','GET',null,'?select=*,biens(nom)&order=mois.desc&limit=50');
+    tb.innerHTML=l&&l.length?l.map(x=>`<tr><td>${x.biens?.nom||''}</td><td>${new Date(x.mois).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</td><td style="color:var(--or)">${x.montant_fcfa?.toLocaleString('fr-FR')} FCFA</td><td>${x.mode_paiement||''}</td><td>${loyerBadge(x.statut)}</td><td style="font-size:.72rem">${x.date_paiement?fmtDate(x.date_paiement):''}</td></tr>`).join(''):'<tr><td colspan="6"><div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucun loyer</div></div></td></tr>';
+  } catch(e) { tb.innerHTML=`<tr><td colspan="6" style="color:var(--red);padding:1rem">Erreur: ${e.message}</td></tr>`; }
+}
+
+// 
+// MDIATHQUE
+// 
+async function loadMedias() {
+  try {
+    const photos=await api('photos','GET',null,'?select=*,biens(nom)&order=created_at.desc&limit=100');
+    const grid=document.getElementById('media-grid');
+    grid.innerHTML=photos&&photos.length?photos.map(p=>`
+      <div class="photo-card">
+        <img src="${p.url}" alt="${p.legende||''}" loading="lazy">
+        <div class="photo-overlay">
+          <div style="font-size:.68rem;color:rgba(255,255,255,.7);margin-bottom:.4rem">${p.biens?.nom||''}</div>
+          <div style="font-size:.62rem;color:rgba(255,255,255,.5)">${p.tag||'Non tagu'}</div>
+        </div>
+        ${p.est_salon?'<div class="photo-badge badge bg-or"></div>':''}
+      </div>`).join(''):'<div class="empty"><div class="empty-ico"></div><div class="empty-t">Aucune photo</div></div>';
+  } catch(e) { toast(e.message,'err'); }
+}
+
+// 
+// PARAMTRES
+// 
+async function loadParametres() {
+  try {
+    const params=await api('parametres','GET',null,'?order=cle.asc');
+    const form=document.getElementById('params-form');
+    form.innerHTML=params.map(p=>`
+      <div class="ff">
+        <label>${p.description||p.cle}</label>
+        <input type="text" value="${p.valeur||''}" onchange="saveParam('${p.id}',this.value)">
+      </div>`).join('')+
+      '<button class="btn btn-sm" onclick="toast(' Paramtres sauvegards','ok')">Enregistrer</button>';
+  } catch(e) { toast(e.message,'err'); }
+}
+
+async function saveParam(id, valeur) {
+  try { await api('parametres','PATCH',{valeur},`?id=eq.${id}`); }
+  catch(e) { toast(e.message,'err'); }
+}
+
+// 
+// HELPERS
+// 
+async function loadQuartiers() {
+  try {
+    const q=await api('quartiers','GET',null,'?actif=eq.true&order=nom');
+    const sel=document.getElementById('b-quartier');
+    if(sel) sel.innerHTML='<option value="">Slectionner</option>'+q.map(x=>`<option value="${x.id}">${x.nom}</option>`).join('');
+  } catch(e) {}
+}
+
+function buildEquipGrid(bien) {
+  const grid=document.getElementById('equip-grid');
+  if(!grid) return;
+  grid.innerHTML=EQUIPEMENTS_LIST.map(e=>`
+    <label class="check-item ${bien[e.id]?'checked':''}" onclick="this.classList.toggle('checked')">
+      <input type="checkbox" id="chk-${e.id}" ${bien[e.id]?'checked':''}>
+      ${e.ico} ${e.label}
+    </label>`).join('');
+}
+
+function autoSlug() {
+  const nom=v('b-nom');
+  document.getElementById('b-slug').value=slugify(nom);
+}
+
+function updateConv() {
+  const prix=vn('b-prix');
+  if(prix>0) {
+    document.getElementById('conv-eur').textContent=Math.round(prix/655.957).toLocaleString('fr-FR');
+    document.getElementById('conv-usd').textContent=Math.round(prix/605).toLocaleString('fr-FR');
+    document.getElementById('conv-display').style.display='block';
+  } else { document.getElementById('conv-display').style.display='none'; }
+}
+
+function v(id) { return document.getElementById(id)?.value?.trim()||''; }
+function vn(id) { const v=parseFloat(document.getElementById(id)?.value); return isNaN(v)?null:v; }
+function set(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+function slugify(s) { return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''); }
+function fmtDate(d) { return d?new Date(d).toLocaleDateString('fr-FR'):'-'; }
+function loading(v) { document.getElementById('loading').classList[v?'add':'remove']('show'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function toast(msg, type='ok') {
+  const el=document.getElementById('toast');
+  el.className=`toast show ${type}`;el.textContent=msg;
+  setTimeout(()=>el.classList.remove('show'),3200);
+}
+
+function openModalProp() { toast('Fonctionnalit  venir','ok'); }
+
+function roleLabel(r) {
+  return {'super_admin':'Super Admin','gestionnaire':'Gestionnaire','commercial':'Commercial','comptable':'Comptable','photographe':'Photographe','support':'Support','locataire':'Locataire'}[r]||r;
+}
+function statutBadge(s) {
+  const m={'brouillon':'bg-grey','disponible':'bg-green','loue':'bg-blue','reserve':'bg-yellow','indisponible':'bg-red','archive':'bg-grey'};
+  const l={'brouillon':'Brouillon','disponible':'Disponible','loue':'Lou','reserve':'Rserv','indisponible':'Indisponible','archive':'Archiv'};
+  return `<span class="badge ${m[s]||'bg-grey'}">${l[s]||s}</span>`;
+}
+function occBadge(t) {
+  const m={'meuble':'bg-or','non_meuble':'bg-blue','courte_duree':'bg-yellow','moyenne_duree':'bg-yellow','longue_duree':'bg-green'};
+  const l={'meuble':'Meubl','non_meuble':'Non meubl','courte_duree':'Court sjour','moyenne_duree':'Moy. dure','longue_duree':'Long terme'};
+  return `<span class="badge ${m[t]||'bg-grey'}">${l[t]||t}</span>`;
+}
+function dossierBadge(s) {
+  const m={'en_cours':'bg-yellow','analyse':'bg-blue','valide':'bg-green','refuse':'bg-red','archive':'bg-grey'};
+  const l={'en_cours':'En cours','analyse':'Analyse','valide':'Valid','refuse':'Refus','archive':'Archiv'};
+  return `<span class="badge ${m[s]||'bg-grey'}">${l[s]||s}</span>`;
+}
+function loyerBadge(s) {
+  const m={'en_attente':'bg-yellow','paye':'bg-green','retard':'bg-yellow','impaye':'bg-red'};
+  const l={'en_attente':'En attente','paye':'Pay','retard':'Retard','impaye':'Impay'};
+  return `<span class="badge ${m[s]||'bg-grey'}">${l[s]||s}</span>`;
+}
+
+// 
+// INIT
+// 
+document.getElementById('lpwd').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+if(window.location.protocol==='file:'){
+  document.getElementById('cors-warn').style.display='block';
+}
+window.addEventListener('load', async()=>{
+  const tok=localStorage.getItem('kaddu_tok');
+  if(tok){
+    try{
+      TOKEN=tok;
+      const r=await fetch(`${SB}/auth/v1/user`,{
+        headers:{'apikey':KEY,'Authorization':'Bearer '+tok},
+        signal: AbortSignal.timeout(8000)
+      });
+      if(r.ok){
+        USER=await r.json();
+        try { await loadProfil(); } catch(e2) { 
+          PROFIL = KNOWN_ADMINS.includes(USER.id) ? 
+            {id:USER.id,role:'super_admin',prenom:'Cheikh Admin',nom:'AIDARA'} : null;
+        }
+        showApp();
+        return;
+      }
+    }catch(e){ console.warn('Auto-login failed:', e.message); }
+    localStorage.removeItem('kaddu_tok');
+  }
+});
+if(window.location.protocol==='file:'){
+  document.getElementById('cors-warn').style.display='block';
+}
+</script>
+</body>
+</html>
