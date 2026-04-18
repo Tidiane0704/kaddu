@@ -1448,7 +1448,7 @@ async function loadParametres() {
         <label>${p.description||p.cle}</label>
         <input type="text" value="${p.valeur||''}" onchange="saveParam('${p.id}',this.value)">
       </div>`).join('')+
-      '<button class="btn btn-sm" onclick="toast(' Paramtres sauvegards','ok')">Enregistrer</button>';
+      '<button class="btn btn-sm" onclick="saveParametres()">Enregistrer</button>';
   } catch(e) { toast(e.message,'err'); }
 }
 
@@ -1456,6 +1456,7 @@ async function saveParam(id, valeur) {
   try { await api('parametres','PATCH',{valeur},`?id=eq.${id}`); }
   catch(e) { toast(e.message,'err'); }
 }
+function saveParametres() { toast('Parametres sauvegardes','ok'); }
 
 // 
 // HELPERS
