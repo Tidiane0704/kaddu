@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Dossier V2 — Étape 1</title><style>
+:root{
+  --or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.62);
+  --bdr:rgba(191,150,80,.18);--green:#00C875;--red:#ff9f9f;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt)}
+nav{position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10}
+.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+.sticky{position:sticky;top:78px;background:#0b2039;border:1px solid var(--bdr);padding:14px 16px;z-index:9}
+.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+.box{max-width:980px;margin:18px auto 60px;background:#0b2039;border:1px solid var(--bdr);padding:30px 24px}
+h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}
+h1 em{font-style:italic;color:var(--or)}
+.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.req{color:#ffcc7a}
+input,select,textarea{width:100%;padding:14px 14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:17px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
+textarea{min-height:98px;resize:vertical}
+.error{display:none;color:var(--red);font-size:13px;margin-top:8px}
+.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px}
+.btn1,.btn2,.btn3{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}
+.btn1{background:var(--or);color:#111}
+.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}
+.btn3{background:#25D366;color:#fff}
+.notice{margin-top:18px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7}
+.recap{margin-top:18px;padding:14px 16px;border:1px solid var(--bdr);background:rgba(255,255,255,.03)}
+.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.recap-item{color:var(--muted);line-height:1.6}
+.recap-item strong{display:block;color:var(--txt);font-weight:700}
+.score-box{border:1px solid var(--bdr);background:rgba(191,150,80,.06);padding:18px;text-align:center}
+.score-value{font-family:Georgia,serif;font-size:54px;color:var(--or);line-height:1}
+.score-label{margin-top:6px;color:var(--muted)}
+ul.reason-list{margin:10px 0 0 18px;color:var(--muted);line-height:1.8}
+.ok{color:var(--green);font-weight:700}.ko{color:var(--red);font-weight:700}
+.success{border:1px solid rgba(0,200,117,.25);background:rgba(0,200,117,.07);padding:18px 20px;margin-bottom:18px}
+.success-title{font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+@media(max-width:860px){.row,.recap-grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style></head><body>
+<nav><a class="back" href="javascript:history.back()">← Retour</a><div>Kàddu · Dossier V2</div></nav>
+<div class="top"><div class="sticky"><div class="stepmsg">Étape 1 sur 5 · Identité</div><div id="bienLabel" style="margin-bottom:10px;font-weight:700;">Le Petit Bantukay</div><div class="progress"><div class="fill" style="width:20%"></div></div></div></div>
+<div class="box"><h1>Votre identité <em>essentielle</em></h1><div class="sub">Cette étape collecte le minimum de données critiques à capter tôt pour le moteur antifraude.</div>
+<form id="step1Form" novalidate>
+<div class="row"><div class="field"><label>Nom complet <span class="req">*</span></label><input id="nom" required /></div><div class="field"><label>Téléphone <span class="req">*</span></label><input id="telephone" required /></div></div>
+<div class="row"><div class="field"><label>Numéro WhatsApp <span class="req">*</span></label><input id="numeroWhatsapp" required /></div><div class="field"><label>Email <span class="req">*</span></label><input id="email" type="email" required /></div></div>
+<div class="row"><div class="field"><label>Date de naissance <span class="req">*</span></label><input id="dateNaissance" type="date" required /></div><div class="field"><label>Nationalité <span class="req">*</span></label><input id="nationalite" required /></div></div>
+<div class="row"><div class="field"><label>Date d'entrée souhaitée <span class="req">*</span></label><input id="dateEntree" type="date" required /></div><div class="field"><label>Durée souhaitée <span class="req">*</span></label><select id="duree" required><option value="">Sélectionner</option><option>1 à 3 mois</option><option>3 à 6 mois</option><option>6 à 12 mois</option><option>12 mois et plus</option></select></div></div>
+<div id="formError" class="error">Merci de renseigner tous les champs obligatoires.</div>
+<div class="navbtns"><a class="btn2" href="javascript:history.back()">← Retour</a><button class="btn1" type="submit">Continuer</button></div></form>
+<div class="notice">Après validation de cette étape, le parcours passe par l’écran OTP sandbox avant l’étape 2.</div></div>
+<script>
+const qp = new URLSearchParams(location.search); const bien = qp.get("bien") || "bantukay";
+const labels = { bantukay:"Le Petit Bantukay", nopalukay:"Le Petit Nopalukay", suxalikay:"Le Petit Suxalikay" };
+document.getElementById("bienLabel").textContent = labels[bien] || bien;
+document.getElementById("step1Form").addEventListener("submit", function(e){
+  e.preventDefault();
+  const ids = ["nom","telephone","numeroWhatsapp","email","dateNaissance","nationalite","dateEntree","duree"];
+  const vals = Object.fromEntries(ids.map(id => [id, document.getElementById(id).value.trim()]));
+  if (Object.values(vals).some(v => !v)) { document.getElementById("formError").style.display = "block"; return; }
+  vals.bien = bien;
+  vals.prequal = { referrer: document.referrer || "direct", userAgent: navigator.userAgent, screen: window.innerWidth + "x" + window.innerHeight, submittedAt: new Date().toISOString() };
+  localStorage.setItem("kaddu_v2_step1", JSON.stringify(vals));
+  localStorage.removeItem("kaddu_otp_verified");
+  window.location.href = "dossier-v2-otp.html?bien=" + encodeURIComponent(bien);
+});
+</script></body></html>

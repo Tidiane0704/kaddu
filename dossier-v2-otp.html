@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Dossier V2 — OTP</title><style>
+:root{
+  --or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.62);
+  --bdr:rgba(191,150,80,.18);--green:#00C875;--red:#ff9f9f;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt)}
+nav{position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10}
+.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+.sticky{position:sticky;top:78px;background:#0b2039;border:1px solid var(--bdr);padding:14px 16px;z-index:9}
+.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+.box{max-width:980px;margin:18px auto 60px;background:#0b2039;border:1px solid var(--bdr);padding:30px 24px}
+h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}
+h1 em{font-style:italic;color:var(--or)}
+.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.req{color:#ffcc7a}
+input,select,textarea{width:100%;padding:14px 14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:17px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
+textarea{min-height:98px;resize:vertical}
+.error{display:none;color:var(--red);font-size:13px;margin-top:8px}
+.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px}
+.btn1,.btn2,.btn3{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}
+.btn1{background:var(--or);color:#111}
+.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}
+.btn3{background:#25D366;color:#fff}
+.notice{margin-top:18px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7}
+.recap{margin-top:18px;padding:14px 16px;border:1px solid var(--bdr);background:rgba(255,255,255,.03)}
+.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.recap-item{color:var(--muted);line-height:1.6}
+.recap-item strong{display:block;color:var(--txt);font-weight:700}
+.score-box{border:1px solid var(--bdr);background:rgba(191,150,80,.06);padding:18px;text-align:center}
+.score-value{font-family:Georgia,serif;font-size:54px;color:var(--or);line-height:1}
+.score-label{margin-top:6px;color:var(--muted)}
+ul.reason-list{margin:10px 0 0 18px;color:var(--muted);line-height:1.8}
+.ok{color:var(--green);font-weight:700}.ko{color:var(--red);font-weight:700}
+.success{border:1px solid rgba(0,200,117,.25);background:rgba(0,200,117,.07);padding:18px 20px;margin-bottom:18px}
+.success-title{font-size:18px;font-weight:700;color:var(--green);margin-bottom:8px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+@media(max-width:860px){.row,.recap-grid{grid-template-columns:1fr}h1{font-size:34px}}
+</style></head><body>
+<nav><a class="back" href="dossier-v2-step1.html">← Retour</a><div>Kàddu · OTP sandbox</div></nav>
+<div class="top"><div class="sticky"><div class="stepmsg">Étape intermédiaire · Vérification téléphone</div><div id="bienLabel" style="margin-bottom:10px;font-weight:700;">Le Petit Bantukay</div><div class="progress"><div class="fill" style="width:30%"></div></div></div></div>
+<div class="box"><h1>Vérification <em>du téléphone</em></h1><div class="sub">Cette étape ne déclenche aucun SMS réel. Elle simule l’OTP intelligent avant l’étape 2.</div>
+<div class="recap"><div class="recap-title">Décision OTP</div><div id="otpDecision" class="ko">Analyse en cours…</div><ul id="reasonList" class="reason-list"></ul></div>
+<div class="recap"><div class="recap-title">Téléphone concerné</div><div id="phoneValue" class="recap-item">—</div><div class="notice" id="mockInfo" style="display:none;margin-top:12px"><strong>Code sandbox :</strong> <span id="mockCode">123456</span></div></div>
+<div class="field"><label>Code OTP</label><input id="otpCode" placeholder="Ex : 123456" /></div>
+<div class="navbtns"><button class="btn2" id="startBtn" type="button">Recevoir le code</button><button class="btn1" id="verifyBtn" type="button">Vérifier le code</button></div>
+<div id="resultBox" class="notice" style="display:none"></div></div>
+<script src="kaddu-otp-sandbox.js"></script><script>
+const qp = new URLSearchParams(location.search); const bien = qp.get("bien") || "bantukay";
+const labels = { bantukay:"Le Petit Bantukay", nopalukay:"Le Petit Nopalukay", suxalikay:"Le Petit Suxalikay" };
+document.getElementById("bienLabel").textContent = labels[bien] || bien;
+const payload = KadduOtpSandbox.loadSteps(); const decision = KadduOtpSandbox.shouldRequireOtp(payload); const step1 = payload.step1 || {};
+const phone = step1.telephone || ""; const otpDecision = document.getElementById("otpDecision"); const reasonList = document.getElementById("reasonList");
+document.getElementById("phoneValue").textContent = phone || "Téléphone non renseigné";
+if (decision.required) {
+  otpDecision.innerHTML = '<span class="ko">OTP requis</span>';
+  decision.reasons.forEach(r => { const li = document.createElement("li"); li.textContent = r; reasonList.appendChild(li); });
+} else {
+  otpDecision.innerHTML = '<span class="ok">OTP non requis, mais testable en sandbox</span>';
+  const li = document.createElement("li"); li.textContent = "Aucun signal critique ne déclenche l’OTP dans cette simulation."; reasonList.appendChild(li);
+}
+document.getElementById("startBtn").addEventListener("click", function(){
+  if (!phone) { const box = document.getElementById("resultBox"); box.style.display = "block"; box.innerHTML = '<span class="ko">Impossible : téléphone absent de l’étape 1.</span>'; return; }
+  const res = KadduOtpSandbox.startOtp(phone); document.getElementById("mockInfo").style.display = "block"; document.getElementById("mockCode").textContent = res.code;
+  const box = document.getElementById("resultBox"); box.style.display = "block"; box.innerHTML = '<span class="ok">OTP sandbox généré pour le numéro saisi.</span>';
+});
+document.getElementById("verifyBtn").addEventListener("click", function(){
+  const code = document.getElementById("otpCode").value.trim(); const res = KadduOtpSandbox.verifyOtp(phone, code); const box = document.getElementById("resultBox"); box.style.display = "block";
+  if (res.success) { box.innerHTML = '<span class="ok">OTP validé. Passage à l’étape 2…</span>'; setTimeout(() => { window.location.href = "dossier-v2-step2.html?bien=" + encodeURIComponent(bien); }, 500); }
+  else { box.innerHTML = '<span class="ko">Code invalide.</span>'; }
+});
+</script></body></html>
