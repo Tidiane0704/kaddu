@@ -623,8 +623,16 @@
         comment: comment || reason || null
       });
 
-      await init();
-    }
+      const currentId = selectedId;
+
+await init();
+
+// réouvrir le bon dossier
+const updated = allRows.find(r => r.id === currentId);
+if (updated) {
+  selectedId = currentId;
+  renderDetail(updated);
+}
 
     async function init(){
       try{
