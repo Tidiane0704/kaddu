@@ -70,6 +70,7 @@
     .history-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
     .history-item:last-child{border-bottom:none}
     .action-help{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
+    .success-note{display:none;margin-top:12px;padding:10px 12px;border:1px solid rgba(0,200,117,.35);background:rgba(0,200,117,.1);color:#77ffbe}
     @media (max-width:1200px){.toolbar{grid-template-columns:1fr 1fr}.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
     @media (max-width:760px){.toolbar{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.hero{display:block}.hero h1{font-size:38px}.grid{grid-template-columns:1fr}}
   </style>
@@ -197,6 +198,7 @@
               <button class="btn-ghost" id="btnArchive">Archiver</button>
             </div>
             <div class="action-help">Le refus exige un motif. Chaque action crée un événement d’historique.</div>
+            <div class="success-note" id="successNote">Statut mis à jour avec succès.</div>
           </div>
 
           <div class="section">
@@ -337,6 +339,16 @@
         internal_comment_added: "Commentaire interne ajouté"
       };
       return map[type] || type || "Événement";
+    }
+
+    function showSuccess(message = "Statut mis à jour avec succès."){
+      const el = document.getElementById("successNote");
+      el.textContent = message;
+      el.style.display = "block";
+      clearTimeout(showSuccess._timer);
+      showSuccess._timer = setTimeout(() => {
+        el.style.display = "none";
+      }, 2500);
     }
 
     async function fetchDossiers(){
@@ -585,7 +597,8 @@
         return;
       }
 
-      const currentRow = allRows.find(r => r.id === selectedId);
+      const currentId = selectedId;
+      const currentRow = allRows.find(r => r.id === currentId);
       const oldStatus = currentRow?.status_metier || "nouveau";
 
       const payload = {
@@ -597,7 +610,7 @@
       };
 
       const res = await fetch(
-        SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rental_dossiers?id=eq." + selectedId,
+        SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rental_dossiers?id=eq." + currentId,
         {
           method: "PATCH",
           headers: {
@@ -616,23 +629,30 @@
       }
 
       await createDossierEvent({
-        dossierId: selectedId,
+        dossierId: currentId,
         eventType: "status_metier_changed",
         oldValue: oldStatus,
         newValue: newStatus,
         comment: comment || reason || null
       });
 
-      const currentId = selectedId;
+      // Évite l'effet "dossier disparu" si un filtre métier actif exclut le nouveau statut
+      document.getElementById("metierFilter").value = "";
 
-await init();
+      await init();
 
-// réouvrir le bon dossier
-const updated = allRows.find(r => r.id === currentId);
-if (updated) {
-  selectedId = currentId;
-  renderDetail(updated);
-}
+      const updated = allRows.find(r => r.id === currentId);
+
+      if (updated) {
+        selectedId = currentId;
+        renderTable();
+        renderDetail(updated);
+        showSuccess(`Statut mis à jour : ${metierLabel(newStatus)}`);
+      } else {
+        selectedId = null;
+        renderTable();
+      }
+    }
 
     async function init(){
       try{
