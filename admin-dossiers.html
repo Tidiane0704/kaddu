@@ -6,7 +6,7 @@
   <title>Kàddu Admin — Dossiers</title>
   <style>
     :root{
-      --or:#BF9650;--nbl:#07182B;--panel:#0E243F;--txt:#F8F4EE;--muted:rgba(248,244,238,.62);
+      --or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.62);
       --bdr:rgba(191,150,80,.18);--green:#00C875;--red:#FF6B6B;--orange:#F5A623;
     }
     *{box-sizing:border-box}
@@ -14,9 +14,10 @@
     nav{position:sticky;top:0;z-index:20;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
     .brand{font-family:Georgia,serif;font-size:32px;color:var(--or)}
     .nav-actions{display:flex;gap:10px;align-items:center}
-    .btn,.btn-ghost{padding:12px 14px;border:none;cursor:pointer;font-weight:700}
+    .btn,.btn-ghost,.btn-wa{padding:12px 14px;border:none;cursor:pointer;font-weight:700;text-decoration:none;display:inline-block}
     .btn{background:var(--or);color:#111}
     .btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--bdr)}
+    .btn-wa{background:#25D366;color:#fff}
     .wrap{max-width:1440px;margin:0 auto;padding:22px}
     .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:20px}
     .hero h1{font-family:Georgia,serif;font-size:48px;font-weight:400;margin:0}
@@ -55,6 +56,7 @@
     .reason-list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
     .empty{padding:32px;color:var(--muted);text-align:center}
     .footer-note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.7}
+    .detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     @media (max-width:1100px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
     @media (max-width:760px){.toolbar{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.hero{display:block}.hero h1{font-size:38px}.grid{grid-template-columns:1fr}}
   </style>
@@ -183,8 +185,12 @@
             <ul class="reason-list" id="reasonList"></ul>
           </div>
 
+          <div class="detail-actions">
+            <a href="#" class="btn-wa" id="waLink" target="_blank" rel="noopener noreferrer">Contacter sur WhatsApp</a>
+          </div>
+
           <div class="footer-note">
-            Cette première version est volontairement orientée consultation. On pourra ajouter ensuite :
+            Cette première version est orientée consultation. On pourra ajouter ensuite :
             validation, refus, changement de statut métier, relance WhatsApp, et archivage.
           </div>
         </div>
@@ -194,7 +200,8 @@
 
   <script>
     const SUPABASE_URL = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJpc3MiLCJyZWYiOiJtanJtYm5hcGRwa3Vna3duYmhjeiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzc2NDU1NDExLCJleHAiOjIwOTIwMzE0MTF9.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE";
+
     let allRows = [];
     let filteredRows = [];
     let selectedId = null;
@@ -214,12 +221,20 @@
     }
 
     function statusLabel(status){
-      const map = { faible_risque: "Faible risque", risque_modere: "Risque modéré", risque_eleve: "Risque élevé" };
+      const map = {
+        faible_risque: "Faible risque",
+        risque_modere: "Risque modéré",
+        risque_eleve: "Risque élevé"
+      };
       return map[status] || status || "—";
     }
 
     function bienLabel(bien){
-      const map = { bantukay: "Bantukay", nopalukay: "Nopalukay", suxalikay: "Suxalikay" };
+      const map = {
+        bantukay: "Bantukay",
+        nopalukay: "Nopalukay",
+        suxalikay: "Suxalikay"
+      };
       return map[bien] || bien || "—";
     }
 
@@ -231,9 +246,11 @@
           "Authorization": "Bearer " + SUPABASE_ANON_KEY
         }
       });
+
       const text = await res.text();
       let data = [];
       try { data = text ? JSON.parse(text) : []; } catch(e) { data = []; }
+
       if(!res.ok){
         throw new Error(typeof data === "string" ? data : JSON.stringify(data));
       }
@@ -247,7 +264,11 @@
       const sort = document.getElementById("sortFilter").value;
 
       filteredRows = allRows.filter(row => {
-        const hay = [row.nom, row.email, row.telephone, row.employeur, row.bien, row.numero_whatsapp, row.pays_residence].join(" ").toLowerCase();
+        const hay = [
+          row.nom, row.email, row.telephone, row.employeur, row.bien,
+          row.numero_whatsapp, row.pays_residence
+        ].join(" ").toLowerCase();
+
         const okSearch = !q || hay.includes(q);
         const okBien = !bien || row.bien === bien;
         const okStatus = !status || row.status === status;
@@ -364,6 +385,12 @@
           reasonList.appendChild(li);
         });
       }
+
+      const phone = row.numero_whatsapp || row.telephone || "";
+      const msg = `Bonjour ${row.nom || ""}, je reviens vers vous concernant votre dossier pour ${bienLabel(row.bien)}.`;
+      document.getElementById("waLink").href = phone
+        ? `https://wa.me/${String(phone).replace(/[^\d]/g, "")}?text=${encodeURIComponent(msg)}`
+        : "#";
     }
 
     async function init(){
