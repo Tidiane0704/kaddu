@@ -1,0 +1,4 @@
+window.KADDU_SUPABASE = {
+  url: "https://mjrmbnapdpkugkwnbhcz.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE"
+};
