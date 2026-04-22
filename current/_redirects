@@ -1,1 +1,3 @@
-
+/admin   /admin.html   200
+/test   /test-login.html   200
+/   /tunnel/dossier-v2-step1.html   301
