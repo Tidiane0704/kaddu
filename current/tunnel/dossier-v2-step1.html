@@ -451,13 +451,38 @@
 
 <script>
   const qp = new URLSearchParams(location.search);
-  const bien = qp.get("bien") || "bantukay";
-  const labels = {
+  // Accepte le nom complet depuis l'URL (ex: "Le petit Bantukay") ou le slug court
+  const slugMap = {
     bantukay:"Le Petit Bantukay",
     nopalukay:"Le Petit Nopalukay",
     suxalikay:"Le Petit Suxalikay"
   };
-  document.getElementById("bienLabel").textContent = labels[bien] || bien;
+  let bienRaw = qp.get("bien") || "";
+  // Si c'est un slug court, le mapper; sinon conserver le nom complet
+  const bien = slugMap[bienRaw.toLowerCase()] || bienRaw || "Le Petit Bantukay";
+  document.getElementById("bienLabel").textContent = bien;
+
+  // Re-population des champs depuis localStorage si l'utilisateur revient en arrière
+  (function prefillFromStorage(){
+    try {
+      const saved = JSON.parse(localStorage.getItem("kaddu_v2_step1") || "{}");
+      if(!saved || !saved.nom) return;
+      const fields = ["nom","email","nationalite","duree"];
+      fields.forEach(id => { if(saved[id]) { const el = document.getElementById(id); if(el) el.value = saved[id]; } });
+      // Téléphone
+      if(saved.telephoneCode) { const el = document.getElementById("telephoneCode"); if(el) el.value = saved.telephoneCode; }
+      if(saved.telephoneLocal) { const el = document.getElementById("telephoneLocal"); if(el) el.value = saved.telephoneLocal; }
+      if(saved.numeroWhatsappCode) { const el = document.getElementById("whatsappCode"); if(el) el.value = saved.numeroWhatsappCode; }
+      if(saved.numeroWhatsappLocal) { const el = document.getElementById("numeroWhatsappLocal"); if(el) el.value = saved.numeroWhatsappLocal; }
+      // Dates
+      if(saved.dateNaissanceDisplay) { const el = document.getElementById("dateNaissance"); if(el) el.value = saved.dateNaissanceDisplay; }
+      if(saved.dateEntreeDisplay) { const el = document.getElementById("dateEntree"); if(el) el.value = saved.dateEntreeDisplay; }
+      // Même WhatsApp checkbox
+      if(saved.telephone && saved.numeroWhatsapp && saved.telephone === saved.numeroWhatsapp) {
+        const cb = document.getElementById("sameWhatsapp"); if(cb) cb.checked = true;
+      }
+    } catch(e){}
+  })();
 
   const form = document.getElementById("step1Form");
   const sameWhatsapp = document.getElementById("sameWhatsapp");
@@ -765,7 +790,7 @@
       dateEntree: toIsoDate(dateEntree.value.trim()),
       dateEntreeDisplay: dateEntree.value.trim(),
       duree: document.getElementById("duree").value.trim(),
-      bien: bien,
+      bien: bien, // nom complet persisté
       prequal: {
         referrer: document.referrer || "direct",
         userAgent: navigator.userAgent,
