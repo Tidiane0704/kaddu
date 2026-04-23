@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kàddu — Vérification du numéro</title>
+<style>
+:root{
+  --or:#BF9650; --nbl:#07182B; --txt:#F8F4EE; --muted:rgba(248,244,238,.68);
+  --bdr:rgba(191,150,80,.18); --green:#00C875; --red:#ff6b6b;
+  --card:#0b2039;
+}
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);margin:0}
+nav{
+  position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;
+  justify-content:space-between;align-items:center;z-index:10
+}
+.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+.sticky{
+  position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);
+  padding:14px 16px;z-index:9
+}
+.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+.box{max-width:980px;margin:18px auto 60px;background:var(--card);border:1px solid var(--bdr);padding:30px 24px}
+h1{font-family:Georgia,serif;font-size:36px;font-weight:400;margin:0 0 8px}
+h1 em{font-style:italic;color:var(--or)}
+.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
+.sandbox-badge{
+  display:inline-block;padding:6px 12px;background:rgba(255,204,122,.12);
+  border:1px solid rgba(255,204,122,.30);color:#ffcc7a;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px
+}
+.phone-display{
+  padding:16px 18px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);
+  font-size:18px;font-weight:700;letter-spacing:.06em;margin-bottom:6px
+}
+.phone-sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.otp-row{display:flex;gap:10px;margin-bottom:8px}
+.otp-input{
+  width:54px;height:62px;text-align:center;font-size:26px;font-weight:700;
+  background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);
+  letter-spacing:0
+}
+.otp-input:focus{outline:none;border-color:var(--or)}
+.otp-input.filled{border-color:rgba(0,200,117,.45)}
+.hint-code{
+  margin-bottom:24px;padding:12px 14px;
+  background:rgba(0,200,117,.06);border:1px solid rgba(0,200,117,.20);
+  font-size:13px;color:var(--muted)
+}
+.hint-code strong{color:var(--green);font-size:16px;letter-spacing:.15em}
+.error-msg{display:none;color:var(--red);font-size:13px;margin-bottom:14px;padding:10px 12px;border:1px solid rgba(255,107,107,.25);background:rgba(255,107,107,.06)}
+.btn1{
+  padding:14px 22px;background:var(--or);color:#111;border:none;
+  font-weight:700;cursor:pointer;font-size:16px;width:100%;max-width:320px
+}
+.btn1:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{
+  display:block;margin-top:16px;background:none;border:none;color:var(--muted);
+  cursor:pointer;font-size:13px;text-decoration:underline;padding:0
+}
+.success-block{
+  display:none;padding:18px;background:rgba(0,200,117,.08);
+  border:1px solid rgba(0,200,117,.25);border-left:4px solid var(--green);margin-top:24px
+}
+.success-block strong{display:block;font-size:15px;margin-bottom:4px}
+.success-block span{color:var(--muted);font-size:13px}
+.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:28px}
+.btn2{padding:14px 16px;text-decoration:none;border:1px solid var(--bdr);background:transparent;color:var(--txt);font-weight:700;display:inline-block}
+@media(max-width:600px){h1{font-size:28px}.otp-input{width:44px;height:54px;font-size:22px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="back" id="navBack" href="dossier-v2-step1.html">← Retour</a>
+  <div>Kàddu · Vérification du numéro</div>
+</nav>
+
+<div class="top">
+  <div class="sticky">
+    <div class="stepmsg">Vérification · Entre l'étape 1 et 2</div>
+    <div id="bienLabel" style="margin-bottom:4px;font-weight:700;"></div>
+    <div class="progress"><div class="fill" style="width:28%"></div></div>
+  </div>
+</div>
+
+<div class="box">
+  <div class="sandbox-badge">⚠ Mode sandbox — vérification simulée</div>
+  <h1>Confirmer votre <em>numéro</em></h1>
+  <div class="sub">
+    Un code de vérification a été envoyé au numéro renseigné à l'étape précédente.
+    Saisissez-le ci-dessous pour continuer.
+  </div>
+
+  <div class="phone-display" id="phoneDisplay">—</div>
+  <div class="phone-sub">Numéro sur lequel le code a été envoyé (WhatsApp / SMS)</div>
+
+  <div class="hint-code" id="hintCode">
+    Mode sandbox actif — le code de vérification est : <strong id="sandboxCode">—</strong><br>
+    <span style="font-size:12px;opacity:.7">(En production, ce code sera envoyé par SMS ou WhatsApp)</span>
+  </div>
+
+  <div class="otp-row" id="otpRow">
+    <input class="otp-input" id="d1" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+    <input class="otp-input" id="d2" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+    <input class="otp-input" id="d3" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+    <input class="otp-input" id="d4" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+    <input class="otp-input" id="d5" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+    <input class="otp-input" id="d6" maxlength="1" inputmode="numeric" pattern="[0-9]"/>
+  </div>
+
+  <div class="error-msg" id="errorMsg">Code incorrect. En mode sandbox, utilisez le code affiché ci-dessus.</div>
+
+  <button class="btn1" id="verifyBtn" disabled>Vérifier le code</button>
+  <button class="btn-ghost" id="resendBtn">Renvoyer le code</button>
+
+  <div class="success-block" id="successBlock">
+    <strong>✔ Numéro vérifié</strong>
+    <span>Vous allez être redirigé vers l'étape 2…</span>
+  </div>
+
+  <div class="navbtns">
+    <a class="btn2" id="backBtn" href="dossier-v2-step1.html">← Modifier mon numéro</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const qp = new URLSearchParams(location.search);
+  const step1 = JSON.parse(localStorage.getItem('kaddu_v2_step1') || '{}');
+  const bien = qp.get('bien') || step1.bien || '';
+
+  // Bien label + nav back
+  if(bien) {
+    const lbl = document.getElementById('bienLabel');
+    if(lbl) lbl.textContent = bien;
+    const navBack = document.getElementById('navBack');
+    if(navBack) navBack.href = 'dossier-v2-step1.html?bien=' + encodeURIComponent(bien);
+    const backBtn = document.getElementById('backBtn');
+    if(backBtn) backBtn.href = 'dossier-v2-step1.html?bien=' + encodeURIComponent(bien);
+  }
+
+  // Afficher le numéro
+  const phone = step1.numeroWhatsapp || step1.telephone || '—';
+  document.getElementById('phoneDisplay').textContent = phone;
+
+  // Générer code sandbox fixe (4 derniers chiffres du numéro + 2 aléatoires)
+  function generateSandboxCode(){
+    const digits = phone.replace(/\D/g,'');
+    const suffix = digits.slice(-4) || '0000';
+    // Code = 6 chiffres : 2 fixes + 4 derniers du numéro
+    const prefix = String(Math.floor(10 + Math.random() * 90));
+    return prefix + suffix;
+  }
+
+  const SANDBOX_CODE = generateSandboxCode();
+  document.getElementById('sandboxCode').textContent = SANDBOX_CODE;
+
+  // OTP inputs — navigation auto
+  const inputs = Array.from(document.querySelectorAll('.otp-input'));
+
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', (e) => {
+      // Ne garder que les chiffres
+      inp.value = inp.value.replace(/\D/g,'').slice(0,1);
+      if(inp.value) {
+        inp.classList.add('filled');
+        if(i < inputs.length - 1) inputs[i+1].focus();
+      } else {
+        inp.classList.remove('filled');
+      }
+      updateVerifyBtn();
+      document.getElementById('errorMsg').style.display = 'none';
+    });
+
+    inp.addEventListener('keydown', (e) => {
+      if(e.key === 'Backspace' && !inp.value && i > 0){
+        inputs[i-1].focus();
+        inputs[i-1].value = '';
+        inputs[i-1].classList.remove('filled');
+      }
+    });
+
+    // Coller le code complet
+    inp.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
+      pasted.split('').forEach((ch, j) => {
+        if(inputs[j]) {
+          inputs[j].value = ch;
+          inputs[j].classList.add('filled');
+        }
+      });
+      if(inputs[pasted.length - 1]) inputs[pasted.length - 1].focus();
+      updateVerifyBtn();
+    });
+  });
+
+  function getEnteredCode(){
+    return inputs.map(i => i.value).join('');
+  }
+
+  function updateVerifyBtn(){
+    document.getElementById('verifyBtn').disabled = getEnteredCode().length < 6;
+  }
+
+  document.getElementById('verifyBtn').addEventListener('click', () => {
+    const entered = getEnteredCode();
+    if(entered !== SANDBOX_CODE){
+      document.getElementById('errorMsg').style.display = 'block';
+      inputs.forEach(i => { i.classList.remove('filled'); i.value = ''; });
+      inputs[0].focus();
+      return;
+    }
+    // Succès
+    localStorage.setItem('kaddu_otp_verified', JSON.stringify({
+      verifiedAt: new Date().toISOString(),
+      phone: phone,
+      sandbox: true
+    }));
+    document.getElementById('verifyBtn').disabled = true;
+    document.getElementById('verifyBtn').textContent = 'Code vérifié ✔';
+    document.getElementById('successBlock').style.display = 'block';
+    document.getElementById('errorMsg').style.display = 'none';
+    document.getElementById('resendBtn').style.display = 'none';
+
+    setTimeout(() => {
+      window.location.href = 'dossier-v2-step2.html' + (bien ? '?bien=' + encodeURIComponent(bien) : '');
+    }, 1400);
+  });
+
+  // Focus premier champ
+  document.getElementById('d1').focus();
+
+  // Renvoyer le code (sandbox : affiche juste un message)
+  let resendCount = 0;
+  document.getElementById('resendBtn').addEventListener('click', () => {
+    resendCount++;
+    const btn = document.getElementById('resendBtn');
+    btn.textContent = 'Code renvoyé ✔ (code inchangé en mode sandbox)';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Renvoyer le code';
+      btn.disabled = false;
+    }, 4000);
+  });
+})();
+</script>
+</body>
+</html>
