@@ -79,7 +79,7 @@ textarea{min-height:96px;resize:vertical}
 <body>
 
 <nav>
-  <a class="back" href="dossier-v2-step2.html">← Retour</a>
+  <a class="back" id="navBack" href="dossier-v2-step2.html">← Retour</a>
   <div>Kàddu · Votre situation actuelle</div>
 </nav>
 
@@ -415,6 +415,17 @@ textarea{min-height:96px;resize:vertical}
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Bien context
+    const qp = new URLSearchParams(location.search);
+    const step1Data = JSON.parse(localStorage.getItem('kaddu_v2_step1') || '{}');
+    const bien = qp.get('bien') || step1Data.bien || '';
+    if(bien) {
+      const lbl = document.getElementById('bienLabel');
+      if(lbl) lbl.textContent = bien;
+      const navBack = document.getElementById('navBack');
+      if(navBack) navBack.href = 'dossier-v2-step2.html?bien=' + encodeURIComponent(bien);
+    }
+
     if(window.KadduV2 && KadduV2.setHeader) KadduV2.setHeader();
     setRecap();
 
@@ -437,12 +448,19 @@ textarea{min-height:96px;resize:vertical}
     e.preventDefault();
     if(!validate()) return;
 
+    const qp2 = new URLSearchParams(location.search);
+    const step1Data2 = JSON.parse(localStorage.getItem('kaddu_v2_step1') || '{}');
+    const bienSubmit = qp2.get('bien') || step1Data2.bien || '';
+
     const data = {
       logementActuel: logementActuel.value,
       ancienneteLogement: ancienneteLogement.value,
       motifDepart: motifDepart.value,
       motifDepartAutre: motifDepartAutre.value.trim(),
+      // motifAffiche : valeur lisible pour le récap Step5
+      motifAffiche: motifDepart.value === 'Autre' ? (motifDepartAutre.value.trim() || 'Autre') : motifDepart.value,
       nombreOccupants: nombreOccupants.value,
+      nombreOccupantsLabel: nombreOccupants.value ? nombreOccupants.value + (Number(nombreOccupants.value) > 1 ? ' occupants' : ' occupant') : '',
       nomBailleur: nomBailleur.value.trim(),
       contactBailleur: contactBailleur.value.trim(),
       nomGarant: nomGarant.value.trim(),
@@ -455,7 +473,7 @@ textarea{min-height:96px;resize:vertical}
       location.href = 'dossier-v2-step4.html?bien=' + encodeURIComponent(KadduV2.getBien());
     } else {
       localStorage.setItem('kaddu_v2_step3', JSON.stringify(data));
-      location.href = 'dossier-v2-step4.html';
+      location.href = 'dossier-v2-step4.html' + (bienSubmit ? '?bien=' + encodeURIComponent(bienSubmit) : '');
     }
   });
 })();
