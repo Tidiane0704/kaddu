@@ -276,6 +276,23 @@ h1 em{font-style:italic;color:var(--or)}
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE";
   // ────────────────────────────────────────────────────────
 
+  // ── HELPERS ─────────────────────────────────────────────
+  function safeDate(val){
+    if(!val) return null;
+    // Accepte ISO (YYYY-MM-DD) ou FR (DD/MM/YYYY)
+    const iso = String(val).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if(iso) return val;
+    const fr = String(val).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if(fr) return fr[3] + '-' + fr[2] + '-' + fr[1];
+    return null;
+  }
+  function safeNum(val){
+    if(!val) return null;
+    const n = Number(String(val).replace(/\D/g,''));
+    return isNaN(n) || n === 0 ? null : n;
+  }
+  // ────────────────────────────────────────────────────────
+
   function computeScore(){
     // Score interne calculé côté client — repris depuis step2 et step3
     let score = 0;
@@ -377,16 +394,16 @@ h1 em{font-style:italic;color:var(--or)}
       email:            step1.email || null,
       telephone:        step1.telephone || null,
       numero_whatsapp:  step1.numeroWhatsapp || step1.telephone || null,
-      date_naissance:   step1.dateNaissance || null,
+      date_naissance:   safeDate(step1.dateNaissance),
       nationalite:      step1.nationalite || null,
-      date_entree:      step1.dateEntree || null,
+      date_entree:      safeDate(step1.dateEntree),
       duree:            step1.duree || null,
 
       // Step 2 — Situation financière
       situation:         step2.situation || null,
-      revenu_mensuel:    step2.revenu ? Number(step2.revenu) : null,
+      revenu_mensuel:    safeNum(step2.revenu),
       employeur:         step2.employeur || null,
-      date_debut_emploi: step2.dateDebutEmploi || null,
+      date_debut_emploi: safeDate(step2.dateDebutEmploi),
       pays_residence:    step2.paysResidence || null,
       garant:            step2.garant || null,
       identite_garant:   step2.activite || step2.sourceRevenus || null,
