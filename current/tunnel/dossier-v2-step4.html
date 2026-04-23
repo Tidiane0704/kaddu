@@ -75,7 +75,7 @@ input:focus{outline:none;border-color:var(--or)}
 <body>
 
 <nav>
-  <a class="back" href="dossier-v2-step3.html">← Retour</a>
+  <a class="back" id="navBack" href="dossier-v2-step3.html">← Retour</a>
   <div>Kàddu · Pièces justificatives</div>
 </nav>
 
@@ -159,9 +159,9 @@ input:focus{outline:none;border-color:var(--or)}
         <div class="file-ok" id="ok3"></div>
       </div>
 
-      <label>Contact de l’ancien bailleur <span class="req">*</span></label>
+      <label>Contact du bailleur actuel ou précédent</label>
       <input id="bailleur" placeholder="Téléphone ou email"/>
-      <div class="help" style="color:var(--muted);font-size:13px;margin-top:6px;">Facultatif dans l’usage, mais recommandé pour compléter le dossier.</div>
+      <div class="help" style="color:var(--muted);font-size:13px;margin-top:6px;">Si disponible, un contact de bailleur aide à accélérer l’étude de votre dossier.</div>
 
       <div class="upload-card">
         <div class="upload-top">
@@ -186,7 +186,7 @@ input:focus{outline:none;border-color:var(--or)}
       <div class="formError" id="formError">Merci de compléter les informations obligatoires.</div>
 
       <div class="navbtns">
-        <a class="btn2" href="dossier-v2-step3.html">← Retour</a>
+        <a class="btn2" id="navBtnBack" href="dossier-v2-step3.html">← Retour</a>
         <button class="btn1" type="submit">Continuer</button>
       </div>
     </form>
@@ -197,30 +197,50 @@ input:focus{outline:none;border-color:var(--or)}
 (function(){
   const step2 = JSON.parse(localStorage.getItem('kaddu_v2_step2') || '{}');
   const step3 = JSON.parse(localStorage.getItem('kaddu_v2_step3') || '{}');
+  const step4prev = JSON.parse(localStorage.getItem('kaddu_v2_step4') || '{}');
+
+  // Bien context
+  const qp = new URLSearchParams(location.search);
+  const step1Data = JSON.parse(localStorage.getItem('kaddu_v2_step1') || '{}');
+  const bien = qp.get('bien') || step1Data.bien || '';
+  if(bien) {
+    const lbl = document.getElementById('bienLabel');
+    if(lbl) lbl.textContent = bien;
+    const navBack = document.getElementById('navBack');
+    if(navBack) navBack.href = 'dossier-v2-step3.html?bien=' + encodeURIComponent(bien);
+    const navBtnBack = document.getElementById('navBtnBack');
+    if(navBtnBack) navBtnBack.href = 'dossier-v2-step3.html?bien=' + encodeURIComponent(bien);
+  }
 
   function setSummary(){
     document.getElementById('sumSituation').textContent = step2.situation || '—';
     document.getElementById('sumGarant').textContent = step2.garant || '—';
     document.getElementById('sumLogement').textContent = step3.logementActuel || '—';
-    document.getElementById('sumMotif').textContent = step3.motifDepart || '—';
+    document.getElementById('sumMotif').textContent = step3.motifAffiche || step3.motifDepart || '—';
   }
 
   function setProfessionalDocGuidance(){
     const s = step2.situation || '';
     const desc = document.getElementById('proDesc');
-    const guidance = document.getElementById('docGuidance');
-
     if(s === 'Salarié' || s === 'Corporate'){
       desc.textContent = "Document attendu : idéalement les 3 derniers bulletins de salaire.";
     } else if(s === 'Indépendant'){
-      desc.textContent = "Document attendu : 2 derniers bilans comptables ou, si nécessaire, une attestation des ressources de l’exercice en cours délivrée par un comptable.";
+      desc.textContent = "Document attendu : 2 derniers bilans comptables ou, si nécessaire, une attestation des ressources de l'exercice en cours délivrée par un comptable.";
     } else if(s === 'Étudiant'){
       desc.textContent = "Document attendu : carte étudiante ou justificatif de scolarité récent.";
     } else {
       desc.textContent = "Ajoutez le document le plus pertinent pour justifier votre situation actuelle.";
     }
+  }
 
-    guidance.textContent = "Nous vous proposons les documents les plus adaptés à votre situation pour simplifier votre démarche.";
+  function prefillBailleur(){
+    const bailleurEl = document.getElementById('bailleur');
+    if(!bailleurEl) return;
+    if(step4prev.bailleur) {
+      bailleurEl.value = step4prev.bailleur;
+    } else if(step3.contactBailleur) {
+      bailleurEl.value = step3.contactBailleur;
+    }
   }
 
   function bindFile(inputId, metaId, okId, rmId){
@@ -228,7 +248,6 @@ input:focus{outline:none;border-color:var(--or)}
     const meta = document.getElementById(metaId);
     const ok = document.getElementById(okId);
     const rm = document.getElementById(rmId);
-
     input.addEventListener('change', () => {
       if(input.files && input.files.length){
         const f = input.files[0];
@@ -237,7 +256,6 @@ input:focus{outline:none;border-color:var(--or)}
         rm.classList.remove('hidden');
       }
     });
-
     rm.addEventListener('click', () => {
       input.value = '';
       meta.textContent = "Aucun document ajouté pour le moment.";
@@ -253,35 +271,43 @@ input:focus{outline:none;border-color:var(--or)}
 
   setSummary();
   setProfessionalDocGuidance();
+  prefillBailleur();
 
   document.getElementById('form').addEventListener('submit', function(e){
     e.preventDefault();
     const formError = document.getElementById('formError');
     formError.style.display = 'none';
 
-    const ok = (
-      document.getElementById('idFile').files.length &&
-      document.getElementById('domFile').files.length &&
-      document.getElementById('proFile').files.length &&
-      document.getElementById('bailleur').value.trim()
+    const missingDocs = (
+      !document.getElementById('idFile').files.length ||
+      !document.getElementById('domFile').files.length ||
+      !document.getElementById('proFile').files.length
     );
 
-    if(!ok){
+    if(missingDocs){
       formError.style.display = 'block';
+      formError.textContent = "Merci d'ajouter les trois documents obligatoires (identité, domicile, justificatif professionnel).";
       return;
     }
 
-    localStorage.setItem('kaddu_v2_step4', JSON.stringify({
+    const data = {
       bailleur: document.getElementById('bailleur').value.trim(),
       docs: {
         identite: document.getElementById('idFile').files[0]?.name || null,
         domicile: document.getElementById('domFile').files[0]?.name || null,
         loyer: document.getElementById('loyerFile').files[0]?.name || null,
         pro: document.getElementById('proFile').files[0]?.name || null
-      }
-    }));
+      },
+      docsCount: [
+        document.getElementById('idFile').files[0],
+        document.getElementById('domFile').files[0],
+        document.getElementById('loyerFile').files[0],
+        document.getElementById('proFile').files[0]
+      ].filter(Boolean).length
+    };
 
-    window.location.href = 'dossier-v2-step5.html';
+    localStorage.setItem('kaddu_v2_step4', JSON.stringify(data));
+    window.location.href = 'dossier-v2-step5.html' + (bien ? '?bien=' + encodeURIComponent(bien) : '');
   });
 })();
 </script>
