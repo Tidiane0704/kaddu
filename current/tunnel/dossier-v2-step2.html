@@ -1,45 +1,495 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>KADDU — Étape 2</title><style>
-:root{--or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.68);--bdr:rgba(191,150,80,.18);--green:#00C875;--red:#ff9f9f;--card:#0b2039}
-*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);line-height:1.6}
-nav{position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10}
-.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
-.sticky{position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);padding:14px 16px;z-index:9}.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
-.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KADDU — Étape 2</title>
+<style>
+:root{
+  --or:#BF9650; --nbl:#07182B; --txt:#F8F4EE; --muted:rgba(248,244,238,.68);
+  --bdr:rgba(191,150,80,.18); --green:#00C875; --red:#ff6b6b; --orange:#ffcc7a;
+  --card:#0b2039; --okbg:rgba(0,200,117,.08); --warnbg:rgba(255,204,122,.10); --badbg:rgba(255,107,107,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);line-height:1.6}
+nav{
+  position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10
+}
+.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+.sticky{
+  position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);
+  padding:14px 16px;z-index:9
+}
+.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+.meta-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.small{font-size:13px;color:var(--muted)}
 .box{max-width:980px;margin:18px auto 60px;background:var(--card);border:1px solid var(--bdr);padding:30px 24px}
-h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}h1 em{font-style:italic;color:var(--or)}.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{margin-bottom:16px}label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.help{font-size:13px;color:var(--muted);margin-top:6px}.req{color:#ffcc7a}
-input,select,textarea{width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:17px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}textarea{min-height:98px;resize:vertical}
-.error{display:none;color:var(--red);font-size:13px;margin-top:8px}.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px;flex-wrap:wrap}
-.btn1,.btn2,.btn3,.btn4{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}.btn1{background:var(--or);color:#111}
-.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}.btn3{background:#25D366;color:#fff}.btn4{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--bdr)}
-.notice{margin-top:18px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7}.notice.warn{border-color:rgba(191,150,80,.35);background:rgba(191,150,80,.08)}
-.recap{margin-top:18px;padding:14px 16px;border:1px solid var(--bdr);background:rgba(255,255,255,.03)}.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.recap-item{color:var(--muted);line-height:1.6}.recap-item strong{display:block;color:var(--txt);font-weight:700}
-.card{border:1px solid var(--bdr);padding:18px;background:rgba(255,255,255,.02);margin-bottom:16px}.badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
-.hidden{display:none!important}.score-box{border:1px solid var(--bdr);background:rgba(191,150,80,.06);padding:18px;text-align:center}.score-value{font-family:Georgia,serif;font-size:54px;color:var(--or);line-height:1}.score-label{margin-top:6px;color:var(--muted)}
-ul.reason-list{margin:10px 0 0 18px;color:var(--muted);line-height:1.8}.file-card{border:1px dashed var(--bdr);padding:18px;background:rgba(255,255,255,.02);margin-bottom:14px}
-.file-row{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.file-meta,.muted,.small{font-size:13px;color:var(--muted)}
-.status-pill{display:inline-block;padding:4px 8px;font-size:11px;border:1px solid var(--bdr);text-transform:uppercase;letter-spacing:.08em}.status-ok{color:var(--green);border-color:rgba(0,200,117,.25)}.status-warn{color:#ffcc7a;border-color:rgba(255,204,122,.3)}.status-bad{color:var(--red);border-color:rgba(255,159,159,.25)}
-.toggle{display:flex;gap:8px;align-items:center;margin-top:8px}
-@media(max-width:860px){.row,.recap-grid{grid-template-columns:1fr}h1{font-size:34px}}
-</style></head><body>
-<nav><a class="back" href="dossier-v2-step1.html">← Retour</a><div>Kàddu · Dossier premium</div></nav>
-<div class="top"><div class="sticky"><div class="stepmsg">Étape 2 sur 5 · Situation professionnelle</div><div id="bienLabel" style="margin-bottom:10px;font-weight:700;"></div><div id="bienRent" class="small" style="margin-bottom:10px;"></div><div class="progress"><div class="fill" style="width:40%"></div></div></div></div>
-<div class="box"><span class="badge">Compatibilité financière</span><h1>Votre situation <em>actuelle</em></h1><div class="sub">Ces éléments nous aident à vérifier l’adéquation entre votre projet et le logement, sans vous demander l’inutile.</div>
-<form id="step2Form">
-<div class="row"><div class="field"><label>Situation professionnelle <span class="req">*</span></label><select id="situation"><option value="">Sélectionner</option><option>Salarié</option><option>Indépendant</option><option>Étudiant</option><option>Sans emploi</option><option>Corporate</option></select></div><div class="field"><label>Pays de résidence <span class="req">*</span></label><input id="paysResidence" value="Sénégal"/></div></div>
-<div class="row"><div class="field"><label>Revenus mensuels estimés (FCFA) <span class="req">*</span></label><input id="revenu"/><div class="help">Revenus nets mensuels ou équivalent.</div></div><div class="field"><label>Garant</label><select id="garant"><option value="">Sélectionner</option><option>Oui</option><option>Non</option></select></div></div>
-<div id="blocSalarie" class="row hidden"><div class="field"><label>Nom employeur</label><input id="employeur"/></div><div class="field"><label>Date de début d’emploi</label><input id="dateDebutEmploi" type="date"/></div></div>
-<div id="blocIndep" class="row hidden"><div class="field"><label>Activité exercée</label><input id="activite"/></div><div class="field"><label>Source principale des revenus</label><input id="sourceRevenus"/></div></div>
-<div id="blocEtudiant" class="row hidden"><div class="field"><label>Source de revenus</label><input id="sourceRevenusEtudiant"/></div><div class="field"><label>Établissement / programme</label><input id="etablissement"/></div></div>
-<div class="notice" id="ratioBox">Renseignez vos revenus pour estimer la compatibilité du dossier avec ce bien.</div>
-<div id="formError" class="error">Merci de compléter les champs requis.</div>
-<div class="navbtns"><a class="btn2" href="dossier-v2-step1.html">← Retour</a><button class="btn1" type="submit">Continuer</button></div>
-</form></div>
-<script src="kaddu-v2-ux-hooks.js"></script><script>document.addEventListener('DOMContentLoaded',()=>{KadduV2.setHeader();const ex=KadduV2.loadStep('step2');['situation','paysResidence','revenu','garant','employeur','dateDebutEmploi','activite','sourceRevenus','sourceRevenusEtudiant','etablissement'].forEach(id=>{if(ex[id])document.getElementById(id).value=ex[id]});refreshConditional();});
-function refreshConditional(){const s=document.getElementById('situation').value; document.getElementById('blocSalarie').classList.toggle('hidden',!['Salarié','Corporate'].includes(s)); document.getElementById('blocIndep').classList.toggle('hidden',s!=='Indépendant'); document.getElementById('blocEtudiant').classList.toggle('hidden',s!=='Étudiant'); if(s==='Étudiant'&&!document.getElementById('garant').value)document.getElementById('garant').value='Oui'; refreshRatio();}
-function refreshRatio(){const revenu=Number(String(document.getElementById('revenu').value||'').replace(/\D/g,'')); const loyer=KadduV2.getBienData().loyer; const box=document.getElementById('ratioBox'); if(!revenu){box.textContent='Renseignez vos revenus pour estimer la compatibilité du dossier avec ce bien.'; return;} const ratio=loyer/revenu; box.textContent=ratio<=0.33?'Votre niveau de revenus semble confortable pour ce bien.':ratio<=0.4?'Votre dossier semble compatible, avec vérification standard.':ratio<=0.5?'Votre dossier reste recevable, mais des pièces complémentaires peuvent aider.':'Le ratio est élevé : un garant ou des justificatifs solides seront recommandés.';}
-document.getElementById('situation').addEventListener('change',refreshConditional); document.getElementById('revenu').addEventListener('input',refreshRatio);
-document.getElementById('step2Form').addEventListener('submit',e=>{e.preventDefault(); const data={situation:document.getElementById('situation').value,paysResidence:document.getElementById('paysResidence').value.trim(),revenu:String(document.getElementById('revenu').value||'').replace(/\D/g,''),garant:document.getElementById('garant').value,employeur:document.getElementById('employeur').value.trim(),dateDebutEmploi:document.getElementById('dateDebutEmploi').value,activite:document.getElementById('activite').value.trim(),sourceRevenus:document.getElementById('sourceRevenus').value.trim()||document.getElementById('sourceRevenusEtudiant').value.trim(),etablissement:document.getElementById('etablissement').value.trim()}; if(!data.situation||!data.paysResidence||!data.revenu){document.getElementById('formError').style.display='block';return;} KadduV2.saveStep('step2',data); location.href='dossier-v2-step3.html?bien='+encodeURIComponent(KadduV2.getBien());});</script></body></html>
+.badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}
+h1 em{font-style:italic;color:var(--or)}
+.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.help{font-size:13px;color:var(--muted);margin-top:6px}
+.req{color:#ffcc7a}
+input,select,textarea{
+  width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);
+  color:var(--txt);font-size:17px
+}
+select{background-color:rgba(255,255,255,.04);color:var(--txt)}
+select option{background:#102640;color:#F8F4EE}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
+.error{display:none;color:var(--red);font-size:13px;margin-top:8px}
+.field.invalid input,.field.invalid select{border-color:var(--red)!important;box-shadow:0 0 0 1px rgba(255,107,107,.18) inset}
+.field.valid input,.field.valid select{border-color:rgba(0,200,117,.35)}
+.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px;flex-wrap:wrap}
+.btn1,.btn2{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}
+.btn1{background:var(--or);color:#111}
+.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}
+.notice{
+  margin-top:18px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);
+  background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7
+}
+.notice.warn{border-color:rgba(191,150,80,.35);background:rgba(191,150,80,.08)}
+.hidden{display:none!important}
+.score-box{
+  border:1px solid var(--bdr);padding:18px;border-left:4px solid var(--or);margin-top:18px
+}
+.score-box.good{background:var(--okbg);border-left-color:var(--green)}
+.score-box.mid{background:var(--warnbg);border-left-color:var(--orange)}
+.score-box.bad{background:var(--badbg);border-left-color:var(--red)}
+.score-title{font-weight:700;margin-bottom:6px}
+.score-sub{color:var(--muted);font-size:14px}
+.micro{
+  margin-top:8px;font-size:13px;color:var(--muted);padding:10px 12px;
+  border:1px dashed rgba(191,150,80,.18);background:rgba(255,255,255,.02)
+}
+.prescoring{display:none}
+@media(max-width:860px){.row{grid-template-columns:1fr} h1{font-size:34px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="back" href="dossier-v2-step1.html">← Retour</a>
+  <div>Kàddu · Analyse de votre profil</div>
+</nav>
+
+<div class="top">
+  <div class="sticky">
+    <div class="stepmsg">Étape 2 sur 5 · Situation professionnelle</div>
+    <div id="bienLabel" style="margin-bottom:4px;font-weight:700;"></div>
+    <div class="meta-row">
+      <div id="bienRent" class="small"></div>
+      <div class="small">Temps restant estimé : 2 min</div>
+    </div>
+    <div class="progress"><div class="fill" style="width:40%"></div></div>
+  </div>
+</div>
+
+<div class="box">
+  <span class="badge">Analyse de votre profil</span>
+  <h1>Votre situation <em>actuelle</em></h1>
+  <div class="sub">
+    Ces éléments nous aident à vérifier l’adéquation entre votre projet et le logement,
+    à éviter les refus inutiles, et à orienter votre dossier de façon plus juste.
+  </div>
+
+  <form id="step2Form" novalidate>
+    <div class="row">
+      <div class="field" id="field-situation">
+        <label>Situation professionnelle <span class="req">*</span></label>
+        <select id="situation">
+          <option value="">Sélectionner</option>
+          <option>Salarié</option>
+          <option>Indépendant</option>
+          <option>Étudiant</option>
+          <option>Sans emploi</option>
+          <option>Corporate</option>
+        </select>
+        <div class="help">Choisissez la situation la plus proche de votre réalité actuelle.</div>
+        <div class="error" id="errSituation"></div>
+      </div>
+
+      <div class="field" id="field-paysResidence">
+        <label>Pays de résidence <span class="req">*</span></label>
+        <input id="paysResidence" value="Sénégal"/>
+        <div class="error" id="errPaysResidence"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field" id="field-revenu">
+        <label>Revenus mensuels estimés (FCFA) <span class="req">*</span></label>
+        <input id="revenu" inputmode="numeric" placeholder="Ex : 350 000"/>
+        <div class="help">Saisissez vos revenus nets mensuels ou leur équivalent.</div>
+        <div class="error" id="errRevenu"></div>
+      </div>
+
+      <div class="field" id="field-garant">
+        <label>Garant</label>
+        <select id="garant">
+          <option value="">Sélectionner</option>
+          <option>Oui</option>
+          <option>Non</option>
+        </select>
+        <div class="help" id="garantHelp">Un garant peut renforcer la solidité du dossier selon votre profil.</div>
+        <div class="error" id="errGarant"></div>
+      </div>
+    </div>
+
+    <div id="blocSalarie" class="row hidden">
+      <div class="field" id="field-employeur">
+        <label>Nom employeur <span class="req salaried-req">*</span></label>
+        <input id="employeur"/>
+        <div class="help">Requis pour les profils salariés et corporate.</div>
+        <div class="error" id="errEmployeur"></div>
+      </div>
+      <div class="field" id="field-dateDebutEmploi">
+        <label>Date de début d’emploi <span class="req salaried-req">*</span></label>
+        <input id="dateDebutEmploi" type="date"/>
+        <div class="error" id="errDateDebutEmploi"></div>
+      </div>
+    </div>
+
+    <div id="blocIndep" class="row hidden">
+      <div class="field" id="field-activite">
+        <label>Activité exercée <span class="req indep-req">*</span></label>
+        <input id="activite"/>
+        <div class="help">Ex : commerce, conseil, transport, restauration…</div>
+        <div class="error" id="errActivite"></div>
+      </div>
+      <div class="field" id="field-sourceRevenus">
+        <label>Source principale des revenus <span class="req indep-req">*</span></label>
+        <input id="sourceRevenus"/>
+        <div class="help">Précisez la source dominante de vos revenus actuels.</div>
+        <div class="error" id="errSourceRevenus"></div>
+      </div>
+    </div>
+
+    <div id="blocEtudiant" class="row hidden">
+      <div class="field" id="field-sourceRevenusEtudiant">
+        <label>Source de revenus <span class="req student-req">*</span></label>
+        <input id="sourceRevenusEtudiant"/>
+        <div class="help">Ex : parents, bourse, activité parallèle, soutien familial…</div>
+        <div class="error" id="errSourceRevenusEtudiant"></div>
+      </div>
+      <div class="field" id="field-etablissement">
+        <label>Établissement / programme <span class="req student-req">*</span></label>
+        <input id="etablissement"/>
+        <div class="error" id="errEtablissement"></div>
+      </div>
+    </div>
+
+    <div class="score-box" id="ratioBox">
+      <div class="score-title">Compatibilité en attente</div>
+      <div class="score-sub">Renseignez vos revenus pour estimer la compatibilité du dossier avec ce bien.</div>
+    </div>
+
+    <div class="micro" id="microRecommendation">
+      Les recommandations apparaîtront automatiquement selon votre profil.
+    </div>
+
+    <div id="formError" class="error" style="margin-top:18px;">Merci de corriger les champs signalés ci-dessous.</div>
+
+    <div class="navbtns">
+      <a class="btn2" href="dossier-v2-step1.html">← Retour</a>
+      <button class="btn1" type="submit">Continuer</button>
+    </div>
+  </form>
+</div>
+
+<script src="kaddu-v2-ux-hooks.js"></script>
+<script>
+(function(){
+  const situation = document.getElementById('situation');
+  const paysResidence = document.getElementById('paysResidence');
+  const revenu = document.getElementById('revenu');
+  const garant = document.getElementById('garant');
+  const employeur = document.getElementById('employeur');
+  const dateDebutEmploi = document.getElementById('dateDebutEmploi');
+  const activite = document.getElementById('activite');
+  const sourceRevenus = document.getElementById('sourceRevenus');
+  const sourceRevenusEtudiant = document.getElementById('sourceRevenusEtudiant');
+  const etablissement = document.getElementById('etablissement');
+  const formError = document.getElementById('formError');
+  const ratioBox = document.getElementById('ratioBox');
+  const microRecommendation = document.getElementById('microRecommendation');
+
+  function formatMoneyInput(el){
+    const digits = String(el.value || '').replace(/\D/g,'');
+    if(!digits){ el.value=''; return 0; }
+    el.value = new Intl.NumberFormat('fr-FR').format(Number(digits));
+    return Number(digits);
+  }
+
+  function clearFieldState(id){
+    const field = document.getElementById('field-' + id);
+    const err = document.getElementById('err' + id.charAt(0).toUpperCase()+id.slice(1));
+    if(field) field.classList.remove('invalid','valid');
+    if(err){ err.style.display='none'; err.textContent=''; }
+  }
+
+  function setFieldError(id, message){
+    const field = document.getElementById('field-' + id);
+    const err = document.getElementById('err' + id.charAt(0).toUpperCase()+id.slice(1));
+    if(field) field.classList.add('invalid');
+    if(err){ err.textContent=message; err.style.display='block'; }
+  }
+
+  function setFieldValid(id){
+    const field = document.getElementById('field-' + id);
+    if(field){
+      field.classList.remove('invalid');
+      field.classList.add('valid');
+    }
+  }
+
+  function requiredBySituation(){
+    const s = situation.value;
+    return {
+      employeur: ['Salarié','Corporate'].includes(s),
+      dateDebutEmploi: ['Salarié','Corporate'].includes(s),
+      activite: s === 'Indépendant',
+      sourceRevenus: s === 'Indépendant',
+      sourceRevenusEtudiant: s === 'Étudiant',
+      etablissement: s === 'Étudiant',
+      garantStronglyRecommended: ['Étudiant','Sans emploi'].includes(s)
+    };
+  }
+
+  function refreshConditional(){
+    const s = situation.value;
+    document.getElementById('blocSalarie').classList.toggle('hidden', !['Salarié','Corporate'].includes(s));
+    document.getElementById('blocIndep').classList.toggle('hidden', s !== 'Indépendant');
+    document.getElementById('blocEtudiant').classList.toggle('hidden', s !== 'Étudiant');
+
+    if(s === 'Étudiant' && !garant.value) garant.value = 'Oui';
+
+    const req = requiredBySituation();
+    document.getElementById('garantHelp').textContent = req.garantStronglyRecommended
+      ? "Un garant est fortement recommandé pour ce profil."
+      : "Un garant peut renforcer la solidité du dossier selon votre profil.";
+
+    if(s === 'Corporate'){
+      microRecommendation.textContent = "Pour un profil corporate, la clarté de l’employeur et de la situation contractuelle renforce le dossier.";
+    } else if(s === 'Indépendant'){
+      microRecommendation.textContent = "Pour un profil indépendant, la stabilité de l’activité et la source des revenus sont déterminantes.";
+    } else if(s === 'Étudiant'){
+      microRecommendation.textContent = "Pour un profil étudiant, un garant est fortement recommandé afin d’éviter les refus inutiles.";
+    } else if(s === 'Sans emploi'){
+      microRecommendation.textContent = "Pour un profil sans emploi, un garant ou des justificatifs de soutien sont généralement recommandés.";
+    } else {
+      microRecommendation.textContent = "Les recommandations apparaîtront automatiquement selon votre profil.";
+    }
+
+    refreshScoreAndRatio();
+  }
+
+  function refreshScoreAndRatio(){
+    const bienData = (window.KadduV2 && KadduV2.getBienData) ? KadduV2.getBienData() : { loyer: 0 };
+    const loyer = Number(bienData.loyer || 0);
+    const rev = Number(String(revenu.value || '').replace(/\D/g,'')) || 0;
+    const s = situation.value;
+    const g = garant.value;
+
+    let preScore = 0;
+    if(rev > 0){
+      if(loyer && rev > loyer * 3) preScore += 35;
+      else if(loyer && rev > loyer * 2.5) preScore += 28;
+      else if(loyer && rev > loyer * 2) preScore += 20;
+      else preScore += 10;
+    }
+
+    if(s === 'Salarié') preScore += 25;
+    if(s === 'Corporate') preScore += 22;
+    if(s === 'Indépendant') preScore += 16;
+    if(s === 'Étudiant') preScore += 8;
+    if(s === 'Sans emploi') preScore += 4;
+    if(g === 'Oui') preScore += 18;
+
+    const req = requiredBySituation();
+    if(req.employeur && employeur.value.trim()) preScore += 5;
+    if(req.dateDebutEmploi && dateDebutEmploi.value) preScore += 5;
+    if(req.activite && activite.value.trim()) preScore += 5;
+    if(req.sourceRevenus && sourceRevenus.value.trim()) preScore += 5;
+    if(req.sourceRevenusEtudiant && sourceRevenusEtudiant.value.trim()) preScore += 5;
+    if(req.etablissement && etablissement.value.trim()) preScore += 5;
+
+    let toneClass = '';
+    let title = 'Compatibilité en attente';
+    let sub = 'Renseignez vos revenus pour estimer la compatibilité du dossier avec ce bien.';
+
+    if(rev){
+      const ratio = loyer ? (loyer / rev) : 0;
+
+      if(ratio <= 0.33){
+        toneClass = 'good';
+        title = '🟢 Compatible';
+        sub = "Votre niveau de revenus semble confortable pour ce bien. Le dossier paraît bien positionné.";
+      } else if(ratio <= 0.40){
+        toneClass = 'good';
+        title = '🟢 Compatible avec vérification standard';
+        sub = "Votre profil semble cohérent pour ce bien. Le dossier paraît recevable sans signal immédiat.";
+      } else if(ratio <= 0.50){
+        toneClass = 'mid';
+        title = '🟡 À renforcer';
+        sub = "Le dossier reste recevable, mais un garant ou des justificatifs complémentaires pourront aider.";
+      } else {
+        toneClass = 'bad';
+        title = '🔴 Risque élevé';
+        sub = "Le ratio revenus / bien paraît tendu. Un garant ou des éléments de stabilité seront fortement recommandés.";
+      }
+
+      if(req.garantStronglyRecommended && g !== 'Oui'){
+        sub += " Pour ce profil, un garant est fortement recommandé.";
+      }
+    }
+
+    ratioBox.className = 'score-box ' + toneClass;
+    ratioBox.innerHTML = '<div class="score-title">' + title + '</div><div class="score-sub">' + sub + '</div>';
+
+    // Pré-score interne invisible pour exploitation ultérieure
+    ratioBox.dataset.prescore = String(preScore);
+  }
+
+  function validate(){
+    formError.style.display = 'none';
+    let firstInvalid = null;
+    let valid = true;
+    const req = requiredBySituation();
+
+    [
+      'situation','paysResidence','revenu','garant',
+      'employeur','dateDebutEmploi','activite','sourceRevenus',
+      'sourceRevenusEtudiant','etablissement'
+    ].forEach(clearFieldState);
+
+    if(!situation.value){
+      valid = false; firstInvalid = firstInvalid || 'situation';
+      setFieldError('situation','Merci de sélectionner votre situation professionnelle.');
+    } else setFieldValid('situation');
+
+    if(!paysResidence.value.trim()){
+      valid = false; firstInvalid = firstInvalid || 'paysResidence';
+      setFieldError('paysResidence','Merci de renseigner votre pays de résidence.');
+    } else setFieldValid('paysResidence');
+
+    const revDigits = String(revenu.value || '').replace(/\D/g,'');
+    if(!revDigits){
+      valid = false; firstInvalid = firstInvalid || 'revenu';
+      setFieldError('revenu','Merci de renseigner vos revenus mensuels estimés.');
+    } else setFieldValid('revenu');
+
+    if(req.garantStronglyRecommended && !garant.value){
+      valid = false; firstInvalid = firstInvalid || 'garant';
+      setFieldError('garant','Merci de préciser si vous disposez d’un garant.');
+    } else if(garant.value) setFieldValid('garant');
+
+    if(req.employeur){
+      if(!employeur.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'employeur';
+        setFieldError('employeur','Merci de renseigner le nom de votre employeur.');
+      } else setFieldValid('employeur');
+
+      if(!dateDebutEmploi.value){
+        valid = false; firstInvalid = firstInvalid || 'dateDebutEmploi';
+        setFieldError('dateDebutEmploi','Merci de renseigner la date de début d’emploi.');
+      } else setFieldValid('dateDebutEmploi');
+    }
+
+    if(req.activite){
+      if(!activite.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'activite';
+        setFieldError('activite','Merci de renseigner votre activité exercée.');
+      } else setFieldValid('activite');
+    }
+
+    if(req.sourceRevenus){
+      if(!sourceRevenus.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'sourceRevenus';
+        setFieldError('sourceRevenus','Merci de préciser votre source principale de revenus.');
+      } else setFieldValid('sourceRevenus');
+    }
+
+    if(req.sourceRevenusEtudiant){
+      if(!sourceRevenusEtudiant.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'sourceRevenusEtudiant';
+        setFieldError('sourceRevenusEtudiant','Merci de préciser votre source de revenus.');
+      } else setFieldValid('sourceRevenusEtudiant');
+    }
+
+    if(req.etablissement){
+      if(!etablissement.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'etablissement';
+        setFieldError('etablissement','Merci de renseigner votre établissement ou programme.');
+      } else setFieldValid('etablissement');
+    }
+
+    if(!valid){
+      formError.style.display = 'block';
+      const target = document.getElementById('field-' + firstInvalid);
+      if(target){
+        target.scrollIntoView({ behavior:'smooth', block:'center' });
+        const input = target.querySelector('input,select');
+        if(input) input.focus();
+      }
+    }
+    return valid;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if(window.KadduV2 && KadduV2.setHeader) KadduV2.setHeader();
+    const ex = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step2') : {};
+    ['situation','paysResidence','revenu','garant','employeur','dateDebutEmploi','activite','sourceRevenus','sourceRevenusEtudiant','etablissement'].forEach(id => {
+      if(ex[id]) document.getElementById(id).value = ex[id];
+    });
+    if(revenu.value) formatMoneyInput(revenu);
+    refreshConditional();
+  });
+
+  situation.addEventListener('change', refreshConditional);
+  garant.addEventListener('change', refreshScoreAndRatio);
+  revenu.addEventListener('input', () => { formatMoneyInput(revenu); refreshScoreAndRatio(); });
+
+  [paysResidence, employeur, dateDebutEmploi, activite, sourceRevenus, sourceRevenusEtudiant, etablissement].forEach(el => {
+    el.addEventListener('input', refreshScoreAndRatio);
+    el.addEventListener('change', refreshScoreAndRatio);
+  });
+
+  document.getElementById('step2Form').addEventListener('submit', e => {
+    e.preventDefault();
+    if(!validate()) return;
+
+    const data = {
+      situation: situation.value,
+      paysResidence: paysResidence.value.trim(),
+      revenu: String(revenu.value || '').replace(/\D/g,''),
+      garant: garant.value,
+      employeur: employeur.value.trim(),
+      dateDebutEmploi: dateDebutEmploi.value,
+      activite: activite.value.trim(),
+      sourceRevenus: sourceRevenus.value.trim() || sourceRevenusEtudiant.value.trim(),
+      sourceRevenusEtudiant: sourceRevenusEtudiant.value.trim(),
+      etablissement: etablissement.value.trim(),
+      preScoreInterne: Number(ratioBox.dataset.prescore || 0)
+    };
+
+    if(window.KadduV2 && KadduV2.saveStep){
+      KadduV2.saveStep('step2', data);
+      location.href = 'dossier-v2-step3.html?bien=' + encodeURIComponent(KadduV2.getBien());
+    } else {
+      localStorage.setItem('kaddu_v2_step2', JSON.stringify(data));
+      location.href = 'dossier-v2-step3.html';
+    }
+  });
+})();
+</script>
+</body>
+</html>
