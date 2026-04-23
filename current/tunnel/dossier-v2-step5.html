@@ -77,7 +77,7 @@ h1 em{font-style:italic;color:var(--or)}
 <body>
 
 <nav>
-  <a class="back" href="dossier-v2-step4.html">← Retour</a>
+  <a class="back" id="navBack" href="dossier-v2-step4.html">← Retour</a>
   <div>Kàddu · Confirmation du dossier</div>
 </nav>
 
@@ -160,26 +160,50 @@ h1 em{font-style:italic;color:var(--or)}
   const step3 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step3') : JSON.parse(localStorage.getItem('kaddu_v2_step3') || '{}');
   const step4 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step4') : JSON.parse(localStorage.getItem('kaddu_v2_step4') || '{}');
 
+  // Récupérer le bien depuis URL ou step1
+  const qp = new URLSearchParams(location.search);
+  const bienFromUrl = qp.get('bien') || '';
+  const bienFromStep1 = step1.bien || '';
+  const bienResolved = bienFromUrl || bienFromStep1 || '';
+
   function money(v){
     const n = Number(v || 0);
     return n ? new Intl.NumberFormat('fr-FR').format(n) + ' FCFA' : '—';
   }
 
   function inferSpecificPropertyCase(){
-    const bien = (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || '');
-    return !!bien && bien !== 'libre' && bien !== 'dossier-libre' && bien !== 'general';
+    const b = bienResolved;
+    return !!b && b !== 'libre' && b !== 'dossier-libre' && b !== 'general' && b !== '';
   }
 
   function countDocs(){
-    const docs = step4.docsSummary || step4.docs || {};
-    let c = 0;
-    Object.keys(docs).forEach(k => { if(docs[k]) c++; });
-    return c;
+    // Utiliser docsCount si disponible (calculé dans step4), sinon compter les docs non-null
+    if(step4.docsCount) return step4.docsCount;
+    const docs = step4.docs || {};
+    return Object.values(docs).filter(Boolean).length;
+  }
+
+  function updateNavLinks(){
+    // Mettre à jour tous les liens avec ?bien=
+    const b = bienResolved;
+    const suffix = b ? '?bien=' + encodeURIComponent(b) : '';
+    const navBack = document.getElementById('navBack');
+    if(navBack) navBack.href = 'dossier-v2-step4.html' + suffix;
+    // Liens modifier
+    const editMap = {
+      0: 'dossier-v2-step1.html',
+      1: 'dossier-v2-step2.html',
+      2: 'dossier-v2-step3.html',
+      3: 'dossier-v2-step4.html'
+    };
+    document.querySelectorAll('.edit-link').forEach((el, i) => {
+      if(editMap[i]) el.href = editMap[i] + suffix;
+    });
   }
 
   function setHeaderAndTexts(){
     const isSpecific = inferSpecificPropertyCase();
-    const bien = (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || '');
+    const bien = bienResolved;
     const bienLabel = document.getElementById('bienLabel');
     const bienRent = document.getElementById('bienRent');
 
@@ -189,22 +213,22 @@ h1 em{font-style:italic;color:var(--or)}
       document.getElementById('mainTitle').innerHTML = 'Votre candidature est <em>prête</em>';
       document.getElementById('mainSubtitle').textContent = "Votre dossier est maintenant prêt à être transmis pour ce logement.";
       document.getElementById('statusTitle').textContent = "🟢 Candidature prête";
-      document.getElementById('statusSub').textContent = "Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l’envoi de votre candidature.";
+      document.getElementById('statusSub').textContent = "Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l'envoi de votre candidature.";
       document.getElementById('sendBtn').textContent = "Envoyer ma candidature";
       document.getElementById('browseBtn').textContent = "Voir d'autres biens";
       document.getElementById('nextStepsList').innerHTML =
         "<li>Un retour vous sera apporté sous 24h.</li>" +
         "<li>Si nécessaire, des éléments complémentaires pourront vous être demandés.</li>" +
-        "<li>En attendant, vous pouvez continuer à découvrir d’autres biens disponibles.</li>";
+        "<li>En attendant, vous pouvez continuer à découvrir d'autres biens disponibles.</li>";
       document.getElementById('recapType').textContent = "Candidature ciblée";
       document.getElementById('recapBien').textContent = bien || "Bien sélectionné";
-      bienLabel.textContent = bien || "Bien sélectionné";
-      bienRent.textContent = "Demande liée à un bien précis";
+      if(bienLabel) bienLabel.textContent = bien || "Bien sélectionné";
+      if(bienRent) bienRent.textContent = "Demande liée à un bien précis";
     } else {
       document.getElementById('mainTitle').innerHTML = 'Votre dossier est <em>prêt</em>';
       document.getElementById('mainSubtitle').textContent = "Votre profil peut maintenant être rapproché des opportunités adaptées.";
       document.getElementById('statusTitle').textContent = "🟢 Dossier prêt";
-      document.getElementById('statusSub').textContent = "Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l’envoi du dossier.";
+      document.getElementById('statusSub').textContent = "Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l'envoi du dossier.";
       document.getElementById('sendBtn').textContent = "Envoyer mon dossier";
       document.getElementById('browseBtn').textContent = "Explorer les offres";
       document.getElementById('nextStepsList').innerHTML =
@@ -213,8 +237,8 @@ h1 em{font-style:italic;color:var(--or)}
         "<li>Vous pouvez dès maintenant consulter les offres disponibles sur le site.</li>";
       document.getElementById('recapType').textContent = "Dossier libre";
       document.getElementById('recapBien').textContent = "Aucun bien spécifique";
-      bienLabel.textContent = "Dossier libre";
-      bienRent.textContent = "Ouverture à un futur matching";
+      if(bienLabel) bienLabel.textContent = "Dossier libre";
+      if(bienRent) bienRent.textContent = "Ouverture à un futur matching";
     }
   }
 
@@ -222,32 +246,38 @@ h1 em{font-style:italic;color:var(--or)}
     document.getElementById('recapSituation').textContent = step2.situation || '—';
     document.getElementById('recapRevenu').textContent = money(step2.revenu);
     document.getElementById('recapGarant').textContent = step2.garant || '—';
-    document.getElementById('recapOccupants').textContent = step3.nombreOccupants || step3.occupants || '—';
-    document.getElementById('recapMotif').textContent = step3.motifDepart || step3.motif || '—';
+    // Occupants : utiliser le label calculé si disponible
+    document.getElementById('recapOccupants').textContent =
+      step3.nombreOccupantsLabel || (step3.nombreOccupants ? step3.nombreOccupants + ' occupant(s)' : '—');
+    // Motif : utiliser motifAffiche pour gérer "Autre" correctement
+    document.getElementById('recapMotif').textContent =
+      step3.motifAffiche || step3.motifDepart || '—';
+    // Documents
     const docsCount = countDocs();
-    document.getElementById('recapDocuments').textContent = docsCount ? (docsCount + " document" + (docsCount > 1 ? "s" : "") + " ajouté" + (docsCount > 1 ? "s" : "")) : '—';
+    document.getElementById('recapDocuments').textContent =
+      docsCount ? (docsCount + " document" + (docsCount > 1 ? "s" : "") + " ajouté" + (docsCount > 1 ? "s" : "")) : '—';
   }
 
   function buildWhatsAppLink(){
     const number = "221778647777";
     const isSpecific = inferSpecificPropertyCase();
-    const bien = (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || '');
+    const bien = bienResolved;
     let text = "";
-
     if(isSpecific){
       text = "Bonjour, mon dossier est prêt pour le bien " + bien + ". Je souhaite confirmer ma candidature.";
     } else {
       text = "Bonjour, mon dossier libre est prêt. Je souhaite être recontacté pour les opportunités adaptées.";
     }
-
-    document.getElementById('whatsappBtn').href = "https://wa.me/" + number + "?text=" + encodeURIComponent(text);
+    return "https://wa.me/" + number + "?text=" + encodeURIComponent(text);
   }
 
   function sendFinal(){
     const isSpecific = inferSpecificPropertyCase();
+    const waLink = buildWhatsAppLink();
+
     const payload = {
       type: isSpecific ? "candidature_ciblee" : "dossier_libre",
-      bien: (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || null),
+      bien: bienResolved || null,
       sentAt: new Date().toISOString(),
       step1, step2, step3, step4
     };
@@ -260,19 +290,36 @@ h1 em{font-style:italic;color:var(--or)}
     btn.style.opacity = '0.7';
 
     setTimeout(() => {
-      btn.textContent = isSpecific ? "Candidature envoyée" : "Dossier envoyé";
+      btn.textContent = isSpecific ? "Candidature envoyée ✔" : "Dossier envoyé ✔";
       document.getElementById('successMsg').style.display = 'block';
       document.getElementById('bottomNotice').textContent = isSpecific
         ? "Votre candidature est maintenant enregistrée pour ce logement."
         : "Votre dossier est maintenant disponible pour de futures opportunités.";
       document.getElementById('successMsg').scrollIntoView({behavior:'smooth', block:'center'});
+      // Mise à jour du bouton WhatsApp
+      const waBtn = document.getElementById('whatsappBtn');
+      if(waBtn) {
+        waBtn.href = waLink;
+        waBtn.textContent = isSpecific ? "Finaliser sur WhatsApp" : "Être recontacté sur WhatsApp";
+      }
+      // Auto-ouverture WhatsApp après 1 seconde supplémentaire
+      setTimeout(() => {
+        window.open(waLink, '_blank', 'noopener');
+      }, 1000);
     }, 900);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     setHeaderAndTexts();
     setRecap();
-    buildWhatsAppLink();
+    updateNavLinks();
+    // Init WhatsApp button
+    const waBtn = document.getElementById('whatsappBtn');
+    if(waBtn) {
+      waBtn.href = buildWhatsAppLink();
+      const isSpecific = inferSpecificPropertyCase();
+      waBtn.textContent = isSpecific ? "Finaliser sur WhatsApp" : "Être recontacté sur WhatsApp";
+    }
     document.getElementById('sendBtn').addEventListener('click', sendFinal);
   });
 })();
