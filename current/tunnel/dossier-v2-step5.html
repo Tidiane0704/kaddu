@@ -273,7 +273,9 @@ h1 em{font-style:italic;color:var(--or)}
 
   // ── SUPABASE CONFIG ─────────────────────────────────────
   const SUPABASE_URL = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE";
+  // Clé utilisée uniquement pour l'INSERT du tunnel (bypass RLS nécessaire suite migration JWT ECC)
+  const SUPABASE_INSERT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjQ1NTQxMSwiZXhwIjoyMDkyMDMxNDExfQ.wXyrM0RpR5XSpp8O9toX_m_fNvN8X6JRoOKTDscTuo4";
   // ────────────────────────────────────────────────────────
 
   // ── HELPERS ─────────────────────────────────────────────
@@ -352,8 +354,8 @@ h1 em{font-style:italic;color:var(--or)}
     const res = await fetch(SUPABASE_URL + "/rest/v1/rental_dossiers", {
       method: "POST",
       headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "apikey": SUPABASE_INSERT_KEY,
+        "Authorization": "Bearer " + SUPABASE_INSERT_KEY,
         "Content-Type": "application/json",
         "Prefer": "return=representation"
       },
