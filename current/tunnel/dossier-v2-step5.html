@@ -6,103 +6,276 @@
 <title>KADDU — Étape 5</title>
 <style>
 :root{
-  --or:#BF9650; --nbl:#07182B; --txt:#F8F4EE; --muted:rgba(248,244,238,.7);
-  --bdr:rgba(191,150,80,.18); --green:#00C875; --card:#0b2039;
+  --or:#BF9650; --nbl:#07182B; --txt:#F8F4EE; --muted:rgba(248,244,238,.68);
+  --bdr:rgba(191,150,80,.18); --green:#00C875; --red:#ff6b6b; --blue:#53b7ff;
+  --card:#0b2039; --okbg:rgba(0,200,117,.08); --infobg:rgba(83,183,255,.08);
 }
-body{font-family:Arial;background:var(--nbl);color:var(--txt);margin:0}
-.container{max-width:900px;margin:auto;padding:20px}
-.box{background:var(--card);padding:30px;border:1px solid var(--bdr)}
-.progress{height:6px;background:#333;border-radius:10px;overflow:hidden;margin-bottom:15px}
-.fill{height:100%;background:var(--or)}
-h1{font-size:32px;margin-bottom:10px}
-.sub{color:var(--muted);margin-bottom:20px}
-.recap{border:1px solid var(--bdr);padding:15px;margin:20px 0}
-.next{border:1px solid var(--bdr);padding:15px;margin:20px 0}
-.btn{padding:14px;margin-top:10px;width:100%;border:none;font-weight:bold;cursor:pointer}
-.primary{background:var(--or);color:#111}
-.secondary{background:transparent;border:1px solid var(--bdr);color:white}
-.success{display:none;margin-top:20px;padding:15px;background:rgba(0,200,117,.1)}
-.link{display:block;margin-top:10px;color:var(--muted);text-decoration:underline;cursor:pointer}
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);margin:0}
+nav{
+  position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10
+}
+.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+.sticky{
+  position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);
+  padding:14px 16px;z-index:9
+}
+.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+.meta-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.small{font-size:13px;color:var(--muted)}
+.container{max-width:980px;margin:auto;padding:18px 24px 60px}
+.box{background:var(--card);padding:30px 24px;border:1px solid var(--bdr)}
+.badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}
+h1 em{font-style:italic;color:var(--or)}
+.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
+.hero-status{
+  border:1px solid var(--bdr);padding:18px;margin:18px 0;background:var(--okbg);border-left:4px solid var(--green)
+}
+.status-title{font-weight:700;margin-bottom:6px}
+.status-sub{color:var(--muted);font-size:14px}
+.recap{
+  border:1px solid var(--bdr);padding:18px;margin:18px 0;background:rgba(255,255,255,.03)
+}
+.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.recap-item{color:var(--muted);line-height:1.6;padding:10px 12px;border:1px solid rgba(191,150,80,.10);background:rgba(255,255,255,.02)}
+.recap-item strong{display:block;color:var(--txt);font-weight:700;margin-bottom:2px}
+.edit-links{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px
+}
+.edit-link{
+  display:block;padding:12px 14px;border:1px solid rgba(191,150,80,.12);background:rgba(255,255,255,.02);
+  color:var(--muted);text-decoration:none
+}
+.edit-link:hover{border-color:var(--or);color:var(--txt)}
+.next-box{
+  border:1px solid var(--bdr);padding:18px;margin:18px 0;background:var(--infobg);border-left:4px solid var(--blue)
+}
+.next-box ol{margin:8px 0 0 20px;color:var(--muted)}
+.next-box li{margin:6px 0}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+.btn1,.btn2,.btn3{
+  padding:14px 18px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block
+}
+.btn1{background:var(--or);color:#111}
+.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}
+.btn3{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--bdr)}
+.notice{margin-top:16px;font-size:13px;color:var(--muted)}
+.success-msg{display:none;margin-top:18px;padding:14px 16px;background:var(--okbg);border:1px solid rgba(0,200,117,.22);color:var(--txt)}
+@media(max-width:860px){
+  .recap-grid,.edit-links{grid-template-columns:1fr}
+  h1{font-size:34px}
+  .cta-row{flex-direction:column}
+}
 </style>
 </head>
 <body>
+
+<nav>
+  <a class="back" href="dossier-v2-step4.html">← Retour</a>
+  <div>Kàddu · Confirmation du dossier</div>
+</nav>
+
+<div class="top">
+  <div class="sticky">
+    <div class="stepmsg">Étape 5 sur 5 · Confirmation</div>
+    <div id="bienLabel" style="margin-bottom:4px;font-weight:700;">Votre dossier</div>
+    <div class="meta-row">
+      <div id="bienRent" class="small"></div>
+      <div class="small">Dernière étape</div>
+    </div>
+    <div class="progress"><div class="fill" style="width:100%"></div></div>
+  </div>
+</div>
+
 <div class="container">
-<div class="box">
-<div class="progress"><div class="fill" style="width:100%"></div></div>
-<h1 id="title">Votre dossier est prêt</h1>
-<p class="sub" id="subtitle"></p>
+  <div class="box">
+    <span class="badge">Finalisation</span>
+    <h1 id="mainTitle">Votre dossier est <em>prêt</em></h1>
+    <div class="sub" id="mainSubtitle">
+      Votre dossier est maintenant prêt pour les prochaines étapes.
+    </div>
 
-<div class="recap">
-<strong>Récapitulatif</strong>
-<div id="recapContent"></div>
+    <div class="hero-status">
+      <div class="status-title" id="statusTitle">🟢 Dossier complet</div>
+      <div class="status-sub" id="statusSub">Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l’envoi.</div>
+    </div>
+
+    <div class="recap">
+      <div class="recap-title">Récapitulatif du dossier</div>
+      <div class="recap-grid">
+        <div class="recap-item"><strong id="recapType">—</strong>Type de demande</div>
+        <div class="recap-item"><strong id="recapBien">—</strong>Bien concerné</div>
+        <div class="recap-item"><strong id="recapSituation">—</strong>Situation professionnelle</div>
+        <div class="recap-item"><strong id="recapRevenu">—</strong>Revenus mensuels</div>
+        <div class="recap-item"><strong id="recapGarant">—</strong>Garant</div>
+        <div class="recap-item"><strong id="recapOccupants">—</strong>Occupants prévus</div>
+        <div class="recap-item"><strong id="recapDocuments">—</strong>Documents ajoutés</div>
+        <div class="recap-item"><strong id="recapMotif">—</strong>Projet actuel</div>
+      </div>
+
+      <div class="edit-links">
+        <a class="edit-link" href="dossier-v2-step1.html">Modifier mes informations</a>
+        <a class="edit-link" href="dossier-v2-step2.html">Modifier mon profil</a>
+        <a class="edit-link" href="dossier-v2-step3.html">Modifier ma situation</a>
+        <a class="edit-link" href="dossier-v2-step4.html">Modifier mes documents</a>
+      </div>
+    </div>
+
+    <div class="next-box">
+      <div class="status-title">Prochaines étapes</div>
+      <ol id="nextStepsList">
+        <li>Votre dossier sera étudié dans un délai estimatif de X.</li>
+        <li>Si nécessaire, des éléments complémentaires pourront vous être demandés.</li>
+        <li>Vous pouvez continuer à découvrir d’autres biens disponibles.</li>
+      </ol>
+    </div>
+
+    <div class="cta-row">
+      <button class="btn1" id="sendBtn">Envoyer mon dossier</button>
+      <a class="btn2" id="browseBtn" href="/">Explorer les offres</a>
+      <a class="btn3" id="whatsappBtn" href="#" target="_blank" rel="noopener">Continuer sur WhatsApp</a>
+    </div>
+
+    <div class="notice" id="bottomNotice">
+      Vous gardez la main jusqu’à cette dernière confirmation.
+    </div>
+
+    <div class="success-msg" id="successMsg">
+      Votre dossier a bien été envoyé. Vous pouvez maintenant revenir vers les offres ou poursuivre l’échange sur WhatsApp.
+    </div>
+  </div>
 </div>
 
-<div class="next">
-<strong>Prochaines étapes</strong>
-<ul id="nextSteps"></ul>
-</div>
-
-<button class="btn primary" id="sendBtn">Envoyer mon dossier</button>
-<button class="btn secondary" onclick="window.location.href='/'" id="browseBtn">Explorer les offres</button>
-
-<div class="link" onclick="editStep(1)">Modifier mes informations</div>
-<div class="link" onclick="editStep(2)">Modifier mon profil</div>
-<div class="link" onclick="editStep(3)">Modifier ma situation</div>
-<div class="link" onclick="editStep(4)">Modifier mes documents</div>
-
-<div class="success" id="successMsg">
-Votre dossier a bien été envoyé.
-</div>
-
-</div>
-</div>
-
+<script src="kaddu-v2-ux-hooks.js"></script>
 <script>
-const step1 = JSON.parse(localStorage.getItem("step1") || "{}");
-const step2 = JSON.parse(localStorage.getItem("step2") || "{}");
-const step3 = JSON.parse(localStorage.getItem("step3") || "{}");
+(function(){
+  const step1 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step1') : JSON.parse(localStorage.getItem('kaddu_v2_step1') || '{}');
+  const step2 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step2') : JSON.parse(localStorage.getItem('kaddu_v2_step2') || '{}');
+  const step3 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step3') : JSON.parse(localStorage.getItem('kaddu_v2_step3') || '{}');
+  const step4 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step4') : JSON.parse(localStorage.getItem('kaddu_v2_step4') || '{}');
 
-const isSpecific = !!step1.bien;
+  function money(v){
+    const n = Number(v || 0);
+    return n ? new Intl.NumberFormat('fr-FR').format(n) + ' FCFA' : '—';
+  }
 
-if(isSpecific){
-  title.innerText = "Votre candidature est prête";
-  subtitle.innerText = "Votre dossier est prêt à être transmis pour ce logement.";
-  nextSteps.innerHTML = `
-    <li>Un retour vous sera apporté sous 24h.</li>
-    <li>Des éléments complémentaires pourront être demandés si nécessaire.</li>
-    <li>Vous pouvez continuer à découvrir d'autres biens disponibles.</li>
-  `;
-  sendBtn.innerText = "Envoyer ma candidature";
-  browseBtn.innerText = "Voir d'autres biens";
-}else{
-  title.innerText = "Votre dossier est prêt";
-  subtitle.innerText = "Votre profil peut être rapproché des opportunités adaptées.";
-  nextSteps.innerHTML = `
-    <li>Votre dossier sera étudié dans les prochains jours (3 à 5 jours ouvrés).</li>
-    <li>Il pourra être rapproché des biens correspondant à votre profil.</li>
-    <li>Vous pouvez dès maintenant consulter les offres disponibles.</li>
-  `;
-}
+  function inferSpecificPropertyCase(){
+    const bien = (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || '');
+    return !!bien && bien !== 'libre' && bien !== 'dossier-libre' && bien !== 'general';
+  }
 
-recapContent.innerHTML = `
-Situation : ${step2.situation || "-"}<br>
-Revenus : ${step2.revenu || "-"}<br>
-Garant : ${step2.garant || "-"}<br>
-Occupants : ${step3.occupants || "-"}
-`;
+  function countDocs(){
+    const docs = step4.docsSummary || step4.docs || {};
+    let c = 0;
+    Object.keys(docs).forEach(k => { if(docs[k]) c++; });
+    return c;
+  }
 
-function editStep(step){
-  window.location.href = "dossier-v2-step" + step + ".html";
-}
+  function setHeaderAndTexts(){
+    const isSpecific = inferSpecificPropertyCase();
+    const bien = (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || '');
+    const bienLabel = document.getElementById('bienLabel');
+    const bienRent = document.getElementById('bienRent');
 
-sendBtn.onclick = () => {
-  sendBtn.disabled = true;
-  sendBtn.innerText = "Envoi...";
-  setTimeout(()=>{
-    sendBtn.innerText = isSpecific ? "Candidature envoyée" : "Dossier envoyé";
-    successMsg.style.display = "block";
-  },1000);
-};
+    if(window.KadduV2 && KadduV2.setHeader) KadduV2.setHeader();
+
+    if(isSpecific){
+      document.getElementById('mainTitle').innerHTML = 'Votre candidature est <em>prête</em>';
+      document.getElementById('mainSubtitle').textContent = "Votre dossier est maintenant prêt à être transmis pour ce logement.";
+      document.getElementById('statusTitle').textContent = "🟢 Candidature prête";
+      document.getElementById('statusSub').textContent = "Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l’envoi de votre candidature.";
+      document.getElementById('sendBtn').textContent = "Envoyer ma candidature";
+      document.getElementById('browseBtn').textContent = "Voir d'autres biens";
+      document.getElementById('nextStepsList').innerHTML =
+        "<li>Un retour vous sera apporté sous 24h.</li>" +
+        "<li>Si nécessaire, des éléments complémentaires pourront vous être demandés.</li>" +
+        "<li>En attendant, vous pouvez continuer à découvrir d’autres biens disponibles.</li>";
+      document.getElementById('recapType').textContent = "Candidature ciblée";
+      document.getElementById('recapBien').textContent = bien || "Bien sélectionné";
+      bienLabel.textContent = bien || "Bien sélectionné";
+      bienRent.textContent = "Demande liée à un bien précis";
+    } else {
+      document.getElementById('mainTitle').innerHTML = 'Votre dossier est <em>prêt</em>';
+      document.getElementById('mainSubtitle').textContent = "Votre profil peut maintenant être rapproché des opportunités adaptées.";
+      document.getElementById('statusTitle').textContent = "🟢 Dossier prêt";
+      document.getElementById('statusSub').textContent = "Les éléments principaux ont bien été renseignés. Vous pouvez maintenant confirmer l’envoi du dossier.";
+      document.getElementById('sendBtn').textContent = "Envoyer mon dossier";
+      document.getElementById('browseBtn').textContent = "Explorer les offres";
+      document.getElementById('nextStepsList').innerHTML =
+        "<li>Votre dossier sera étudié dans les prochains jours (3 à 5 jours ouvrés).</li>" +
+        "<li>Il pourra ensuite être rapproché des opportunités adaptées à votre profil.</li>" +
+        "<li>Vous pouvez dès maintenant consulter les offres disponibles sur le site.</li>";
+      document.getElementById('recapType').textContent = "Dossier libre";
+      document.getElementById('recapBien').textContent = "Aucun bien spécifique";
+      bienLabel.textContent = "Dossier libre";
+      bienRent.textContent = "Ouverture à un futur matching";
+    }
+  }
+
+  function setRecap(){
+    document.getElementById('recapSituation').textContent = step2.situation || '—';
+    document.getElementById('recapRevenu').textContent = money(step2.revenu);
+    document.getElementById('recapGarant').textContent = step2.garant || '—';
+    document.getElementById('recapOccupants').textContent = step3.nombreOccupants || step3.occupants || '—';
+    document.getElementById('recapMotif').textContent = step3.motifDepart || step3.motif || '—';
+    const docsCount = countDocs();
+    document.getElementById('recapDocuments').textContent = docsCount ? (docsCount + " document" + (docsCount > 1 ? "s" : "") + " ajouté" + (docsCount > 1 ? "s" : "")) : '—';
+  }
+
+  function buildWhatsAppLink(){
+    const number = "221778647777";
+    const isSpecific = inferSpecificPropertyCase();
+    const bien = (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || '');
+    let text = "";
+
+    if(isSpecific){
+      text = "Bonjour, mon dossier est prêt pour le bien " + bien + ". Je souhaite confirmer ma candidature.";
+    } else {
+      text = "Bonjour, mon dossier libre est prêt. Je souhaite être recontacté pour les opportunités adaptées.";
+    }
+
+    document.getElementById('whatsappBtn').href = "https://wa.me/" + number + "?text=" + encodeURIComponent(text);
+  }
+
+  function sendFinal(){
+    const isSpecific = inferSpecificPropertyCase();
+    const payload = {
+      type: isSpecific ? "candidature_ciblee" : "dossier_libre",
+      bien: (window.KadduV2 && KadduV2.getBien) ? KadduV2.getBien() : (step1.bien || null),
+      sentAt: new Date().toISOString(),
+      step1, step2, step3, step4
+    };
+
+    localStorage.setItem('kaddu_v2_step5_sent', JSON.stringify(payload));
+
+    const btn = document.getElementById('sendBtn');
+    btn.disabled = true;
+    btn.textContent = "Envoi en cours...";
+    btn.style.opacity = '0.7';
+
+    setTimeout(() => {
+      btn.textContent = isSpecific ? "Candidature envoyée" : "Dossier envoyé";
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('bottomNotice').textContent = isSpecific
+        ? "Votre candidature est maintenant enregistrée pour ce logement."
+        : "Votre dossier est maintenant disponible pour de futures opportunités.";
+      document.getElementById('successMsg').scrollIntoView({behavior:'smooth', block:'center'});
+    }, 900);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setHeaderAndTexts();
+    setRecap();
+    buildWhatsAppLink();
+    document.getElementById('sendBtn').addEventListener('click', sendFinal);
+  });
+})();
 </script>
 </body>
 </html>
