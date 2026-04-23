@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kàddu Dashboard KPI</title>
+  <style>
+    :root{
+      --or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.62);
+      --bdr:rgba(191,150,80,.18);--green:#00C875;--red:#FF6B6B;--orange:#F5A623;--blue:#53b7ff;--purple:#b28cff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt)}
+    nav{position:sticky;top:0;z-index:20;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+    .brand{font-family:Georgia,serif;font-size:32px;color:var(--or)}
+    .nav-actions{display:flex;gap:10px;align-items:center}
+    .btn,.btn-ghost{padding:12px 14px;border:none;cursor:pointer;font-weight:700;text-decoration:none;display:inline-block}
+    .btn{background:var(--or);color:#111}
+    .btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--bdr)}
+    .wrap{max-width:1540px;margin:0 auto;padding:22px}
+    .hero{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:20px}
+    .hero h1{font-family:Georgia,serif;font-size:48px;font-weight:400;margin:0}
+    .hero h1 em{font-style:italic;color:var(--or)}
+    .hero p{margin:10px 0 0;color:var(--muted);line-height:1.7;max-width:840px}
+    .toolbar{display:grid;grid-template-columns:1.5fr 1fr 1fr auto;gap:12px;margin-bottom:18px}
+    select,input{width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:16px}
+    select:focus,input:focus{outline:none;border-color:var(--or)}
+    .stats{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:18px}
+    .stat{border:1px solid var(--bdr);background:#0b2039;padding:18px}
+    .stat .k{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--or);margin-bottom:10px}
+    .stat .v{font-family:Georgia,serif;font-size:34px}
+    .stat .s{margin-top:10px;color:var(--muted);font-size:13px}
+    .layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
+    .stack{display:grid;gap:18px}
+    .card{border:1px solid var(--bdr);background:#0b2039;padding:18px}
+    .card h2{font-family:Georgia,serif;font-weight:400;font-size:28px;margin:0 0 6px}
+    .card p.lead{margin:0 0 16px;color:var(--muted);line-height:1.6}
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .mini-stat{border:1px solid var(--bdr);background:rgba(255,255,255,.03);padding:14px}
+    .mini-stat .label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--or);margin-bottom:8px}
+    .mini-stat .value{font-size:28px;font-family:Georgia,serif}
+    .funnel{display:grid;gap:10px}
+    .funnel-row{display:grid;grid-template-columns:180px 1fr 90px;gap:12px;align-items:center}
+    .funnel-label{color:var(--txt);font-weight:700}
+    .funnel-bar-wrap{height:16px;background:rgba(255,255,255,.06);border:1px solid var(--bdr);position:relative}
+    .funnel-bar{height:100%}
+    .bar-new{background:rgba(255,255,255,.25)}
+    .bar-pre{background:rgba(83,183,255,.55)}
+    .bar-valid{background:rgba(0,200,117,.55)}
+    .bar-rent{background:rgba(178,140,255,.7)}
+    .funnel-val{text-align:right;color:var(--muted)}
+    .dist-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    .dist-card{border:1px solid var(--bdr);padding:16px;background:rgba(255,255,255,.03)}
+    .dist-card .title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--or);margin-bottom:8px}
+    .dist-card .num{font-size:34px;font-family:Georgia,serif}
+    .dist-card .sub{margin-top:8px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:14px 12px;border-bottom:1px solid var(--bdr);text-align:left}
+    th{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--or)}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+    .pill-green{background:rgba(0,200,117,.14);color:#77ffbe}
+    .pill-orange{background:rgba(245,166,35,.14);color:#ffd180}
+    .pill-red{background:rgba(255,107,107,.14);color:#ffb3b3}
+    .pill-purple{background:rgba(178,140,255,.16);color:#e1d1ff}
+    .empty{padding:24px;color:var(--muted);text-align:center;border:1px dashed var(--bdr)}
+    .timeline{display:grid;gap:10px}
+    .timeline-row{display:grid;grid-template-columns:130px 1fr 60px;gap:12px;align-items:center}
+    .timeline-date{color:var(--txt)}
+    .timeline-bar-wrap{height:14px;background:rgba(255,255,255,.06);border:1px solid var(--bdr)}
+    .timeline-bar{height:100%;background:rgba(191,150,80,.75)}
+    .timeline-val{text-align:right;color:var(--muted)}
+    .footer-note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.7}
+    @media (max-width:1320px){
+      .stats{grid-template-columns:repeat(3,1fr)}
+      .layout{grid-template-columns:1fr}
+      .toolbar{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:900px){
+      .mini-grid,.dist-grid{grid-template-columns:1fr}
+      .toolbar{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+      .funnel-row,.timeline-row{grid-template-columns:1fr}
+    }
+    @media (max-width:640px){
+      .stats{grid-template-columns:1fr}
+      .hero{display:block}
+      .hero h1{font-size:38px}
+    }
+
+    /* ── AUTH OVERLAY ── */
+    #authOverlay{
+      position:fixed;inset:0;z-index:9999;
+      background:var(--nbl);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .auth-box{
+      width:100%;max-width:420px;padding:40px 32px;
+      background:#0b2039;border:1px solid var(--bdr);
+    }
+    .auth-box h2{font-family:Georgia,serif;font-size:32px;font-weight:400;margin:0 0 6px;color:var(--txt)}
+    .auth-box h2 em{font-style:italic;color:var(--or)}
+    .auth-sub{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6}
+    .auth-label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;margin-top:16px}
+    .auth-input{width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:16px}
+    .auth-input:focus{outline:none;border-color:var(--or)}
+    .auth-btn{width:100%;margin-top:24px;padding:15px;background:var(--or);color:#111;border:none;font-weight:700;font-size:16px;cursor:pointer}
+    .auth-btn:disabled{opacity:.5;cursor:not-allowed}
+    .auth-error{display:none;margin-top:14px;padding:10px 12px;border:1px solid rgba(255,107,107,.30);background:rgba(255,107,107,.07);color:#ffb3b3;font-size:13px}
+    .auth-loading{display:none;margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
+    .auth-badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:20px}
+  </style>
+</head>
+<body>
+
+  <!-- AUTH OVERLAY -->
+  <div id="authOverlay">
+    <div class="auth-box">
+      <span class="auth-badge">Accès restreint</span>
+      <h2>Kàddu <em>KPI</em></h2>
+      <div class="auth-sub">Espace réservé à l'équipe Kàddu. Connectez-vous pour accéder au dashboard.</div>
+      <label class="auth-label" for="authEmail">Adresse email</label>
+      <input class="auth-input" id="authEmail" type="email" placeholder="admin@kaddu.net" autocomplete="email"/>
+      <label class="auth-label" for="authPassword">Mot de passe</label>
+      <input class="auth-input" id="authPassword" type="password" placeholder="••••••••" autocomplete="current-password"/>
+      <button class="auth-btn" id="authBtn">Se connecter</button>
+      <div class="auth-error" id="authError"></div>
+      <div class="auth-loading" id="authLoading">Connexion en cours…</div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="brand">Kàddu Dashboard</div>
+    <div class="nav-actions">
+      <a class="btn-ghost" href="admin-dossiers-v3-final.html">📋 Dossiers</a>
+      <button class="btn-ghost" id="clearFiltersBtn">Réinitialiser</button>
+      <button class="btn" id="refreshBtn">Rafraîchir</button>
+      <button class="btn-ghost" id="logoutBtn">Déconnexion</button>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <h1>Pilotage <em>KPI</em></h1>
+        <p>Dashboard business pour piloter le volume, le risque, le funnel métier et la conversion réelle des dossiers locataires Kàddu à partir de <code>rental_dossiers</code>.</p>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <input id="searchInput" placeholder="Rechercher par nom, email, téléphone, employeur…" />
+      <select id="bienFilter">
+        <option value="">Tous les biens</option>
+        <option value="bantukay">Bantukay</option>
+        <option value="nopalukay">Nopalukay</option>
+        <option value="suxalikay">Suxalikay</option>
+      </select>
+      <select id="periodFilter">
+        <option value="all">Toute la période</option>
+        <option value="30">30 derniers jours</option>
+        <option value="7">7 derniers jours</option>
+      </select>
+      <select id="finalFilter">
+        <option value="">Tous les statuts finaux</option>
+        <option value="en_cours">En cours</option>
+        <option value="loue">Loué</option>
+        <option value="refuse">Refusé</option>
+        <option value="abandonne">Abandonné</option>
+        <option value="archive">Archivé</option>
+      </select>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><div class="k">Total dossiers</div><div class="v" id="statTotal">0</div><div class="s" id="statTotalSub">Base filtrée</div></div>
+      <div class="stat"><div class="k">Score moyen</div><div class="v" id="statAvgScore">0</div><div class="s">Sur dossiers filtrés</div></div>
+      <div class="stat"><div class="k">Taux conversion</div><div class="v" id="statConversion">0%</div><div class="s">Loués / total</div></div>
+      <div class="stat"><div class="k">Dossiers loués</div><div class="v" id="statRented">0</div><div class="s">Conversion réelle</div></div>
+      <div class="stat"><div class="k">Pré-validés</div><div class="v" id="statPrevalidated">0</div><div class="s">Funnel</div></div>
+      <div class="stat"><div class="k">Validés</div><div class="v" id="statValidated">0</div><div class="s">Avant location</div></div>
+    </section>
+
+    <section class="layout">
+      <div class="stack">
+        <div class="card">
+          <h2>Vue globale</h2>
+          <p class="lead">Synthèse rapide de la qualité du portefeuille et du comportement du funnel de conversion.</p>
+          <div class="mini-grid">
+            <div class="mini-stat">
+              <div class="label">Faible risque</div>
+              <div class="value" id="miniLowRisk">0</div>
+            </div>
+            <div class="mini-stat">
+              <div class="label">Risque modéré</div>
+              <div class="value" id="miniMidRisk">0</div>
+            </div>
+            <div class="mini-stat">
+              <div class="label">Risque élevé</div>
+              <div class="value" id="miniHighRisk">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Funnel métier</h2>
+          <p class="lead">Comprendre où les dossiers se transforment, où ils ralentissent et où ils se perdent.</p>
+          <div class="funnel" id="funnelContainer"></div>
+        </div>
+
+        <div class="card">
+          <h2>Conversion par tranche de score</h2>
+          <p class="lead">C’est l’indicateur le plus important pour valider la pertinence de ton scoring antifraude.</p>
+          <div id="conversionTableWrap"></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h2>Répartition du risque</h2>
+          <p class="lead">Lecture rapide du mix qualité / vigilance sur le portefeuille courant.</p>
+          <div class="dist-grid">
+            <div class="dist-card">
+              <div class="title">Faible risque</div>
+              <div class="num" id="riskLowNum">0</div>
+              <div class="sub" id="riskLowPct">0%</div>
+            </div>
+            <div class="dist-card">
+              <div class="title">Risque modéré</div>
+              <div class="num" id="riskMidNum">0</div>
+              <div class="sub" id="riskMidPct">0%</div>
+            </div>
+            <div class="dist-card">
+              <div class="title">Risque élevé</div>
+              <div class="num" id="riskHighNum">0</div>
+              <div class="sub" id="riskHighPct">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Répartition des statuts finaux</h2>
+          <p class="lead">Visualiser la sortie business réelle des dossiers.</p>
+          <div id="finalStatusTableWrap"></div>
+        </div>
+
+        <div class="card">
+          <h2>Volumes récents</h2>
+          <p class="lead">Suivi des dépôts récents, utile pour sentir la dynamique commerciale.</p>
+          <div class="timeline" id="timelineContainer"></div>
+          <div class="footer-note">Les volumes ci-dessous sont calculés sur les dates de création disponibles dans <code>created_at</code>.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE";
+
+    let allRows = [];
+    let filteredRows = [];
+
+    function formatPct(value){
+      return `${Math.round((value || 0) * 100)}%`;
+    }
+
+    function formatDate(value){
+      if(!value) return "—";
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return value;
+      return d.toLocaleDateString("fr-FR");
+    }
+
+    function dateKey(value){
+      const d = new Date(value);
+      if (isNaN(d.getTime())) return null;
+      return d.toISOString().slice(0, 10);
+    }
+
+    function bienLabel(bien){
+      const map = { bantukay:"Bantukay", nopalukay:"Nopalukay", suxalikay:"Suxalikay" };
+      if(!bien) return "—";
+      const norm = bien.toLowerCase().replace(/le petit /i,'').replace(/[^a-z]/g,'');
+      return map[norm] || bien;
+    }
+
+    function finalLabel(status){
+      const map = {
+        en_cours: "En cours",
+        loue: "Loué",
+        refuse: "Refusé",
+        abandonne: "Abandonné",
+        archive: "Archivé"
+      };
+      return map[status] || "En cours";
+    }
+
+    function metierLabel(status){
+      const map = {
+        nouveau: "Nouveau",
+        a_revoir: "À revoir",
+        pieces_complementaires: "Pièces complémentaires",
+        pre_valide: "Pré-validé",
+        valide: "Validé",
+        refuse: "Refusé",
+        archive: "Archivé"
+      };
+      return map[status] || "Nouveau";
+    }
+
+    function scoreBucket(score){
+      const n = Number(score || 0);
+      if (n >= 75) return ">=75";
+      if (n >= 50) return "50-74";
+      return "<50";
+    }
+
+    async function fetchDossiers(){
+      const endpoint = SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rental_dossiers?select=*&order=created_at.desc";
+      const res = await fetch(endpoint, { headers: getAuthHeaders() });
+
+      const text = await res.text();
+      let data = [];
+      try { data = text ? JSON.parse(text) : []; } catch(e) { data = []; }
+
+      if(!res.ok){
+        throw new Error(typeof data === "string" ? data : JSON.stringify(data));
+      }
+      return Array.isArray(data) ? data : [];
+    }
+
+    function applyFilters(){
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const bien = document.getElementById("bienFilter").value;
+      const finalStatusFilter = document.getElementById("finalFilter").value;
+      const period = document.getElementById("periodFilter").value;
+
+      const now = new Date();
+      let minDate = null;
+      if(period === "30"){
+        minDate = new Date(now);
+        minDate.setDate(minDate.getDate() - 30);
+      } else if (period === "7"){
+        minDate = new Date(now);
+        minDate.setDate(minDate.getDate() - 7);
+      }
+
+      filteredRows = allRows.filter(row => {
+        const hay = [
+          row.nom, row.email, row.telephone, row.employeur, row.bien,
+          row.numero_whatsapp, row.pays_residence
+        ].join(" ").toLowerCase();
+
+        const okSearch = !q || hay.includes(q);
+        const bienNorm = (b) => (b||'').toLowerCase().replace(/le petit /i,'').replace(/[^a-z]/g,'');
+        const okBien = !bien || bienNorm(row.bien) === bienNorm(bien);
+        const rowFinal = row.final_status || "en_cours";
+        const okFinal = !finalStatusFilter || rowFinal === finalStatusFilter;
+
+        let okPeriod = true;
+        if(minDate && row.created_at){
+          const d = new Date(row.created_at);
+          okPeriod = !isNaN(d.getTime()) && d >= minDate;
+        } else if(minDate && !row.created_at){
+          okPeriod = false;
+        }
+
+        return okSearch && okBien && okFinal && okPeriod;
+      });
+
+      renderDashboard();
+    }
+
+    function renderStats(){
+      const total = filteredRows.length;
+      const avgScore = total ? (filteredRows.reduce((sum, r) => sum + Number(r.score || 0), 0) / total) : 0;
+      const rented = filteredRows.filter(r => (r.final_status || "en_cours") === "loue").length;
+      const prevalidated = filteredRows.filter(r => (r.status_metier || "nouveau") === "pre_valide").length;
+      const validated = filteredRows.filter(r => (r.status_metier || "nouveau") === "valide").length;
+
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statAvgScore").textContent = Math.round(avgScore);
+      document.getElementById("statConversion").textContent = total ? `${Math.round((rented / total) * 100)}%` : "0%";
+      document.getElementById("statRented").textContent = rented;
+      document.getElementById("statPrevalidated").textContent = prevalidated;
+      document.getElementById("statValidated").textContent = validated;
+      document.getElementById("statTotalSub").textContent = `${document.getElementById("periodFilter").selectedOptions[0].text}`;
+    }
+
+    function renderRiskBlocks(){
+      const total = filteredRows.length || 1;
+      const low = filteredRows.filter(r => r.status === "faible_risque").length;
+      const mid = filteredRows.filter(r => r.status === "risque_modere").length;
+      const high = filteredRows.filter(r => r.status === "risque_eleve").length;
+
+      document.getElementById("miniLowRisk").textContent = low;
+      document.getElementById("miniMidRisk").textContent = mid;
+      document.getElementById("miniHighRisk").textContent = high;
+
+      document.getElementById("riskLowNum").textContent = low;
+      document.getElementById("riskMidNum").textContent = mid;
+      document.getElementById("riskHighNum").textContent = high;
+
+      document.getElementById("riskLowPct").textContent = `${Math.round((low / total) * 100)}% du portefeuille`;
+      document.getElementById("riskMidPct").textContent = `${Math.round((mid / total) * 100)}% du portefeuille`;
+      document.getElementById("riskHighPct").textContent = `${Math.round((high / total) * 100)}% du portefeuille`;
+    }
+
+    function renderFunnel(){
+      const total = filteredRows.length;
+      const pre = filteredRows.filter(r => ["pre_valide", "valide"].includes(r.status_metier || "nouveau") || (r.final_status || "en_cours") === "loue").length;
+      const valid = filteredRows.filter(r => (r.status_metier || "nouveau") === "valide" || (r.final_status || "en_cours") === "loue").length;
+      const rent = filteredRows.filter(r => (r.final_status || "en_cours") === "loue").length;
+      const max = Math.max(total, 1);
+
+      const rows = [
+        ["Nouveaux / portefeuille", total, "bar-new"],
+        ["Pré-validés+", pre, "bar-pre"],
+        ["Validés+", valid, "bar-valid"],
+        ["Loués", rent, "bar-rent"]
+      ];
+
+      const container = document.getElementById("funnelContainer");
+      container.innerHTML = rows.map(([label, value, cls]) => `
+        <div class="funnel-row">
+          <div class="funnel-label">${label}</div>
+          <div class="funnel-bar-wrap"><div class="funnel-bar ${cls}" style="width:${(value / max) * 100}%"></div></div>
+          <div class="funnel-val">${value}</div>
+        </div>
+      `).join("") || '<div class="empty">Aucune donnée.</div>';
+    }
+
+    function renderConversionByScore(){
+      const buckets = {
+        ">=75": { label: "Score ≥ 75", total: 0, rented: 0 },
+        "50-74": { label: "Score 50 à 74", total: 0, rented: 0 },
+        "<50": { label: "Score < 50", total: 0, rented: 0 }
+      };
+
+      filteredRows.forEach(r => {
+        const key = scoreBucket(r.score);
+        buckets[key].total += 1;
+        if((r.final_status || "en_cours") === "loue"){
+          buckets[key].rented += 1;
+        }
+      });
+
+      const rows = Object.values(buckets).map(b => ({
+        ...b,
+        pct: b.total ? Math.round((b.rented / b.total) * 100) : 0
+      }));
+
+      const wrap = document.getElementById("conversionTableWrap");
+      if(!filteredRows.length){
+        wrap.innerHTML = '<div class="empty">Aucune donnée à afficher.</div>';
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Tranche</th>
+              <th>Nb dossiers</th>
+              <th>Loués</th>
+              <th>Taux conversion</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.label}</td>
+                <td>${r.total}</td>
+                <td>${r.rented}</td>
+                <td>
+                  <span class="pill ${r.pct >= 50 ? 'pill-green' : r.pct >= 25 ? 'pill-orange' : 'pill-red'}">
+                    ${r.pct}%
+                  </span>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderFinalStatuses(){
+      const counts = {
+        en_cours: 0,
+        loue: 0,
+        refuse: 0,
+        abandonne: 0,
+        archive: 0
+      };
+
+      filteredRows.forEach(r => {
+        const key = r.final_status || "en_cours";
+        if(counts[key] !== undefined) counts[key] += 1;
+      });
+
+      const total = filteredRows.length || 1;
+      const order = ["en_cours", "loue", "refuse", "abandonne", "archive"];
+      const wrap = document.getElementById("finalStatusTableWrap");
+
+      if(!filteredRows.length){
+        wrap.innerHTML = '<div class="empty">Aucune donnée à afficher.</div>';
+        return;
+      }
+
+      wrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Statut final</th>
+              <th>Volume</th>
+              <th>Poids</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${order.map(key => {
+              const value = counts[key];
+              const pct = Math.round((value / total) * 100);
+              const pillClass =
+                key === "loue" ? "pill-purple" :
+                key === "refuse" ? "pill-red" :
+                key === "abandonne" ? "pill-orange" :
+                key === "archive" ? "pill-orange" : "pill-green";
+              return `
+                <tr>
+                  <td>${finalLabel(key)}</td>
+                  <td>${value}</td>
+                  <td><span class="pill ${pillClass}">${pct}%</span></td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderTimeline(){
+      const map = new Map();
+
+      filteredRows.forEach(r => {
+        const key = dateKey(r.created_at);
+        if(!key) return;
+        map.set(key, (map.get(key) || 0) + 1);
+      });
+
+      const entries = Array.from(map.entries())
+        .sort((a,b) => a[0].localeCompare(b[0]))
+        .slice(-10);
+
+      const max = Math.max(...entries.map(e => e[1]), 1);
+      const container = document.getElementById("timelineContainer");
+
+      if(!entries.length){
+        container.innerHTML = '<div class="empty">Pas assez de données datées.</div>';
+        return;
+      }
+
+      container.innerHTML = entries.map(([date, value]) => `
+        <div class="timeline-row">
+          <div class="timeline-date">${formatDate(date)}</div>
+          <div class="timeline-bar-wrap"><div class="timeline-bar" style="width:${(value / max) * 100}%"></div></div>
+          <div class="timeline-val">${value}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderDashboard(){
+      renderStats();
+      renderRiskBlocks();
+      renderFunnel();
+      renderConversionByScore();
+      renderFinalStatuses();
+      renderTimeline();
+    }
+
+    async function init(){
+      try{
+        allRows = await fetchDossiers();
+        applyFilters();
+      } catch(e){
+        document.querySelector(".layout").innerHTML = `<div class="empty">Erreur de chargement : ${e.message}</div>`;
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("bienFilter").addEventListener("change", applyFilters);
+    document.getElementById("periodFilter").addEventListener("change", applyFilters);
+    document.getElementById("finalFilter").addEventListener("change", applyFilters);
+
+    document.getElementById("refreshBtn").addEventListener("click", async () => {
+      await init();
+    });
+
+    document.getElementById("clearFiltersBtn").addEventListener("click", () => {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("bienFilter").value = "";
+      document.getElementById("periodFilter").value = "all";
+      document.getElementById("finalFilter").value = "";
+      applyFilters();
+    });
+
+    // ── SUPABASE AUTH ──────────────────────────────────────────
+    let currentSession = null;
+
+    function getAuthHeaders(){
+      const token = currentSession?.access_token || SUPABASE_ANON_KEY;
+      return { "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + token, "Content-Type": "application/json" };
+    }
+
+    async function supabaseSignIn(email, password){
+      const res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
+        method: "POST",
+        headers: { "apikey": SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error_description || data.msg || "Identifiants incorrects.");
+      return data;
+    }
+
+    function persistSession(session){
+      try {
+        localStorage.setItem("kaddu_admin_session", JSON.stringify({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+          expires_at: Date.now() + (session.expires_in || 3600) * 1000
+        }));
+      } catch(e){}
+    }
+
+    function loadSession(){
+      try {
+        const raw = localStorage.getItem("kaddu_admin_session");
+        if(!raw) return null;
+        const s = JSON.parse(raw);
+        if(s.expires_at && Date.now() > s.expires_at - 60000) return null;
+        return s;
+      } catch(e){ return null; }
+    }
+
+    function clearSession(){ localStorage.removeItem("kaddu_admin_session"); currentSession = null; }
+    function showApp(){ document.getElementById("authOverlay").style.display = "none"; }
+
+    function initAuth(){
+      const logoutBtn = document.getElementById("logoutBtn");
+      if(logoutBtn) logoutBtn.addEventListener("click", () => { clearSession(); location.reload(); });
+
+      const saved = loadSession();
+      if(saved && saved.access_token){ currentSession = saved; showApp(); init(); return; }
+
+      const authBtn = document.getElementById("authBtn");
+      const authError = document.getElementById("authError");
+      const authLoading = document.getElementById("authLoading");
+
+      authBtn.addEventListener("click", async () => {
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value;
+        if(!email || !password){
+          authError.textContent = "Merci de renseigner l'email et le mot de passe.";
+          authError.style.display = "block"; return;
+        }
+        authBtn.disabled = true; authError.style.display = "none"; authLoading.style.display = "block";
+        try {
+          const session = await supabaseSignIn(email, password);
+          currentSession = session; persistSession(session); showApp(); init();
+        } catch(e){
+          authError.textContent = e.message || "Connexion impossible.";
+          authError.style.display = "block";
+        } finally { authBtn.disabled = false; authLoading.style.display = "none"; }
+      });
+
+      [document.getElementById("authEmail"), document.getElementById("authPassword")]
+        .forEach(el => el && el.addEventListener("keydown", e => { if(e.key === "Enter") authBtn.click(); }));
+    }
+
+    document.addEventListener("DOMContentLoaded", initAuth);
+    // ───────────────────────────────────────────────────────────
+
+  </script>
+</body>
+</html>
