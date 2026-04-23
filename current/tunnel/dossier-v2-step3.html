@@ -1,41 +1,464 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>KADDU — Étape 3</title><style>
-:root{--or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.68);--bdr:rgba(191,150,80,.18);--green:#00C875;--red:#ff9f9f;--card:#0b2039}
-*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);line-height:1.6}
-nav{position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10}
-.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
-.sticky{position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);padding:14px 16px;z-index:9}.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
-.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KADDU — Étape 3</title>
+<style>
+:root{
+  --or:#BF9650; --nbl:#07182B; --txt:#F8F4EE; --muted:rgba(248,244,238,.68);
+  --bdr:rgba(191,150,80,.18); --green:#00C875; --red:#ff6b6b; --orange:#ffcc7a; --blue:#53b7ff;
+  --card:#0b2039; --okbg:rgba(0,200,117,.08); --warnbg:rgba(255,204,122,.10); --infobg:rgba(83,183,255,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);line-height:1.6}
+nav{
+  position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10
+}
+.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+.sticky{
+  position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);
+  padding:14px 16px;z-index:9
+}
+.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+.meta-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.small{font-size:13px;color:var(--muted)}
 .box{max-width:980px;margin:18px auto 60px;background:var(--card);border:1px solid var(--bdr);padding:30px 24px}
-h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}h1 em{font-style:italic;color:var(--or)}.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{margin-bottom:16px}label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.help{font-size:13px;color:var(--muted);margin-top:6px}.req{color:#ffcc7a}
-input,select,textarea{width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:17px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}textarea{min-height:98px;resize:vertical}
-.error{display:none;color:var(--red);font-size:13px;margin-top:8px}.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px;flex-wrap:wrap}
-.btn1,.btn2,.btn3,.btn4{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}.btn1{background:var(--or);color:#111}
-.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}.btn3{background:#25D366;color:#fff}.btn4{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--bdr)}
-.notice{margin-top:18px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7}.notice.warn{border-color:rgba(191,150,80,.35);background:rgba(191,150,80,.08)}
-.recap{margin-top:18px;padding:14px 16px;border:1px solid var(--bdr);background:rgba(255,255,255,.03)}.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.recap-item{color:var(--muted);line-height:1.6}.recap-item strong{display:block;color:var(--txt);font-weight:700}
-.card{border:1px solid var(--bdr);padding:18px;background:rgba(255,255,255,.02);margin-bottom:16px}.badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
-.hidden{display:none!important}.score-box{border:1px solid var(--bdr);background:rgba(191,150,80,.06);padding:18px;text-align:center}.score-value{font-family:Georgia,serif;font-size:54px;color:var(--or);line-height:1}.score-label{margin-top:6px;color:var(--muted)}
-ul.reason-list{margin:10px 0 0 18px;color:var(--muted);line-height:1.8}.file-card{border:1px dashed var(--bdr);padding:18px;background:rgba(255,255,255,.02);margin-bottom:14px}
-.file-row{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.file-meta,.muted,.small{font-size:13px;color:var(--muted)}
-.status-pill{display:inline-block;padding:4px 8px;font-size:11px;border:1px solid var(--bdr);text-transform:uppercase;letter-spacing:.08em}.status-ok{color:var(--green);border-color:rgba(0,200,117,.25)}.status-warn{color:#ffcc7a;border-color:rgba(255,204,122,.3)}.status-bad{color:var(--red);border-color:rgba(255,159,159,.25)}
-.toggle{display:flex;gap:8px;align-items:center;margin-top:8px}
-@media(max-width:860px){.row,.recap-grid{grid-template-columns:1fr}h1{font-size:34px}}
-</style></head><body>
-<nav><a class="back" href="dossier-v2-step2.html">← Retour</a><div>Kàddu · Dossier premium</div></nav>
-<div class="top"><div class="sticky"><div class="stepmsg">Étape 3 sur 5 · Stabilité & références</div><div id="bienLabel" style="margin-bottom:10px;font-weight:700;"></div><div id="bienRent" class="small" style="margin-bottom:10px;"></div><div class="progress"><div class="fill" style="width:60%"></div></div></div></div>
-<div class="box"><span class="badge">Contexte du dossier</span><h1>Quelques repères <em>complémentaires</em></h1><div class="sub">Ces informations renforcent votre dossier et nous aident à traiter votre demande plus vite.</div>
-<form id="step3Form">
-<div class="row"><div class="field"><label>Ancienneté dans l’emploi</label><select id="ancienneteEmploi"><option value="">Sélectionner</option><option>Moins de 6 mois</option><option>6 à 12 mois</option><option>1 à 3 ans</option><option>Plus de 3 ans</option></select></div><div class="field"><label>Logement actuel <span class="req">*</span></label><select id="logementActuel"><option value="">Sélectionner</option><option>Locataire</option><option>Hébergé</option><option>Propriétaire</option><option>Résidence de fonction</option></select></div></div>
-<div class="row"><div class="field"><label>Motif du départ</label><input id="raisonDepart"/></div><div class="field"><label>Nombre d’occupants <span class="req">*</span></label><input id="nbOccupants"/></div></div>
-<div id="garantBlock" class="card hidden"><div class="badge">Garant</div><div class="row"><div class="field"><label>Nom du garant</label><input id="garantNom"/></div><div class="field"><label>Téléphone du garant</label><input id="garantTelephone"/></div></div></div>
-<div id="bailleurBlock" class="card hidden"><div class="badge">Référence bailleur</div><div class="row"><div class="field"><label>Nom de l’ancien bailleur</label><input id="bailleurNom"/></div><div class="field"><label>Contact du bailleur</label><input id="bailleurContact"/></div></div><div class="help">Facultatif si vous n’en avez pas, mais recommandé.</div></div>
-<div id="formError" class="error">Merci de compléter les éléments requis.</div><div class="navbtns"><a class="btn2" href="dossier-v2-step2.html">← Retour</a><button class="btn1" type="submit">Continuer</button></div>
-</form></div>
-<script src="kaddu-v2-ux-hooks.js"></script><script>const step2=KadduV2.loadStep('step2'); document.addEventListener('DOMContentLoaded',()=>{KadduV2.setHeader();const ex=KadduV2.loadStep('step3');['ancienneteEmploi','logementActuel','raisonDepart','nbOccupants','garantNom','garantTelephone','bailleurNom','bailleurContact'].forEach(id=>{if(ex[id])document.getElementById(id).value=ex[id]}); refreshBlocks();});
-function refreshBlocks(){document.getElementById('garantBlock').classList.toggle('hidden',step2.garant!=='Oui'); document.getElementById('bailleurBlock').classList.toggle('hidden',document.getElementById('logementActuel').value!=='Locataire');}
-document.getElementById('logementActuel').addEventListener('change',refreshBlocks);
-document.getElementById('step3Form').addEventListener('submit',e=>{e.preventDefault(); const data={ancienneteEmploi:document.getElementById('ancienneteEmploi').value,logementActuel:document.getElementById('logementActuel').value,raisonDepart:document.getElementById('raisonDepart').value.trim(),nbOccupants:String(document.getElementById('nbOccupants').value||'').replace(/\D/g,''),garantNom:document.getElementById('garantNom').value.trim(),garantTelephone:document.getElementById('garantTelephone').value.trim(),bailleurNom:document.getElementById('bailleurNom').value.trim(),bailleurContact:document.getElementById('bailleurContact').value.trim(),bailleurApplicable:document.getElementById('logementActuel').value==='Locataire'?'yes':'no'}; if(!data.logementActuel||!data.nbOccupants){document.getElementById('formError').style.display='block';return;} KadduV2.saveStep('step3',data); location.href='dossier-v2-step4.html?bien='+encodeURIComponent(KadduV2.getBien());});</script></body></html>
+.badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}
+h1 em{font-style:italic;color:var(--or)}
+.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.help{font-size:13px;color:var(--muted);margin-top:6px}
+.req{color:#ffcc7a}
+input,select,textarea{
+  width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);
+  color:var(--txt);font-size:17px
+}
+select{background-color:rgba(255,255,255,.04);color:var(--txt)}
+select option{background:#102640;color:#F8F4EE}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
+textarea{min-height:96px;resize:vertical}
+.error{display:none;color:var(--red);font-size:13px;margin-top:8px}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--red)!important;box-shadow:0 0 0 1px rgba(255,107,107,.18) inset}
+.field.valid input,.field.valid select,.field.valid textarea{border-color:rgba(0,200,117,.35)}
+.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px;flex-wrap:wrap}
+.btn1,.btn2{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}
+.btn1{background:var(--or);color:#111}
+.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}
+.hidden{display:none!important}
+.score-box{
+  border:1px solid var(--bdr);padding:18px;border-left:4px solid var(--blue);margin-top:18px;background:var(--infobg)
+}
+.score-box.good{background:var(--okbg);border-left-color:var(--green)}
+.score-box.mid{background:var(--warnbg);border-left-color:var(--orange)}
+.score-box.info{background:var(--infobg);border-left-color:var(--blue)}
+.score-title{font-weight:700;margin-bottom:6px}
+.score-sub{color:var(--muted);font-size:14px}
+.micro{
+  margin-top:8px;font-size:13px;color:var(--muted);padding:10px 12px;
+  border:1px dashed rgba(191,150,80,.18);background:rgba(255,255,255,.02)
+}
+.recap{
+  margin:18px 0;padding:14px 16px;border:1px solid var(--bdr);background:rgba(255,255,255,.03)
+}
+.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.recap-item{color:var(--muted);line-height:1.6}
+.recap-item strong{display:block;color:var(--txt);font-weight:700}
+@media(max-width:860px){.row,.recap-grid{grid-template-columns:1fr} h1{font-size:34px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="back" href="dossier-v2-step2.html">← Retour</a>
+  <div>Kàddu · Votre situation actuelle</div>
+</nav>
+
+<div class="top">
+  <div class="sticky">
+    <div class="stepmsg">Étape 3 sur 5 · Votre situation actuelle</div>
+    <div id="bienLabel" style="margin-bottom:4px;font-weight:700;"></div>
+    <div class="meta-row">
+      <div id="bienRent" class="small"></div>
+      <div class="small">Temps estimé : ~1 min</div>
+    </div>
+    <div class="progress"><div class="fill" style="width:60%"></div></div>
+  </div>
+</div>
+
+<div class="box">
+  <span class="badge">Contexte du dossier</span>
+  <h1>Votre situation <em>et votre projet</em></h1>
+  <div class="sub">
+    Cette étape permet de mieux comprendre votre situation actuelle et votre projet,
+    afin d’accompagner au mieux votre dossier.
+  </div>
+
+  <div class="recap" id="step2Recap">
+    <div class="recap-title">Rappel de votre profil</div>
+    <div class="recap-grid">
+      <div class="recap-item"><strong id="recapSituation">—</strong>Situation professionnelle</div>
+      <div class="recap-item"><strong id="recapRevenu">—</strong>Revenus mensuels</div>
+      <div class="recap-item"><strong id="recapGarant">—</strong>Garant</div>
+      <div class="recap-item"><strong id="recapPays">—</strong>Pays de résidence</div>
+    </div>
+  </div>
+
+  <form id="step3Form" novalidate>
+    <div class="row">
+      <div class="field" id="field-logementActuel">
+        <label>Situation de logement actuelle <span class="req">*</span></label>
+        <select id="logementActuel">
+          <option value="">Sélectionner</option>
+          <option>Locataire</option>
+          <option>Hébergé</option>
+          <option>Propriétaire occupant</option>
+          <option>Résidence étudiante</option>
+          <option>Hôtel / meublé temporaire</option>
+        </select>
+        <div class="help">Ce champ permet de mieux comprendre votre situation actuelle.</div>
+        <div class="error" id="errLogementActuel"></div>
+      </div>
+
+      <div class="field" id="field-ancienneteLogement">
+        <label>Ancienneté dans votre logement actuel <span class="req">*</span></label>
+        <select id="ancienneteLogement">
+          <option value="">Sélectionner</option>
+          <option>Moins de 3 mois</option>
+          <option>3 à 6 mois</option>
+          <option>6 à 12 mois</option>
+          <option>1 à 2 ans</option>
+          <option>Plus de 2 ans</option>
+        </select>
+        <div class="error" id="errAncienneteLogement"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field" id="field-motifDepart">
+        <label>Motif du départ <span class="req">*</span></label>
+        <select id="motifDepart">
+          <option value="">Sélectionner</option>
+          <option>Mutation professionnelle</option>
+          <option>Rapprochement travail / école</option>
+          <option>Fin de bail</option>
+          <option>Besoin d’un logement plus grand</option>
+          <option>Besoin d’un logement plus petit</option>
+          <option>Changement de quartier</option>
+          <option>Première installation</option>
+          <option>Logement temporaire</option>
+          <option>Autre</option>
+        </select>
+        <div class="error" id="errMotifDepart"></div>
+      </div>
+
+      <div class="field" id="field-nombreOccupants">
+        <label>Nombre total d’occupants prévus <span class="req">*</span></label>
+        <select id="nombreOccupants">
+          <option value="">Sélectionner</option>
+          <option value="1">1 occupant</option>
+          <option value="2">2 occupants</option>
+          <option value="3">3 occupants</option>
+          <option value="4">4 occupants</option>
+          <option value="5">5 occupants ou plus</option>
+        </select>
+        <div class="error" id="errNombreOccupants"></div>
+      </div>
+    </div>
+
+    <div class="field hidden" id="field-motifDepartAutre">
+      <label>Précision sur le motif du départ <span class="req">*</span></label>
+      <textarea id="motifDepartAutre" placeholder="Merci de préciser brièvement votre situation."></textarea>
+      <div class="error" id="errMotifDepartAutre"></div>
+    </div>
+
+    <div id="blocBailleur" class="row hidden">
+      <div class="field" id="field-nomBailleur">
+        <label>Nom de votre précédent bailleur / résidence</label>
+        <input id="nomBailleur"/>
+        <div class="help">Peut être utile pour compléter votre dossier si vous êtes actuellement locataire ou en résidence.</div>
+        <div class="error" id="errNomBailleur"></div>
+      </div>
+
+      <div class="field" id="field-contactBailleur">
+        <label>Contact du précédent bailleur</label>
+        <input id="contactBailleur" placeholder="Téléphone ou email"/>
+        <div class="help">Facultatif — peut aider à compléter votre dossier.</div>
+        <div class="error" id="errContactBailleur"></div>
+      </div>
+    </div>
+
+    <div id="blocGarantDetails" class="row hidden">
+      <div class="field" id="field-nomGarant">
+        <label>Nom du garant <span class="req">*</span></label>
+        <input id="nomGarant"/>
+        <div class="error" id="errNomGarant"></div>
+      </div>
+
+      <div class="field" id="field-contactGarant">
+        <label>Contact du garant <span class="req">*</span></label>
+        <input id="contactGarant" placeholder="Téléphone ou email"/>
+        <div class="error" id="errContactGarant"></div>
+      </div>
+    </div>
+
+    <div class="score-box info" id="profileBox">
+      <div class="score-title">Profil en cours de structuration</div>
+      <div class="score-sub">Renseignez votre situation actuelle pour compléter la présentation de votre dossier.</div>
+    </div>
+
+    <div class="micro" id="microRecommendation">
+      Les recommandations apparaîtront automatiquement selon votre situation.
+    </div>
+
+    <div id="formError" class="error" style="margin-top:18px;">Merci de corriger les champs signalés ci-dessous.</div>
+
+    <div class="navbtns">
+      <a class="btn2" href="dossier-v2-step2.html">← Retour</a>
+      <button class="btn1" type="submit">Continuer</button>
+    </div>
+  </form>
+</div>
+
+<script src="kaddu-v2-ux-hooks.js"></script>
+<script>
+(function(){
+  const step2 = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step2') : JSON.parse(localStorage.getItem('kaddu_v2_step2') || '{}');
+
+  const logementActuel = document.getElementById('logementActuel');
+  const ancienneteLogement = document.getElementById('ancienneteLogement');
+  const motifDepart = document.getElementById('motifDepart');
+  const motifDepartAutre = document.getElementById('motifDepartAutre');
+  const nombreOccupants = document.getElementById('nombreOccupants');
+  const nomBailleur = document.getElementById('nomBailleur');
+  const contactBailleur = document.getElementById('contactBailleur');
+  const nomGarant = document.getElementById('nomGarant');
+  const contactGarant = document.getElementById('contactGarant');
+  const formError = document.getElementById('formError');
+  const profileBox = document.getElementById('profileBox');
+  const microRecommendation = document.getElementById('microRecommendation');
+
+  function setRecap(){
+    document.getElementById('recapSituation').textContent = step2.situation || '—';
+    document.getElementById('recapRevenu').textContent = step2.revenu ? new Intl.NumberFormat('fr-FR').format(Number(step2.revenu)) + ' FCFA' : '—';
+    document.getElementById('recapGarant').textContent = step2.garant || '—';
+    document.getElementById('recapPays').textContent = step2.paysResidence || '—';
+  }
+
+  function clearFieldState(id){
+    const field = document.getElementById('field-' + id);
+    const err = document.getElementById('err' + id.charAt(0).toUpperCase() + id.slice(1));
+    if(field) field.classList.remove('invalid','valid');
+    if(err){ err.style.display='none'; err.textContent=''; }
+  }
+
+  function setFieldError(id, message){
+    const field = document.getElementById('field-' + id);
+    const err = document.getElementById('err' + id.charAt(0).toUpperCase() + id.slice(1));
+    if(field) field.classList.add('invalid');
+    if(err){ err.textContent = message; err.style.display = 'block'; }
+  }
+
+  function setFieldValid(id){
+    const field = document.getElementById('field-' + id);
+    if(field){
+      field.classList.remove('invalid');
+      field.classList.add('valid');
+    }
+  }
+
+  function refreshConditional(){
+    const isAutre = motifDepart.value === 'Autre';
+    document.getElementById('field-motifDepartAutre').classList.toggle('hidden', !isAutre);
+
+    const showBailleur = ['Locataire','Résidence étudiante','Hôtel / meublé temporaire'].includes(logementActuel.value);
+    document.getElementById('blocBailleur').classList.toggle('hidden', !showBailleur);
+
+    const showGarantDetails = step2.garant === 'Oui';
+    document.getElementById('blocGarantDetails').classList.toggle('hidden', !showGarantDetails);
+
+    refreshProfileAssessment();
+  }
+
+  function refreshProfileAssessment(){
+    let score = Number(step2.preScoreInterne || 0);
+
+    if(logementActuel.value === 'Locataire') score += 12;
+    if(logementActuel.value === 'Propriétaire occupant') score += 15;
+    if(logementActuel.value === 'Hébergé') score += 4;
+    if(logementActuel.value === 'Résidence étudiante') score += 6;
+    if(logementActuel.value === 'Hôtel / meublé temporaire') score += 3;
+
+    if(ancienneteLogement.value === 'Plus de 2 ans') score += 12;
+    else if(ancienneteLogement.value === '1 à 2 ans') score += 10;
+    else if(ancienneteLogement.value === '6 à 12 mois') score += 7;
+    else if(ancienneteLogement.value === '3 à 6 mois') score += 4;
+    else if(ancienneteLogement.value === 'Moins de 3 mois') score += 1;
+
+    const occupants = Number(nombreOccupants.value || 0);
+    if(occupants === 1 || occupants === 2) score += 8;
+    else if(occupants === 3) score += 4;
+    else if(occupants >= 4) score += 1;
+
+    if(nomBailleur.value.trim()) score += 5;
+    if(contactBailleur.value.trim()) score += 5;
+    if(nomGarant.value.trim()) score += 4;
+    if(contactGarant.value.trim()) score += 4;
+    if(motifDepart.value && motifDepart.value !== 'Autre') score += 4;
+    if(motifDepart.value === 'Autre' && motifDepartAutre.value.trim()) score += 2;
+
+    let toneClass = 'info';
+    let title = 'Profil en cours de structuration';
+    let sub = 'Renseignez votre situation actuelle pour compléter la présentation de votre dossier.';
+
+    if(logementActuel.value && ancienneteLogement.value && motifDepart.value && nombreOccupants.value){
+      if(score >= 75){
+        toneClass = 'good';
+        title = '🟢 Profil fluide';
+        sub = "Votre situation actuelle semble cohérente et aide à présenter votre dossier de manière claire.";
+      } else if(score >= 55){
+        toneClass = 'mid';
+        title = '🟡 Profil à compléter';
+        sub = "Votre dossier est déjà bien engagé. Quelques éléments peuvent encore le rendre plus lisible.";
+      } else {
+        toneClass = 'info';
+        title = '🔵 Profil en cours de structuration';
+        sub = "Votre dossier se construit progressivement. Quelques précisions permettront de mieux présenter votre situation.";
+      }
+    }
+
+    profileBox.className = 'score-box ' + toneClass;
+    profileBox.innerHTML = '<div class="score-title">' + title + '</div><div class="score-sub">' + sub + '</div>';
+
+    if(logementActuel.value === 'Hébergé'){
+      microRecommendation.textContent = "Si besoin, un garant ou un contact de référence peut aider à mieux présenter votre dossier.";
+    } else if(logementActuel.value === 'Locataire' && !contactBailleur.value.trim()){
+      microRecommendation.textContent = "Un contact de précédent bailleur peut être utile pour compléter votre profil.";
+    } else if(Number(nombreOccupants.value || 0) >= 4){
+      microRecommendation.textContent = "Préciser clairement le nombre d’occupants peut aider à mieux présenter votre projet.";
+    } else if(step2.garant === 'Oui' && (!nomGarant.value.trim() || !contactGarant.value.trim())){
+      microRecommendation.textContent = "Si vous avez déclaré un garant, compléter ses coordonnées renforcera immédiatement votre dossier.";
+    } else {
+      microRecommendation.textContent = "Les recommandations apparaîtront automatiquement selon votre situation.";
+    }
+
+    profileBox.dataset.profilescore = String(score);
+  }
+
+  function validate(){
+    formError.style.display = 'none';
+    let firstInvalid = null;
+    let valid = true;
+
+    ['logementActuel','ancienneteLogement','motifDepart','motifDepartAutre','nombreOccupants','nomBailleur','contactBailleur','nomGarant','contactGarant']
+      .forEach(clearFieldState);
+
+    if(!logementActuel.value){
+      valid = false; firstInvalid = firstInvalid || 'logementActuel';
+      setFieldError('logementActuel','Merci de préciser votre situation de logement actuelle.');
+    } else setFieldValid('logementActuel');
+
+    if(!ancienneteLogement.value){
+      valid = false; firstInvalid = firstInvalid || 'ancienneteLogement';
+      setFieldError('ancienneteLogement','Merci de préciser votre ancienneté dans le logement actuel.');
+    } else setFieldValid('ancienneteLogement');
+
+    if(!motifDepart.value){
+      valid = false; firstInvalid = firstInvalid || 'motifDepart';
+      setFieldError('motifDepart','Merci de sélectionner le motif de votre départ.');
+    } else setFieldValid('motifDepart');
+
+    if(motifDepart.value === 'Autre'){
+      if(!motifDepartAutre.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'motifDepartAutre';
+        setFieldError('motifDepartAutre','Merci de préciser votre motif de départ.');
+      } else setFieldValid('motifDepartAutre');
+    }
+
+    if(!nombreOccupants.value){
+      valid = false; firstInvalid = firstInvalid || 'nombreOccupants';
+      setFieldError('nombreOccupants','Merci de préciser le nombre total d’occupants prévus.');
+    } else setFieldValid('nombreOccupants');
+
+    if(step2.garant === 'Oui'){
+      if(!nomGarant.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'nomGarant';
+        setFieldError('nomGarant','Merci de renseigner le nom du garant.');
+      } else setFieldValid('nomGarant');
+
+      if(!contactGarant.value.trim()){
+        valid = false; firstInvalid = firstInvalid || 'contactGarant';
+        setFieldError('contactGarant','Merci de renseigner le contact du garant.');
+      } else setFieldValid('contactGarant');
+    }
+
+    if(!valid){
+      formError.style.display = 'block';
+      const target = document.getElementById('field-' + firstInvalid);
+      if(target){
+        target.scrollIntoView({ behavior:'smooth', block:'center' });
+        const input = target.querySelector('input,select,textarea');
+        if(input) input.focus();
+      }
+    }
+
+    return valid;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if(window.KadduV2 && KadduV2.setHeader) KadduV2.setHeader();
+    setRecap();
+
+    const ex = (window.KadduV2 && KadduV2.loadStep) ? KadduV2.loadStep('step3') : JSON.parse(localStorage.getItem('kaddu_v2_step3') || '{}');
+    ['logementActuel','ancienneteLogement','motifDepart','motifDepartAutre','nombreOccupants','nomBailleur','contactBailleur','nomGarant','contactGarant']
+      .forEach(id => {
+        if(ex[id]) document.getElementById(id).value = ex[id];
+      });
+
+    refreshConditional();
+  });
+
+  [logementActuel, ancienneteLogement, motifDepart, nombreOccupants, nomBailleur, contactBailleur, nomGarant, contactGarant, motifDepartAutre]
+    .forEach(el => {
+      el.addEventListener('input', refreshProfileAssessment);
+      el.addEventListener('change', refreshConditional);
+    });
+
+  document.getElementById('step3Form').addEventListener('submit', e => {
+    e.preventDefault();
+    if(!validate()) return;
+
+    const data = {
+      logementActuel: logementActuel.value,
+      ancienneteLogement: ancienneteLogement.value,
+      motifDepart: motifDepart.value,
+      motifDepartAutre: motifDepartAutre.value.trim(),
+      nombreOccupants: nombreOccupants.value,
+      nomBailleur: nomBailleur.value.trim(),
+      contactBailleur: contactBailleur.value.trim(),
+      nomGarant: nomGarant.value.trim(),
+      contactGarant: contactGarant.value.trim(),
+      scoreProfilInterne: Number(profileBox.dataset.profilescore || 0)
+    };
+
+    if(window.KadduV2 && KadduV2.saveStep){
+      KadduV2.saveStep('step3', data);
+      location.href = 'dossier-v2-step4.html?bien=' + encodeURIComponent(KadduV2.getBien());
+    } else {
+      localStorage.setItem('kaddu_v2_step3', JSON.stringify(data));
+      location.href = 'dossier-v2-step4.html';
+    }
+  });
+})();
+</script>
+</body>
+</html>
