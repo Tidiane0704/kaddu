@@ -1,49 +1,783 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>KADDU — Étape 1</title><style>
-:root{--or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.68);--bdr:rgba(191,150,80,.18);--green:#00C875;--red:#ff9f9f;--card:#0b2039}
-*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);line-height:1.6}
-nav{position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10}
-.back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}.top{max-width:980px;margin:0 auto;padding:18px 24px 0}
-.sticky{position:sticky;top:78px;background:var(--card);border:1px solid var(--bdr);padding:14px 16px;z-index:9}.stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
-.progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
-.box{max-width:980px;margin:18px auto 60px;background:var(--card);border:1px solid var(--bdr);padding:30px 24px}
-h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}h1 em{font-style:italic;color:var(--or)}.sub{color:var(--muted);line-height:1.8;margin-bottom:24px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{margin-bottom:16px}label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.help{font-size:13px;color:var(--muted);margin-top:6px}.req{color:#ffcc7a}
-input,select,textarea{width:100%;padding:14px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:17px}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}textarea{min-height:98px;resize:vertical}
-.error{display:none;color:var(--red);font-size:13px;margin-top:8px}.navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px;flex-wrap:wrap}
-.btn1,.btn2,.btn3,.btn4{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}.btn1{background:var(--or);color:#111}
-.btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}.btn3{background:#25D366;color:#fff}.btn4{background:rgba(255,255,255,.04);color:var(--txt);border:1px solid var(--bdr)}
-.notice{margin-top:18px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7}.notice.warn{border-color:rgba(191,150,80,.35);background:rgba(191,150,80,.08)}
-.recap{margin-top:18px;padding:14px 16px;border:1px solid var(--bdr);background:rgba(255,255,255,.03)}.recap-title{font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
-.recap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.recap-item{color:var(--muted);line-height:1.6}.recap-item strong{display:block;color:var(--txt);font-weight:700}
-.card{border:1px solid var(--bdr);padding:18px;background:rgba(255,255,255,.02);margin-bottom:16px}.badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
-.hidden{display:none!important}.score-box{border:1px solid var(--bdr);background:rgba(191,150,80,.06);padding:18px;text-align:center}.score-value{font-family:Georgia,serif;font-size:54px;color:var(--or);line-height:1}.score-label{margin-top:6px;color:var(--muted)}
-ul.reason-list{margin:10px 0 0 18px;color:var(--muted);line-height:1.8}.file-card{border:1px dashed var(--bdr);padding:18px;background:rgba(255,255,255,.02);margin-bottom:14px}
-.file-row{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.file-meta,.muted,.small{font-size:13px;color:var(--muted)}
-.status-pill{display:inline-block;padding:4px 8px;font-size:11px;border:1px solid var(--bdr);text-transform:uppercase;letter-spacing:.08em}.status-ok{color:var(--green);border-color:rgba(0,200,117,.25)}.status-warn{color:#ffcc7a;border-color:rgba(255,204,122,.3)}.status-bad{color:var(--red);border-color:rgba(255,159,159,.25)}
-.toggle{display:flex;gap:8px;align-items:center;margin-top:8px}
-@media(max-width:860px){.row,.recap-grid{grid-template-columns:1fr}h1{font-size:34px}}
-</style></head><body>
-<nav><a class="back" href="javascript:history.back()">← Retour</a><div>Kàddu · Dossier premium</div></nav>
-<div class="top"><div class="sticky"><div class="stepmsg">Étape 1 sur 5 · Contact & projet</div><div id="bienLabel" style="margin-bottom:10px;font-weight:700;"></div><div id="bienRent" class="small" style="margin-bottom:10px;"></div><div class="progress"><div class="fill" style="width:20%"></div></div></div></div>
-<div class="box"><span class="badge">Environ 3 minutes</span><h1>Commençons par <em>l’essentiel</em></h1><div class="sub">Nous préparons votre candidature avec les informations clés uniquement. Vous pourrez tout relire avant envoi.</div>
-<form id="step1Form">
-<div class="row"><div class="field"><label>Prénom <span class="req">*</span></label><input id="prenom"/><div id="err_prenom" class="error"></div></div><div class="field"><label>Nom <span class="req">*</span></label><input id="nom"/><div id="err_nom" class="error"></div></div></div>
-<div class="row"><div class="field"><label>Téléphone <span class="req">*</span></label><input id="telephone"/><div id="err_telephone" class="error"></div></div><div class="field"><label>Email <span class="req">*</span></label><input id="email" type="email"/><div id="err_email" class="error"></div></div></div>
-<div class="field"><label>WhatsApp</label><div class="toggle"><input type="checkbox" id="waSame" checked style="width:auto"/><span class="small">Mon numéro WhatsApp est le même que mon téléphone</span></div></div>
-<div id="waField" class="field hidden"><label>Numéro WhatsApp</label><input id="numeroWhatsapp"/></div>
-<div class="row"><div class="field"><label>Date d’entrée souhaitée <span class="req">*</span></label><input id="dateEntree" type="date"/><div id="err_dateEntree" class="error"></div></div><div class="field"><label>Durée souhaitée <span class="req">*</span></label><select id="duree"><option value="">Sélectionner</option><option>1 à 3 mois</option><option>3 à 6 mois</option><option>6 à 12 mois</option><option>12 mois et plus</option></select><div id="err_duree" class="error"></div></div></div>
-<div class="row"><div class="field"><label>Date de naissance</label><input id="dateNaissance" type="date"/></div><div class="field"><label>Nationalité</label><input id="nationalite"/></div></div>
-<div class="card"><div class="badge">Vérification du numéro</div><div class="small">Pour sécuriser votre dossier, nous vérifions votre téléphone avant la suite. En cas de difficulté, vous pourrez continuer via WhatsApp.</div><div id="otpIntro" class="notice warn" style="display:none"></div><div id="otpBlock" class="hidden" style="margin-top:14px;"><div class="row"><div class="field"><label>Code reçu par SMS / WhatsApp</label><input id="otpCode" maxlength="6"/><div class="help">Code sandbox actuel : 123456</div></div><div class="field"><label>&nbsp;</label><button class="btn4" type="button" id="otpBtn">Vérifier le code</button><div id="otpState" class="help"></div></div></div></div></div>
-<div id="formError" class="error">Merci de corriger les champs indiqués.</div><div class="navbtns"><a class="btn2" href="javascript:history.back()">← Retour</a><button class="btn1" type="submit">Continuer</button></div>
-</form></div>
-<script src="kaddu-v2-ux-hooks.js"></script><script>document.addEventListener('DOMContentLoaded',()=>{KadduV2.setHeader(); const existing=KadduV2.loadStep('step1'); ['prenom','nom','telephone','email','dateEntree','duree','dateNaissance','nationalite','numeroWhatsapp'].forEach(id=>{if(existing[id])document.getElementById(id).value=existing[id]}); document.getElementById('waSame').checked=!existing.numeroWhatsapp||existing.numeroWhatsapp===existing.telephone; syncWa();});
-function syncWa(){document.getElementById('waField').classList.toggle('hidden',document.getElementById('waSame').checked)}; document.getElementById('waSame').addEventListener('change',syncWa);
-function setErr(id,msg){const el=document.getElementById('err_'+id); if(el){el.style.display=msg?'block':'none'; el.textContent=msg||'';}}
-document.getElementById('otpBtn').addEventListener('click',()=>{const ok=document.getElementById('otpCode').value.trim()==='123456'; localStorage.setItem('kaddu_otp_verified',ok?'true':'false'); document.getElementById('otpState').textContent=ok?'Numéro vérifié avec succès.':'Code non validé. Vérification manuelle prévue.';});
-document.getElementById('step1Form').addEventListener('submit',e=>{e.preventDefault(); let ok=true; const v={prenom:document.getElementById('prenom').value.trim(),nom:document.getElementById('nom').value.trim(),telephone:document.getElementById('telephone').value.trim(),email:document.getElementById('email').value.trim(),dateEntree:document.getElementById('dateEntree').value,duree:document.getElementById('duree').value,dateNaissance:document.getElementById('dateNaissance').value,nationalite:document.getElementById('nationalite').value.trim(),numeroWhatsapp:document.getElementById('waSame').checked?document.getElementById('telephone').value.trim():document.getElementById('numeroWhatsapp').value.trim(),bien:KadduV2.getBien()};
-['prenom','nom','telephone','email','dateEntree','duree'].forEach(i=>setErr(i,'')); if(!v.prenom){setErr('prenom','Prénom requis');ok=false} if(!v.nom){setErr('nom','Nom requis');ok=false} if(!v.telephone){setErr('telephone','Téléphone requis');ok=false} if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email)){setErr('email','Email invalide');ok=false} if(!v.dateEntree){setErr('dateEntree','Date d’entrée requise');ok=false} if(!v.duree){setErr('duree','Durée requise');ok=false}
-if(!document.getElementById('waSame').checked&&!v.numeroWhatsapp){document.getElementById('formError').style.display='block';document.getElementById('formError').textContent='Merci d’indiquer le numéro WhatsApp.';ok=false}
-KadduV2.saveStep('step1',v); const otp=KadduV2.estimateOtpDecision(v); const intro=document.getElementById('otpIntro'); intro.style.display='block'; intro.textContent=otp.required?'Vérification recommandée : '+otp.reasons.join(' · '):'Vérification rapide du téléphone avant de poursuivre.'; document.getElementById('otpBlock').classList.remove('hidden');
-if(!ok)return; if(localStorage.getItem('kaddu_otp_verified')===null)localStorage.setItem('kaddu_otp_verified','false'); location.href='dossier-v2-step2.html?bien='+encodeURIComponent(KadduV2.getBien());});</script></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kàddu — Étape 1</title>
+  <style>
+    :root{
+      --or:#BF9650;--nbl:#07182B;--txt:#F8F4EE;--muted:rgba(248,244,238,.62);
+      --bdr:rgba(191,150,80,.18);--green:#00C875;--red:#ff9f9f;--ok:#7fd9b1;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt)}
+    nav{position:sticky;top:0;background:rgba(7,24,43,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:18px 28px;display:flex;justify-content:space-between;align-items:center;z-index:10}
+    .back{color:var(--txt);text-decoration:none;border:1px solid var(--bdr);padding:10px 14px}
+    .top{max-width:980px;margin:0 auto;padding:18px 24px 0}
+    .sticky{position:sticky;top:78px;background:#0b2039;border:1px solid var(--bdr);padding:14px 16px;z-index:9}
+    .stepmsg{font-size:13px;color:var(--or);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+    .progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+    .fill{height:100%;background:linear-gradient(90deg,var(--or),var(--green))}
+    .box{max-width:980px;margin:18px auto 60px;background:#0b2039;border:1px solid var(--bdr);padding:30px 24px}
+    h1{font-family:Georgia,serif;font-size:42px;font-weight:400;margin:0 0 8px}
+    h1 em{font-style:italic;color:var(--or)}
+    .sub{color:var(--muted);line-height:1.8;margin-bottom:18px}
+    .intro-card{margin-bottom:24px;padding:14px 16px;border:1px solid rgba(0,200,117,.22);background:rgba(0,200,117,.05);color:var(--muted);line-height:1.7}
+    .intro-card strong{color:var(--txt)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .field{margin-bottom:16px}
+    label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+    .req{color:#ffcc7a}
+    input,select,textarea,button.date-btn{
+      width:100%;padding:14px 14px;background:rgba(255,255,255,.04);
+      border:1px solid var(--bdr);color:var(--txt);font-size:17px;border-radius:0;
+    }
+    input:focus,select:focus,textarea:focus,button.date-btn:focus{outline:none;border-color:var(--or)}
+    select{background-color:rgba(255,255,255,.04);color:var(--txt)}
+    select option{background:#102640;color:#F8F4EE}
+    .hint{font-size:12px;color:rgba(248,244,238,.45);margin-top:7px;line-height:1.5}
+    .error-global{display:none;color:var(--red);font-size:13px;margin-top:10px;padding:12px 14px;border:1px solid rgba(255,159,159,.25);background:rgba(255,159,159,.06)}
+    .error{display:none;color:var(--red);font-size:13px;margin-top:8px;line-height:1.5}
+    .field.invalid input,.field.invalid select,.field.invalid button.date-btn{border-color:var(--red)!important;box-shadow:0 0 0 1px rgba(255,159,159,.15) inset}
+    .field.valid input,.field.valid select,.field.valid button.date-btn{border-color:rgba(127,217,177,.55)}
+    .navbtns{display:flex;justify-content:space-between;gap:14px;margin-top:22px}
+    .btn1,.btn2{padding:14px 16px;text-decoration:none;border:none;font-weight:700;cursor:pointer;display:inline-block}
+    .btn1{background:var(--or);color:#111}
+    .btn2{border:1px solid var(--bdr);background:transparent;color:var(--txt)}
+    .toggle-row{display:flex;align-items:center;gap:10px;margin:8px 0 16px}
+    .toggle-row input{width:auto;transform:scale(1.1)}
+    .phone-wrap{display:grid;grid-template-columns:230px 1fr;gap:10px}
+    .phone-input-wrap{position:relative}
+    .phone-badge{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(248,244,238,.35);pointer-events:none;letter-spacing:.06em}
+    .status-line{margin-top:10px;font-size:13px;color:var(--ok)}
+    .search-note{font-size:12px;color:rgba(248,244,238,.40);margin-top:7px}
+    .date-wrap{display:grid;grid-template-columns:1fr 58px;gap:10px}
+    .date-btn{cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
+    .native-date{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+    .date-field-box{position:relative}
+    @media(max-width:860px){
+      .row,.phone-wrap{grid-template-columns:1fr}
+      h1{font-size:34px}
+      .navbtns{flex-direction:column-reverse}
+      .btn1,.btn2{width:100%;text-align:center}
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <a class="back" href="javascript:history.back()">← Retour</a>
+  <div>Kàddu · Dossier locataire digital</div>
+</nav>
+
+<div class="top">
+  <div class="sticky">
+    <div class="stepmsg">Étape 1 sur 5 · Identité et projet</div>
+    <div id="bienLabel" style="margin-bottom:10px;font-weight:700;">Le Petit Bantukay</div>
+    <div class="progress"><div class="fill" style="width:20%"></div></div>
+  </div>
+</div>
+
+<div class="box">
+  <h1>Votre dossier <em>commence ici</em></h1>
+  <div class="sub">
+    Nous commençons par les informations essentielles pour préparer votre candidature.
+    La vérification du numéro se fera à l’étape suivante, de façon claire et guidée.
+  </div>
+
+  <div class="intro-card">
+    <strong>Dossier locataire digital</strong><br>
+    Merci de renseigner chaque champ avec précision. En cas de blocage, le premier champ à corriger sera mis en évidence.
+  </div>
+
+  <form id="step1Form" novalidate>
+    <div class="row">
+      <div class="field" id="field-nom">
+        <label>Nom complet <span class="req">*</span></label>
+        <input id="nom" autocomplete="name" />
+        <div class="error" id="error-nom"></div>
+      </div>
+
+      <div class="field" id="field-email">
+        <label>Email <span class="req">*</span></label>
+        <input id="email" type="email" autocomplete="email" />
+        <div class="error" id="error-email"></div>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <input type="checkbox" id="sameWhatsapp" checked />
+      <label for="sameWhatsapp" style="margin:0;color:var(--txt);text-transform:none;letter-spacing:0;font-size:14px;">
+        Mon numéro WhatsApp est le même que mon numéro principal
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="field" id="field-telephone">
+        <label>Téléphone principal <span class="req">*</span></label>
+        <div class="phone-wrap">
+          <select id="telephoneCode"><option value="+221" data-digits="9" data-example="77 123 45 67" selected>Sénégal (+221)</option>
+<option value="+33" data-digits="9" data-example="6 12 34 56 78" >France (+33)</option>
+<option value="+1" data-digits="10" data-example="202 555 0147" >États-Unis / Canada (+1)</option>
+<option value="+44" data-digits="10" data-example="7400 123456" >Royaume-Uni (+44)</option>
+<option value="+34" data-digits="9" data-example="612 34 56 78" >Espagne (+34)</option>
+<option value="+39" data-digits="10" data-example="312 345 6789" >Italie (+39)</option>
+<option value="+49" data-digits="10" data-example="1512 345678" >Allemagne (+49)</option>
+<option value="+32" data-digits="9" data-example="470 12 34 56" >Belgique (+32)</option>
+<option value="+41" data-digits="9" data-example="78 123 45 67" >Suisse (+41)</option>
+<option value="+352" data-digits="9" data-example="621 123 456" >Luxembourg (+352)</option>
+<option value="+212" data-digits="9" data-example="612 34 56 78" >Maroc (+212)</option>
+<option value="+216" data-digits="8" data-example="20 123 456" >Tunisie (+216)</option>
+<option value="+213" data-digits="9" data-example="551 23 45 67" >Algérie (+213)</option>
+<option value="+225" data-digits="10" data-example="07 12 34 56 78" >Côte d’Ivoire (+225)</option>
+<option value="+226" data-digits="8" data-example="70 12 34 56" >Burkina Faso (+226)</option>
+<option value="+223" data-digits="8" data-example="76 12 34 56" >Mali (+223)</option>
+<option value="+224" data-digits="9" data-example="620 12 34 56" >Guinée (+224)</option>
+<option value="+245" data-digits="7" data-example="955 1234" >Guinée-Bissau (+245)</option>
+<option value="+220" data-digits="7" data-example="301 2345" >Gambie (+220)</option>
+<option value="+222" data-digits="8" data-example="22 12 34 56" >Mauritanie (+222)</option>
+<option value="+229" data-digits="8" data-example="90 12 34 56" >Bénin (+229)</option>
+<option value="+228" data-digits="8" data-example="90 12 34 56" >Togo (+228)</option>
+<option value="+227" data-digits="8" data-example="90 12 34 56" >Niger (+227)</option>
+<option value="+234" data-digits="10" data-example="801 234 5678" >Nigéria (+234)</option>
+<option value="+237" data-digits="9" data-example="671 23 45 67" >Cameroun (+237)</option>
+<option value="+243" data-digits="9" data-example="812 345 678" >RDC (+243)</option>
+<option value="+242" data-digits="9" data-example="061 234 567" >Congo (+242)</option>
+<option value="+241" data-digits="8" data-example="06 12 34 56" >Gabon (+241)</option>
+<option value="+240" data-digits="9" data-example="222 123 456" >Guinée équatoriale (+240)</option>
+<option value="+971" data-digits="9" data-example="50 123 4567" >Émirats arabes unis (+971)</option>
+<option value="+966" data-digits="9" data-example="50 123 4567" >Arabie saoudite (+966)</option></select>
+          <div class="phone-input-wrap">
+            <input id="telephoneLocal" inputmode="numeric" placeholder="Ex : 77 123 45 67" autocomplete="tel-national" />
+            <span class="phone-badge" id="telephoneDigitsBadge">9 chiffres</span>
+          </div>
+        </div>
+        <div class="hint" id="telephoneHint">Choisissez l’indicatif pays, puis saisissez votre numéro. Le format est assisté automatiquement.</div>
+        <div class="error" id="error-telephone"></div>
+      </div>
+
+      <div class="field" id="field-numeroWhatsapp">
+        <label>Numéro WhatsApp <span class="req">*</span></label>
+        <div class="phone-wrap">
+          <select id="whatsappCode"><option value="+221" data-digits="9" data-example="77 123 45 67" selected>Sénégal (+221)</option>
+<option value="+33" data-digits="9" data-example="6 12 34 56 78" >France (+33)</option>
+<option value="+1" data-digits="10" data-example="202 555 0147" >États-Unis / Canada (+1)</option>
+<option value="+44" data-digits="10" data-example="7400 123456" >Royaume-Uni (+44)</option>
+<option value="+34" data-digits="9" data-example="612 34 56 78" >Espagne (+34)</option>
+<option value="+39" data-digits="10" data-example="312 345 6789" >Italie (+39)</option>
+<option value="+49" data-digits="10" data-example="1512 345678" >Allemagne (+49)</option>
+<option value="+32" data-digits="9" data-example="470 12 34 56" >Belgique (+32)</option>
+<option value="+41" data-digits="9" data-example="78 123 45 67" >Suisse (+41)</option>
+<option value="+352" data-digits="9" data-example="621 123 456" >Luxembourg (+352)</option>
+<option value="+212" data-digits="9" data-example="612 34 56 78" >Maroc (+212)</option>
+<option value="+216" data-digits="8" data-example="20 123 456" >Tunisie (+216)</option>
+<option value="+213" data-digits="9" data-example="551 23 45 67" >Algérie (+213)</option>
+<option value="+225" data-digits="10" data-example="07 12 34 56 78" >Côte d’Ivoire (+225)</option>
+<option value="+226" data-digits="8" data-example="70 12 34 56" >Burkina Faso (+226)</option>
+<option value="+223" data-digits="8" data-example="76 12 34 56" >Mali (+223)</option>
+<option value="+224" data-digits="9" data-example="620 12 34 56" >Guinée (+224)</option>
+<option value="+245" data-digits="7" data-example="955 1234" >Guinée-Bissau (+245)</option>
+<option value="+220" data-digits="7" data-example="301 2345" >Gambie (+220)</option>
+<option value="+222" data-digits="8" data-example="22 12 34 56" >Mauritanie (+222)</option>
+<option value="+229" data-digits="8" data-example="90 12 34 56" >Bénin (+229)</option>
+<option value="+228" data-digits="8" data-example="90 12 34 56" >Togo (+228)</option>
+<option value="+227" data-digits="8" data-example="90 12 34 56" >Niger (+227)</option>
+<option value="+234" data-digits="10" data-example="801 234 5678" >Nigéria (+234)</option>
+<option value="+237" data-digits="9" data-example="671 23 45 67" >Cameroun (+237)</option>
+<option value="+243" data-digits="9" data-example="812 345 678" >RDC (+243)</option>
+<option value="+242" data-digits="9" data-example="061 234 567" >Congo (+242)</option>
+<option value="+241" data-digits="8" data-example="06 12 34 56" >Gabon (+241)</option>
+<option value="+240" data-digits="9" data-example="222 123 456" >Guinée équatoriale (+240)</option>
+<option value="+971" data-digits="9" data-example="50 123 4567" >Émirats arabes unis (+971)</option>
+<option value="+966" data-digits="9" data-example="50 123 4567" >Arabie saoudite (+966)</option></select>
+          <div class="phone-input-wrap">
+            <input id="numeroWhatsappLocal" inputmode="numeric" placeholder="Ex : 77 123 45 67" autocomplete="tel-national" />
+            <span class="phone-badge" id="whatsappDigitsBadge">9 chiffres</span>
+          </div>
+        </div>
+        <div class="hint" id="whatsappHint">Renseignez le numéro sur lequel vous êtes joignable sur WhatsApp.</div>
+        <div class="error" id="error-numeroWhatsapp"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field" id="field-dateNaissance">
+        <label>Date de naissance <span class="req">*</span></label>
+        <div class="date-wrap">
+          <div class="date-field-box">
+            <input id="dateNaissance" type="text" inputmode="numeric" maxlength="10" placeholder="JJ/MM/AAAA" />
+            <input id="dateNaissanceNative" class="native-date" type="date" />
+          </div>
+          <button class="date-btn" type="button" id="btnDateNaissance" aria-label="Choisir la date de naissance">📅</button>
+        </div>
+        <div class="hint">Vous pouvez soit taper la date, soit utiliser le mini-calendrier.</div>
+        <div class="error" id="error-dateNaissance"></div>
+      </div>
+
+      <div class="field" id="field-nationalite">
+        <label>Nationalité <span class="req">*</span></label>
+        <input id="nationalite" list="nationalitesList" placeholder="Commencez à taper votre nationalité" autocomplete="off" />
+        <datalist id="nationalitesList">
+          <option value="Afghane"></option>
+<option value="Albanaise"></option>
+<option value="Algérienne"></option>
+<option value="Allemande"></option>
+<option value="Andorrane"></option>
+<option value="Angolaise"></option>
+<option value="Antiguaise-et-Barbudienne"></option>
+<option value="Saoudienne"></option>
+<option value="Argentine"></option>
+<option value="Arménienne"></option>
+<option value="Australienne"></option>
+<option value="Autrichienne"></option>
+<option value="Azerbaïdjanaise"></option>
+<option value="Bahaméenne"></option>
+<option value="Bahreïnienne"></option>
+<option value="Bangladaise"></option>
+<option value="Barbadienne"></option>
+<option value="Belge"></option>
+<option value="Bélizienne"></option>
+<option value="Béninoise"></option>
+<option value="Bhoutanaise"></option>
+<option value="Biélorusse"></option>
+<option value="Birmane"></option>
+<option value="Bissau-Guinéenne"></option>
+<option value="Bolivienne"></option>
+<option value="Bosnienne"></option>
+<option value="Botswanaise"></option>
+<option value="Brésilienne"></option>
+<option value="Brunéienne"></option>
+<option value="Bulgare"></option>
+<option value="Burkinabè"></option>
+<option value="Burundaise"></option>
+<option value="Cambodgienne"></option>
+<option value="Camerounaise"></option>
+<option value="Canadienne"></option>
+<option value="Cap-verdienne"></option>
+<option value="Centrafricaine"></option>
+<option value="Chilienne"></option>
+<option value="Chinoise"></option>
+<option value="Chypriote"></option>
+<option value="Colombienne"></option>
+<option value="Comorienne"></option>
+<option value="Congolaise (Congo-Brazzaville)"></option>
+<option value="Congolaise (RDC)"></option>
+<option value="Costaricienne"></option>
+<option value="Ivoirienne"></option>
+<option value="Croate"></option>
+<option value="Cubaine"></option>
+<option value="Danoise"></option>
+<option value="Djiboutienne"></option>
+<option value="Dominicaine"></option>
+<option value="Dominiquaise"></option>
+<option value="Égyptienne"></option>
+<option value="Émirienne"></option>
+<option value="Équatorienne"></option>
+<option value="Érythréenne"></option>
+<option value="Espagnole"></option>
+<option value="Estonienne"></option>
+<option value="Eswatinienne"></option>
+<option value="Éthiopienne"></option>
+<option value="Fidjienne"></option>
+<option value="Finlandaise"></option>
+<option value="Française"></option>
+<option value="Gabonaise"></option>
+<option value="Gambienne"></option>
+<option value="Géorgienne"></option>
+<option value="Ghanéenne"></option>
+<option value="Grecque"></option>
+<option value="Grenadienne"></option>
+<option value="Guatémaltèque"></option>
+<option value="Guinéenne"></option>
+<option value="Équato-guinéenne"></option>
+<option value="Guyanienne"></option>
+<option value="Haïtienne"></option>
+<option value="Hondurienne"></option>
+<option value="Hongroise"></option>
+<option value="Indienne"></option>
+<option value="Indonésienne"></option>
+<option value="Irakienne"></option>
+<option value="Iranienne"></option>
+<option value="Irlandaise"></option>
+<option value="Islandaise"></option>
+<option value="Israélienne"></option>
+<option value="Italienne"></option>
+<option value="Jamaïcaine"></option>
+<option value="Japonaise"></option>
+<option value="Jordanienne"></option>
+<option value="Kazakhe"></option>
+<option value="Kényane"></option>
+<option value="Kirghize"></option>
+<option value="Kiribatienne"></option>
+<option value="Koweïtienne"></option>
+<option value="Laotienne"></option>
+<option value="Lesothane"></option>
+<option value="Lettone"></option>
+<option value="Libanaise"></option>
+<option value="Libérienne"></option>
+<option value="Libyenne"></option>
+<option value="Liechtensteinoise"></option>
+<option value="Lituanienne"></option>
+<option value="Luxembourgeoise"></option>
+<option value="Macédonienne"></option>
+<option value="Malgache"></option>
+<option value="Malaisienne"></option>
+<option value="Malawienne"></option>
+<option value="Maldivienne"></option>
+<option value="Malienne"></option>
+<option value="Maltaise"></option>
+<option value="Marocaine"></option>
+<option value="Marshallaise"></option>
+<option value="Mauricienne"></option>
+<option value="Mauritanienne"></option>
+<option value="Mexicaine"></option>
+<option value="Micronésienne"></option>
+<option value="Moldave"></option>
+<option value="Monégasque"></option>
+<option value="Mongole"></option>
+<option value="Monténégrine"></option>
+<option value="Mozambicaine"></option>
+<option value="Namibienne"></option>
+<option value="Nauruane"></option>
+<option value="Népalaise"></option>
+<option value="Nicaraguayenne"></option>
+<option value="Nigérienne"></option>
+<option value="Nigériane"></option>
+<option value="Norvégienne"></option>
+<option value="Néo-zélandaise"></option>
+<option value="Omanaise"></option>
+<option value="Ougandaise"></option>
+<option value="Ouzbèke"></option>
+<option value="Pakistanaise"></option>
+<option value="Palaosienne"></option>
+<option value="Panaméenne"></option>
+<option value="Papouasienne"></option>
+<option value="Paraguayenne"></option>
+<option value="Néerlandaise"></option>
+<option value="Péruvienne"></option>
+<option value="Philippine"></option>
+<option value="Polonaise"></option>
+<option value="Portugaise"></option>
+<option value="Qatarienne"></option>
+<option value="Roumaine"></option>
+<option value="Britannique"></option>
+<option value="Russe"></option>
+<option value="Rwandaise"></option>
+<option value="Saint-Christophienne-et-Névicienne"></option>
+<option value="Saint-Lucienne"></option>
+<option value="Saint-Vincentaise-et-Grenadine"></option>
+<option value="Salvadorienne"></option>
+<option value="Samoane"></option>
+<option value="Santoméenne"></option>
+<option value="Sénégalaise"></option>
+<option value="Serbe"></option>
+<option value="Seychelloise"></option>
+<option value="Sierra-léonaise"></option>
+<option value="Singapourienne"></option>
+<option value="Slovaque"></option>
+<option value="Slovène"></option>
+<option value="Somalienne"></option>
+<option value="Soudanaise"></option>
+<option value="Sud-Soudanaise"></option>
+<option value="Sri-Lankaise"></option>
+<option value="Sud-Africaine"></option>
+<option value="Suédoise"></option>
+<option value="Suisse"></option>
+<option value="Surinamaise"></option>
+<option value="Syrienne"></option>
+<option value="Tadjike"></option>
+<option value="Tanzanienne"></option>
+<option value="Tchadienne"></option>
+<option value="Tchèque"></option>
+<option value="Thaïlandaise"></option>
+<option value="Togolaise"></option>
+<option value="Tongienne"></option>
+<option value="Trinidadienne"></option>
+<option value="Tunisienne"></option>
+<option value="Turkmène"></option>
+<option value="Turque"></option>
+<option value="Tuvaluane"></option>
+<option value="Ukrainienne"></option>
+<option value="Uruguayenne"></option>
+<option value="Vanuataise"></option>
+<option value="Vaticane"></option>
+<option value="Vénézuélienne"></option>
+<option value="Vietnamienne"></option>
+<option value="Yéménite"></option>
+<option value="Zambienne"></option>
+<option value="Zimbabwéenne"></option>
+        </datalist>
+        <div class="search-note">Tapez quelques lettres pour filtrer rapidement la liste.</div>
+        <div class="error" id="error-nationalite"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field" id="field-dateEntree">
+        <label>Date d'entrée souhaitée <span class="req">*</span></label>
+        <div class="date-wrap">
+          <div class="date-field-box">
+            <input id="dateEntree" type="text" inputmode="numeric" maxlength="10" placeholder="JJ/MM/AAAA" />
+            <input id="dateEntreeNative" class="native-date" type="date" />
+          </div>
+          <button class="date-btn" type="button" id="btnDateEntree" aria-label="Choisir la date d'entrée">📅</button>
+        </div>
+        <div class="hint">Vous pouvez soit taper la date, soit utiliser le mini-calendrier.</div>
+        <div class="error" id="error-dateEntree"></div>
+      </div>
+
+      <div class="field" id="field-duree">
+        <label>Durée souhaitée <span class="req">*</span></label>
+        <select id="duree">
+          <option value="">Sélectionner</option>
+          <option>1 à 3 mois</option>
+          <option>3 à 6 mois</option>
+          <option>6 à 12 mois</option>
+          <option>12 mois et plus</option>
+        </select>
+        <div class="error" id="error-duree"></div>
+      </div>
+    </div>
+
+    <div id="formError" class="error-global">Merci de corriger les champs signalés ci-dessous.</div>
+
+    <div class="navbtns">
+      <a class="btn2" href="javascript:history.back()">← Retour</a>
+      <button class="btn1" type="submit" id="continueBtn">Continuer</button>
+    </div>
+
+    <div class="status-line">Après validation, vous passerez automatiquement à l’étape de vérification du numéro.</div>
+  </form>
+</div>
+
+<script>
+  const qp = new URLSearchParams(location.search);
+  const bien = qp.get("bien") || "bantukay";
+  const labels = {
+    bantukay:"Le Petit Bantukay",
+    nopalukay:"Le Petit Nopalukay",
+    suxalikay:"Le Petit Suxalikay"
+  };
+  document.getElementById("bienLabel").textContent = labels[bien] || bien;
+
+  const form = document.getElementById("step1Form");
+  const sameWhatsapp = document.getElementById("sameWhatsapp");
+  const telephoneCode = document.getElementById("telephoneCode");
+  const whatsappCode = document.getElementById("whatsappCode");
+  const telephoneLocal = document.getElementById("telephoneLocal");
+  const numeroWhatsappLocal = document.getElementById("numeroWhatsappLocal");
+  const telephoneHint = document.getElementById("telephoneHint");
+  const telDigitsBadge = document.getElementById("telephoneDigitsBadge");
+  const waDigitsBadge = document.getElementById("whatsappDigitsBadge");
+  const dateNaissance = document.getElementById("dateNaissance");
+  const dateEntree = document.getElementById("dateEntree");
+  const dateNaissanceNative = document.getElementById("dateNaissanceNative");
+  const dateEntreeNative = document.getElementById("dateEntreeNative");
+
+  const knownNationalities = new Set(['Afghane', 'Albanaise', 'Algérienne', 'Allemande', 'Andorrane', 'Angolaise', 'Antiguaise-et-Barbudienne', 'Saoudienne', 'Argentine', 'Arménienne', 'Australienne', 'Autrichienne', 'Azerbaïdjanaise', 'Bahaméenne', 'Bahreïnienne', 'Bangladaise', 'Barbadienne', 'Belge', 'Bélizienne', 'Béninoise', 'Bhoutanaise', 'Biélorusse', 'Birmane', 'Bissau-Guinéenne', 'Bolivienne', 'Bosnienne', 'Botswanaise', 'Brésilienne', 'Brunéienne', 'Bulgare', 'Burkinabè', 'Burundaise', 'Cambodgienne', 'Camerounaise', 'Canadienne', 'Cap-verdienne', 'Centrafricaine', 'Chilienne', 'Chinoise', 'Chypriote', 'Colombienne', 'Comorienne', 'Congolaise (Congo-Brazzaville)', 'Congolaise (RDC)', 'Costaricienne', 'Ivoirienne', 'Croate', 'Cubaine', 'Danoise', 'Djiboutienne', 'Dominicaine', 'Dominiquaise', 'Égyptienne', 'Émirienne', 'Équatorienne', 'Érythréenne', 'Espagnole', 'Estonienne', 'Eswatinienne', 'Éthiopienne', 'Fidjienne', 'Finlandaise', 'Française', 'Gabonaise', 'Gambienne', 'Géorgienne', 'Ghanéenne', 'Grecque', 'Grenadienne', 'Guatémaltèque', 'Guinéenne', 'Équato-guinéenne', 'Guyanienne', 'Haïtienne', 'Hondurienne', 'Hongroise', 'Indienne', 'Indonésienne', 'Irakienne', 'Iranienne', 'Irlandaise', 'Islandaise', 'Israélienne', 'Italienne', 'Jamaïcaine', 'Japonaise', 'Jordanienne', 'Kazakhe', 'Kényane', 'Kirghize', 'Kiribatienne', 'Koweïtienne', 'Laotienne', 'Lesothane', 'Lettone', 'Libanaise', 'Libérienne', 'Libyenne', 'Liechtensteinoise', 'Lituanienne', 'Luxembourgeoise', 'Macédonienne', 'Malgache', 'Malaisienne', 'Malawienne', 'Maldivienne', 'Malienne', 'Maltaise', 'Marocaine', 'Marshallaise', 'Mauricienne', 'Mauritanienne', 'Mexicaine', 'Micronésienne', 'Moldave', 'Monégasque', 'Mongole', 'Monténégrine', 'Mozambicaine', 'Namibienne', 'Nauruane', 'Népalaise', 'Nicaraguayenne', 'Nigérienne', 'Nigériane', 'Norvégienne', 'Néo-zélandaise', 'Omanaise', 'Ougandaise', 'Ouzbèke', 'Pakistanaise', 'Palaosienne', 'Panaméenne', 'Papouasienne', 'Paraguayenne', 'Néerlandaise', 'Péruvienne', 'Philippine', 'Polonaise', 'Portugaise', 'Qatarienne', 'Roumaine', 'Britannique', 'Russe', 'Rwandaise', 'Saint-Christophienne-et-Névicienne', 'Saint-Lucienne', 'Saint-Vincentaise-et-Grenadine', 'Salvadorienne', 'Samoane', 'Santoméenne', 'Sénégalaise', 'Serbe', 'Seychelloise', 'Sierra-léonaise', 'Singapourienne', 'Slovaque', 'Slovène', 'Somalienne', 'Soudanaise', 'Sud-Soudanaise', 'Sri-Lankaise', 'Sud-Africaine', 'Suédoise', 'Suisse', 'Surinamaise', 'Syrienne', 'Tadjike', 'Tanzanienne', 'Tchadienne', 'Tchèque', 'Thaïlandaise', 'Togolaise', 'Tongienne', 'Trinidadienne', 'Tunisienne', 'Turkmène', 'Turque', 'Tuvaluane', 'Ukrainienne', 'Uruguayenne', 'Vanuataise', 'Vaticane', 'Vénézuélienne', 'Vietnamienne', 'Yéménite', 'Zambienne', 'Zimbabwéenne']);
+  const fieldIds = ["nom","email","telephone","numeroWhatsapp","dateNaissance","nationalite","dateEntree","duree"];
+
+  function digitsOnly(value) {
+    return (value || "").replace(/\D/g, "");
+  }
+
+  function formatPhoneForStorage(codeEl, localEl) {
+    return codeEl.value + digitsOnly(localEl.value);
+  }
+
+  function expectedDigits(selectEl) {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    return Number((opt && opt.dataset && opt.dataset.digits) || 8);
+  }
+
+  function exampleFor(selectEl) {
+    const opt = selectEl.options[selectEl.selectedIndex];
+    return (opt && opt.dataset && opt.dataset.example) || "";
+  }
+
+  function maskDateInput(el) {
+    const raw = el.value || "";
+    const digits = digitsOnly(raw).slice(0,8);
+    let out = "";
+    if (digits.length > 0) out += digits.slice(0,2);
+    if (digits.length >= 3) out += "/" + digits.slice(2,4);
+    if (digits.length >= 5) out += "/" + digits.slice(4,8);
+    el.value = out;
+  }
+
+  function parseDateFR(value) {
+    const v = (value || "").trim();
+    const m = v.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!m) return null;
+    const d = Number(m[1]), mo = Number(m[2]), y = Number(m[3]);
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+    return dt;
+  }
+
+  function toIsoDate(frValue) {
+    const dt = parseDateFR(frValue);
+    if (!dt) return "";
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, "0");
+    const d = String(dt.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+  }
+
+  function isoToFr(isoValue) {
+    if (!isoValue) return "";
+    const m = isoValue.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return "";
+    return m[3] + "/" + m[2] + "/" + m[1];
+  }
+
+  function formatPhoneVisual(rawDigits, groupPattern) {
+    let digits = digitsOnly(rawDigits);
+    let result = [];
+    let index = 0;
+    for (const size of groupPattern) {
+      if (index >= digits.length) break;
+      result.push(digits.slice(index, index + size));
+      index += size;
+    }
+    if (index < digits.length) result.push(digits.slice(index));
+    return result.join(" ");
+  }
+
+  function getGrouping(expected) {
+    if (expected === 8) return [2,2,2,2];
+    if (expected === 9) return [2,3,2,2];
+    if (expected === 10) return [3,3,2,2];
+    return [3,3,3,3];
+  }
+
+  function updatePhoneUi(codeEl, inputEl, badgeEl, hintEl) {
+    const exp = expectedDigits(codeEl);
+    badgeEl.textContent = exp + " chiffres";
+    inputEl.placeholder = "Ex : " + exampleFor(codeEl);
+    if (hintEl) {
+      hintEl.textContent = "Pour le pays sélectionné, le numéro attendu est de " + exp + " chiffres.";
+    }
+  }
+
+  function maskPhoneInput(codeEl, inputEl) {
+    const exp = expectedDigits(codeEl);
+    const digits = digitsOnly(inputEl.value).slice(0, exp);
+    inputEl.value = formatPhoneVisual(digits, getGrouping(exp));
+  }
+
+  function syncWhatsapp() {
+    const locked = sameWhatsapp.checked;
+    whatsappCode.value = telephoneCode.value;
+    updatePhoneUi(whatsappCode, numeroWhatsappLocal, waDigitsBadge, null);
+    numeroWhatsappLocal.value = telephoneLocal.value;
+    whatsappCode.disabled = locked;
+    numeroWhatsappLocal.readOnly = locked;
+    document.getElementById("whatsappHint").textContent = locked
+      ? "WhatsApp utilisera le même numéro que votre téléphone principal."
+      : "Renseignez le numéro sur lequel vous êtes joignable sur WhatsApp.";
+  }
+
+  function setFieldState(name, isValid, message) {
+    const field = document.getElementById("field-" + name);
+    const err = document.getElementById("error-" + name);
+    if (!field || !err) return;
+    field.classList.remove("invalid","valid");
+    err.style.display = "none";
+    err.textContent = "";
+    if (isValid === null) return;
+    if (isValid) {
+      field.classList.add("valid");
+    } else {
+      field.classList.add("invalid");
+      err.textContent = message || "";
+      err.style.display = "block";
+    }
+  }
+
+  function validateNom() {
+    const v = document.getElementById("nom").value.trim();
+    if (!v) return { ok:false, msg:"Merci de renseigner votre nom complet." };
+    if (v.length < 4) return { ok:false, msg:"Le nom complet semble trop court." };
+    return { ok:true };
+  }
+
+  function validateEmail() {
+    const v = document.getElementById("email").value.trim();
+    if (!v) return { ok:false, msg:"Merci de renseigner votre email." };
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    if (!ok) return { ok:false, msg:"Merci de saisir un email valide." };
+    return { ok:true };
+  }
+
+  function validatePhone(kind) {
+    const isWhatsapp = kind === "numeroWhatsapp";
+    const codeEl = isWhatsapp ? whatsappCode : telephoneCode;
+    const localEl = isWhatsapp ? numeroWhatsappLocal : telephoneLocal;
+    const digits = digitsOnly(localEl.value);
+    const expDigits = expectedDigits(codeEl);
+    if (!digits) return { ok:false, msg:"Merci de saisir un numéro " + (isWhatsapp ? "WhatsApp" : "de téléphone") + "." };
+    if (digits.length !== expDigits) return { ok:false, msg:"Merci de saisir un numéro valide pour le pays sélectionné (" + expDigits + " chiffres attendus)." };
+    return { ok:true };
+  }
+
+  function validateDate(fieldName, label, minAgeYears) {
+    const raw = document.getElementById(fieldName).value.trim();
+    if (!raw) return { ok:false, msg:"Merci de renseigner " + label + "." };
+    const dt = parseDateFR(raw);
+    if (!dt) return { ok:false, msg:"Merci de saisir " + label + " au format JJ/MM/AAAA ou d'utiliser le calendrier." };
+    if (typeof minAgeYears === "number") {
+      const now = new Date();
+      const age = now.getFullYear() - dt.getFullYear() - ((now.getMonth() < dt.getMonth() || (now.getMonth() === dt.getMonth() && now.getDate() < dt.getDate())) ? 1 : 0);
+      if (age < minAgeYears) return { ok:false, msg:"Le candidat doit avoir au moins " + minAgeYears + " ans." };
+    }
+    return { ok:true };
+  }
+
+  function validateNationalite() {
+    const v = document.getElementById("nationalite").value.trim();
+    if (!v) return { ok:false, msg:"Merci de sélectionner votre nationalité." };
+    if (!knownNationalities.has(v)) return { ok:false, msg:"Merci de sélectionner une nationalité proposée dans la liste." };
+    return { ok:true };
+  }
+
+  function validateDuree() {
+    const v = document.getElementById("duree").value.trim();
+    if (!v) return { ok:false, msg:"Merci de sélectionner la durée souhaitée." };
+    return { ok:true };
+  }
+
+  function validateFieldByName(name) {
+    let res = { ok:true };
+    if (name === "nom") res = validateNom();
+    if (name === "email") res = validateEmail();
+    if (name === "telephone") res = validatePhone("telephone");
+    if (name === "numeroWhatsapp") res = validatePhone("numeroWhatsapp");
+    if (name === "dateNaissance") res = validateDate("dateNaissance", "votre date de naissance", 18);
+    if (name === "nationalite") res = validateNationalite();
+    if (name === "dateEntree") res = validateDate("dateEntree", "votre date d'entrée souhaitée");
+    if (name === "duree") res = validateDuree();
+    setFieldState(name, res.ok, res.msg || "");
+    return res.ok;
+  }
+
+  function firstInvalidField() {
+    for (const name of fieldIds) {
+      if (!validateFieldByName(name)) return name;
+    }
+    return null;
+  }
+
+  function bindValidation(id, events) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    (events || ["input","blur","change"]).forEach(evt => {
+      el.addEventListener(evt, () => validateFieldByName(id));
+    });
+  }
+
+  function wireDatePair(textEl, nativeEl, buttonEl, fieldName) {
+    textEl.addEventListener("input", (e) => {
+      maskDateInput(e.target);
+    });
+    textEl.addEventListener("blur", () => {
+      validateFieldByName(fieldName);
+      const iso = toIsoDate(textEl.value.trim());
+      if (iso) nativeEl.value = iso;
+    });
+    buttonEl.addEventListener("click", () => {
+      if (typeof nativeEl.showPicker === "function") {
+        nativeEl.showPicker();
+      } else {
+        nativeEl.focus();
+        nativeEl.click();
+      }
+    });
+    nativeEl.addEventListener("change", () => {
+      textEl.value = isoToFr(nativeEl.value);
+      validateFieldByName(fieldName);
+    });
+  }
+
+  bindValidation("nom");
+  bindValidation("email");
+  bindValidation("nationalite", ["input","blur","change"]);
+  bindValidation("duree");
+
+  [telephoneCode, whatsappCode].forEach(el => el.addEventListener("change", () => {
+    updatePhoneUi(telephoneCode, telephoneLocal, telDigitsBadge, telephoneHint);
+    updatePhoneUi(whatsappCode, numeroWhatsappLocal, waDigitsBadge, null);
+    maskPhoneInput(telephoneCode, telephoneLocal);
+    maskPhoneInput(whatsappCode, numeroWhatsappLocal);
+    validateFieldByName("telephone");
+    validateFieldByName("numeroWhatsapp");
+    if (sameWhatsapp.checked) syncWhatsapp();
+  }));
+
+  telephoneLocal.addEventListener("input", (e) => {
+    maskPhoneInput(telephoneCode, e.target);
+    if (sameWhatsapp.checked) syncWhatsapp();
+  });
+  numeroWhatsappLocal.addEventListener("input", (e) => {
+    maskPhoneInput(whatsappCode, e.target);
+  });
+
+  telephoneLocal.addEventListener("blur", () => validateFieldByName("telephone"));
+  numeroWhatsappLocal.addEventListener("blur", () => validateFieldByName("numeroWhatsapp"));
+
+  sameWhatsapp.addEventListener("change", syncWhatsapp);
+  telephoneCode.addEventListener("change", syncWhatsapp);
+
+  wireDatePair(dateNaissance, dateNaissanceNative, document.getElementById("btnDateNaissance"), "dateNaissance");
+  wireDatePair(dateEntree, dateEntreeNative, document.getElementById("btnDateEntree"), "dateEntree");
+
+  updatePhoneUi(telephoneCode, telephoneLocal, telDigitsBadge, telephoneHint);
+  updatePhoneUi(whatsappCode, numeroWhatsappLocal, waDigitsBadge, null);
+  syncWhatsapp();
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    document.getElementById("formError").style.display = "none";
+
+    const invalid = firstInvalidField();
+    if (invalid) {
+      document.getElementById("formError").style.display = "block";
+      const target = document.getElementById("field-" + invalid);
+      if (target) {
+        target.scrollIntoView({ behavior:"smooth", block:"center" });
+        const input = target.querySelector("input, select, button");
+        if (input) input.focus();
+      }
+      return;
+    }
+
+    const vals = {
+      nom: document.getElementById("nom").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      telephone: formatPhoneForStorage(telephoneCode, telephoneLocal),
+      telephoneCode: telephoneCode.value,
+      telephoneLocal: digitsOnly(telephoneLocal.value),
+      numeroWhatsapp: formatPhoneForStorage(whatsappCode, numeroWhatsappLocal),
+      numeroWhatsappCode: whatsappCode.value,
+      numeroWhatsappLocal: digitsOnly(numeroWhatsappLocal.value),
+      dateNaissance: toIsoDate(dateNaissance.value.trim()),
+      dateNaissanceDisplay: dateNaissance.value.trim(),
+      nationalite: document.getElementById("nationalite").value.trim(),
+      dateEntree: toIsoDate(dateEntree.value.trim()),
+      dateEntreeDisplay: dateEntree.value.trim(),
+      duree: document.getElementById("duree").value.trim(),
+      bien: bien,
+      prequal: {
+        referrer: document.referrer || "direct",
+        userAgent: navigator.userAgent,
+        screen: window.innerWidth + "x" + window.innerHeight,
+        submittedAt: new Date().toISOString()
+      }
+    };
+
+    localStorage.setItem("kaddu_v2_step1", JSON.stringify(vals));
+    localStorage.removeItem("kaddu_otp_verified");
+    window.location.href = "dossier-v2-otp.html?bien=" + encodeURIComponent(bien);
+  });
+</script>
+</body>
+</html>
