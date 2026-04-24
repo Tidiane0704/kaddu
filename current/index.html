@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kàddu — Louer en confiance à Dakar</title>
-  <meta name="description" content="Kàddu réconcilie propriétaires exigeants et locataires sérieux grâce à une expérience immobilière digitale, premium et vérifiée à Dakar." />
+  <meta name="description" content="Kàddu réconcilie propriétaires exigeants et locataires sérieux grâce à une expérience immobilière digitale, premium et vérifiée." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
@@ -497,6 +497,25 @@
       .moteur-score-col{flex-direction:column}
     }
 
+    /* ══ SEARCH CHIPS ══ */
+    .sr-chip{
+      padding:7px 13px;border:1px solid var(--bdr);border-radius:999px;
+      background:rgba(255,255,255,.03);color:rgba(248,244,238,.55);
+      font-family:'DM Sans',sans-serif;font-size:.76rem;cursor:pointer;transition:.18s
+    }
+    .sr-chip:hover{border-color:rgba(191,150,80,.3);color:var(--txt)}
+    .sr-chip.active{background:rgba(191,150,80,.14);border-color:var(--or);color:var(--or);font-weight:600}
+    .sr-result-mini{
+      border:1px solid var(--bdr);border-radius:12px;overflow:hidden;
+      background:rgba(7,24,43,.5);cursor:pointer;transition:.2s
+    }
+    .sr-result-mini:hover{border-color:var(--bds);transform:translateY(-2px)}
+    .sr-result-mini img{width:100%;height:110px;object-fit:cover;display:block}
+    .sr-result-mini-body{padding:10px}
+    .sr-result-mini-body h4{font-size:.88rem;font-family:'Playfair Display',serif;font-weight:300;margin-bottom:3px}
+    .sr-result-mini-body p{font-size:.72rem;color:var(--muted)}
+    .sr-result-mini-body .price{font-size:.88rem;color:var(--or);margin-top:5px;font-weight:600}
+
     /* ══ DIFFÉRENCIATION MEUBLÉ / NON MEUBLÉ ══ */
     /* Badge non meublé — bleu acier sobre */
     .listing-badge-nm{
@@ -800,17 +819,20 @@
       <div class="container hero-grid">
 
         <div class="hero-copy">
-          <span class="eyebrow">1ère agence 100% digitale du Sénégal</span>
-          <h1>Louer <em>sans friction</em>.<br>Louer <em>en confiance</em>.</h1>
-          <div class="hero-slogan">Bailleurs : recevez uniquement des profils qualifiés. Locataires : votre sérieux enfin reconnu.</div>
-          <p class="hero-text">
-            Appartements vérifiés — la seule plateforme qui sécurise le bien et le locataire.
+          <span class="eyebrow">1ère agence immobilière 100% digitale au Sénégal</span>
+          <h1>Appartements vérifiés à Dakar —<br><em>la seule plateforme qui sécurise</em><br><em>bien et locataire</em>.</h1>
+          <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px">
+            Visitez à distance en 360° et candidatez avec un dossier qualifié — fini les mauvaises surprises.
           </p>
-          <div class="hero-pills">
-            <div class="trust-pill"><strong>🥇</strong> 1ère agence 100% digitale · Sénégal</div>
-            <div class="trust-pill"><strong>🌀</strong> Visites 360° disponibles</div>
-            <div class="trust-pill"><strong>🔐</strong> Moteur antifraude intégré</div>
-            <div class="trust-pill">Wave · Orange Money · Stripe</div>
+          <p style="font-size:.76rem;color:rgba(248,244,238,.38);margin-bottom:20px;letter-spacing:.04em">
+            Dossiers analysés automatiquement · Sélection basée sur des données réelles
+          </p>
+
+          <!-- Chips minimalistes Point 5 -->
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px">
+            <span style="padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;color:rgba(248,244,238,.62);background:rgba(255,255,255,.03);letter-spacing:.06em">Visites 360°</span>
+            <span style="padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;color:rgba(248,244,238,.62);background:rgba(255,255,255,.03);letter-spacing:.06em">Moteur antifraude puissant</span>
+            <span style="padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;color:rgba(248,244,238,.62);background:rgba(255,255,255,.03);letter-spacing:.06em">Dossier 100% digital</span>
           </div>
 
           <!-- Search bar fonctionnelle -->
@@ -832,14 +854,12 @@
                   <option value="Saly">Saly</option>
                   <option value="Diourbel">Diourbel</option>
                   <option value="Tambacounda">Tambacounda</option>
-                  <option value="Ziguinchor">Ziguinchor</option>
                 </select>
               </div>
               <div class="search-field">
                 <label>Quartier</label>
                 <select id="searchQuartier">
                   <option value="">Tous les quartiers</option>
-                  <!-- Dakar — Plateau / Centre -->
                   <optgroup label="Plateau · Centre">
                     <option>Plateau</option>
                     <option>Médina</option>
@@ -847,7 +867,6 @@
                     <option>Gueule Tapée · Fass · Colobane</option>
                     <option>Gorée</option>
                   </optgroup>
-                  <!-- Almadies / VDN -->
                   <optgroup label="Almadies · VDN">
                     <option>Almadies</option>
                     <option>Mermoz · Sacré-Cœur</option>
@@ -858,7 +877,6 @@
                     <option>Sipres VDN 2</option>
                     <option>Les Mamelles</option>
                   </optgroup>
-                  <!-- Grand Dakar -->
                   <optgroup label="Grand Dakar · Sud">
                     <option>Grand Dakar</option>
                     <option>HLM</option>
@@ -869,7 +887,6 @@
                     <option>Rebeuss</option>
                     <option>Colobane</option>
                   </optgroup>
-                  <!-- Parcelles Assainies / Nord -->
                   <optgroup label="Parcelles · Nord">
                     <option>Parcelles Assainies</option>
                     <option>Grand Yoff</option>
@@ -877,7 +894,6 @@
                     <option>Patte d'Oie</option>
                     <option>Liberté</option>
                   </optgroup>
-                  <!-- Pikine / Guédiawaye -->
                   <optgroup label="Pikine · Guédiawaye">
                     <option>Pikine</option>
                     <option>Guédiawaye</option>
@@ -885,7 +901,6 @@
                     <option>Yeumbeul</option>
                     <option>Keur Massar</option>
                   </optgroup>
-                  <!-- Rufisque / Périphérie -->
                   <optgroup label="Rufisque · Périphérie">
                     <option>Rufisque</option>
                     <option>Bargny</option>
@@ -902,12 +917,21 @@
                   <option value="non_meuble">Non meublé</option>
                 </select>
               </div>
-              <button class="btn btn-primary btn-lg" onclick="filterBiens()">Rechercher</button>
+              <button class="btn btn-primary btn-lg" onclick="openSearchOverlay()">Rechercher</button>
             </div>
+          </div>
+
+          <!-- Parcours 3 étapes — Point 6 -->
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px;font-size:.74rem;color:rgba(248,244,238,.38)">
+            <span style="color:rgba(248,244,238,.55)">① Explorez les biens</span>
+            <span style="color:rgba(191,150,80,.4)">→</span>
+            <span style="color:rgba(248,244,238,.55)">② Visitez de chez vous en 360°</span>
+            <span style="color:rgba(191,150,80,.4)">→</span>
+            <span style="color:rgba(248,244,238,.55)">③ Candidatez en ligne</span>
           </div>
         </div>
 
-        <!-- Hero panel: featured property card -->
+        <!-- Hero panel: featured property card — chargé dynamiquement depuis Supabase -->
         <aside class="hero-panel" aria-label="Bien en vedette">
           <div class="deco-k">K</div>
           <div class="hero-stack">
@@ -917,31 +941,29 @@
               <div class="metric"><strong>100%</strong><span>Vérifié Kàddu</span></div>
             </div>
 
-            <div class="hero-prop-card">
-              <div class="hero-prop-img apt-bg-1">
+            <!-- Card du bien coup de cœur — peuplée par JS -->
+            <div class="hero-prop-card" id="heroPropCard">
+              <div class="hero-prop-img apt-bg-1" id="heroPropImg">
                 <div class="hero-prop-img-layer"></div>
-                <img src="/assets/images/biens/meubles/bantukay-01.jpeg"
-                     alt="Le Petit Bantukay"
-                     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1"
-                     onerror="this.src='/assets/images/biens/meubles/bantukay-01.jpg';this.onerror=function(){this.style.display='none'}">
-                <div class="hero-prop-badge">Meublé · Coup de cœur</div>
-                <div class="hero-prop-avail">Disponible</div>
+                <div id="heroPropImgInner" style="position:absolute;inset:0;z-index:1"></div>
+                <div class="hero-prop-badge" id="heroPropBadge">Meublé · Coup de cœur</div>
+                <div class="hero-prop-avail" id="heroPropAvail">Disponible</div>
               </div>
               <div class="hero-prop-body">
-                <h4>Le Petit <em>Bantukay</em></h4>
-                <div class="hero-prop-meta">Sipres VDN 2, Dakar · Immeuble AÏDARA</div>
-                <div class="hero-prop-specs">
+                <h4 id="heroPropNom">Le Petit <em>Bantukay</em></h4>
+                <div class="hero-prop-meta" id="heroPropMeta">Sipres VDN 2, Dakar · Immeuble AÏDARA</div>
+                <div class="hero-prop-specs" id="heroPropSpecs">
                   <span class="spec-chip">F3 · 3 pièces</span>
                   <span class="spec-chip">Climatisé</span>
                   <span class="spec-chip">WiFi inclus</span>
                   <span class="spec-chip">Gardiennage</span>
                 </div>
                 <div class="hero-prop-price-row">
-                  <div class="hero-prop-price">
+                  <div class="hero-prop-price" id="heroPropPrice">
                     À partir de 50 000 FCFA
                     <small>/ nuit · prix selon durée</small>
                   </div>
-                  <a class="btn btn-primary" href="#" onclick="event.preventDefault();openModal('bantukay')">Découvrir →</a>
+                  <button class="btn btn-primary" id="heroPropBtn" onclick="openHeroBien()">Voir le bien →</button>
                 </div>
               </div>
             </div>
@@ -1055,6 +1077,24 @@
     <!-- ══ MOTEUR KADDU — SECTION ANTIFRAUDE ══ -->
     <section class="section" id="moteur">
       <div class="container">
+
+        <!-- Stat choc — Point 2 -->
+        <div style="
+          display:flex;align-items:center;gap:20px;
+          border:1px solid rgba(191,150,80,.22);border-radius:18px;
+          background:linear-gradient(135deg,rgba(191,150,80,.07),rgba(7,24,43,.5));
+          padding:18px 24px;margin-bottom:36px;flex-wrap:wrap
+        ">
+          <div style="font-size:2.4rem;flex-shrink:0">🔍</div>
+          <div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:300;margin-bottom:4px">
+              En moyenne, <em style="color:var(--or);font-style:italic">7 dossiers sur 10</em> reçus sans Kàddu présentent des incohérences détectées par notre moteur.
+            </div>
+            <div style="font-size:.76rem;color:rgba(248,244,238,.38);letter-spacing:.06em">
+              Identité · Revenus · Situation locative · Cohérence documentaire
+            </div>
+          </div>
+        </div>
 
         <div class="section-head" style="margin-bottom:40px">
           <div>
@@ -1268,9 +1308,9 @@
               </div>
               <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
-              <div class="listing-avail">Disponible</div>
+              <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>
               <div class="listing-cta-overlay">
-                <button class="btn-explorer" onclick="openModal('bantukay')">Explorer →</button>
+                <button class="btn-explorer" onclick="openModal('bantukay')">Voir le bien →</button>
               </div>
             </div>
             <div class="listing-body">
@@ -1288,7 +1328,7 @@
                   <strong>50 000 FCFA</strong>
                   <small>/ nuit · tarif mensuel disponible</small>
                 </div>
-                <button class="btn-explorer" onclick="openModal('bantukay')">Explorer →</button>
+                <button class="btn-explorer" onclick="openModal('bantukay')">Voir le bien →</button>
               </div>
             </div>
           </article>
@@ -1304,9 +1344,9 @@
               </div>
               <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
-              <div class="listing-avail">Disponible</div>
+              <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>
               <div class="listing-cta-overlay">
-                <button class="btn-explorer" onclick="openModal('suxalikay')">Explorer →</button>
+                <button class="btn-explorer" onclick="openModal('suxalikay')">Voir le bien →</button>
               </div>
             </div>
             <div class="listing-body">
@@ -1324,7 +1364,7 @@
                   <strong>Sur demande</strong>
                   <small>Visite digitale 360° disponible</small>
                 </div>
-                <button class="btn-explorer" onclick="openModal('suxalikay')">Explorer →</button>
+                <button class="btn-explorer" onclick="openModal('suxalikay')">Voir le bien →</button>
               </div>
             </div>
           </article>
@@ -1340,9 +1380,9 @@
               </div>
               <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
-              <div class="listing-avail">Disponible</div>
+              <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>
               <div class="listing-cta-overlay">
-                <button class="btn-explorer" onclick="openModal('nopalukay')">Explorer →</button>
+                <button class="btn-explorer" onclick="openModal('nopalukay')">Voir le bien →</button>
               </div>
             </div>
             <div class="listing-body">
@@ -1360,7 +1400,7 @@
                   <strong>Dossier prioritaire</strong>
                   <small>Déposez votre candidature</small>
                 </div>
-                <button class="btn-explorer" onclick="openModal('nopalukay')">Explorer →</button>
+                <button class="btn-explorer" onclick="openModal('nopalukay')">Voir le bien →</button>
               </div>
             </div>
           </article>
@@ -1532,6 +1572,163 @@
   </footer>
 
 
+  <!-- ══ SEARCH OVERLAY — Point 4 ══ -->
+  <div id="searchOverlay" style="
+    position:fixed;inset:0;z-index:250;
+    background:rgba(4,10,20,.82);backdrop-filter:blur(16px);
+    display:none;align-items:flex-start;justify-content:center;
+    padding:60px 20px 20px;overflow-y:auto;
+  ">
+    <div style="
+      width:100%;max-width:780px;
+      background:linear-gradient(160deg,#0b1e33,#07182b);
+      border:1px solid var(--bds);border-radius:24px;
+      box-shadow:0 24px 64px rgba(0,0,0,.5);
+      overflow:hidden;
+    ">
+      <!-- Header -->
+      <div style="padding:22px 24px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:5px">Recherche avancée</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300">Trouvez votre <em style="color:var(--or)">bien idéal</em></h3>
+        </div>
+        <button onclick="closeSearchOverlay()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(248,244,238,.6);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+      </div>
+
+      <!-- Champs de recherche -->
+      <div style="padding:22px 24px">
+
+        <!-- Ligne 1 : Lieu -->
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Adresse, quartier, ville…</label>
+          <input id="srLieu" type="text" placeholder="Ex : Sipres VDN, Almadies, Dakar…" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.9rem;border-radius:10px;font-family:inherit;outline:none" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--bdr)'"/>
+        </div>
+
+        <!-- Ligne 2 : Type + Catégorie + Budget -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+          <div>
+            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Catégorie</label>
+            <select id="srCategorie" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
+              <option value="">Meublé & non meublé</option>
+              <option value="meuble">Meublé</option>
+              <option value="non_meuble">Non meublé</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Loyer max (FCFA/mois)</label>
+            <select id="srLoyer" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
+              <option value="">Tous budgets</option>
+              <option value="100000">≤ 100 000</option>
+              <option value="200000">≤ 200 000</option>
+              <option value="350000">≤ 350 000</option>
+              <option value="500000">≤ 500 000</option>
+              <option value="750000">≤ 750 000</option>
+              <option value="1000000">≤ 1 000 000</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Surface min (m²)</label>
+            <select id="srSurface" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
+              <option value="">Toutes surfaces</option>
+              <option value="20">≥ 20 m²</option>
+              <option value="40">≥ 40 m²</option>
+              <option value="60">≥ 60 m²</option>
+              <option value="80">≥ 80 m²</option>
+              <option value="100">≥ 100 m²</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Ligne 3 : Pièces + Chambres + Durée -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+          <div>
+            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Nb de pièces</label>
+            <select id="srPieces" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
+              <option value="">Peu importe</option>
+              <option value="1">1 pièce (studio)</option>
+              <option value="2">2 pièces (F2)</option>
+              <option value="3">3 pièces (F3)</option>
+              <option value="4">4 pièces (F4)</option>
+              <option value="5">5 pièces et +</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Durée souhaitée</label>
+            <select id="srDuree" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
+              <option value="">Peu importe</option>
+              <option value="court">Courte durée (nuits)</option>
+              <option value="moyen">Moyen terme (semaines)</option>
+              <option value="long">Longue durée (mois)</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Disponibilité</label>
+            <input id="srDispo" type="date" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;color-scheme:dark"/>
+          </div>
+        </div>
+
+        <!-- Ligne 4 : Équipements chips -->
+        <div style="margin-bottom:20px">
+          <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:9px">Équipements souhaités</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" id="srEquipChips">
+            <button class="sr-chip" data-eq="clim" onclick="toggleChip(this)">❄️ Climatisation</button>
+            <button class="sr-chip" data-eq="wifi" onclick="toggleChip(this)">📶 WiFi</button>
+            <button class="sr-chip" data-eq="parking" onclick="toggleChip(this)">🅿️ Parking</button>
+            <button class="sr-chip" data-eq="gardien" onclick="toggleChip(this)">🔒 Gardiennage</button>
+            <button class="sr-chip" data-eq="piscine" onclick="toggleChip(this)">🏊 Piscine</button>
+            <button class="sr-chip" data-eq="ascenseur" onclick="toggleChip(this)">🛗 Ascenseur</button>
+            <button class="sr-chip" data-eq="cuisine_eq" onclick="toggleChip(this)">🍳 Cuisine équipée</button>
+            <button class="sr-chip" data-eq="balcon" onclick="toggleChip(this)">🌿 Balcon / Terrasse</button>
+            <button class="sr-chip" data-eq="lave_linge" onclick="toggleChip(this)">🧺 Lave-linge</button>
+            <button class="sr-chip" data-eq="generateur" onclick="toggleChip(this)">⚡ Groupe électrogène</button>
+            <button class="sr-chip" data-eq="eau_chaude" onclick="toggleChip(this)">🚿 Eau chaude</button>
+            <button class="sr-chip" data-eq="linge_maison" onclick="toggleChip(this)">🛏️ Linge fourni</button>
+          </div>
+        </div>
+
+        <!-- Boutons action -->
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button onclick="launchSearch()" style="flex:1;padding:14px 20px;background:var(--or);color:#0a0a0a;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:.82rem;letter-spacing:.08em;cursor:pointer;transition:.2s" onmouseover="this.style.background='#DDB96E'" onmouseout="this.style.background='var(--or)'">Voir les biens disponibles →</button>
+          <button onclick="showAlerteForm()" style="padding:14px 20px;background:transparent;color:var(--or);border:1px solid rgba(191,150,80,.3);border-radius:999px;font-family:inherit;font-weight:700;font-size:.82rem;letter-spacing:.08em;cursor:pointer;white-space:nowrap;transition:.2s">🔔 Créer une alerte</button>
+        </div>
+      </div>
+
+      <!-- Résultats inline -->
+      <div id="srResults" style="display:none;border-top:1px solid var(--bdr);padding:20px 24px">
+        <div id="srResultsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px"></div>
+      </div>
+
+      <!-- Formulaire alerte -->
+      <div id="alerteForm" style="display:none;border-top:1px solid var(--bdr);padding:22px 24px;background:rgba(191,150,80,.04)">
+        <div style="font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:12px">🔔 Créer une alerte — soyez notifié dès qu'un bien correspond</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div>
+            <label style="display:block;font-size:.68rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Prénom *</label>
+            <input id="alertePrenom" type="text" placeholder="Votre prénom" style="width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:8px;font-family:inherit;outline:none"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:.68rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Email ou WhatsApp *</label>
+            <input id="alerteContact" type="text" placeholder="Email ou +221 77…" style="width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:8px;font-family:inherit;outline:none"/>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:.68rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Fréquence de notification</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(248,244,238,.6);cursor:pointer"><input type="radio" name="alerteFreq" value="immediat" checked style="accent-color:var(--or);width:auto"> Immédiate</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(248,244,238,.6);cursor:pointer"><input type="radio" name="alerteFreq" value="quotidien" style="accent-color:var(--or);width:auto"> Quotidienne</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(248,244,238,.6);cursor:pointer"><input type="radio" name="alerteFreq" value="hebdo" style="accent-color:var(--or);width:auto"> Hebdomadaire</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button onclick="saveAlerte()" style="padding:12px 24px;background:var(--or);color:#0a0a0a;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:.8rem;cursor:pointer">Enregistrer mon alerte</button>
+          <button onclick="hideAlerteForm()" style="padding:12px 16px;background:transparent;color:rgba(248,244,238,.45);border:1px solid var(--bdr);border-radius:999px;font-family:inherit;font-size:.8rem;cursor:pointer">Annuler</button>
+          <span id="alerteMsg" style="font-size:.78rem;color:var(--green);display:none">✓ Alerte enregistrée !</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ══ MODAL BIEN ══ -->
   <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal" id="modalBox">
@@ -1586,6 +1783,9 @@
           <div class="modal-price-sub" id="modalPriceSub"></div>
         </div>
         <div class="modal-cta-actions">
+          <a id="modal360Btn" href="#" target="_blank" style="display:none;align-items:center;gap:6px;padding:12px 16px;border:1px solid rgba(191,150,80,.28);border-radius:999px;background:rgba(191,150,80,.08);color:var(--or);font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:.2s;text-decoration:none">
+            🌀 Voir en 360°
+          </a>
           <a class="btn-whatsapp" id="modalWhatsApp" href="#" target="_blank">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WhatsApp
@@ -1917,6 +2117,15 @@
     // CTA
     document.getElementById('modalCTA').href = b.tunnel;
     document.getElementById('modalWhatsApp').href = b.whatsapp;
+
+    // Bouton 360° — visible seulement si lien renseigné
+    const btn360 = document.getElementById('modal360Btn');
+    if (b.visite360) {
+      btn360.href = b.visite360;
+      btn360.style.display = 'inline-flex';
+    } else {
+      btn360.style.display = 'none';
+    }
 
     // Gallery
     buildGallery(b);
@@ -2335,8 +2544,219 @@
       wireCards(); // fallback statique
     }
   });
+  // ══ POINT 1 — Tunnel : vider localStorage à la fermeture ══════════════════
+  // On marque un timestamp à chaque écriture tunnel
+  // Si > 30 min ou onglet fermé → purge au prochain chargement
+  (function purgeTunnelIfStale() {
+    const TUNNEL_KEYS = [
+      'kaddu_step1','kaddu_step2','kaddu_step3','kaddu_step4',
+      'kaddu_bien','kaddu_prenom','kaddu_nom','kaddu_email',
+      'kaddu_tel','kaddu_otp','dossier_data','tunnel_data',
+      'kaddu_tunnel_ts'
+    ];
+    const ts = localStorage.getItem('kaddu_tunnel_ts');
+    const THIRTY_MIN = 30 * 60 * 1000;
+    if (ts && Date.now() - parseInt(ts) > THIRTY_MIN) {
+      TUNNEL_KEYS.forEach(k => localStorage.removeItem(k));
+      localStorage.removeItem('kaddu_tunnel_ts');
+    }
+    // Purge aussi si sessionStorage ne confirme pas la session active
+    // (fermeture d'onglet = nouvelle session)
+    if (!sessionStorage.getItem('kaddu_session_active')) {
+      TUNNEL_KEYS.forEach(k => localStorage.removeItem(k));
+      localStorage.removeItem('kaddu_tunnel_ts');
+    }
+    sessionStorage.setItem('kaddu_session_active', '1');
+  })();
+
+  // ══ POINT 2 & 3 — Hero panel dynamique ══════════════════════════════════════
+  // Lit le bien marqué coup_de_coeur depuis Supabase
+  // Affiche sa photo principale et ouvre sa modale au clic
+
+  let heroBienSlug = 'bantukay'; // fallback statique
+
+  async function loadHeroBien(allRows) {
+    // Cherche d'abord un bien marqué coup_de_coeur dans les rows déjà chargés
+    let hero = allRows?.find(r => r.coup_de_coeur === true);
+    // Sinon prend le premier bien disponible meublé
+    if (!hero) hero = allRows?.find(r => r.categorie === 'meuble' && r.statut !== 'brouillon');
+    if (!hero) return; // garde le fallback statique
+
+    heroBienSlug = hero.slug;
+    const photos = parsePh(hero.photos);
+    const main   = photos.find(p => p.is_main) || photos[0];
+
+    // Image principale
+    const imgDiv = document.getElementById('heroPropImgInner');
+    if (imgDiv && main?.url) {
+      imgDiv.innerHTML = `<img src="${main.url}" alt="${hero.titre||''}"
+        style="width:100%;height:100%;object-fit:cover;display:block"
+        onerror="this.style.display='none'">`;
+    }
+
+    // Textes
+    const nom = (hero.titre||'').replace(/Le Petit (.+)/, 'Le Petit <em>$1</em>');
+    const nomEl = document.getElementById('heroPropNom');
+    if (nomEl) nomEl.innerHTML = nom;
+
+    const metaEl = document.getElementById('heroPropMeta');
+    if (metaEl) metaEl.textContent = [hero.quartier, hero.ville, hero.immeuble].filter(Boolean).join(' · ');
+
+    const badgeEl = document.getElementById('heroPropBadge');
+    if (badgeEl) badgeEl.textContent = hero.coup_de_coeur ? 'Meublé · Coup de cœur' : (hero.categorie === 'meuble' ? 'Meublé' : 'Non meublé');
+
+    const priceEl = document.getElementById('heroPropPrice');
+    if (priceEl) priceEl.innerHTML = `${hero.prix || 'Sur demande'}<small>${hero.prix_sub ? ' · '+hero.prix_sub : ''}</small>`;
+
+    // Specs
+    const specsEl = document.getElementById('heroPropSpecs');
+    if (specsEl && hero.pieces) {
+      const specs = Array.isArray(hero.specs) ? hero.specs : [];
+      specsEl.innerHTML = [hero.pieces, ...specs.slice(0,3)]
+        .filter(Boolean).map(s => `<span class="spec-chip">${s}</span>`).join('');
+    }
+  }
+
+  function openHeroBien() {
+    if (BIENS[heroBienSlug]) {
+      openModal(heroBienSlug);
+    } else {
+      // Scroll vers les biens si pas dans BIENS
+      document.getElementById('biens')?.scrollIntoView({behavior:'smooth'});
+    }
+  }
+
+  // ══ POINT 4 — Overlay recherche avancée ═════════════════════════════════════
+
+  function openSearchOverlay() {
+    document.getElementById('searchOverlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('srLieu')?.focus(), 100);
+  }
+
+  function closeSearchOverlay() {
+    document.getElementById('searchOverlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('searchOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('searchOverlay')) closeSearchOverlay();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('searchOverlay').style.display === 'flex') {
+      closeSearchOverlay();
+    }
+  });
+
+  function toggleChip(btn) {
+    btn.classList.toggle('active');
+  }
+
+  function launchSearch() {
+    const lieu      = document.getElementById('srLieu')?.value?.trim().toLowerCase() || '';
+    const categorie = document.getElementById('srCategorie')?.value || '';
+    const pieces    = document.getElementById('srPieces')?.value || '';
+    const surface   = parseInt(document.getElementById('srSurface')?.value) || 0;
+    const activeEq  = [...document.querySelectorAll('.sr-chip.active')].map(c => c.dataset.eq);
+
+    // Filtre sur les cards de la page
+    const cards = document.querySelectorAll('.listing-card[data-bien]');
+    let visible = 0;
+    cards.forEach(card => {
+      const slug = card.dataset.bien;
+      const b    = BIENS[slug];
+      if (!b) { card.style.display = ''; visible++; return; }
+      const loc  = (b.location || '').toLowerCase();
+      const cat  = b._sbRow?.categorie || (b.badge?.toLowerCase().includes('non') ? 'non_meuble' : 'meuble');
+      const surf = b._sbRow?.surface || 0;
+      const eq   = b._sbRow?.equipements_bool || {};
+
+      const matchLieu = !lieu || loc.includes(lieu);
+      const matchCat  = !categorie || cat === categorie;
+      const matchPieces = !pieces || (b._sbRow?.chambres >= parseInt(pieces));
+      const matchSurf = !surface || surf >= surface;
+      const matchEq   = activeEq.every(e => eq[e]);
+
+      if (matchLieu && matchCat && matchPieces && matchSurf && matchEq) {
+        card.style.display = ''; visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Résultats inline dans l'overlay
+    const resultsEl = document.getElementById('srResults');
+    const listEl    = document.getElementById('srResultsList');
+    const matching  = [...cards].filter(c => c.style.display !== 'none');
+
+    if (matching.length > 0) {
+      listEl.innerHTML = matching.map(card => {
+        const slug = card.dataset.bien;
+        const b = BIENS[slug];
+        const img = card.querySelector('.listing-media img');
+        return `<div class="sr-result-mini" onclick="closeSearchOverlay();openModal('${slug}')">
+          ${img ? `<img src="${img.src}" alt="${b?.nom?.replace(/<[^>]+>/g,'')||''}" loading="lazy" onerror="this.style.display='none'">` : '<div style="height:110px;background:rgba(191,150,80,.1)"></div>'}
+          <div class="sr-result-mini-body">
+            <h4>${b?.nom?.replace(/<[^>]+>/g,'') || slug}</h4>
+            <p>${b?._sbRow?.quartier || 'Dakar'}</p>
+            <p class="price">${b?.prix || '—'}</p>
+          </div>
+        </div>`;
+      }).join('');
+      resultsEl.style.display = 'block';
+    } else {
+      listEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted);font-size:.88rem">Aucun bien ne correspond à ces critères.</div>`;
+      resultsEl.style.display = 'block';
+    }
+  }
+
+  function showAlerteForm() {
+    document.getElementById('alerteForm').style.display = 'block';
+    document.getElementById('alertePrenom')?.focus();
+  }
+  function hideAlerteForm() {
+    document.getElementById('alerteForm').style.display = 'none';
+  }
+
+  async function saveAlerte() {
+    const prenom  = document.getElementById('alertePrenom')?.value.trim();
+    const contact = document.getElementById('alerteContact')?.value.trim();
+    const freq    = document.querySelector('input[name="alerteFreq"]:checked')?.value || 'immediat';
+    if (!prenom || !contact) { alert('Merci de renseigner votre prénom et contact.'); return; }
+
+    const criteres = {
+      lieu:      document.getElementById('srLieu')?.value.trim() || null,
+      categorie: document.getElementById('srCategorie')?.value || null,
+      loyer_max: document.getElementById('srLoyer')?.value || null,
+      surface_min: document.getElementById('srSurface')?.value || null,
+      pieces:    document.getElementById('srPieces')?.value || null,
+      duree:     document.getElementById('srDuree')?.value || null,
+      equipements: [...document.querySelectorAll('.sr-chip.active')].map(c => c.dataset.eq),
+    };
+
+    try {
+      await fetch(`${SB_URL}/rest/v1/alertes_biens`, {
+        method: 'POST',
+        headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ prenom, contact, frequence: freq, criteres: JSON.stringify(criteres), created_at: new Date().toISOString() })
+      });
+    } catch (_) {}
+
+    document.getElementById('alerteMsg').style.display = 'inline';
+    setTimeout(() => {
+      hideAlerteForm();
+      document.getElementById('alerteMsg').style.display = 'none';
+    }, 2500);
+  }
+
+  // ══ Patch loadBiensFromSupabase pour passer rows au hero ════════════════════
+  const _origLoadBiens = loadBiensFromSupabase;
+  loadBiensFromSupabase = async function() {
+    const rows = await _origLoadBiens();
+    if (rows) loadHeroBien(rows);
+    return rows;
+  };
   // ─────────────────────────────────────────────────────────────────────────────
-  </script>
 
 </body>
 </html>
