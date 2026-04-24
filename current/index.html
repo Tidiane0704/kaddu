@@ -466,17 +466,33 @@
     .modal-close:hover{background:rgba(191,150,80,.15);color:var(--or);border-color:rgba(191,150,80,.3)}
 
     /* Gallery */
-    .modal-gallery{position:relative;height:360px;overflow:hidden;cursor:pointer}
-    @media(max-width:640px){.modal-gallery{height:240px}}
+    .modal-gallery{
+      position:relative;
+      /* Hauteur adaptative : assez grande pour les photos paysage,
+         et les photos portrait s'affichent en entier grâce à contain */
+      height:clamp(280px, 52vh, 480px);
+      overflow:hidden;cursor:pointer;
+      /* Fond sombre derrière les photos portrait (zones latérales) */
+      background:#060e1a;
+    }
+    @media(max-width:640px){.modal-gallery{height:clamp(240px,55vw,340px)}}
     .gallery-track{
       display:flex;height:100%;
       transition:transform .38s cubic-bezier(.4,0,.2,1);
     }
     .gallery-slide{
-      min-width:100%;height:100%;position:relative;flex-shrink:0
+      min-width:100%;height:100%;position:relative;flex-shrink:0;
+      background:#060e1a;
+      display:flex;align-items:center;justify-content:center;
     }
     .gallery-slide img{
-      width:100%;height:100%;object-fit:cover;display:block
+      /* contain : jamais de rognage, toujours la photo entière visible */
+      max-width:100%;max-height:100%;
+      width:auto;height:auto;
+      object-fit:contain;
+      display:block;
+      /* Légère ombre pour séparer la photo du fond sombre */
+      filter:drop-shadow(0 4px 24px rgba(0,0,0,.5));
     }
     .gallery-slide .slide-placeholder{
       width:100%;height:100%;display:flex;align-items:center;justify-content:center;
@@ -484,7 +500,8 @@
     }
     .gallery-overlay{
       position:absolute;inset:0;
-      background:linear-gradient(to bottom, transparent 50%, rgba(8,21,37,.75) 100%);
+      /* Dégradé plus subtil pour ne pas trop assombrir les photos portrait */
+      background:linear-gradient(to bottom, transparent 60%, rgba(8,21,37,.55) 100%);
       pointer-events:none
     }
     .gallery-nav{
