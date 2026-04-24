@@ -387,6 +387,116 @@
       font-size:.73rem;color:rgba(248,244,238,.30)
     }
 
+    /* ══ MOTEUR KADDU ══ */
+    .moteur-layout{display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:start}
+    
+    /* Score card */
+    .moteur-score-col{display:flex;flex-direction:column;gap:16px;position:sticky;top:100px}
+    .score-card{
+      border:1px solid var(--bds);border-radius:28px;padding:26px 22px;
+      background:linear-gradient(160deg,rgba(191,150,80,.08),rgba(7,24,43,.6));
+      text-align:center;
+    }
+    .score-label-top{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:18px}
+    .score-ring-wrap{position:relative;width:150px;height:150px;margin:0 auto 14px}
+    .score-ring{width:100%;height:100%}
+    .score-arc{transition:stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1)}
+    .score-center{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:0
+    }
+    .score-num{
+      font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:300;
+      color:var(--or);line-height:1;transition:color .3s
+    }
+    .score-slash{font-size:.72rem;color:rgba(248,244,238,.38);margin-top:2px}
+    .score-level{
+      font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+      padding:5px 14px;border-radius:999px;display:inline-block;margin:0 auto 14px;
+      transition:all .3s
+    }
+    .level-fort{background:rgba(0,200,117,.14);color:#77ffbe;border:1px solid rgba(0,200,117,.3)}
+    .level-moyen{background:rgba(245,166,35,.12);color:#ffd180;border:1px solid rgba(245,166,35,.28)}
+    .level-faible{background:rgba(255,107,107,.12);color:#ffb3b3;border:1px solid rgba(255,107,107,.28)}
+    .score-reasons{
+      display:flex;flex-direction:column;gap:6px;margin-bottom:16px;min-height:60px;
+      text-align:left
+    }
+    .score-reason-item{
+      font-size:.76rem;color:rgba(248,244,238,.6);
+      display:flex;align-items:flex-start;gap:7px;padding:5px 8px;
+      border-radius:8px;background:rgba(255,255,255,.03);
+      border:1px solid rgba(191,150,80,.08);line-height:1.4
+    }
+    .score-replay-btn{
+      background:transparent;border:1px solid var(--bdr);color:rgba(248,244,238,.45);
+      font-size:.72rem;padding:8px 16px;border-radius:999px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;letter-spacing:.08em;transition:.2s
+    }
+    .score-replay-btn:hover{border-color:var(--or);color:var(--or)}
+    
+    /* Propriétaire note */
+    .score-owner-note{
+      border:1px solid var(--bdr);border-radius:16px;padding:14px 16px;
+      background:rgba(7,24,43,.4);
+      display:flex;gap:10px;align-items:flex-start;font-size:.78rem
+    }
+    .son-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px}
+    .score-owner-note strong{display:block;color:var(--or);font-size:.74rem;letter-spacing:.06em;margin-bottom:3px}
+    .score-owner-note span{color:rgba(248,244,238,.45);line-height:1.55}
+
+    /* Critères */
+    .criteres-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+    .critere-card{
+      border:1px solid var(--bdr);border-radius:18px;padding:16px;
+      background:rgba(7,24,43,.35);
+      display:flex;align-items:flex-start;gap:12px;
+      transition:.3s;
+    }
+    .critere-card.active{
+      border-color:rgba(191,150,80,.4);
+      background:rgba(191,150,80,.07);
+      box-shadow:0 0 20px rgba(191,150,80,.06)
+    }
+    .critere-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+    .critere-body{flex:1;min-width:0}
+    .critere-label{font-size:.82rem;font-weight:700;margin-bottom:4px;color:var(--blanc)}
+    .critere-desc{font-size:.74rem;color:rgba(248,244,238,.48);line-height:1.5;margin-bottom:8px}
+    .critere-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+    .critere-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--orl));width:0;border-radius:2px;transition:width 1s ease}
+    .critere-check{
+      font-size:1rem;color:rgba(248,244,238,.2);flex-shrink:0;transition:.3s;margin-top:1px;line-height:1
+    }
+    .critere-card.active .critere-check{color:var(--green)}
+
+    /* Angles propriétaire / locataire */
+    .angles-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .angle-card{
+      border:1px solid var(--bdr);border-radius:22px;padding:22px;
+      background:rgba(7,24,43,.35);
+    }
+    .angle-proprio{border-color:rgba(191,150,80,.2);background:linear-gradient(160deg,rgba(191,150,80,.07),rgba(7,24,43,.4))}
+    .angle-locataire{border-color:rgba(83,183,255,.15);background:linear-gradient(160deg,rgba(83,183,255,.05),rgba(7,24,43,.4))}
+    .angle-kicker{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+    .angle-locataire .angle-kicker{color:var(--blue, #53b7ff)}
+    .angle-card h3{font-size:1.15rem;margin-bottom:12px;line-height:1.25}
+    .angle-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+    .angle-list li{font-size:.82rem;color:rgba(248,244,238,.62);display:flex;align-items:flex-start;gap:7px;line-height:1.4}
+    .angle-list li::before{content:"✦";color:var(--or);font-size:.62rem;margin-top:3px;flex-shrink:0}
+    .angle-locataire .angle-list li::before{color:#53b7ff}
+
+    @media(max-width:1100px){
+      .moteur-layout{grid-template-columns:1fr}
+      .moteur-score-col{position:static;flex-direction:row;flex-wrap:wrap}
+      .score-card{flex:1;min-width:260px}
+      .score-owner-note{flex:1;min-width:240px}
+    }
+    @media(max-width:700px){
+      .criteres-grid{grid-template-columns:1fr}
+      .angles-grid{grid-template-columns:1fr}
+      .moteur-score-col{flex-direction:column}
+    }
+
     /* ══ RESPONSIVE ══ */
     @media (max-width:1100px){
       .hero-grid,.proofs-grid,.footer-grid{grid-template-columns:1fr}
@@ -808,6 +918,133 @@
             <p>Wave, Orange Money, Stripe, virement : une expérience pensée pour les usages réels du marché sénégalais.</p>
           </article>
         </div>
+      </div>
+    </section>
+
+    <!-- ══ MOTEUR KADDU — SECTION ANTIFRAUDE ══ -->
+    <section class="section" id="moteur">
+      <div class="container">
+
+        <div class="section-head" style="margin-bottom:40px">
+          <div>
+            <span class="eyebrow">Le moteur Kàddu</span>
+            <h2>La qualification, <em>pas la sélection au hasard</em>.</h2>
+          </div>
+          <p class="section-head-desc">Kàddu ne se contente pas de collecter un dossier. Chaque candidature est analysée sur 4 dimensions et produit un score de confiance exploitable par le propriétaire.</p>
+        </div>
+
+        <!-- Score demo + 4 critères -->
+        <div class="moteur-layout">
+
+          <!-- LEFT : Score visuel animé -->
+          <div class="moteur-score-col">
+            <div class="score-card" id="scoreCard">
+              <div class="score-label-top">Score de confiance</div>
+              <div class="score-ring-wrap">
+                <svg class="score-ring" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(191,150,80,.1)" stroke-width="8"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="url(#scoreGrad)" stroke-width="8"
+                    stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"
+                    class="score-arc" id="scoreArc" transform="rotate(-90 60 60)"/>
+                  <defs>
+                    <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#BF9650"/>
+                      <stop offset="100%" stop-color="#DDB96E"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="score-center">
+                  <span class="score-num" id="scoreNum">0</span>
+                  <span class="score-slash">/ 100</span>
+                </div>
+              </div>
+              <div class="score-level" id="scoreLevel">—</div>
+              <div class="score-reasons" id="scoreReasons"></div>
+              <button class="score-replay-btn" id="scoreReplay">↺ Rejouer la simulation</button>
+            </div>
+
+            <!-- Note propriétaire -->
+            <div class="score-owner-note">
+              <div class="son-icon">🔐</div>
+              <div>
+                <strong>Visible propriétaire uniquement</strong>
+                <span>Le score 0-100 et les signaux détectés sont accessibles dans le tableau de bord admin — jamais exposés au locataire.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT : 4 critères + deux angles -->
+          <div class="moteur-right">
+
+            <!-- 4 piliers -->
+            <div class="criteres-grid" id="criteresGrid">
+              <div class="critere-card" id="crit-identite">
+                <div class="critere-icon">🪪</div>
+                <div class="critere-body">
+                  <div class="critere-label">Identité</div>
+                  <div class="critere-desc">Vérification du nom, prénom, date de naissance et numéro de téléphone avec OTP.</div>
+                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
+                </div>
+                <div class="critere-check" id="chk-identite">○</div>
+              </div>
+              <div class="critere-card" id="crit-revenus">
+                <div class="critere-icon">💼</div>
+                <div class="critere-body">
+                  <div class="critere-label">Capacité financière</div>
+                  <div class="critere-desc">Statut professionnel, niveau de revenus déclarés et cohérence avec le loyer visé.</div>
+                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
+                </div>
+                <div class="critere-check" id="chk-revenus">○</div>
+              </div>
+              <div class="critere-card" id="crit-locatif">
+                <div class="critere-icon">🏠</div>
+                <div class="critere-body">
+                  <div class="critere-label">Situation locative</div>
+                  <div class="critere-desc">Historique locatif, motif de recherche, nombre d'occupants et projet de séjour.</div>
+                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
+                </div>
+                <div class="critere-check" id="chk-locatif">○</div>
+              </div>
+              <div class="critere-card" id="crit-docs">
+                <div class="critere-icon">📎</div>
+                <div class="critere-body">
+                  <div class="critere-label">Documents</div>
+                  <div class="critere-desc">Pièce d'identité, justificatif de revenus ou d'activité, et cohérence documentaire globale.</div>
+                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
+                </div>
+                <div class="critere-check" id="chk-docs">○</div>
+              </div>
+            </div>
+
+            <!-- Deux angles : propriétaire / locataire -->
+            <div class="angles-grid">
+              <div class="angle-card angle-proprio">
+                <div class="angle-kicker">Pour le propriétaire</div>
+                <h3>Moins de temps perdu,<br><em>plus de signaux utiles</em>.</h3>
+                <ul class="angle-list">
+                  <li>Score de confiance 0-100 par candidature</li>
+                  <li>Motifs détaillés : points forts et signaux d'alerte</li>
+                  <li>Classement automatique des candidats</li>
+                  <li>Décision éclairée, pas intuitive</li>
+                </ul>
+                <a class="btn btn-primary btn-sm" href="#cta-final" style="margin-top:16px;width:fit-content">Confier mon bien →</a>
+              </div>
+              <div class="angle-card angle-locataire">
+                <div class="angle-kicker">Pour le locataire</div>
+                <h3>Votre sérieux <em>enfin reconnu</em><br>et valorisé.</h3>
+                <ul class="angle-list">
+                  <li>Dossier guidé, structuré et complet</li>
+                  <li>Les candidats sérieux ne sont plus noyés dans la masse</li>
+                  <li>Processus transparent, réponse rapide</li>
+                  <li>Aucun frais de dossier via Kàddu</li>
+                </ul>
+                <a class="btn btn-secondary btn-sm" href="/tunnel/dossier-v2-step1.html" style="margin-top:16px;width:fit-content">Déposer mon dossier →</a>
+              </div>
+            </div>
+
+          </div><!-- /moteur-right -->
+        </div><!-- /moteur-layout -->
+
       </div>
     </section>
 
@@ -1529,7 +1766,115 @@
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  // ── Wire up listing cards ───────────────────────────────────────────────────
+  // ── Moteur Kàddu — Animation score ─────────────────────────────────────────
+  const SCORE_SIMULATION = {
+    steps: [
+      { critere:'identite', delay:400,  fillW:88, label:'Identité vérifiée',       icon:'✓' },
+      { critere:'revenus',  delay:1200, fillW:72, label:'Revenus cohérents',        icon:'✓' },
+      { critere:'locatif',  delay:2000, fillW:80, label:'Situation locative stable',icon:'✓' },
+      { critere:'docs',     delay:2800, fillW:65, label:'Documents complets',       icon:'✓' },
+    ],
+    finalScore: 82,
+    reasons: [
+      { icon:'✦', text:'Identité confirmée par OTP' },
+      { icon:'✦', text:'Revenus déclarés × 3 le loyer' },
+      { icon:'△', text:'Premier logement autonome — profil à confirmer' },
+    ]
+  };
+
+  function getLevel(score) {
+    if (score >= 75) return { label:'Profil Fort', cls:'level-fort' };
+    if (score >= 50) return { label:'Profil Moyen', cls:'level-moyen' };
+    return { label:'Profil Faible', cls:'level-faible' };
+  }
+
+  function animateScore() {
+    // Reset
+    const arc = document.getElementById('scoreArc');
+    const numEl = document.getElementById('scoreNum');
+    const levelEl = document.getElementById('scoreLevel');
+    const reasonsEl = document.getElementById('scoreReasons');
+    if (!arc) return;
+
+    arc.style.strokeDashoffset = '314';
+    numEl.textContent = '0';
+    levelEl.textContent = '—';
+    levelEl.className = 'score-level';
+    reasonsEl.innerHTML = '';
+
+    // Reset critères
+    SCORE_SIMULATION.steps.forEach(s => {
+      const card = document.getElementById('crit-' + s.critere);
+      const chk  = document.getElementById('chk-' + s.critere);
+      const fill = card?.querySelector('.critere-fill');
+      if (card) card.classList.remove('active');
+      if (chk)  chk.textContent = '○';
+      if (fill) fill.style.width = '0';
+    });
+
+    // Animate each critère sequentially
+    SCORE_SIMULATION.steps.forEach((step, i) => {
+      setTimeout(() => {
+        const card = document.getElementById('crit-' + step.critere);
+        const chk  = document.getElementById('chk-' + step.critere);
+        const fill = card?.querySelector('.critere-fill');
+        if (card) card.classList.add('active');
+        if (chk)  chk.textContent = '✓';
+        if (fill) fill.style.width = step.fillW + '%';
+      }, step.delay);
+    });
+
+    // Animate score number + arc after all critères
+    const finalDelay = SCORE_SIMULATION.steps[SCORE_SIMULATION.steps.length - 1].delay + 400;
+    setTimeout(() => {
+      const target = SCORE_SIMULATION.finalScore;
+      const circumference = 314;
+      const offset = circumference - (target / 100) * circumference;
+      arc.style.strokeDashoffset = offset;
+
+      // Count-up number
+      let current = 0;
+      const duration = 1400;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        numEl.textContent = Math.round(current);
+        if (current >= target) {
+          clearInterval(timer);
+          // Show level
+          const lv = getLevel(target);
+          levelEl.textContent = lv.label;
+          levelEl.className = 'score-level ' + lv.cls;
+          // Show reasons
+          SCORE_SIMULATION.reasons.forEach((r, ri) => {
+            setTimeout(() => {
+              const el = document.createElement('div');
+              el.className = 'score-reason-item';
+              el.innerHTML = `<span style="color:var(--or);flex-shrink:0">${r.icon}</span><span>${r.text}</span>`;
+              reasonsEl.appendChild(el);
+            }, ri * 200);
+          });
+        }
+      }, 16);
+    }, finalDelay);
+  }
+
+  // Start animation when section enters viewport
+  const moteurSection = document.getElementById('moteur');
+  if (moteurSection) {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setTimeout(animateScore, 300);
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    obs.observe(moteurSection);
+  }
+
+  document.getElementById('scoreReplay')?.addEventListener('click', animateScore);
+  // ────────────────────────────────────────────────────────────────────────────
   document.querySelectorAll('.listing-card[data-bien]').forEach(card => {
     card.addEventListener('click', e => {
       // Don't open modal if clicking directly on a button/link
