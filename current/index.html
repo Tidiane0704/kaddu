@@ -578,40 +578,55 @@
     /* Gallery */
     .modal-gallery{
       position:relative;
-      /* Hauteur adaptative : assez grande pour les photos paysage,
-         et les photos portrait s'affichent en entier grâce à contain */
-      height:clamp(280px, 52vh, 480px);
+      height:clamp(300px, 56vh, 500px);
       overflow:hidden;cursor:pointer;
-      /* Fond sombre derrière les photos portrait (zones latérales) */
       background:#060e1a;
     }
-    @media(max-width:640px){.modal-gallery{height:clamp(240px,55vw,340px)}}
+    @media(max-width:640px){.modal-gallery{height:clamp(260px,60vw,380px)}}
     .gallery-track{
       display:flex;height:100%;
       transition:transform .38s cubic-bezier(.4,0,.2,1);
     }
     .gallery-slide{
       min-width:100%;height:100%;position:relative;flex-shrink:0;
-      background:#060e1a;
-      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
     }
+    /* Fond flouté (même image, agrandie et floutée) — visible sur photos portrait */
+    .gallery-slide-bg{
+      position:absolute;inset:-10%;
+      background-size:cover;background-position:center;
+      filter:blur(22px) brightness(.45) saturate(.8);
+      transform:scale(1.1);
+      z-index:0;
+    }
+    /* Photo principale centrée par-dessus le fond */
     .gallery-slide img{
-      /* contain : jamais de rognage, toujours la photo entière visible */
+      position:relative;z-index:1;
       max-width:100%;max-height:100%;
       width:auto;height:auto;
       object-fit:contain;
       display:block;
-      /* Légère ombre pour séparer la photo du fond sombre */
-      filter:drop-shadow(0 4px 24px rgba(0,0,0,.5));
+      margin:0 auto;
+      /* Légère ombre pour détacher la photo du fond flouté */
+      filter:drop-shadow(0 2px 18px rgba(0,0,0,.45));
+    }
+    /* Pour les photos paysage : on les laisse couvrir toute la surface */
+    .gallery-slide.is-landscape img{
+      width:100%;height:100%;
+      object-fit:cover;
+      filter:none;
+    }
+    .gallery-slide.is-landscape .gallery-slide-bg{
+      display:none;
     }
     .gallery-slide .slide-placeholder{
       width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-      font-size:.8rem;color:rgba(248,244,238,.3);letter-spacing:.1em;text-transform:uppercase
+      font-size:.8rem;color:rgba(248,244,238,.3);letter-spacing:.1em;text-transform:uppercase;
+      position:relative;z-index:1;
     }
     .gallery-overlay{
-      position:absolute;inset:0;
-      /* Dégradé plus subtil pour ne pas trop assombrir les photos portrait */
-      background:linear-gradient(to bottom, transparent 60%, rgba(8,21,37,.55) 100%);
+      position:absolute;inset:0;z-index:2;
+      background:linear-gradient(to bottom, transparent 55%, rgba(8,21,37,.6) 100%);
       pointer-events:none
     }
     .gallery-nav{
@@ -1968,14 +1983,51 @@
 
   // Patch buildGallery pour gérer sbPhotos (URLs directes Supabase)
   const _origBuildGallery = buildGallery;
+
+  // Crée un slide avec fond flouté intelligent
+  function makeSlide(src, alt, isFirst) {
+    const slide = document.createElement('div');
+    slide.className = 'gallery-slide';
+    slide.dataset.src = src;
+
+    // Fond flouté (toujours présent, masqué si paysage)
+    const bg = document.createElement('div');
+    bg.className = 'gallery-slide-bg';
+    bg.style.backgroundImage = `url(${src})`;
+    slide.appendChild(bg);
+
+    // Photo principale
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = alt;
+    img.loading = isFirst ? 'eager' : 'lazy';
+    img.style.cssText = 'display:block;max-width:100%;max-height:100%;width:auto;height:auto;margin:0 auto;position:relative;z-index:1;';
+
+    // Détection ratio après chargement
+    img.onload = () => {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      if (ratio > 1.1) {
+        // Paysage → cover plein cadre, pas de fond flouté visible
+        slide.classList.add('is-landscape');
+        img.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;';
+      }
+      // Portrait → on garde contain + fond flouté → rien à changer
+    };
+
+    slide.appendChild(img);
+    return slide;
+  }
+
   buildGallery = function(b) {
     if(b.sbPhotos && b.sbPhotos.length) {
-      const sorted = [...b.sbPhotos].sort((a,z)=>(a.ordre??0)-(z.ordre??0));
+      const sorted   = [...b.sbPhotos].sort((a,z)=>(a.ordre??0)-(z.ordre??0));
       const bienName = b.nom.replace(/<[^>]+>/g,'');
-      galleryTrack.innerHTML = sorted.map((p,i)=>`
-        <div class="gallery-slide">
-          <img src="${p.url}" alt="Photo ${i+1} — ${bienName}" loading="${i===0?'eager':'lazy'}"/>
-        </div>`).join('');
+
+      galleryTrack.innerHTML = '';
+      sorted.forEach((p,i) => {
+        galleryTrack.appendChild(makeSlide(p.url, `Photo ${i+1} — ${bienName}`, i===0));
+      });
+
       galleryDots.innerHTML = sorted.map((_,i)=>
         `<button class="gallery-dot${i===0?' active':''}" data-idx="${i}" aria-label="Photo ${i+1}"></button>`
       ).join('');
