@@ -7,291 +7,579 @@
   <meta name="description" content="Kàddu réconcilie propriétaires exigeants et locataires sérieux grâce à une expérience immobilière digitale, premium et vérifiée à Dakar." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
   <style>
     :root{
       --or:#BF9650;--orl:#DDB96E;--ord:#8B6520;
-      --noir:#0F0F0F;--nc:#161410;--nb:#1C1810;--nbl:#0D1B2A;
-      --blanc:#F8F4EE;--beige:#E8DCC5;--muted:#8E8578;
-      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.32);
+      --noir:#0F0F0F;--nbl:#07182B;--card:#0b2039;
+      --blanc:#F8F4EE;--beige:#E8DCC5;--muted:rgba(248,244,238,.62);
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);
       --green:#00C875;--blue:#4A9EFF;
-      --fs-base:17px;--fs-sm:15px;--fs-xs:13px;--fs-xxs:12px;
-      --fs-h1:clamp(2.8rem,5vw,4.8rem);
-      --fs-h2:clamp(2rem,3.5vw,3rem);
+      --fs-base:17px;
+      --fs-h1:clamp(2.6rem,5vw,4.4rem);
+      --fs-h2:clamp(1.9rem,3.2vw,2.8rem);
       --radius:28px;
-      --shadow:0 20px 60px rgba(0,0,0,.28);
+      --shadow:0 24px 64px rgba(0,0,0,.32);
+      --glow:0 0 60px rgba(191,150,80,.10);
     }
-    *{box-sizing:border-box}
+    *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;font-size:var(--fs-base)}
     body{
-      margin:0;
       font-family:'DM Sans',sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(191,150,80,.08), transparent 22%),
-        radial-gradient(circle at left center, rgba(191,150,80,.05), transparent 20%),
-        linear-gradient(180deg,#0c0c0c 0%, #101822 45%, #0d1b2a 100%);
+      background:#070f1a;
       color:var(--blanc);
       -webkit-font-smoothing:antialiased;
       overflow-x:hidden;
       line-height:1.7;
     }
+    /* ── Background texture ── */
+    body::before{
+      content:"";
+      position:fixed;inset:0;z-index:-1;
+      background:
+        radial-gradient(ellipse 90% 60% at 70% -10%, rgba(191,150,80,.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at -10% 60%, rgba(191,150,80,.06) 0%, transparent 55%),
+        linear-gradient(180deg,#070c15 0%,#0a1628 40%,#07182b 100%);
+    }
     a{text-decoration:none;color:inherit}
     .container{max-width:1240px;margin:0 auto;padding:0 28px}
-    .section{padding:92px 0}
+    .section{padding:96px 0}
     .eyebrow{
       display:inline-flex;align-items:center;gap:.7rem;
-      color:var(--or);font-size:var(--fs-xxs);letter-spacing:.22em;text-transform:uppercase
+      color:var(--or);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px
     }
-    .eyebrow::before{content:"";width:20px;height:1px;background:var(--or)}
-    h1,h2,h3{font-family:'Playfair Display',serif;font-weight:300;line-height:1.08;margin:0}
+    .eyebrow::before{content:"";width:20px;height:1px;background:var(--or);flex-shrink:0}
+    h1,h2,h3{font-family:'Playfair Display',serif;font-weight:300;line-height:1.08}
     h1 em,h2 em,h3 em{font-style:italic;color:var(--or)}
     p{margin:0}
+
+    /* ══ NAV ══ */
     .nav{
       position:sticky;top:0;z-index:50;
-      backdrop-filter:blur(18px);
-      background:rgba(12,12,12,.78);
+      backdrop-filter:blur(20px) saturate(1.4);
+      background:rgba(7,12,21,.82);
       border-bottom:1px solid var(--bdr);
     }
     .nav-inner{
-      height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px
+      height:74px;display:flex;align-items:center;justify-content:space-between;gap:24px
     }
     .brand{display:flex;align-items:center;gap:14px}
     .brand-mark{
-      width:42px;height:42px;border-radius:14px;
-      background:linear-gradient(145deg, rgba(191,150,80,.22), rgba(191,150,80,.06));
+      width:40px;height:40px;border-radius:13px;
+      background:linear-gradient(145deg, rgba(191,150,80,.25), rgba(191,150,80,.06));
       border:1px solid var(--bds);
       display:flex;align-items:center;justify-content:center;
-      font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--or)
+      font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or);
+      box-shadow:0 0 20px rgba(191,150,80,.12)
     }
-    .brand-text{display:flex;flex-direction:column;gap:2px}
-    .brand-name{font-size:.98rem;letter-spacing:.08em;text-transform:uppercase}
-    .brand-tag{font-size:.67rem;color:rgba(248,244,238,.38);letter-spacing:.12em;text-transform:uppercase}
-    .nav-links{display:flex;gap:28px;align-items:center}
-    .nav-links a{
-      font-size:.78rem;letter-spacing:.10em;text-transform:uppercase;
-      color:rgba(248,244,238,.58)
-    }
+    .brand-text{display:flex;flex-direction:column;gap:1px}
+    .brand-name{font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+    .brand-tag{font-size:.62rem;color:rgba(248,244,238,.35);letter-spacing:.14em;text-transform:uppercase}
+    .nav-links{display:flex;gap:26px;align-items:center}
+    .nav-links a{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.52);transition:.2s}
     .nav-links a:hover{color:var(--or)}
-    .nav-cta{display:flex;gap:10px;align-items:center}
+    .nav-cta{display:flex;gap:10px;align-items:center;flex-shrink:0}
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.65rem;
-      border:none;cursor:pointer;padding:15px 22px;border-radius:999px;
-      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.11em;
-      text-transform:uppercase;transition:.25s ease;white-space:nowrap
+      display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+      border:none;cursor:pointer;padding:13px 22px;border-radius:999px;
+      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.10em;
+      text-transform:uppercase;transition:.22s ease;white-space:nowrap
     }
-    .btn-primary{background:var(--or);color:var(--noir)}
-    .btn-primary:hover{background:var(--orl);transform:translateY(-1px)}
-    .btn-secondary{
-      background:transparent;color:var(--blanc);
-      border:1px solid rgba(248,244,238,.16)
-    }
+    .btn-primary{background:var(--or);color:#0a0a0a}
+    .btn-primary:hover{background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}
+    .btn-secondary{background:transparent;color:var(--blanc);border:1px solid rgba(248,244,238,.16)}
     .btn-secondary:hover{border-color:var(--or);color:var(--or)}
-    .hero{padding:72px 0 54px}
-    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:34px;align-items:stretch}
-    .hero-copy{padding:28px 0 14px;position:relative}
-    .hero-copy h1{font-size:var(--fs-h1);margin:18px 0 16px}
+    .btn-lg{padding:16px 28px;font-size:.82rem}
+    .btn-icon{font-size:.95rem;line-height:1}
+
+    /* ══ HERO ══ */
+    .hero{padding:68px 0 48px}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:stretch;min-height:640px}
+    .hero-copy{padding:16px 0;display:flex;flex-direction:column;justify-content:center}
+    .hero-copy h1{font-size:var(--fs-h1);margin:14px 0 12px}
     .hero-slogan{
       display:inline-block;
       padding-left:14px;border-left:2px solid var(--or);
       color:rgba(248,244,238,.44);font-family:'Playfair Display',serif;
-      font-style:italic;font-size:1.02rem;margin-bottom:18px
+      font-style:italic;font-size:1.0rem;margin-bottom:16px
     }
-    .hero-text{
-      max-width:650px;font-size:1.02rem;color:rgba(248,244,238,.66);margin-bottom:28px
-    }
-    .hero-trust{display:flex;flex-wrap:wrap;gap:14px;margin:26px 0 30px}
+    .hero-text{font-size:1.0rem;color:rgba(248,244,238,.62);margin-bottom:24px;max-width:600px}
+    .hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
     .trust-pill{
-      border:1px solid var(--bdr);
-      background:rgba(255,255,255,.03);
-      color:rgba(248,244,238,.56);
-      border-radius:999px;padding:10px 14px;font-size:.77rem
+      border:1px solid var(--bdr);background:rgba(255,255,255,.03);
+      color:rgba(248,244,238,.54);border-radius:999px;padding:9px 14px;font-size:.74rem
     }
-    .split-entry{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+    .trust-pill strong{color:var(--or);font-weight:500}
+
+    /* Entry split */
+    .split-entry{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
     .entry-card{
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--bdr);
-      border-radius:var(--radius);
-      padding:24px 22px;box-shadow:var(--shadow)
+      background:linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      border:1px solid var(--bdr);border-radius:var(--radius);
+      padding:22px 20px;transition:.2s;
     }
-    .entry-kicker{
-      font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:10px
-    }
-    .entry-card h3{font-size:1.55rem;margin-bottom:8px}
-    .entry-card p{color:rgba(248,244,238,.56);font-size:.92rem;margin-bottom:16px}
-    .entry-points{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
-    .entry-points span{font-size:.82rem;color:rgba(248,244,238,.6)}
-    .entry-points span::before{content:"•";color:var(--or);margin-right:8px}
+    .entry-card:hover{border-color:rgba(191,150,80,.34)}
+    .entry-kicker{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:9px}
+    .entry-card h3{font-size:1.4rem;margin-bottom:7px;line-height:1.15}
+    .entry-card p{color:rgba(248,244,238,.52);font-size:.88rem;margin-bottom:14px}
+    .entry-points{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+    .entry-points span{font-size:.80rem;color:rgba(248,244,238,.58)}
+    .entry-points span::before{content:"•";color:var(--or);margin-right:7px}
+
+    /* ══ HERO PANEL (right) ══ */
     .hero-panel{
       position:relative;
-      background:linear-gradient(180deg, rgba(191,150,80,.07), rgba(255,255,255,.02));
-      border:1px solid var(--bdr);
-      border-radius:36px;
-      min-height:620px;
-      overflow:hidden;
-      box-shadow:var(--shadow)
+      background:linear-gradient(160deg, rgba(191,150,80,.08), rgba(7,24,43,.6));
+      border:1px solid var(--bdr);border-radius:36px;
+      overflow:hidden;box-shadow:var(--shadow),var(--glow)
     }
     .hero-panel::before{
-      content:"";
-      position:absolute;inset:0;
+      content:"";position:absolute;inset:0;
       background-image:
-        linear-gradient(rgba(191,150,80,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(191,150,80,.04) 1px, transparent 1px);
-      background-size:44px 44px;
-      opacity:.7;
+        linear-gradient(rgba(191,150,80,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(191,150,80,.035) 1px,transparent 1px);
+      background-size:40px 40px;opacity:.8
     }
     .deco-k{
-      position:absolute;inset:auto auto 18px 18px;
-      font-family:'Playfair Display',serif;font-size:17rem;line-height:.9;
-      color:rgba(191,150,80,.05);user-select:none
+      position:absolute;inset:auto auto 10px 10px;
+      font-family:'Playfair Display',serif;font-size:16rem;line-height:.9;
+      color:rgba(191,150,80,.045);user-select:none;pointer-events:none
     }
     .hero-stack{
-      position:relative;z-index:2;padding:26px;height:100%;
-      display:grid;grid-template-rows:auto auto 1fr;gap:16px
+      position:relative;z-index:2;padding:24px;height:100%;
+      display:grid;grid-template-rows:auto auto 1fr;gap:14px
     }
-    .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     .metric{
-      background:rgba(7,24,43,.55);
-      border:1px solid rgba(191,150,80,.18);
-      border-radius:22px;padding:18px
+      background:rgba(7,24,43,.65);border:1px solid rgba(191,150,80,.18);border-radius:20px;padding:16px 14px
     }
-    .metric strong{
-      display:block;font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:300;color:var(--or)
+    .metric strong{display:block;font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:300;color:var(--or)}
+    .metric span{font-size:.68rem;color:rgba(248,244,238,.4);text-transform:uppercase;letter-spacing:.1em}
+
+    /* Featured property card in hero */
+    .hero-prop-card{
+      background:rgba(7,24,43,.8);border:1px solid rgba(191,150,80,.2);border-radius:24px;overflow:hidden
     }
-    .metric span{font-size:.72rem;color:rgba(248,244,238,.42);text-transform:uppercase;letter-spacing:.1em}
-    .proof-card,.mini-list{
-      background:rgba(7,24,43,.72);border:1px solid rgba(191,150,80,.18);border-radius:28px
+    .hero-prop-img{
+      height:172px;position:relative;overflow:hidden;
+      background:linear-gradient(135deg, #1a2f1a 0%, #2d1f0a 40%, #0f1e30 100%);
     }
-    .proof-card{padding:22px}
-    .proof-card h3{font-size:1.5rem;margin-bottom:8px}
-    .proof-card p{font-size:.9rem;color:rgba(248,244,238,.56);max-width:440px}
-    .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .mini-list{padding:18px}
-    .mini-list h4{margin:0 0 12px;font-size:.84rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or)}
-    .mini-item{padding:10px 0;border-bottom:1px solid rgba(191,150,80,.08)}
-    .mini-item:last-child{border-bottom:none}
-    .mini-item strong{display:block;font-size:.9rem;font-weight:500}
-    .mini-item span{font-size:.78rem;color:rgba(248,244,238,.46)}
-    .section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:30px}
-    .section-head h2{font-size:var(--fs-h2);max-width:620px}
-    .section-head p{max-width:520px;color:rgba(248,244,238,.54)}
-    .pain-grid,.value-grid,.how-grid,.proofs-grid,.listing-grid,.cta-grid{display:grid;gap:18px}
-    .pain-grid{grid-template-columns:1fr 1fr}
-    .pain-card,.value-card,.proof-card-2,.listing-card{
-      border:1px solid var(--bdr);border-radius:28px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02))
+    .hero-prop-img-layer{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(191,150,80,.18), transparent 50%),
+        radial-gradient(ellipse at 75% 20%, rgba(60,120,60,.12), transparent 40%);
     }
-    .pain-card{padding:26px}
+    /* Geometric apartment illustration */
+    .apt-illustration{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .apt-illustration svg{opacity:.85;width:100%;height:100%}
+    .hero-prop-badge{
+      position:absolute;top:12px;left:12px;
+      background:rgba(191,150,80,.9);color:#0a0a0a;
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:5px 10px;border-radius:999px;font-weight:700
+    }
+    .hero-prop-avail{
+      position:absolute;top:12px;right:12px;
+      background:rgba(0,200,117,.15);border:1px solid rgba(0,200,117,.35);color:#00C875;
+      font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+      padding:5px 10px;border-radius:999px;display:flex;align-items:center;gap:5px
+    }
+    .hero-prop-avail::before{content:"";width:6px;height:6px;border-radius:50%;background:#00C875;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .hero-prop-body{padding:16px}
+    .hero-prop-body h4{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:300;margin-bottom:4px}
+    .hero-prop-body h4 em{font-style:italic;color:var(--or)}
+    .hero-prop-meta{font-size:.76rem;color:rgba(248,244,238,.44);margin-bottom:12px}
+    .hero-prop-specs{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .spec-chip{
+      background:rgba(191,150,80,.1);border:1px solid rgba(191,150,80,.2);
+      color:rgba(248,244,238,.7);font-size:.7rem;padding:4px 10px;border-radius:999px
+    }
+    .hero-prop-price-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .hero-prop-price{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;color:var(--or)}
+    .hero-prop-price small{font-size:.68rem;font-family:'DM Sans',sans-serif;color:rgba(248,244,238,.42);display:block;font-weight:300}
+
+    /* ══ SEARCH BAR ══ */
+    .search-bar-wrap{
+      background:linear-gradient(160deg, rgba(191,150,80,.07), rgba(255,255,255,.02));
+      border:1px solid var(--bds);border-radius:24px;padding:20px 24px;
+      margin-bottom:0;
+    }
+    .search-label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:12px}
+    .search-fields{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
+    .search-field label{display:block;font-size:.72rem;color:rgba(248,244,238,.42);margin-bottom:6px;letter-spacing:.08em}
+    .search-field select,.search-field input{
+      width:100%;background:rgba(7,24,43,.7);border:1px solid var(--bdr);
+      color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.88rem;
+      padding:11px 14px;border-radius:14px;outline:none;appearance:none;
+      transition:.2s
+    }
+    .search-field select:focus,.search-field input:focus{border-color:var(--or)}
+    .search-field select option{background:#0d1b2a}
+
+    /* ══ PAIN SECTION ══ */
+    .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .pain-card{
+      border:1px solid var(--bdr);border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
+      padding:26px;transition:.2s
+    }
+    .pain-card:hover{border-color:rgba(191,150,80,.28)}
     .pain-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-    .pain-label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or)}
-    .pain-badge{font-size:.68rem;padding:6px 10px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.52)}
-    .pain-card h3{font-size:1.55rem;margin-bottom:10px}
-    .pain-card p{color:rgba(248,244,238,.56);margin-bottom:16px}
-    .pain-list{display:flex;flex-direction:column;gap:10px}
-    .pain-list span{font-size:.83rem;color:rgba(248,244,238,.58)}
+    .pain-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or)}
+    .pain-badge{font-size:.66rem;padding:5px 10px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.50)}
+    .pain-card h3{font-size:1.5rem;margin-bottom:10px}
+    .pain-card p{color:rgba(248,244,238,.54);margin-bottom:16px;font-size:.9rem}
+    .pain-list{display:flex;flex-direction:column;gap:9px}
+    .pain-list span{font-size:.83rem;color:rgba(248,244,238,.56)}
     .pain-list span::before{content:"—";color:var(--or);margin-right:8px}
-    .value-grid{grid-template-columns:repeat(4,1fr)}
-    .value-card{padding:22px}
-    .value-icon{
-      width:50px;height:50px;border-radius:18px;margin-bottom:16px;
-      border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;
-      color:var(--or);font-size:1.1rem;background:rgba(191,150,80,.08)
+
+    /* ══ VALUE GRID ══ */
+    .value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    .value-card{
+      border:1px solid var(--bdr);border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));
+      padding:22px;transition:.2s
     }
-    .value-card h3{font-size:1.2rem;margin-bottom:8px}
-    .value-card p{font-size:.86rem;color:rgba(248,244,238,.52)}
-    .how-grid{grid-template-columns:repeat(4,1fr)}
+    .value-card:hover{border-color:var(--bds);transform:translateY(-2px)}
+    .value-icon{
+      width:48px;height:48px;border-radius:16px;margin-bottom:14px;
+      border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;
+      color:var(--or);font-size:1.05rem;background:rgba(191,150,80,.08)
+    }
+    .value-card h3{font-size:1.15rem;margin-bottom:7px}
+    .value-card p{font-size:.84rem;color:rgba(248,244,238,.50)}
+
+    /* ══ HOW IT WORKS ══ */
+    .how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
     .how-card{
       position:relative;padding:26px;border:1px solid var(--bdr);
-      border-radius:28px;background:rgba(7,24,43,.36)
+      border-radius:var(--radius);background:rgba(7,24,43,.4)
     }
     .how-num{
-      font-family:'Playfair Display',serif;font-size:3rem;line-height:1;color:rgba(191,150,80,.13);
-      margin-bottom:12px
+      font-family:'Playfair Display',serif;font-size:3rem;line-height:1;color:rgba(191,150,80,.14);margin-bottom:12px
     }
-    .how-card h3{font-size:1.15rem;margin-bottom:8px}
-    .how-card p{font-size:.84rem;color:rgba(248,244,238,.5)}
-    .proofs-grid{grid-template-columns:1.15fr .85fr}
-    .proof-card-2{padding:28px}
-    .proof-card-2 h3{font-size:1.7rem;margin-bottom:10px}
-    .proof-card-2 p{color:rgba(248,244,238,.56);margin-bottom:18px}
+    .how-card h3{font-size:1.12rem;margin-bottom:7px}
+    .how-card p{font-size:.83rem;color:rgba(248,244,238,.48)}
+
+    /* ══ SOCIAL PROOF ══ */
+    .social-proof-section{background:rgba(7,24,43,.28);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
+    .proof-ticker{display:flex;gap:32px;overflow:hidden;padding:18px 0}
+    .proof-stat{
+      display:flex;align-items:center;gap:10px;white-space:nowrap;flex-shrink:0
+    }
+    .proof-stat strong{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300;color:var(--or)}
+    .proof-stat span{font-size:.8rem;color:rgba(248,244,238,.48)}
+    .proof-sep{color:rgba(191,150,80,.25);font-size:1.2rem}
+
+    /* ══ DIFFERENTIATOR ══ */
+    .proofs-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+    .proof-card-2{
+      border:1px solid var(--bdr);border-radius:var(--radius);
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      padding:30px
+    }
+    .proof-card-2 h3{font-size:1.65rem;margin-bottom:10px}
+    .proof-card-2 p{color:rgba(248,244,238,.54);margin-bottom:18px;font-size:.94rem}
     .proof-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .proof-item{
       border:1px solid rgba(191,150,80,.12);border-radius:22px;padding:16px;background:rgba(255,255,255,.02)
     }
-    .proof-item strong{display:block;font-size:.95rem;margin-bottom:4px}
-    .proof-item span{font-size:.78rem;color:rgba(248,244,238,.46)}
-    .listing-grid{grid-template-columns:repeat(3,1fr)}
-    .listing-card{overflow:hidden}
+    .proof-item strong{display:block;font-size:.93rem;margin-bottom:4px}
+    .proof-item span{font-size:.76rem;color:rgba(248,244,238,.44)}
+
+    /* ══ LISTINGS ══ */
+    .listing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .listing-card{
+      border:1px solid var(--bdr);border-radius:var(--radius);
+      background:var(--card);overflow:hidden;
+      transition:.28s ease;cursor:pointer
+    }
+    .listing-card:hover{border-color:var(--bds);transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.3)}
+    .listing-card:hover .listing-cta-overlay{opacity:1}
     .listing-media{
-      height:220px;
-      background:linear-gradient(135deg, rgba(191,150,80,.25), rgba(13,27,42,.85));
-      position:relative
+      height:230px;position:relative;overflow:hidden
     }
-    .listing-media::after{
-      content:"KÀDDU";position:absolute;right:16px;bottom:12px;
-      font-family:'Playfair Display',serif;color:rgba(248,244,238,.22);letter-spacing:.18em;font-size:.8rem
+    /* Stylized apartment illustrations per unit */
+    .listing-media-inner{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center
     }
-    .listing-body{padding:20px}
+    .listing-media-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to bottom, transparent 40%, rgba(11,32,57,.9) 100%)
+    }
+    .listing-cta-overlay{
+      position:absolute;inset:0;
+      background:rgba(7,24,43,.7);backdrop-filter:blur(4px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:.25s
+    }
     .listing-badge{
-      display:inline-flex;padding:5px 10px;border-radius:999px;background:rgba(191,150,80,.1);
-      color:var(--or);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px
+      position:absolute;top:14px;left:14px;
+      background:rgba(191,150,80,.9);color:#0a0a0a;
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:5px 10px;border-radius:999px;font-weight:700;z-index:2
     }
-    .listing-card h3{font-size:1.3rem;margin-bottom:6px}
-    .listing-meta{font-size:.8rem;color:rgba(248,244,238,.42);margin-bottom:12px}
-    .listing-desc{font-size:.86rem;color:rgba(248,244,238,.54);margin-bottom:14px}
-    .listing-price{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .listing-price strong{
-      font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300;color:var(--or)
+    .listing-avail{
+      position:absolute;top:14px;right:14px;z-index:2;
+      background:rgba(0,200,117,.15);border:1px solid rgba(0,200,117,.4);color:#00C875;
+      font-size:.62rem;padding:5px 10px;border-radius:999px;display:flex;align-items:center;gap:5px
     }
+    .listing-avail::before{content:"";width:5px;height:5px;border-radius:50%;background:#00C875}
+    .listing-body{padding:20px}
+    .listing-body h3{font-size:1.25rem;margin-bottom:5px}
+    .listing-meta{font-size:.78rem;color:rgba(248,244,238,.42);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+    .listing-meta::before{content:"📍";font-size:.7rem}
+    .listing-specs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .listing-spec{
+      font-size:.7rem;padding:4px 10px;border-radius:999px;
+      background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.16);color:rgba(248,244,238,.68)
+    }
+    .listing-desc{font-size:.83rem;color:rgba(248,244,238,.50);margin-bottom:16px;line-height:1.55}
+    .listing-price-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid rgba(191,150,80,.1)}
+    .listing-price strong{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300;color:var(--or)}
+    .listing-price small{font-size:.66rem;color:rgba(248,244,238,.38);display:block}
+
+    /* Apartment SVG illustrations */
+    .apt-bg-1{background:linear-gradient(145deg,#0e1f12 0%,#1c2d10 30%,#0f1e2a 60%,#0a1520 100%)}
+    .apt-bg-2{background:linear-gradient(145deg,#1a1008 0%,#2d1f0a 35%,#1a2830 60%,#081520 100%)}
+    .apt-bg-3{background:linear-gradient(145deg,#08101a 0%,#0f1a28 35%,#1a1508 60%,#0d1d15 100%)}
+
+    /* ══ CTA FINAL ══ */
     .cta-band{
-      border:1px solid var(--bdr);border-radius:36px;padding:34px;
-      background:linear-gradient(180deg, rgba(191,150,80,.08), rgba(255,255,255,.03))
+      border:1px solid var(--bdr);border-radius:36px;padding:36px;
+      background:linear-gradient(160deg, rgba(191,150,80,.08), rgba(255,255,255,.02))
     }
-    .cta-grid{grid-template-columns:1fr 1fr}
+    .section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:28px}
+    .section-head h2{font-size:var(--fs-h2);max-width:600px}
+    .section-head-desc{max-width:480px;color:rgba(248,244,238,.52);font-size:.94rem}
+    .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .cta-box{
-      border:1px solid rgba(191,150,80,.14);border-radius:28px;padding:26px;background:rgba(7,24,43,.32)
+      border:1px solid rgba(191,150,80,.14);border-radius:28px;padding:28px;background:rgba(7,24,43,.32);transition:.2s
     }
-    .cta-box h3{font-size:1.55rem;margin-bottom:8px}
-    .cta-box p{color:rgba(248,244,238,.56);margin-bottom:18px}
-    footer{
-      padding:38px 0 26px;border-top:1px solid var(--bdr);background:rgba(0,0,0,.18)
+    .cta-box:hover{border-color:rgba(191,150,80,.30)}
+    .cta-box h3{font-size:1.5rem;margin-bottom:8px}
+    .cta-box p{color:rgba(248,244,238,.54);margin-bottom:18px;font-size:.92rem}
+
+    /* ══ TESTIMONIALS ══ */
+    .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+    .testi-card{
+      border:1px solid var(--bdr);border-radius:22px;padding:22px;
+      background:rgba(7,24,43,.36)
     }
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:20px;align-items:start}
-    .foot-kicker{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
-    .foot-text{max-width:360px;color:rgba(248,244,238,.48);font-size:.9rem}
-    .foot-col a{display:block;color:rgba(248,244,238,.48);font-size:.84rem;margin:8px 0}
+    .testi-stars{color:var(--or);font-size:.95rem;margin-bottom:10px;letter-spacing:2px}
+    .testi-quote{font-size:.88rem;color:rgba(248,244,238,.62);line-height:1.6;margin-bottom:14px;font-style:italic}
+    .testi-author{font-size:.76rem;color:rgba(248,244,238,.38);display:flex;align-items:center;gap:8px}
+    .testi-author::before{content:"";width:18px;height:1px;background:rgba(191,150,80,.3)}
+
+    /* ══ FOOTER ══ */
+    footer{padding:40px 0 28px;border-top:1px solid var(--bdr);background:rgba(0,0,0,.15)}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:22px;align-items:start}
+    .foot-kicker{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:9px}
+    .foot-text{max-width:360px;color:rgba(248,244,238,.44);font-size:.88rem}
+    .foot-col a{display:block;color:rgba(248,244,238,.44);font-size:.82rem;margin:9px 0;transition:.2s}
     .foot-col a:hover{color:var(--or)}
     .foot-bottom{
       display:flex;justify-content:space-between;gap:18px;align-items:center;
-      padding-top:22px;margin-top:22px;border-top:1px solid rgba(191,150,80,.08);
-      font-size:.76rem;color:rgba(248,244,238,.34)
+      padding-top:20px;margin-top:20px;border-top:1px solid rgba(191,150,80,.08);
+      font-size:.73rem;color:rgba(248,244,238,.30)
     }
 
-    @media (max-width: 1100px){
+    /* ══ RESPONSIVE ══ */
+    @media (max-width:1100px){
       .hero-grid,.proofs-grid,.footer-grid{grid-template-columns:1fr}
       .value-grid,.how-grid,.listing-grid{grid-template-columns:1fr 1fr}
-      .pain-grid,.split-entry,.cta-grid,.proof-list,.metric-row,.proof-grid{grid-template-columns:1fr}
+      .pain-grid,.split-entry,.cta-grid,.proof-list{grid-template-columns:1fr}
       .hero-panel{min-height:auto}
       .section-head{flex-direction:column;align-items:start}
+      .search-fields{grid-template-columns:1fr;gap:10px}
+      .testimonials-grid{grid-template-columns:1fr 1fr}
     }
-    @media (max-width: 760px){
+    @media (max-width:760px){
       .nav-links{display:none}
       .nav-cta .btn-secondary{display:none}
-      .hero{padding:44px 0 24px}
-      .section{padding:68px 0}
-      .value-grid,.how-grid,.listing-grid,.pain-grid,.cta-grid{grid-template-columns:1fr}
+      .hero{padding:40px 0 20px}
+      .section{padding:64px 0}
+      .value-grid,.how-grid,.listing-grid,.pain-grid,.cta-grid,.testimonials-grid{grid-template-columns:1fr}
       .container{padding:0 18px}
-      .nav-inner{height:72px}
-      .entry-card,.pain-card,.value-card,.proof-card-2,.listing-card,.cta-box,.hero-panel{border-radius:22px}
-      .hero-copy h1{font-size:clamp(2.4rem,8vw,3.4rem)}
-      .hero-trust{gap:10px}
-      .btn{width:100%}
-      .nav-cta{width:100%}
-      .nav-inner{flex-wrap:wrap;padding:12px 0}
-      .foot-bottom{flex-direction:column;align-items:start}
+      .hero-copy h1{font-size:clamp(2.3rem,9vw,3.2rem)}
+      .hero-pills{gap:8px}
+      .split-entry{grid-template-columns:1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+      .foot-bottom{flex-direction:column;align-items:start;gap:6px}
+      .proof-ticker{gap:24px}
+    }
+
+    /* ══ MODAL ══ */
+    .modal-backdrop{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(5,10,18,.88);
+      backdrop-filter:blur(12px);
+      display:flex;align-items:center;justify-content:center;
+      padding:20px;
+      opacity:0;pointer-events:none;
+      transition:opacity .28s ease;
+    }
+    .modal-backdrop.open{opacity:1;pointer-events:all}
+    .modal{
+      background:linear-gradient(160deg,#0b1e33,#081525);
+      border:1px solid var(--bds);
+      border-radius:32px;
+      width:100%;max-width:960px;
+      max-height:90vh;
+      overflow-y:auto;
+      box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 80px rgba(191,150,80,.08);
+      transform:translateY(18px) scale(.98);
+      transition:transform .3s ease, opacity .3s ease;
+      scrollbar-width:thin;scrollbar-color:rgba(191,150,80,.2) transparent;
+    }
+    .modal-backdrop.open .modal{transform:translateY(0) scale(1)}
+    .modal-header{
+      position:sticky;top:0;z-index:10;
+      background:rgba(8,21,37,.92);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--bdr);
+      padding:18px 24px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      border-radius:32px 32px 0 0;
+    }
+    .modal-header-left{display:flex;align-items:center;gap:14px}
+    .modal-badge-pill{
+      background:rgba(191,150,80,.15);border:1px solid rgba(191,150,80,.3);
+      color:var(--or);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:5px 12px;border-radius:999px;font-weight:600
+    }
+    .modal-avail-pill{
+      background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.3);color:#00C875;
+      font-size:.66rem;padding:5px 12px;border-radius:999px;
+      display:flex;align-items:center;gap:6px
+    }
+    .modal-avail-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#00C875;animation:pulse 2s infinite}
+    .modal-close{
+      width:38px;height:38px;border-radius:50%;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+      color:rgba(248,244,238,.6);font-size:1.1rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:.2s;flex-shrink:0
+    }
+    .modal-close:hover{background:rgba(191,150,80,.15);color:var(--or);border-color:rgba(191,150,80,.3)}
+
+    /* Gallery */
+    .modal-gallery{position:relative;height:360px;overflow:hidden;cursor:pointer}
+    @media(max-width:640px){.modal-gallery{height:240px}}
+    .gallery-track{
+      display:flex;height:100%;
+      transition:transform .38s cubic-bezier(.4,0,.2,1);
+    }
+    .gallery-slide{
+      min-width:100%;height:100%;position:relative;flex-shrink:0
+    }
+    .gallery-slide img{
+      width:100%;height:100%;object-fit:cover;display:block
+    }
+    .gallery-slide .slide-placeholder{
+      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;color:rgba(248,244,238,.3);letter-spacing:.1em;text-transform:uppercase
+    }
+    .gallery-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to bottom, transparent 50%, rgba(8,21,37,.75) 100%);
+      pointer-events:none
+    }
+    .gallery-nav{
+      position:absolute;top:50%;transform:translateY(-50%);
+      width:44px;height:44px;border-radius:50%;
+      background:rgba(8,21,37,.72);backdrop-filter:blur(8px);
+      border:1px solid var(--bdr);color:var(--blanc);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      font-size:1.1rem;transition:.2s;z-index:5;
+      pointer-events:all
+    }
+    .gallery-nav:hover{background:rgba(191,150,80,.25);border-color:var(--or)}
+    .gallery-prev{left:14px}
+    .gallery-next{right:14px}
+    .gallery-dots{
+      position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+      display:flex;gap:6px;z-index:5
+    }
+    .gallery-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:rgba(248,244,238,.3);border:none;cursor:pointer;padding:0;transition:.2s
+    }
+    .gallery-dot.active{background:var(--or);width:18px;border-radius:3px}
+    .gallery-counter{
+      position:absolute;bottom:14px;right:14px;z-index:5;
+      background:rgba(0,0,0,.45);backdrop-filter:blur(6px);
+      color:rgba(248,244,238,.7);font-size:.72rem;padding:4px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.08)
+    }
+
+    /* Modal body */
+    .modal-body{padding:28px}
+    .modal-title-row{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:6px}
+    .modal-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;line-height:1.1}
+    .modal-title em{font-style:italic;color:var(--or)}
+    .modal-location{font-size:.85rem;color:rgba(248,244,238,.42);margin-bottom:18px;display:flex;align-items:center;gap:6px}
+    .modal-location::before{content:"📍";font-size:.8rem}
+    .modal-specs-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+    .modal-spec{
+      background:rgba(191,150,80,.09);border:1px solid rgba(191,150,80,.2);
+      color:rgba(248,244,238,.75);font-size:.76rem;padding:6px 14px;border-radius:999px
+    }
+    .modal-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;margin-bottom:24px}
+    @media(max-width:680px){.modal-grid{grid-template-columns:1fr}}
+    .modal-desc-label{
+      font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px
+    }
+    .modal-desc{font-size:.92rem;color:rgba(248,244,238,.6);line-height:1.7;margin-bottom:18px}
+    .modal-equip-list{display:flex;flex-direction:column;gap:8px}
+    .modal-equip-item{
+      display:flex;align-items:center;gap:10px;
+      font-size:.84rem;color:rgba(248,244,238,.62);
+      padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.025);
+      border:1px solid rgba(191,150,80,.08)
+    }
+    .modal-equip-item span:first-child{font-size:1rem}
+    .modal-conditions{
+      background:rgba(7,24,43,.5);border:1px solid var(--bdr);
+      border-radius:18px;padding:18px;margin-bottom:22px
+    }
+    .modal-conditions-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:10px}
+    .modal-cond-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(191,150,80,.07);font-size:.86rem}
+    .modal-cond-row:last-child{border-bottom:none}
+    .modal-cond-label{color:rgba(248,244,238,.45)}
+    .modal-cond-value{color:var(--blanc);font-weight:500}
+    .modal-cta-bar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:20px 24px;
+      border-top:1px solid var(--bdr);
+      background:rgba(7,24,43,.5);
+      border-radius:0 0 32px 32px;
+      position:sticky;bottom:0;
+      backdrop-filter:blur(12px);
+    }
+    .modal-price-big{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:300;color:var(--or)}
+    .modal-price-sub{font-size:.72rem;color:rgba(248,244,238,.38);margin-top:1px}
+    .modal-cta-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn-whatsapp{
+      background:#25D366;color:#fff;
+      display:inline-flex;align-items:center;gap:.6rem;
+      padding:13px 18px;border-radius:999px;
+      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;letter-spacing:.06em;
+      transition:.2s;border:none;cursor:pointer;text-decoration:none
+    }
+    .btn-whatsapp:hover{background:#20bc59;transform:translateY(-1px)}
+    @media(max-width:600px){
+      .modal-cta-bar{flex-direction:column;align-items:stretch;gap:12px}
+      .modal-cta-actions{flex-direction:column}
+      .modal-cta-actions .btn,.btn-whatsapp{width:100%;justify-content:center}
     }
   </style>
 </head>
 <body>
+
+  <!-- ══ NAV ══ -->
   <nav class="nav">
     <div class="container nav-inner">
       <a href="/" class="brand" aria-label="Kàddu Accueil">
@@ -301,104 +589,170 @@
           <div class="brand-tag">La parole qui engage</div>
         </div>
       </a>
-
       <div class="nav-links">
         <a href="#proprietaires">Propriétaires</a>
         <a href="#locataires">Locataires</a>
         <a href="#confiance">Pourquoi Kàddu</a>
         <a href="#biens">Biens</a>
       </div>
-
       <div class="nav-cta">
         <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
-        <a class="btn btn-primary" href="#proprietaires">Confier mon bien</a>
+        <a class="btn btn-primary" href="#cta-final">Confier mon bien</a>
       </div>
     </div>
   </nav>
 
   <main>
+    <!-- ══ HERO ══ -->
     <section class="hero">
       <div class="container hero-grid">
+
         <div class="hero-copy">
-          <span class="eyebrow">Immobilier digital premium à Dakar</span>
-          <h1>Louer <em>sans friction</em>.<br> Louer <em>en confiance</em>.</h1>
+          <span class="eyebrow">Immobilier digital premium · Dakar</span>
+          <h1>Louer <em>sans friction</em>.<br>Louer <em>en confiance</em>.</h1>
           <div class="hero-slogan">Kàddu réconcilie propriétaires exigeants et locataires sérieux.</div>
           <p class="hero-text">
-            Une plateforme pensée pour ceux qui ne supportent plus les agences peu réactives, les visites inutiles,
-            les dossiers mal gérés et l’opacité. Kàddu remet de la clarté, du contrôle et de la confiance dans la location.
+            Une plateforme pensée pour ceux qui ne supportent plus les agences peu réactives,
+            les visites inutiles, les dossiers mal gérés et l'opacité.
           </p>
-
-          <div class="hero-trust">
-            <div class="trust-pill">Locataires qualifiés</div>
-            <div class="trust-pill">Dossier digital vérifié</div>
-            <div class="trust-pill">Visites 360°</div>
+          <div class="hero-pills">
+            <div class="trust-pill"><strong>✓</strong> Locataires qualifiés</div>
+            <div class="trust-pill"><strong>✓</strong> Dossier digital vérifié</div>
+            <div class="trust-pill"><strong>🌀</strong> Visites 360°</div>
             <div class="trust-pill">Wave · Orange Money · Stripe</div>
           </div>
 
-          <div class="split-entry">
-            <div class="entry-card" id="proprietaires">
-              <div class="entry-kicker">Pour propriétaires</div>
-              <h3>Reprenez <em>le contrôle</em></h3>
-              <p>Un service plus transparent, plus réactif, et orienté résultats — pas simplement encaissement.</p>
-              <div class="entry-points">
-                <span>Commercialisation premium et suivi clair</span>
-                <span>Sélection et qualification des candidats</span>
-                <span>Expérience digitale plus crédible pour votre bien</span>
+          <!-- Search bar -->
+          <div class="search-bar-wrap">
+            <div class="search-label">Trouver un bien à Dakar</div>
+            <div class="search-fields">
+              <div class="search-field">
+                <label>Type de séjour</label>
+                <select>
+                  <option>Courte durée (meublé)</option>
+                  <option>Longue durée (meublé)</option>
+                  <option>Longue durée (non meublé)</option>
+                </select>
               </div>
-              <a class="btn btn-primary" href="#cta-final">Je suis propriétaire</a>
-            </div>
-
-            <div class="entry-card" id="locataires">
-              <div class="entry-kicker">Pour locataires</div>
-              <h3>Gagnez <em>du temps</em></h3>
-              <p>Moins de visites décevantes, moins d’intermédiaires flous, et un dossier qui vous aide au lieu de vous pénaliser.</p>
-              <div class="entry-points">
-                <span>Biens mieux présentés et mieux filtrés</span>
-                <span>Dossier digital guidé et valorisé</span>
-                <span>Expérience plus sérieuse et plus rassurante</span>
+              <div class="search-field">
+                <label>Quartier</label>
+                <select>
+                  <option>Tous les quartiers</option>
+                  <option>Sipres VDN</option>
+                  <option>Almadies</option>
+                  <option>Plateau</option>
+                  <option>Mermoz</option>
+                </select>
               </div>
-              <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html">Je cherche un logement</a>
+              <a class="btn btn-primary btn-lg" href="#biens">Voir les biens</a>
             </div>
           </div>
         </div>
 
-        <aside class="hero-panel" aria-label="Preuves de valeur Kàddu">
+        <!-- Hero panel: featured property card -->
+        <aside class="hero-panel" aria-label="Bien en vedette">
           <div class="deco-k">K</div>
           <div class="hero-stack">
             <div class="metric-row">
               <div class="metric"><strong>360°</strong><span>Visites immersives</span></div>
-              <div class="metric"><strong>2 côtés</strong><span>Propriétaire + locataire</span></div>
               <div class="metric"><strong>24/7</strong><span>Parcours digital</span></div>
+              <div class="metric"><strong>100%</strong><span>Vérifié Kàddu</span></div>
             </div>
 
-            <div class="proof-card">
-              <h3>Une plateforme qui traite le <em>vrai problème</em></h3>
-              <p>
-                Kàddu ne se contente pas d’annoncer des biens. La plateforme organise la confiance entre les deux parties :
-                meilleure présentation, meilleure qualification, meilleure expérience.
-              </p>
+            <div class="hero-prop-card">
+              <div class="hero-prop-img apt-bg-1">
+                <div class="hero-prop-img-layer"></div>
+                <div class="apt-illustration">
+                  <svg viewBox="0 0 340 172" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                    <!-- Floor -->
+                    <rect x="0" y="140" width="340" height="32" fill="rgba(191,150,80,.06)"/>
+                    <!-- Back wall -->
+                    <rect x="30" y="30" width="280" height="115" rx="4" fill="rgba(191,150,80,.04)" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
+                    <!-- Window left -->
+                    <rect x="50" y="55" width="70" height="55" rx="3" fill="rgba(100,180,255,.08)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
+                    <line x1="85" y1="55" x2="85" y2="110" stroke="rgba(191,150,80,.18)" stroke-width="1"/>
+                    <line x1="50" y1="82" x2="120" y2="82" stroke="rgba(191,150,80,.18)" stroke-width="1"/>
+                    <!-- Light from window -->
+                    <ellipse cx="85" cy="140" rx="45" ry="12" fill="rgba(191,150,80,.06)"/>
+                    <!-- Sofa -->
+                    <rect x="150" y="112" width="100" height="30" rx="5" fill="rgba(191,150,80,.15)" stroke="rgba(191,150,80,.25)" stroke-width="1"/>
+                    <rect x="155" y="105" width="90" height="14" rx="4" fill="rgba(191,150,80,.10)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
+                    <rect x="148" y="108" width="10" height="28" rx="3" fill="rgba(191,150,80,.12)"/>
+                    <rect x="242" y="108" width="10" height="28" rx="3" fill="rgba(191,150,80,.12)"/>
+                    <!-- Table -->
+                    <rect x="175" y="138" width="50" height="6" rx="2" fill="rgba(191,150,80,.1)"/>
+                    <line x1="185" y1="144" x2="185" y2="158" stroke="rgba(191,150,80,.12)" stroke-width="2"/>
+                    <line x1="215" y1="144" x2="215" y2="158" stroke="rgba(191,150,80,.12)" stroke-width="2"/>
+                    <!-- Plant -->
+                    <line x1="280" y1="140" x2="280" y2="100" stroke="rgba(80,140,80,.3)" stroke-width="2"/>
+                    <ellipse cx="280" cy="95" rx="14" ry="12" fill="rgba(60,120,60,.18)" stroke="rgba(80,160,80,.2)" stroke-width="1"/>
+                    <ellipse cx="270" cy="100" rx="10" ry="9" fill="rgba(60,120,60,.14)"/>
+                    <ellipse cx="290" cy="102" rx="9" ry="8" fill="rgba(60,120,60,.14)"/>
+                    <!-- Lamp -->
+                    <line x1="120" y1="30" x2="120" y2="70" stroke="rgba(191,150,80,.15)" stroke-width="1.5"/>
+                    <ellipse cx="120" cy="28" rx="16" ry="8" fill="rgba(191,150,80,.12)" stroke="rgba(191,150,80,.25)" stroke-width="1"/>
+                    <ellipse cx="120" cy="68" rx="8" ry="3" fill="rgba(191,150,80,.08)"/>
+                    <!-- Glow from lamp -->
+                    <radialGradient id="lamp-glow" cx="50%" cy="100%" r="60%">
+                      <stop offset="0%" stop-color="rgba(191,150,80,.12)"/>
+                      <stop offset="100%" stop-color="transparent"/>
+                    </radialGradient>
+                    <ellipse cx="120" cy="70" rx="50" ry="30" fill="url(#lamp-glow)"/>
+                  </svg>
+                </div>
+                <div class="hero-prop-badge">Meublé · Coup de cœur</div>
+                <div class="hero-prop-avail">Disponible</div>
+              </div>
+              <div class="hero-prop-body">
+                <h4>Le Petit <em>Bantukay</em></h4>
+                <div class="hero-prop-meta">Sipres VDN 2, Dakar · Immeuble AÏDARA</div>
+                <div class="hero-prop-specs">
+                  <span class="spec-chip">F3 · 3 pièces</span>
+                  <span class="spec-chip">Climatisé</span>
+                  <span class="spec-chip">WiFi inclus</span>
+                  <span class="spec-chip">Gardiennage</span>
+                </div>
+                <div class="hero-prop-price-row">
+                  <div class="hero-prop-price">
+                    À partir de 50 000 FCFA
+                    <small>/ nuit · prix selon durée</small>
+                  </div>
+                  <a class="btn btn-primary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay">Postuler →</a>
+                </div>
+              </div>
             </div>
 
-            <div class="proof-grid">
-              <div class="mini-list">
-                <h4>Côté propriétaire</h4>
-                <div class="mini-item"><strong>Moins d’opacité</strong><span>Suivi plus lisible et expérience plus professionnelle.</span></div>
-                <div class="mini-item"><strong>Moins de perte de temps</strong><span>Candidats mieux qualifiés avant visite ou décision.</span></div>
-                <div class="mini-item"><strong>Meilleure image du bien</strong><span>Présentation premium, 360° et tunnel structuré.</span></div>
-              </div>
-
-              <div class="mini-list">
-                <h4>Côté locataire</h4>
-                <div class="mini-item"><strong>Moins de visites inutiles</strong><span>Biens mieux décrits et plus cohérents.</span></div>
-                <div class="mini-item"><strong>Moins de friction</strong><span>Dépôt de dossier plus clair, plus rapide, plus rassurant.</span></div>
-                <div class="mini-item"><strong>Moins de flou</strong><span>Un interlocuteur digital plus sérieux qu’un simple courtier.</span></div>
-              </div>
+            <div style="display:flex;gap:10px;align-items:center;padding:6px 2px">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--or)"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
+              <span style="font-size:.7rem;color:rgba(248,244,238,.32);margin-left:4px">3 biens disponibles</span>
             </div>
           </div>
         </aside>
       </div>
     </section>
 
+    <!-- ══ PROOF TICKER ══ -->
+    <div class="social-proof-section">
+      <div class="container">
+        <div class="proof-ticker">
+          <div class="proof-stat"><strong>100%</strong><span>Biens vérifiés sur site</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>3</strong><span>Appartements premium VDN</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>360°</strong><span>Visites virtuelles disponibles</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>48h</strong><span>Délai de réponse garanti</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>Wave · OM · Stripe</strong><span>Paiements acceptés</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>Diaspora · Touristes · Business</strong><span>Profils accueillis</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAIN ══ -->
     <section class="section">
       <div class="container">
         <div class="section-head">
@@ -406,14 +760,10 @@
             <span class="eyebrow">Le constat marché</span>
             <h2>Le même système déçoit <em>les deux côtés</em>.</h2>
           </div>
-          <p>
-            Le problème n’est pas uniquement l’offre ou la demande. Le problème, c’est l’expérience :
-            trop peu de transparence pour les propriétaires, trop peu de sérieux pour les locataires.
-          </p>
+          <p class="section-head-desc">Le problème n'est pas l'offre ou la demande. C'est l'expérience : trop peu de transparence pour les propriétaires, trop peu de sérieux pour les locataires.</p>
         </div>
-
         <div class="pain-grid">
-          <article class="pain-card">
+          <article class="pain-card" id="proprietaires">
             <div class="pain-top">
               <div class="pain-label">Propriétaires</div>
               <div class="pain-badge">Frustration terrain</div>
@@ -426,14 +776,13 @@
               <span>Peu de valeur ajoutée perçue</span>
             </div>
           </article>
-
-          <article class="pain-card">
+          <article class="pain-card" id="locataires">
             <div class="pain-top">
               <div class="pain-label">Locataires</div>
               <div class="pain-badge">Frustration terrain</div>
             </div>
             <h3>Déçus par des visites et intermédiaires qui <em>dégradent</em> le dossier</h3>
-            <p>Temps perdu, annonces peu fiables, attentes mal gérées, et parfois des pratiques qui desservent le candidat sérieux.</p>
+            <p>Temps perdu, annonces peu fiables, attentes mal gérées, et des pratiques qui desservent le candidat sérieux.</p>
             <div class="pain-list">
               <span>Visites inutiles ou mal préparées</span>
               <span>Dossier mal valorisé</span>
@@ -444,6 +793,7 @@
       </div>
     </section>
 
+    <!-- ══ VALUE ══ -->
     <section class="section" id="confiance">
       <div class="container">
         <div class="section-head">
@@ -451,16 +801,13 @@
             <span class="eyebrow">Pourquoi Kàddu</span>
             <h2>Une réponse pensée comme un <em>système de confiance</em>.</h2>
           </div>
-          <p>
-            Kàddu apporte des preuves, de la structure et une meilleure orchestration du parcours — du bien jusqu’au dossier.
-          </p>
+          <p class="section-head-desc">Kàddu apporte des preuves, de la structure et une meilleure orchestration du parcours — du bien jusqu'au dossier.</p>
         </div>
-
         <div class="value-grid">
           <article class="value-card">
             <div class="value-icon">🔐</div>
             <h3>Vérification intelligente</h3>
-            <p>Dossier digital plus structuré, logique de qualification et antifraude en support de la décision.</p>
+            <p>Dossier digital structuré, scoring automatique et logique de qualification antifraude en support de décision.</p>
           </article>
           <article class="value-card">
             <div class="value-icon">🌀</div>
@@ -475,30 +822,27 @@
           <article class="value-card">
             <div class="value-icon">💳</div>
             <h3>Paiements adaptés</h3>
-            <p>Wave, Orange Money, Stripe, virement : une expérience plus locale, plus pratique et plus crédible.</p>
+            <p>Wave, Orange Money, Stripe, virement : une expérience pensée pour les usages réels du marché sénégalais.</p>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- ══ HOW IT WORKS ══ -->
     <section class="section">
       <div class="container">
         <div class="section-head">
           <div>
             <span class="eyebrow">Comment ça marche</span>
-            <h2>Un parcours simple, plus lisible, pour <em>les deux parties</em>.</h2>
+            <h2>Un parcours simple, pour <em>les deux parties</em>.</h2>
           </div>
-          <p>
-            Kàddu ne cherche pas à complexifier. La plateforme simplifie ce qui est souvent mal exécuté : présentation du bien,
-            qualification, dossier, échanges et décision.
-          </p>
+          <p class="section-head-desc">Kàddu simplifie ce qui est souvent mal exécuté : présentation du bien, qualification, dossier, échanges, décision.</p>
         </div>
-
         <div class="how-grid">
           <article class="how-card">
             <div class="how-num">01</div>
             <h3>Le bien est mieux présenté</h3>
-            <p>Contenu plus premium, meilleure lisibilité, et plus de projection dès la première visite digitale.</p>
+            <p>Contenu premium, meilleure lisibilité, et plus de projection dès la première visite digitale.</p>
           </article>
           <article class="how-card">
             <div class="how-num">02</div>
@@ -508,37 +852,34 @@
           <article class="how-card">
             <div class="how-num">03</div>
             <h3>Le propriétaire reprend la main</h3>
-            <p>Moins de bruit, plus de signaux utiles, et une lecture plus nette des candidatures.</p>
+            <p>Moins de bruit, plus de signaux utiles, et une lecture plus nette des candidatures reçues.</p>
           </article>
           <article class="how-card">
             <div class="how-num">04</div>
             <h3>La relation devient plus saine</h3>
-            <p>Moins de perte de temps, plus de confiance, et une meilleure qualité de service côté propriétaire comme locataire.</p>
+            <p>Moins de perte de temps, plus de confiance, et une meilleure qualité de service des deux côtés.</p>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- ══ DIFFERENTIATOR ══ -->
     <section class="section">
       <div class="container proofs-grid">
         <article class="proof-card-2">
           <span class="eyebrow">Ce qui différencie Kàddu</span>
           <h3>Pas une agence de plus. Une <em>expérience immobilière orchestrée</em>.</h3>
-          <p>
-            Le rôle de Kàddu n’est pas seulement de diffuser un bien. Le rôle de Kàddu est de créer un cadre plus sérieux
-            entre offre et demande, avec plus de preuves, plus de clarté et moins de friction.
-          </p>
-          <a class="btn btn-primary" href="#biens">Découvrir les biens</a>
+          <p>Le rôle de Kàddu n'est pas seulement de diffuser un bien. La plateforme organise la confiance entre les deux parties : meilleure présentation, meilleure qualification, meilleure expérience.</p>
+          <a class="btn btn-primary" href="#biens">Découvrir les biens disponibles →</a>
         </article>
-
         <div class="proof-list">
           <div class="proof-item">
             <strong>Dossier locataire guidé</strong>
-            <span>Un dépôt plus fluide, plus clair, mieux valorisé.</span>
+            <span>Un dépôt plus fluide, plus clair, mieux valorisé côté candidat.</span>
           </div>
           <div class="proof-item">
             <strong>Antifraude en support</strong>
-            <span>Le digital aide à qualifier, sans alourdir inutilement le parcours.</span>
+            <span>Le digital aide à qualifier, sans alourdir le parcours.</span>
           </div>
           <div class="proof-item">
             <strong>Présentation premium</strong>
@@ -546,63 +887,200 @@
           </div>
           <div class="proof-item">
             <strong>Canaux de paiement modernes</strong>
-            <span>Une logique pensée pour les usages réels du marché.</span>
+            <span>Pensé pour les usages réels du marché sénégalais.</span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- ══ LISTINGS ══ -->
     <section class="section" id="biens">
       <div class="container">
         <div class="section-head">
           <div>
-            <span class="eyebrow">Sélection Kàddu</span>
-            <h2>Des biens présentés avec plus de <em>clarté et de projection</em>.</h2>
+            <span class="eyebrow">Sélection Kàddu · VDN Dakar</span>
+            <h2>Des biens présentés avec <em>clarté et projection</em>.</h2>
           </div>
-          <p>
-            La homepage ne doit montrer qu’un aperçu. Les détails, les galeries et les pages bien restent sur leurs pages dédiées.
-          </p>
+          <p class="section-head-desc">Chaque appartement est photographié, décrit avec précision et présenté avec un dossier de candidature guidé.</p>
         </div>
 
         <div class="listing-grid">
-          <article class="listing-card">
-            <div class="listing-media"></div>
-            <div class="listing-body">
+
+          <!-- Bantukay -->
+          <article class="listing-card" data-bien="bantukay" style="cursor:pointer">
+            <div class="listing-media apt-bg-1">
+              <div class="listing-media-inner">
+                <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+                  <rect x="0" y="190" width="320" height="40" fill="rgba(191,150,80,.05)"/>
+                  <rect x="20" y="40" width="280" height="155" rx="3" fill="rgba(191,150,80,.03)" stroke="rgba(191,150,80,.1)" stroke-width="1"/>
+                  <!-- Large window -->
+                  <rect x="40" y="65" width="100" height="75" rx="3" fill="rgba(100,180,255,.07)" stroke="rgba(191,150,80,.18)" stroke-width="1"/>
+                  <line x1="90" y1="65" x2="90" y2="140" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
+                  <line x1="40" y1="102" x2="140" y2="102" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
+                  <ellipse cx="90" cy="190" rx="60" ry="14" fill="rgba(191,150,80,.05)"/>
+                  <!-- Bed -->
+                  <rect x="170" y="100" width="110" height="70" rx="6" fill="rgba(191,150,80,.12)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
+                  <rect x="170" y="100" width="110" height="20" rx="5" fill="rgba(191,150,80,.18)"/>
+                  <rect x="180" y="107" width="28" height="18" rx="4" fill="rgba(248,244,238,.06)"/>
+                  <rect x="215" y="107" width="28" height="18" rx="4" fill="rgba(248,244,238,.06)"/>
+                  <!-- Nightstand -->
+                  <rect x="280" y="120" width="22" height="28" rx="3" fill="rgba(191,150,80,.08)" stroke="rgba(191,150,80,.14)" stroke-width="1"/>
+                  <circle cx="291" cy="128" r="3" fill="rgba(191,150,80,.3)"/>
+                  <!-- Rug -->
+                  <ellipse cx="225" cy="188" rx="58" ry="14" fill="rgba(191,150,80,.06)" stroke="rgba(191,150,80,.1)" stroke-width="1"/>
+                  <!-- Plant -->
+                  <line x1="155" y1="190" x2="155" y2="145" stroke="rgba(80,140,80,.25)" stroke-width="2"/>
+                  <ellipse cx="155" cy="140" rx="16" ry="14" fill="rgba(60,120,60,.16)"/>
+                  <ellipse cx="144" cy="147" rx="11" ry="10" fill="rgba(60,120,60,.12)"/>
+                </svg>
+              </div>
+              <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
-              <h3>Le petit <em>Bantukay</em></h3>
-              <div class="listing-meta">Sipres VDN 2 · Dakar</div>
-              <div class="listing-desc">Un F3 premium pensé pour les séjours confortables, avec une présentation plus claire et une meilleure projection.</div>
-              <div class="listing-price">
-                <strong>À partir de 50 000 FCFA</strong>
-                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay">Déposer mon dossier</a>
+              <div class="listing-avail">Disponible</div>
+              <div class="listing-cta-overlay">
+                <a class="btn btn-primary" href="#">Voir le bien →</a>
+              </div>
+            </div>
+            <div class="listing-body">
+              <h3>Le Petit <em>Bantukay</em></h3>
+              <div class="listing-meta">Sipres VDN 2, Dakar</div>
+              <div class="listing-specs">
+                <span class="listing-spec">F3 · 3 pièces</span>
+                <span class="listing-spec">Climatisé</span>
+                <span class="listing-spec">WiFi</span>
+                <span class="listing-spec">Parking</span>
+              </div>
+              <div class="listing-desc">Appartement meublé premium avec salon spacieux, chambre principale et chambre d'appoint. Idéal pour séjours business ou diaspora.</div>
+              <div class="listing-price-row">
+                <div class="listing-price">
+                  <strong>50 000 FCFA</strong>
+                  <small>/ nuit · tarif mensuel disponible</small>
+                </div>
+                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay">Postuler</a>
               </div>
             </div>
           </article>
 
-          <article class="listing-card">
-            <div class="listing-media"></div>
-            <div class="listing-body">
+          <!-- Suxalikay -->
+          <article class="listing-card" data-bien="suxalikay" style="cursor:pointer">
+            <div class="listing-media apt-bg-2">
+              <div class="listing-media-inner">
+                <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+                  <rect x="0" y="190" width="320" height="40" fill="rgba(191,150,80,.04)"/>
+                  <rect x="20" y="35" width="280" height="158" rx="3" fill="rgba(191,150,80,.03)" stroke="rgba(191,150,80,.10)" stroke-width="1"/>
+                  <!-- Kitchen counter -->
+                  <rect x="30" y="130" width="130" height="40" rx="4" fill="rgba(191,150,80,.10)" stroke="rgba(191,150,80,.18)" stroke-width="1"/>
+                  <rect x="35" y="125" width="120" height="10" rx="3" fill="rgba(191,150,80,.14)"/>
+                  <!-- Stove rings -->
+                  <circle cx="65" cy="120" r="8" fill="none" stroke="rgba(191,150,80,.22)" stroke-width="1.5"/>
+                  <circle cx="65" cy="120" r="5" fill="none" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
+                  <circle cx="95" cy="120" r="8" fill="none" stroke="rgba(191,150,80,.22)" stroke-width="1.5"/>
+                  <!-- Upper cabinets -->
+                  <rect x="30" y="55" width="130" height="50" rx="3" fill="rgba(191,150,80,.07)" stroke="rgba(191,150,80,.14)" stroke-width="1"/>
+                  <line x1="95" y1="55" x2="95" y2="105" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
+                  <circle cx="62" cy="80" r="3" fill="rgba(191,150,80,.25)"/>
+                  <circle cx="128" cy="80" r="3" fill="rgba(191,150,80,.25)"/>
+                  <!-- Dining table -->
+                  <ellipse cx="230" cy="140" rx="60" ry="32" fill="rgba(191,150,80,.08)" stroke="rgba(191,150,80,.16)" stroke-width="1"/>
+                  <!-- Chairs -->
+                  <rect x="178" y="130" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
+                  <rect x="260" y="130" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
+                  <rect x="215" y="102" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
+                  <rect x="243" y="102" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
+                  <!-- Window back -->
+                  <rect x="175" y="45" width="105" height="60" rx="3" fill="rgba(100,180,255,.06)" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
+                  <line x1="227" y1="45" x2="227" y2="105" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
+                  <line x1="175" y1="75" x2="280" y2="75" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
+                  <ellipse cx="227" cy="190" rx="65" ry="14" fill="rgba(191,150,80,.05)"/>
+                </svg>
+              </div>
+              <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
-              <h3>Le petit <em>Suxalikay</em></h3>
-              <div class="listing-meta">Sipres VDN 2 · Dakar</div>
-              <div class="listing-desc">Une expérience plus lisible, plus premium et plus crédible pour les candidats sérieux.</div>
-              <div class="listing-price">
-                <strong>Visite digitale disponible</strong>
-                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Suxalikay">Déposer mon dossier</a>
+              <div class="listing-avail">Disponible</div>
+              <div class="listing-cta-overlay">
+                <a class="btn btn-primary" href="#">Voir le bien →</a>
+              </div>
+            </div>
+            <div class="listing-body">
+              <h3>Le Petit <em>Suxalikay</em></h3>
+              <div class="listing-meta">Sipres VDN 2, Dakar</div>
+              <div class="listing-specs">
+                <span class="listing-spec">F2 · 2 pièces</span>
+                <span class="listing-spec">Cuisine équipée</span>
+                <span class="listing-spec">WiFi</span>
+                <span class="listing-spec">Sécurisé</span>
+              </div>
+              <div class="listing-desc">Studio haut de gamme avec cuisine américaine entièrement équipée. Conçu pour l'autonomie, parfait pour un séjour de travail ou de passage.</div>
+              <div class="listing-price-row">
+                <div class="listing-price">
+                  <strong>Sur demande</strong>
+                  <small>Visite digitale 360° disponible</small>
+                </div>
+                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Suxalikay">Postuler</a>
               </div>
             </div>
           </article>
 
-          <article class="listing-card">
-            <div class="listing-media"></div>
-            <div class="listing-body">
+          <!-- Nopalukay -->
+          <article class="listing-card" data-bien="nopalukay" style="cursor:pointer">
+            <div class="listing-media apt-bg-3">
+              <div class="listing-media-inner">
+                <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+                  <rect x="0" y="190" width="320" height="40" fill="rgba(191,150,80,.04)"/>
+                  <rect x="20" y="38" width="280" height="155" rx="3" fill="rgba(191,150,80,.03)" stroke="rgba(191,150,80,.10)" stroke-width="1"/>
+                  <!-- Long sofa -->
+                  <rect x="30" y="130" width="150" height="44" rx="6" fill="rgba(191,150,80,.13)" stroke="rgba(191,150,80,.22)" stroke-width="1"/>
+                  <rect x="30" y="118" width="150" height="18" rx="5" fill="rgba(191,150,80,.09)"/>
+                  <rect x="28" y="120" width="12" height="40" rx="4" fill="rgba(191,150,80,.11)"/>
+                  <rect x="168" y="120" width="12" height="40" rx="4" fill="rgba(191,150,80,.11)"/>
+                  <!-- TV unit -->
+                  <rect x="30" y="75" width="120" height="8" rx="2" fill="rgba(191,150,80,.12)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
+                  <!-- TV screen -->
+                  <rect x="35" y="50" width="110" height="26" rx="3" fill="rgba(20,40,60,.7)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
+                  <rect x="40" y="53" width="100" height="20" rx="2" fill="rgba(50,100,180,.08)"/>
+                  <!-- Coffee table -->
+                  <rect x="80" y="112" width="60" height="12" rx="3" fill="rgba(191,150,80,.09)" stroke="rgba(191,150,80,.16)" stroke-width="1"/>
+                  <!-- Bookshelf -->
+                  <rect x="258" y="55" width="36" height="105" rx="3" fill="rgba(191,150,80,.06)" stroke="rgba(191,150,80,.14)" stroke-width="1"/>
+                  <rect x="261" y="62" width="30" height="8" rx="2" fill="rgba(191,150,80,.15)"/>
+                  <rect x="261" y="75" width="30" height="8" rx="2" fill="rgba(100,80,60,.2)"/>
+                  <rect x="261" y="88" width="30" height="8" rx="2" fill="rgba(191,150,80,.1)"/>
+                  <rect x="261" y="101" width="30" height="8" rx="2" fill="rgba(80,100,120,.2)"/>
+                  <rect x="261" y="114" width="30" height="8" rx="2" fill="rgba(191,150,80,.12)"/>
+                  <!-- Big window -->
+                  <rect x="160" y="50" width="85" height="80" rx="3" fill="rgba(100,180,255,.07)" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
+                  <line x1="202" y1="50" x2="202" y2="130" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
+                  <line x1="160" y1="90" x2="245" y2="90" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
+                  <ellipse cx="202" cy="190" rx="60" ry="13" fill="rgba(191,150,80,.05)"/>
+                  <!-- Plant corner -->
+                  <line x1="240" y1="190" x2="240" y2="150" stroke="rgba(80,140,80,.22)" stroke-width="2"/>
+                  <ellipse cx="240" cy="145" rx="14" ry="13" fill="rgba(60,120,60,.15)"/>
+                  <ellipse cx="229" cy="152" rx="10" ry="9" fill="rgba(60,120,60,.11)"/>
+                </svg>
+              </div>
+              <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
-              <h3>Le petit <em>Nopalukay</em></h3>
-              <div class="listing-meta">Sipres VDN 2 · Dakar</div>
-              <div class="listing-desc">Un bien mis en scène pour faire gagner du temps à tout le monde, propriétaire comme locataire.</div>
-              <div class="listing-price">
-                <strong>Dossier digital prioritaire</strong>
-                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Nopalukay">Déposer mon dossier</a>
+              <div class="listing-avail">Disponible</div>
+              <div class="listing-cta-overlay">
+                <a class="btn btn-primary" href="#">Voir le bien →</a>
+              </div>
+            </div>
+            <div class="listing-body">
+              <h3>Le Petit <em>Nopalukay</em></h3>
+              <div class="listing-meta">Sipres VDN 2, Dakar</div>
+              <div class="listing-specs">
+                <span class="listing-spec">F3 · Salon séparé</span>
+                <span class="listing-spec">Climatisé</span>
+                <span class="listing-spec">Netflix</span>
+                <span class="listing-spec">Gardiennage</span>
+              </div>
+              <div class="listing-desc">Appartement lumineux avec salon séparé, idéal pour familles ou couples. Atmosphère cosy, équipements haut de gamme et vue dégagée.</div>
+              <div class="listing-price-row">
+                <div class="listing-price">
+                  <strong>Dossier prioritaire</strong>
+                  <small>Déposez votre candidature</small>
+                </div>
+                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Nopalukay">Postuler</a>
               </div>
             </div>
           </article>
@@ -610,30 +1088,58 @@
       </div>
     </section>
 
+    <!-- ══ TESTIMONIALS ══ -->
     <section class="section">
-      <div class="container cta-band" id="cta-final">
-        <div class="section-head" style="margin-bottom:22px">
+      <div class="container">
+        <div class="section-head">
           <div>
-            <span class="eyebrow">Choisissez votre entrée</span>
-            <h2>Kàddu apporte une réponse aux <em>deux frustrations du marché</em>.</h2>
+            <span class="eyebrow">Ce que disent nos locataires</span>
+            <h2>Une expérience qui <em>rassure</em> avant même l'arrivée.</h2>
           </div>
-          <p>
-            Une home claire, deux promesses distinctes, et une même logique de confiance.
-          </p>
         </div>
+        <div class="testimonials-grid">
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">« Depuis Paris, j'ai pu tout faire à distance. Le dossier est clair, la réponse rapide, et l'appartement était exactement comme présenté. Zéro mauvaise surprise. »</p>
+            <div class="testi-author">Mariama D. — Paris, séjour 3 semaines</div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">« J'avais essayé d'autres agences avant. Avec Kàddu c'est différent — on sait exactement ce qu'on fait, pourquoi, et on reçoit une vraie réponse. »</p>
+            <div class="testi-author">Cheikh B. — Mission business Dakar</div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">« Le Petit Bantukay est exactement ce qu'il faut pour un séjour prolongé. Tout est pensé. J'ai payé via Wave sans friction. Je reviens sans hésiter. »</p>
+            <div class="testi-author">Fatou K. — Dakar, séjour mensuel</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="cta-grid">
-          <article class="cta-box">
-            <h3>Vous êtes <em>propriétaire</em></h3>
-            <p>Vous cherchez une solution plus réactive, plus claire et plus alignée avec la qualité de votre bien.</p>
-            <a class="btn btn-primary" href="mailto:contact@kaddu.net?subject=Confier%20mon%20bien%20%C3%A0%20K%C3%A0ddu">Confier mon bien</a>
-          </article>
-
-          <article class="cta-box">
-            <h3>Vous êtes <em>locataire</em></h3>
-            <p>Vous voulez éviter les parcours décevants et déposer un dossier plus sérieux, plus propre et mieux valorisé.</p>
-            <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
-          </article>
+    <!-- ══ CTA FINAL ══ -->
+    <section class="section" id="cta-final">
+      <div class="container">
+        <div class="cta-band">
+          <div class="section-head" style="margin-bottom:22px">
+            <div>
+              <span class="eyebrow">Choisissez votre entrée</span>
+              <h2>Kàddu répond aux <em>deux frustrations du marché</em>.</h2>
+            </div>
+            <p class="section-head-desc">Une home claire, deux promesses distinctes, et une même logique de confiance.</p>
+          </div>
+          <div class="cta-grid">
+            <article class="cta-box">
+              <h3>Vous êtes <em>propriétaire</em></h3>
+              <p>Vous cherchez une solution plus réactive, plus claire et plus alignée avec la qualité de votre bien à Dakar. Zéro intermédiaire flou.</p>
+              <a class="btn btn-primary btn-lg" href="mailto:contact@kaddu.net?subject=Confier%20mon%20bien%20%C3%A0%20K%C3%A0ddu">Confier mon bien →</a>
+            </article>
+            <article class="cta-box">
+              <h3>Vous êtes <em>locataire</em></h3>
+              <p>Vous voulez éviter les parcours décevants et déposer un dossier sérieux, propre et bien valorisé. Le tunnel prend moins de 10 minutes.</p>
+              <a class="btn btn-secondary btn-lg" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier →</a>
+            </article>
+          </div>
         </div>
       </div>
     </section>
@@ -644,9 +1150,7 @@
       <div class="footer-grid">
         <div>
           <div class="foot-kicker">Kàddu</div>
-          <div class="foot-text">
-            Plateforme immobilière digitale premium conçue pour réconcilier propriétaires exigeants et locataires sérieux à Dakar.
-          </div>
+          <div class="foot-text">Plateforme immobilière digitale premium conçue pour réconcilier propriétaires exigeants et locataires sérieux à Dakar.</div>
         </div>
         <div class="foot-col">
           <div class="foot-kicker">Parcours</div>
@@ -657,22 +1161,353 @@
         <div class="foot-col">
           <div class="foot-kicker">Plateforme</div>
           <a href="#confiance">Pourquoi Kàddu</a>
-          <a href="#biens">Biens</a>
+          <a href="#biens">Biens disponibles</a>
           <a href="#cta-final">Contact</a>
         </div>
         <div class="foot-col">
           <div class="foot-kicker">Paiements</div>
           <a href="#">Wave</a>
           <a href="#">Orange Money</a>
-          <a href="#">Stripe / PayPal / Virement</a>
+          <a href="#">Stripe · PayPal · Virement</a>
         </div>
       </div>
-
       <div class="foot-bottom">
         <span>© Kàddu — La parole qui engage.</span>
-        <span>Design premium · expérience propriétaire + locataire</span>
+        <span>kaddu.net · contact@kaddu.net</span>
       </div>
     </div>
   </footer>
+
+
+  <!-- ══ MODAL BIEN ══ -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modalBox">
+
+      <!-- Header sticky -->
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <span class="modal-badge-pill" id="modalBadge">Meublé</span>
+          <span class="modal-avail-pill">Disponible</span>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+      </div>
+
+      <!-- Gallery -->
+      <div class="modal-gallery" id="modalGallery">
+        <div class="gallery-track" id="galleryTrack"></div>
+        <div class="gallery-overlay"></div>
+        <button class="gallery-nav gallery-prev" id="galleryPrev" aria-label="Photo précédente">‹</button>
+        <button class="gallery-nav gallery-next" id="galleryNext" aria-label="Photo suivante">›</button>
+        <div class="gallery-dots" id="galleryDots"></div>
+        <div class="gallery-counter" id="galleryCounter">1 / 1</div>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="modal-title-row">
+          <h2 class="modal-title" id="modalTitle"></h2>
+        </div>
+        <div class="modal-location" id="modalLocation"></div>
+        <div class="modal-specs-row" id="modalSpecs"></div>
+
+        <div class="modal-grid">
+          <div>
+            <div class="modal-desc-label">À propos du bien</div>
+            <div class="modal-desc" id="modalDesc"></div>
+            <div class="modal-desc-label" style="margin-top:18px">Équipements inclus</div>
+            <div class="modal-equip-list" id="modalEquip"></div>
+          </div>
+          <div>
+            <div class="modal-conditions">
+              <div class="modal-conditions-title">Conditions de location</div>
+              <div id="modalConditions"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA bar sticky bottom -->
+      <div class="modal-cta-bar">
+        <div>
+          <div class="modal-price-big" id="modalPrice">—</div>
+          <div class="modal-price-sub" id="modalPriceSub"></div>
+        </div>
+        <div class="modal-cta-actions">
+          <a class="btn-whatsapp" id="modalWhatsApp" href="#" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <a class="btn btn-primary btn-lg" id="modalCTA" href="#">Déposer mon dossier →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  // ── Data des biens ──────────────────────────────────────────────────────────
+  const BIENS = {
+    bantukay: {
+      nom: 'Le Petit <em>Bantukay</em>',
+      badge: 'Meublé · Coup de cœur',
+      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
+      specs: ['F3 · 3 pièces', 'Climatisé', 'WiFi inclus', 'Parking', 'Gardiennage', 'Eau chaude'],
+      desc: `Appartement meublé premium situé au cœur du quartier résidentiel Sipres VDN 2. 
+      Composé d'un salon spacieux, d'une chambre principale confortable et d'une chambre d'appoint, 
+      le Petit Bantukay est pensé pour des séjours en toute autonomie. Idéal pour les professionnels 
+      en mission, les membres de la diaspora de retour au pays ou les voyageurs exigeants qui 
+      ne veulent pas sacrifier le confort.`,
+      equip: [
+        ['🛋️', 'Salon meublé complet'],
+        ['🛏️', 'Chambres avec lits doubles'],
+        ['❄️', 'Climatisation dans chaque pièce'],
+        ['📶', 'WiFi fibre haut débit'],
+        ['📺', 'Télévision écran plat'],
+        ['🍳', 'Cuisine équipée (micro-ondes, réfrigérateur)'],
+        ['🚿', 'Eau chaude garantie'],
+        ['🔒', 'Gardiennage 24h/24'],
+      ],
+      conditions: [
+        ['Durée minimale', '3 nuits'],
+        ['Caution', '1 nuit à l'arrivée'],
+        ['Paiements', 'Wave · Orange Money · Virement · Stripe'],
+        ['Check-in', 'Flexible · 14h – 22h'],
+        ['Check-out', '12h00'],
+        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
+      ],
+      prix: '50 000 FCFA',
+      prixSub: '/ nuit · tarifs dégressifs au mois',
+      tunnel: '/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay',
+      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Le%20Petit%20Bantukay%20sur%20Kaddu.net',
+      // Chemins photos — déposer dans /assets/images/biens/
+      photos: [
+        '/assets/images/biens/bantukay-01.jpg',
+        '/assets/images/biens/bantukay-02.jpg',
+        '/assets/images/biens/bantukay-03.jpg',
+        '/assets/images/biens/bantukay-04.jpg',
+        '/assets/images/biens/bantukay-05.jpg',
+        '/assets/images/biens/bantukay-06.jpg',
+        '/assets/images/biens/bantukay-07.jpg',
+      ],
+      // Couleur fallback si photo absente
+      fallbackGradient: 'linear-gradient(145deg,#0e1f12,#2d1f0a,#0f1e2a)',
+    },
+    suxalikay: {
+      nom: 'Le Petit <em>Suxalikay</em>',
+      badge: 'Meublé',
+      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
+      specs: ['F2 · 2 pièces', 'Cuisine équipée', 'WiFi', 'Sécurisé', 'Eau chaude'],
+      desc: `Studio haut de gamme avec cuisine américaine entièrement équipée. 
+      Conçu pour l'autonomie totale, le Petit Suxalikay offre une ambiance chaleureuse 
+      dans un espace optimisé. Parfait pour un séjour de travail, une mission de courte 
+      durée ou un voyageur solo qui apprécie le confort sans superflu.`,
+      equip: [
+        ['🛏️', 'Lit double confortable'],
+        ['🍳', 'Cuisine américaine équipée'],
+        ['❄️', 'Climatisation'],
+        ['📶', 'WiFi inclus'],
+        ['📺', 'Télévision'],
+        ['🔒', 'Immeuble sécurisé'],
+        ['🚿', 'Salle de bain privative'],
+        ['🧺', 'Linge de maison fourni'],
+      ],
+      conditions: [
+        ['Durée minimale', '3 nuits'],
+        ['Caution', '1 nuit à l'arrivée'],
+        ['Paiements', 'Wave · Orange Money · Virement · Stripe'],
+        ['Check-in', 'Flexible · 14h – 22h'],
+        ['Check-out', '12h00'],
+        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
+      ],
+      prix: 'Sur demande',
+      prixSub: 'Contactez-nous pour un tarif personnalisé',
+      tunnel: '/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Suxalikay',
+      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Le%20Petit%20Suxalikay%20sur%20Kaddu.net',
+      photos: [
+        '/assets/images/biens/suxalikay-01.jpg',
+        '/assets/images/biens/suxalikay-02.jpg',
+        '/assets/images/biens/suxalikay-03.jpg',
+        '/assets/images/biens/suxalikay-04.jpg',
+        '/assets/images/biens/suxalikay-05.jpg',
+        '/assets/images/biens/suxalikay-06.jpg',
+        '/assets/images/biens/suxalikay-07.jpg',
+      ],
+      fallbackGradient: 'linear-gradient(145deg,#1a1008,#2d1f0a,#1a2830)',
+    },
+    nopalukay: {
+      nom: 'Le Petit <em>Nopalukay</em>',
+      badge: 'Meublé',
+      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
+      specs: ['F3 · Salon séparé', 'Climatisé', 'Netflix', 'Gardiennage', 'Parking'],
+      desc: `Appartement lumineux avec salon entièrement séparé, idéal pour les familles 
+      ou les couples. Atmosphère cosy, équipements haut de gamme et vue dégagée. 
+      Le Petit Nopalukay est pensé pour ceux qui veulent se sentir chez eux à Dakar, 
+      sans les contraintes hôtelières.`,
+      equip: [
+        ['🛋️', 'Salon séparé spacieux'],
+        ['🛏️', 'Chambre principale + chambre d'appoint'],
+        ['❄️', 'Climatisation multi-split'],
+        ['📶', 'WiFi haut débit'],
+        ['📺', 'Netflix inclus'],
+        ['🍳', 'Cuisine équipée complète'],
+        ['🔒', 'Gardiennage 24h/24'],
+        ['🅿️', 'Parking sécurisé'],
+      ],
+      conditions: [
+        ['Durée minimale', '3 nuits'],
+        ['Caution', '1 nuit à l'arrivée'],
+        ['Paiements', 'Wave · Orange Money · Virement · Stripe'],
+        ['Check-in', 'Flexible · 14h – 22h'],
+        ['Check-out', '12h00'],
+        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
+      ],
+      prix: 'Dossier prioritaire',
+      prixSub: 'Déposez votre candidature pour obtenir le tarif',
+      tunnel: '/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Nopalukay',
+      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Le%20Petit%20Nopalukay%20sur%20Kaddu.net',
+      photos: [
+        '/assets/images/biens/nopalukay-01.jpg',
+        '/assets/images/biens/nopalukay-02.jpg',
+        '/assets/images/biens/nopalukay-03.jpg',
+        '/assets/images/biens/nopalukay-04.jpg',
+        '/assets/images/biens/nopalukay-05.jpg',
+        '/assets/images/biens/nopalukay-06.jpg',
+        '/assets/images/biens/nopalukay-07.jpg',
+      ],
+      fallbackGradient: 'linear-gradient(145deg,#08101a,#0f1a28,#1a1508)',
+    },
+  };
+
+  // ── State ───────────────────────────────────────────────────────────────────
+  let currentSlide = 0;
+  let currentBien = null;
+
+  // ── DOM refs ────────────────────────────────────────────────────────────────
+  const backdrop   = document.getElementById('modalBackdrop');
+  const modalClose = document.getElementById('modalClose');
+  const galleryTrack = document.getElementById('galleryTrack');
+  const galleryDots  = document.getElementById('galleryDots');
+  const galleryCounter = document.getElementById('galleryCounter');
+  const galleryPrev = document.getElementById('galleryPrev');
+  const galleryNext = document.getElementById('galleryNext');
+
+  // ── Open modal ──────────────────────────────────────────────────────────────
+  function openModal(bienKey) {
+    const b = BIENS[bienKey];
+    if (!b) return;
+    currentBien = b;
+    currentSlide = 0;
+
+    // Badge
+    document.getElementById('modalBadge').textContent = b.badge;
+    // Title
+    document.getElementById('modalTitle').innerHTML = b.nom;
+    // Location
+    document.getElementById('modalLocation').textContent = b.location;
+    // Specs
+    document.getElementById('modalSpecs').innerHTML = b.specs
+      .map(s => `<span class="modal-spec">${s}</span>`).join('');
+    // Desc
+    document.getElementById('modalDesc').textContent = b.desc;
+    // Equip
+    document.getElementById('modalEquip').innerHTML = b.equip
+      .map(([icon, label]) => `<div class="modal-equip-item"><span>${icon}</span><span>${label}</span></div>`).join('');
+    // Conditions
+    document.getElementById('modalConditions').innerHTML = b.conditions
+      .map(([label, val]) => `
+        <div class="modal-cond-row">
+          <span class="modal-cond-label">${label}</span>
+          <span class="modal-cond-value">${val}</span>
+        </div>`).join('');
+    // Prix
+    document.getElementById('modalPrice').textContent = b.prix;
+    document.getElementById('modalPriceSub').textContent = b.prixSub;
+    // CTA
+    document.getElementById('modalCTA').href = b.tunnel;
+    document.getElementById('modalWhatsApp').href = b.whatsapp;
+
+    // Gallery
+    buildGallery(b);
+
+    // Open
+    document.body.style.overflow = 'hidden';
+    backdrop.classList.add('open');
+    // Reset scroll inside modal
+    document.getElementById('modalBox').scrollTop = 0;
+  }
+
+  // ── Build gallery ───────────────────────────────────────────────────────────
+  function buildGallery(b) {
+    const photos = b.photos;
+    // Slides
+    galleryTrack.innerHTML = photos.map((src, i) => `
+      <div class="gallery-slide">
+        <img src="${src}" alt="Photo ${i+1} — ${b.nom.replace(/<[^>]+>/g,'')}"
+             onerror="this.parentElement.style.background='${b.fallbackGradient}';this.style.display='none';this.parentElement.innerHTML+='<div class=\\'slide-placeholder\\'>Photo à venir</div>'">
+      </div>
+    `).join('');
+    // Dots
+    galleryDots.innerHTML = photos.map((_, i) =>
+      `<button class="gallery-dot${i===0?' active':''}" data-idx="${i}" aria-label="Photo ${i+1}"></button>`
+    ).join('');
+    galleryCounter.textContent = `1 / ${photos.length}`;
+    galleryPrev.style.display = photos.length > 1 ? 'flex' : 'none';
+    galleryNext.style.display = photos.length > 1 ? 'flex' : 'none';
+    goToSlide(0);
+  }
+
+  function goToSlide(idx) {
+    const total = currentBien ? currentBien.photos.length : 1;
+    currentSlide = (idx + total) % total;
+    galleryTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+    galleryCounter.textContent = `${currentSlide + 1} / ${total}`;
+    document.querySelectorAll('.gallery-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentSlide);
+    });
+  }
+
+  galleryPrev.addEventListener('click', () => goToSlide(currentSlide - 1));
+  galleryNext.addEventListener('click', () => goToSlide(currentSlide + 1));
+  galleryDots.addEventListener('click', e => {
+    if (e.target.dataset.idx !== undefined) goToSlide(+e.target.dataset.idx);
+  });
+
+  // Swipe touch support
+  let touchStartX = 0;
+  document.getElementById('modalGallery').addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, {passive:true});
+  document.getElementById('modalGallery').addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 40) goToSlide(currentSlide + (diff > 0 ? 1 : -1));
+  }, {passive:true});
+
+  // ── Close modal ─────────────────────────────────────────────────────────────
+  function closeModal() {
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // ── Wire up listing cards ───────────────────────────────────────────────────
+  document.querySelectorAll('.listing-card[data-bien]').forEach(card => {
+    card.addEventListener('click', e => {
+      // Don't open modal if clicking directly on a button/link
+      if (e.target.closest('a,button')) return;
+      openModal(card.dataset.bien);
+    });
+    // Also the "Voir le bien" overlay button
+    const overlayBtn = card.querySelector('.listing-cta-overlay .btn');
+    if (overlayBtn) {
+      overlayBtn.addEventListener('click', e => {
+        e.preventDefault();
+        openModal(card.dataset.bien);
+      });
+    }
+  });
+  </script>
+
 </body>
 </html>
