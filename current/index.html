@@ -497,6 +497,56 @@
       .moteur-score-col{flex-direction:column}
     }
 
+    /* ══ DIFFÉRENCIATION MEUBLÉ / NON MEUBLÉ ══ */
+    /* Badge non meublé — bleu acier sobre */
+    .listing-badge-nm{
+      position:absolute;top:14px;left:14px;z-index:2;
+      background:rgba(74,120,180,.88);color:#e8f0ff;
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:5px 10px;border-radius:999px;font-weight:700;
+      border:1px solid rgba(120,170,240,.3);
+    }
+    /* Card non meublé — bordure et fond légèrement différents */
+    .listing-card.nm{border-color:rgba(74,120,180,.22)}
+    .listing-card.nm:hover{border-color:rgba(74,120,180,.45)}
+    .listing-card.nm .listing-media-overlay{
+      background:linear-gradient(to bottom,transparent 40%,rgba(8,18,36,.88) 100%)
+    }
+    /* Prix et label long terme */
+    .listing-price .bail-tag{
+      display:inline-block;margin-top:3px;
+      font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
+      color:rgba(74,158,255,.75);background:rgba(74,120,180,.12);
+      border:1px solid rgba(74,120,180,.2);
+      padding:2px 8px;border-radius:999px;
+    }
+    /* Specs non meublé — couleur plus neutre */
+    .listing-card.nm .listing-spec{
+      border-color:rgba(74,120,180,.2);
+      background:rgba(74,120,180,.06);
+      color:rgba(248,244,238,.6);
+    }
+    /* CTA "Explorer" meublé */
+    .btn-explorer{
+      background:var(--or);color:#0a0a0a;
+      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+      padding:11px 18px;border-radius:999px;border:none;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;
+      letter-spacing:.08em;text-transform:uppercase;transition:.22s;white-space:nowrap
+    }
+    .btn-explorer:hover{background:var(--orl);transform:translateY(-1px);box-shadow:0 6px 18px rgba(191,150,80,.25)}
+    /* CTA "Postuler" non meublé — plus sobre, long terme */
+    .btn-postuler-lt{
+      background:rgba(74,120,180,.12);color:rgba(148,195,255,.85);
+      border:1px solid rgba(74,120,180,.28);
+      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+      padding:11px 18px;border-radius:999px;cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;
+      letter-spacing:.08em;text-transform:uppercase;transition:.22s;white-space:nowrap;
+      text-decoration:none
+    }
+    .btn-postuler-lt:hover{background:rgba(74,120,180,.22);border-color:rgba(74,158,255,.4);color:#b8deff}
+
     /* ══ RESPONSIVE ══ */
     @media (max-width:1100px){
       .hero-grid,.proofs-grid,.footer-grid{grid-template-columns:1fr}
@@ -750,43 +800,109 @@
       <div class="container hero-grid">
 
         <div class="hero-copy">
-          <span class="eyebrow">Immobilier digital premium · Dakar</span>
+          <span class="eyebrow">1ère agence 100% digitale du Sénégal</span>
           <h1>Louer <em>sans friction</em>.<br>Louer <em>en confiance</em>.</h1>
-          <div class="hero-slogan">Kàddu réconcilie propriétaires exigeants et locataires sérieux.</div>
+          <div class="hero-slogan">Bailleurs : recevez uniquement des profils qualifiés. Locataires : votre sérieux enfin reconnu.</div>
           <p class="hero-text">
-            Une plateforme pensée pour ceux qui ne supportent plus les agences peu réactives,
-            les visites inutiles, les dossiers mal gérés et l'opacité.
+            Appartements vérifiés — la seule plateforme qui sécurise le bien et le locataire.
           </p>
           <div class="hero-pills">
-            <div class="trust-pill"><strong>✓</strong> Locataires qualifiés</div>
-            <div class="trust-pill"><strong>✓</strong> Dossier digital vérifié</div>
-            <div class="trust-pill"><strong>🌀</strong> Visites 360°</div>
+            <div class="trust-pill"><strong>🥇</strong> 1ère agence 100% digitale · Sénégal</div>
+            <div class="trust-pill"><strong>🌀</strong> Visites 360° disponibles</div>
+            <div class="trust-pill"><strong>🔐</strong> Moteur antifraude intégré</div>
             <div class="trust-pill">Wave · Orange Money · Stripe</div>
           </div>
 
-          <!-- Search bar -->
+          <!-- Search bar fonctionnelle -->
           <div class="search-bar-wrap">
-            <div class="search-label">Trouver un bien à Dakar</div>
+            <div class="search-label">Trouver un bien</div>
             <div class="search-fields">
               <div class="search-field">
-                <label>Type de séjour</label>
-                <select>
-                  <option>Courte durée (meublé)</option>
-                  <option>Longue durée (meublé)</option>
-                  <option>Longue durée (non meublé)</option>
+                <label>Ville</label>
+                <select id="searchVille" onchange="updateQuartiers()">
+                  <option value="">Toutes les villes</option>
+                  <option value="Dakar" selected>Dakar</option>
+                  <option value="Thiès">Thiès</option>
+                  <option value="Saint-Louis">Saint-Louis</option>
+                  <option value="Ziguinchor">Ziguinchor</option>
+                  <option value="Kaolack">Kaolack</option>
+                  <option value="Mbour">Mbour</option>
+                  <option value="Touba">Touba</option>
+                  <option value="Rufisque">Rufisque</option>
+                  <option value="Saly">Saly</option>
+                  <option value="Diourbel">Diourbel</option>
+                  <option value="Tambacounda">Tambacounda</option>
+                  <option value="Ziguinchor">Ziguinchor</option>
                 </select>
               </div>
               <div class="search-field">
                 <label>Quartier</label>
-                <select>
-                  <option>Tous les quartiers</option>
-                  <option>Sipres VDN</option>
-                  <option>Almadies</option>
-                  <option>Plateau</option>
-                  <option>Mermoz</option>
+                <select id="searchQuartier">
+                  <option value="">Tous les quartiers</option>
+                  <!-- Dakar — Plateau / Centre -->
+                  <optgroup label="Plateau · Centre">
+                    <option>Plateau</option>
+                    <option>Médina</option>
+                    <option>Fann · Point E · Amitié</option>
+                    <option>Gueule Tapée · Fass · Colobane</option>
+                    <option>Gorée</option>
+                  </optgroup>
+                  <!-- Almadies / VDN -->
+                  <optgroup label="Almadies · VDN">
+                    <option>Almadies</option>
+                    <option>Mermoz · Sacré-Cœur</option>
+                    <option>Ngor</option>
+                    <option>Ouakam</option>
+                    <option>Yoff</option>
+                    <option>Sipres VDN</option>
+                    <option>Sipres VDN 2</option>
+                    <option>Les Mamelles</option>
+                  </optgroup>
+                  <!-- Grand Dakar -->
+                  <optgroup label="Grand Dakar · Sud">
+                    <option>Grand Dakar</option>
+                    <option>HLM</option>
+                    <option>Sicap Liberté</option>
+                    <option>Dieuppeul · Derklé</option>
+                    <option>Biscuiterie</option>
+                    <option>Hann Bel Air</option>
+                    <option>Rebeuss</option>
+                    <option>Colobane</option>
+                  </optgroup>
+                  <!-- Parcelles Assainies / Nord -->
+                  <optgroup label="Parcelles · Nord">
+                    <option>Parcelles Assainies</option>
+                    <option>Grand Yoff</option>
+                    <option>Cambérène</option>
+                    <option>Patte d'Oie</option>
+                    <option>Liberté</option>
+                  </optgroup>
+                  <!-- Pikine / Guédiawaye -->
+                  <optgroup label="Pikine · Guédiawaye">
+                    <option>Pikine</option>
+                    <option>Guédiawaye</option>
+                    <option>Thiaroye</option>
+                    <option>Yeumbeul</option>
+                    <option>Keur Massar</option>
+                  </optgroup>
+                  <!-- Rufisque / Périphérie -->
+                  <optgroup label="Rufisque · Périphérie">
+                    <option>Rufisque</option>
+                    <option>Bargny</option>
+                    <option>Diamniadio</option>
+                    <option>Lac Rose</option>
+                  </optgroup>
                 </select>
               </div>
-              <a class="btn btn-primary btn-lg" href="#biens">Voir les biens</a>
+              <div class="search-field">
+                <label>Catégorie</label>
+                <select id="searchCategorie">
+                  <option value="">Meublé & non meublé</option>
+                  <option value="meuble">Meublé</option>
+                  <option value="non_meuble">Non meublé</option>
+                </select>
+              </div>
+              <button class="btn btn-primary btn-lg" onclick="filterBiens()">Rechercher</button>
             </div>
           </div>
         </div>
@@ -825,7 +941,7 @@
                     À partir de 50 000 FCFA
                     <small>/ nuit · prix selon durée</small>
                   </div>
-                  <a class="btn btn-primary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay">Postuler →</a>
+                  <a class="btn btn-primary" href="#" onclick="event.preventDefault();openModal('bantukay')">Découvrir →</a>
                 </div>
               </div>
             </div>
@@ -834,7 +950,7 @@
               <div style="width:8px;height:8px;border-radius:50%;background:var(--or)"></div>
               <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
               <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
-              <span style="font-size:.7rem;color:rgba(248,244,238,.32);margin-left:4px">3 biens disponibles</span>
+              <span style="font-size:.7rem;color:rgba(248,244,238,.32);margin-left:4px">Sélection premium · Dakar</span>
             </div>
           </div>
         </aside>
@@ -1139,9 +1255,9 @@
           <p class="section-head-desc">Chaque appartement est photographié, décrit avec précision et présenté avec un dossier de candidature guidé.</p>
         </div>
 
-        <div class="listing-grid">
+        <div class="listing-grid" id="listingGrid">
 
-          <!-- Bantukay -->
+          <!-- ── BANTUKAY · Meublé ── -->
           <article class="listing-card" data-bien="bantukay" style="cursor:pointer">
             <div class="listing-media apt-bg-1">
               <div class="listing-media-inner">
@@ -1154,7 +1270,7 @@
               <div class="listing-badge">Meublé</div>
               <div class="listing-avail">Disponible</div>
               <div class="listing-cta-overlay">
-                <a class="btn btn-primary" href="#">Voir le bien →</a>
+                <button class="btn-explorer" onclick="openModal('bantukay')">Explorer →</button>
               </div>
             </div>
             <div class="listing-body">
@@ -1163,8 +1279,8 @@
               <div class="listing-specs">
                 <span class="listing-spec">F3 · 3 pièces</span>
                 <span class="listing-spec">Climatisé</span>
-                <span class="listing-spec">WiFi</span>
-                <span class="listing-spec">Parking</span>
+                <span class="listing-spec">WiFi inclus</span>
+                <span class="listing-spec">Gardiennage</span>
               </div>
               <div class="listing-desc">Appartement meublé premium avec salon spacieux, chambre principale et chambre d'appoint. Idéal pour séjours business ou diaspora.</div>
               <div class="listing-price-row">
@@ -1172,49 +1288,25 @@
                   <strong>50 000 FCFA</strong>
                   <small>/ nuit · tarif mensuel disponible</small>
                 </div>
-                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay">Postuler</a>
+                <button class="btn-explorer" onclick="openModal('bantukay')">Explorer →</button>
               </div>
             </div>
           </article>
 
-          <!-- Suxalikay -->
+          <!-- ── SUXALIKAY · Meublé ── -->
           <article class="listing-card" data-bien="suxalikay" style="cursor:pointer">
             <div class="listing-media apt-bg-2">
               <div class="listing-media-inner">
-                <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-                  <rect x="0" y="190" width="320" height="40" fill="rgba(191,150,80,.04)"/>
-                  <rect x="20" y="35" width="280" height="158" rx="3" fill="rgba(191,150,80,.03)" stroke="rgba(191,150,80,.10)" stroke-width="1"/>
-                  <!-- Kitchen counter -->
-                  <rect x="30" y="130" width="130" height="40" rx="4" fill="rgba(191,150,80,.10)" stroke="rgba(191,150,80,.18)" stroke-width="1"/>
-                  <rect x="35" y="125" width="120" height="10" rx="3" fill="rgba(191,150,80,.14)"/>
-                  <!-- Stove rings -->
-                  <circle cx="65" cy="120" r="8" fill="none" stroke="rgba(191,150,80,.22)" stroke-width="1.5"/>
-                  <circle cx="65" cy="120" r="5" fill="none" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
-                  <circle cx="95" cy="120" r="8" fill="none" stroke="rgba(191,150,80,.22)" stroke-width="1.5"/>
-                  <!-- Upper cabinets -->
-                  <rect x="30" y="55" width="130" height="50" rx="3" fill="rgba(191,150,80,.07)" stroke="rgba(191,150,80,.14)" stroke-width="1"/>
-                  <line x1="95" y1="55" x2="95" y2="105" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
-                  <circle cx="62" cy="80" r="3" fill="rgba(191,150,80,.25)"/>
-                  <circle cx="128" cy="80" r="3" fill="rgba(191,150,80,.25)"/>
-                  <!-- Dining table -->
-                  <ellipse cx="230" cy="140" rx="60" ry="32" fill="rgba(191,150,80,.08)" stroke="rgba(191,150,80,.16)" stroke-width="1"/>
-                  <!-- Chairs -->
-                  <rect x="178" y="130" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
-                  <rect x="260" y="130" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
-                  <rect x="215" y="102" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
-                  <rect x="243" y="102" width="22" height="22" rx="4" fill="rgba(191,150,80,.10)"/>
-                  <!-- Window back -->
-                  <rect x="175" y="45" width="105" height="60" rx="3" fill="rgba(100,180,255,.06)" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
-                  <line x1="227" y1="45" x2="227" y2="105" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
-                  <line x1="175" y1="75" x2="280" y2="75" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
-                  <ellipse cx="227" cy="190" rx="65" ry="14" fill="rgba(191,150,80,.05)"/>
-                </svg>
+                <img src="/assets/images/biens/meubles/suxalikay-01.jpeg"
+                     alt="Le Petit Suxalikay"
+                     style="width:100%;height:100%;object-fit:cover;display:block"
+                     onerror="this.src='/assets/images/biens/meubles/suxalikay-01.jpg';this.onerror=function(){this.style.display='none'}">
               </div>
               <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
               <div class="listing-avail">Disponible</div>
               <div class="listing-cta-overlay">
-                <a class="btn btn-primary" href="#">Voir le bien →</a>
+                <button class="btn-explorer" onclick="openModal('suxalikay')">Explorer →</button>
               </div>
             </div>
             <div class="listing-body">
@@ -1226,59 +1318,31 @@
                 <span class="listing-spec">WiFi</span>
                 <span class="listing-spec">Sécurisé</span>
               </div>
-              <div class="listing-desc">Studio haut de gamme avec cuisine américaine entièrement équipée. Conçu pour l'autonomie, parfait pour un séjour de travail ou de passage.</div>
+              <div class="listing-desc">Studio haut de gamme avec cuisine américaine équipée. Parfait pour un séjour de travail ou une mission de courte durée.</div>
               <div class="listing-price-row">
                 <div class="listing-price">
                   <strong>Sur demande</strong>
                   <small>Visite digitale 360° disponible</small>
                 </div>
-                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Suxalikay">Postuler</a>
+                <button class="btn-explorer" onclick="openModal('suxalikay')">Explorer →</button>
               </div>
             </div>
           </article>
 
-          <!-- Nopalukay -->
+          <!-- ── NOPALUKAY · Meublé ── -->
           <article class="listing-card" data-bien="nopalukay" style="cursor:pointer">
             <div class="listing-media apt-bg-3">
               <div class="listing-media-inner">
-                <svg viewBox="0 0 320 230" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
-                  <rect x="0" y="190" width="320" height="40" fill="rgba(191,150,80,.04)"/>
-                  <rect x="20" y="38" width="280" height="155" rx="3" fill="rgba(191,150,80,.03)" stroke="rgba(191,150,80,.10)" stroke-width="1"/>
-                  <!-- Long sofa -->
-                  <rect x="30" y="130" width="150" height="44" rx="6" fill="rgba(191,150,80,.13)" stroke="rgba(191,150,80,.22)" stroke-width="1"/>
-                  <rect x="30" y="118" width="150" height="18" rx="5" fill="rgba(191,150,80,.09)"/>
-                  <rect x="28" y="120" width="12" height="40" rx="4" fill="rgba(191,150,80,.11)"/>
-                  <rect x="168" y="120" width="12" height="40" rx="4" fill="rgba(191,150,80,.11)"/>
-                  <!-- TV unit -->
-                  <rect x="30" y="75" width="120" height="8" rx="2" fill="rgba(191,150,80,.12)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
-                  <!-- TV screen -->
-                  <rect x="35" y="50" width="110" height="26" rx="3" fill="rgba(20,40,60,.7)" stroke="rgba(191,150,80,.2)" stroke-width="1"/>
-                  <rect x="40" y="53" width="100" height="20" rx="2" fill="rgba(50,100,180,.08)"/>
-                  <!-- Coffee table -->
-                  <rect x="80" y="112" width="60" height="12" rx="3" fill="rgba(191,150,80,.09)" stroke="rgba(191,150,80,.16)" stroke-width="1"/>
-                  <!-- Bookshelf -->
-                  <rect x="258" y="55" width="36" height="105" rx="3" fill="rgba(191,150,80,.06)" stroke="rgba(191,150,80,.14)" stroke-width="1"/>
-                  <rect x="261" y="62" width="30" height="8" rx="2" fill="rgba(191,150,80,.15)"/>
-                  <rect x="261" y="75" width="30" height="8" rx="2" fill="rgba(100,80,60,.2)"/>
-                  <rect x="261" y="88" width="30" height="8" rx="2" fill="rgba(191,150,80,.1)"/>
-                  <rect x="261" y="101" width="30" height="8" rx="2" fill="rgba(80,100,120,.2)"/>
-                  <rect x="261" y="114" width="30" height="8" rx="2" fill="rgba(191,150,80,.12)"/>
-                  <!-- Big window -->
-                  <rect x="160" y="50" width="85" height="80" rx="3" fill="rgba(100,180,255,.07)" stroke="rgba(191,150,80,.15)" stroke-width="1"/>
-                  <line x1="202" y1="50" x2="202" y2="130" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
-                  <line x1="160" y1="90" x2="245" y2="90" stroke="rgba(191,150,80,.12)" stroke-width="1"/>
-                  <ellipse cx="202" cy="190" rx="60" ry="13" fill="rgba(191,150,80,.05)"/>
-                  <!-- Plant corner -->
-                  <line x1="240" y1="190" x2="240" y2="150" stroke="rgba(80,140,80,.22)" stroke-width="2"/>
-                  <ellipse cx="240" cy="145" rx="14" ry="13" fill="rgba(60,120,60,.15)"/>
-                  <ellipse cx="229" cy="152" rx="10" ry="9" fill="rgba(60,120,60,.11)"/>
-                </svg>
+                <img src="/assets/images/biens/meubles/nopalukay-01.jpeg"
+                     alt="Le Petit Nopalukay"
+                     style="width:100%;height:100%;object-fit:cover;display:block"
+                     onerror="this.src='/assets/images/biens/meubles/nopalukay-01.jpg';this.onerror=function(){this.style.display='none'}">
               </div>
               <div class="listing-media-overlay"></div>
               <div class="listing-badge">Meublé</div>
               <div class="listing-avail">Disponible</div>
               <div class="listing-cta-overlay">
-                <a class="btn btn-primary" href="#">Voir le bien →</a>
+                <button class="btn-explorer" onclick="openModal('nopalukay')">Explorer →</button>
               </div>
             </div>
             <div class="listing-body">
@@ -1290,16 +1354,89 @@
                 <span class="listing-spec">Netflix</span>
                 <span class="listing-spec">Gardiennage</span>
               </div>
-              <div class="listing-desc">Appartement lumineux avec salon séparé, idéal pour familles ou couples. Atmosphère cosy, équipements haut de gamme et vue dégagée.</div>
+              <div class="listing-desc">Appartement lumineux avec salon séparé, idéal pour familles ou couples. Atmosphère cosy et équipements haut de gamme.</div>
               <div class="listing-price-row">
                 <div class="listing-price">
                   <strong>Dossier prioritaire</strong>
                   <small>Déposez votre candidature</small>
                 </div>
-                <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Nopalukay">Postuler</a>
+                <button class="btn-explorer" onclick="openModal('nopalukay')">Explorer →</button>
               </div>
             </div>
           </article>
+
+          <!-- ── NOFLAY · Non meublé ── -->
+          <article class="listing-card nm" data-bien="noflay" style="cursor:pointer">
+            <div class="listing-media" style="background:linear-gradient(145deg,#0d1824,#101c30,#0a1420)">
+              <div class="listing-media-inner">
+                <img src="/assets/images/biens/non-meubles/noflay-01.jpeg"
+                     alt="Noflay Étage 3A"
+                     style="width:100%;height:100%;object-fit:cover;display:block"
+                     onerror="this.src='/assets/images/biens/non-meubles/noflay-01.jpg';this.onerror=function(){this.style.display='none'}">
+              </div>
+              <div class="listing-media-overlay"></div>
+              <span class="listing-badge-nm">Non meublé</span>
+              <div class="listing-avail">Disponible</div>
+              <div class="listing-cta-overlay">
+                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Noflay%20Etage%203A">Postuler →</a>
+              </div>
+            </div>
+            <div class="listing-body">
+              <h3>Noflay <em>Étage 3A</em></h3>
+              <div class="listing-meta">Sipres VDN 2, Dakar</div>
+              <div class="listing-specs">
+                <span class="listing-spec">3ème étage</span>
+                <span class="listing-spec">Lumineux</span>
+                <span class="listing-spec">Gardiennage</span>
+                <span class="listing-spec">Parking</span>
+              </div>
+              <div class="listing-desc">Appartement vide au 3ème étage, idéal pour une installation durable. Quartier résidentiel calme, immeuble sécurisé, parking inclus.</div>
+              <div class="listing-price-row">
+                <div class="listing-price">
+                  <strong>Sur demande</strong>
+                  <span class="bail-tag">Bail longue durée</span>
+                </div>
+                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Noflay%20Etage%203A">Postuler →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ── DALAL · Non meublé ── -->
+          <article class="listing-card nm" data-bien="dalal" style="cursor:pointer">
+            <div class="listing-media" style="background:linear-gradient(145deg,#0e1520,#141e2c,#0a1018)">
+              <div class="listing-media-inner">
+                <img src="/assets/images/biens/non-meubles/dalal-01.jpeg"
+                     alt="Dalal Étage 1A"
+                     style="width:100%;height:100%;object-fit:cover;display:block"
+                     onerror="this.src='/assets/images/biens/non-meubles/dalal-01.jpg';this.onerror=function(){this.style.display='none'}">
+              </div>
+              <div class="listing-media-overlay"></div>
+              <span class="listing-badge-nm">Non meublé</span>
+              <div class="listing-avail">Disponible</div>
+              <div class="listing-cta-overlay">
+                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Dalal%20Etage%201A">Postuler →</a>
+              </div>
+            </div>
+            <div class="listing-body">
+              <h3>Dalal <em>Étage 1A</em></h3>
+              <div class="listing-meta">Sipres VDN 2, Dakar</div>
+              <div class="listing-specs">
+                <span class="listing-spec">1er étage</span>
+                <span class="listing-spec">Accessible</span>
+                <span class="listing-spec">Parking</span>
+                <span class="listing-spec">Sécurisé</span>
+              </div>
+              <div class="listing-desc">Appartement vide au 1er étage, accès facile, parking sécurisé. Parfait pour une famille ou un professionnel cherchant à s'établir durablement.</div>
+              <div class="listing-price-row">
+                <div class="listing-price">
+                  <strong>Sur demande</strong>
+                  <span class="bail-tag">Bail longue durée</span>
+                </div>
+                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Dalal%20Etage%201A">Postuler →</a>
+              </div>
+            </div>
+          </article>
+
         </div>
       </div>
     </section>
@@ -1467,23 +1604,20 @@
   // L'img HTML utilise onerror pour sauter silencieusement les manquantes.
   // Le dossier est /assets/images/biens/meubles/ pour tous les meublés.
 
-  const PHOTO_BASE = '/assets/images/biens/meubles/';
-  const MAX_PHOTOS = 30; // jusqu'à 30 photos par bien
+  const PHOTO_BASE = '/assets/images/biens/';
+  const MAX_PHOTOS = 30;
 
-  function buildPhotoCandidates(name) {
-    // Pour chaque numéro de 1 à MAX_PHOTOS on génère 4 variantes :
-    //   bantukay-01.jpeg, bantukay-01.jpg, bantukay-1.jpeg, bantukay-1.jpg
-    // Le navigateur essaie la première qui existe (via onerror dans buildGallery).
+  function buildPhotoCandidates(name, subfolder) {
+    const base = subfolder ? `${PHOTO_BASE}${subfolder}/` : `${PHOTO_BASE}meubles/`;
     const candidates = [];
     for (let i = 1; i <= MAX_PHOTOS; i++) {
-      const n2 = String(i).padStart(2, '0'); // "01", "02" …
-      const n1 = String(i);                  // "1",  "2"  …
-      // On pousse les deux formats, extensions .jpeg en priorité (correspond à tes fichiers)
+      const n2 = String(i).padStart(2, '0');
+      const n1 = String(i);
       candidates.push(
-        `${PHOTO_BASE}${name}-${n2}.jpeg`,
-        `${PHOTO_BASE}${name}-${n2}.jpg`,
-        `${PHOTO_BASE}${name}-${n1}.jpeg`,
-        `${PHOTO_BASE}${name}-${n1}.jpg`,
+        `${base}${name}-${n2}.jpeg`,
+        `${base}${name}-${n2}.jpg`,
+        `${base}${name}-${n1}.jpeg`,
+        `${base}${name}-${n1}.jpg`,
       );
     }
     return candidates;
@@ -1594,9 +1728,149 @@
       photoCandidates: buildPhotoCandidates('nopalukay'),
       fallbackGradient: 'linear-gradient(145deg,#08101a,#0f1a28,#1a1508)',
     },
+    noflay: {
+      nom: 'Noflay <em>Étage 3A</em>',
+      badge: 'Non meublé',
+      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
+      specs: ['Non meublé', '3ème étage', 'Gardiennage 24h', 'Parking'],
+      desc: `Appartement non meublé lumineux au 3ème étage d'un immeuble résidentiel sécurisé de Sipres VDN 2. 
+      Espace bien conçu, idéal pour une installation durable. Parfait pour une famille ou un professionnel 
+      cherchant à s'établir dans un quartier prisé de Dakar.`,
+      equip: [
+        ['🔒', 'Gardiennage 24h/24'],
+        ['🅿️', 'Parking sécurisé'],
+        ['💧', 'Eau courante'],
+        ['⚡', 'Électricité'],
+        ['🪟', 'Lumineux · 3ème étage'],
+      ],
+      conditions: [
+        ['Type de bail', 'Location longue durée'],
+        ['Caution', '2 mois de loyer'],
+        ['Paiements', 'Wave · Orange Money · Virement'],
+        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
+      ],
+      prix: 'Sur demande',
+      prixSub: 'Bail longue durée · Contactez-nous',
+      tunnel: '/tunnel/dossier-v2-step1.html?bien=Noflay%20Etage%203A',
+      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Noflay%20%C3%89tage%203A%20sur%20Kaddu.net',
+      photoCandidates: buildPhotoCandidates('noflay', 'non-meubles'),
+      fallbackGradient: 'linear-gradient(145deg,#0d1a10,#1a2a0d,#0a1520)',
+    },
+    dalal: {
+      nom: 'Dalal <em>Étage 1A</em>',
+      badge: 'Non meublé',
+      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
+      specs: ['Non meublé', '1er étage', 'Parking', 'Accessible'],
+      desc: `Appartement non meublé au 1er étage, accessible et fonctionnel. 
+      Bien conçu pour une installation durable, avec un accès facile et un parking sécurisé. 
+      Parfait pour une famille ou un professionnel cherchant à s'établir dans un quartier 
+      résidentiel calme et bien desservi de la VDN.`,
+      equip: [
+        ['🅿️', 'Parking sécurisé'],
+        ['🔒', 'Immeuble sécurisé'],
+        ['💧', 'Eau courante'],
+        ['⚡', 'Électricité'],
+        ['🚪', 'Accès facile · 1er étage'],
+      ],
+      conditions: [
+        ['Type de bail', 'Location longue durée'],
+        ['Caution', '2 mois de loyer'],
+        ['Paiements', 'Wave · Orange Money · Virement'],
+        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
+      ],
+      prix: 'Sur demande',
+      prixSub: 'Bail longue durée · Contactez-nous',
+      tunnel: '/tunnel/dossier-v2-step1.html?bien=Dalal%20Etage%201A',
+      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Dalal%20%C3%89tage%201A%20sur%20Kaddu.net',
+      photoCandidates: buildPhotoCandidates('dalal', 'non-meubles'),
+      fallbackGradient: 'linear-gradient(145deg,#100d1a,#1a0d2a,#080f1a)',
+    },
   };
 
-  // ── State ───────────────────────────────────────────────────────────────────
+  // ── Geo data — quartiers par ville ──────────────────────────────────────────
+  const QUARTIERS_PAR_VILLE = {
+    'Dakar': ['Plateau','Médina','Fann · Point E · Amitié','Gueule Tapée · Fass · Colobane','Almadies','Mermoz · Sacré-Cœur','Ngor','Ouakam','Yoff','Sipres VDN','Sipres VDN 2','Les Mamelles','Grand Dakar','HLM','Sicap Liberté','Dieuppeul · Derklé','Biscuiterie','Hann Bel Air','Parcelles Assainies','Grand Yoff','Cambérène','Patte d\'Oie','Liberté','Pikine','Guédiawaye','Thiaroye','Yeumbeul','Keur Massar','Rufisque','Bargny','Diamniadio','Lac Rose'],
+    'Thiès': ['Centre-ville Thiès','Thiès Nord','Thiès Sud','Mbour Route','Tassette','Keur Moussa'],
+    'Saint-Louis': ['Île de Saint-Louis','Sor','Guet Ndar','Langue de Barbarie','Bango','Thiaka Ndiaye'],
+    'Ziguinchor': ['Centre Ziguinchor','Boucotte','Kandialang','Lyndiane','Tilène Ziguinchor'],
+    'Kaolack': ['Centre Kaolack','Médina Baye','Léona','Sam-Sam','Ndangane'],
+    'Mbour': ['Centre Mbour','Saly Portudal','Nianing','Pointe Sarène','Warang'],
+    'Touba': ['Centre Touba','Darou Khoudoss','Guédé Bousso','Ndamatou'],
+    'Rufisque': ['Centre Rufisque','Colobane Rufisque','Mbao','Bargny','Sébikotane'],
+    'Saly': ['Saly Portudal','Saly Nord','Saly Sud','Nguérigne','Somone'],
+  };
+
+  function updateQuartiers() {
+    const ville = document.getElementById('searchVille')?.value;
+    const sel   = document.getElementById('searchQuartier');
+    if (!sel) return;
+    const quartiers = QUARTIERS_PAR_VILLE[ville] || [];
+    sel.innerHTML = `<option value="">Tous les quartiers</option>` +
+      quartiers.map(q => `<option value="${q}">${q}</option>`).join('');
+  }
+
+  // ── Search / Filter fonctionnel ──────────────────────────────────────────────
+  function filterBiens() {
+    const ville     = document.getElementById('searchVille')?.value?.toLowerCase() || '';
+    const quartier  = document.getElementById('searchQuartier')?.value?.toLowerCase() || '';
+    const categorie = document.getElementById('searchCategorie')?.value || '';
+
+    // Scroll vers les listings
+    document.getElementById('biens')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Si Supabase a chargé les cards dynamiques, filtrer dessus
+    // Sinon filtrer les cards statiques
+    setTimeout(() => {
+      const cards = document.querySelectorAll('.listing-card[data-bien]');
+      let visible = 0;
+      cards.forEach(card => {
+        const slug = card.dataset.bien;
+        const b    = BIENS[slug];
+        if (!b) { card.style.display = ''; visible++; return; }
+
+        const loc  = (b.location || '').toLowerCase();
+        const cat  = (b._sbRow?.categorie || (b.badge?.toLowerCase().includes('non') ? 'non_meuble' : 'meuble'));
+
+        const matchVille    = !ville    || loc.includes(ville);
+        const matchQuartier = !quartier || loc.includes(quartier);
+        const matchCat      = !categorie || cat === categorie;
+
+        if (matchVille && matchQuartier && matchCat) {
+          card.style.display = '';
+          card.style.animation = 'fadeIn .3s ease';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Message si aucun résultat
+      const grid = document.querySelector('.listing-grid');
+      const noResult = document.getElementById('noFilterResult');
+      if (visible === 0 && grid) {
+        if (!noResult) {
+          const msg = document.createElement('div');
+          msg.id = 'noFilterResult';
+          msg.style.cssText = 'grid-column:1/-1;text-align:center;padding:40px;color:rgba(248,244,238,.4);font-size:.9rem';
+          msg.innerHTML = 'Aucun bien disponible pour ces critères. <button onclick="resetFilter()" style="color:var(--or);background:none;border:none;cursor:pointer;font-size:.9rem;text-decoration:underline">Réinitialiser</button>';
+          grid.appendChild(msg);
+        }
+      } else if (noResult) {
+        noResult.remove();
+      }
+    }, 400);
+  }
+
+  function resetFilter() {
+    document.querySelectorAll('.listing-card').forEach(c => c.style.display = '');
+    const noResult = document.getElementById('noFilterResult');
+    if (noResult) noResult.remove();
+    if (document.getElementById('searchVille'))    document.getElementById('searchVille').value = 'Dakar';
+    if (document.getElementById('searchQuartier')) document.getElementById('searchQuartier').value = '';
+    if (document.getElementById('searchCategorie'))document.getElementById('searchCategorie').value = '';
+    updateQuartiers();
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
   let currentSlide = 0;
   let currentBien = null;
 
