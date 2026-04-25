@@ -275,14 +275,15 @@
     .how-card p{font-size:.83rem;color:rgba(248,244,238,.48)}
 
     /* ══ SOCIAL PROOF ══ */
-    .social-proof-section{background:rgba(7,24,43,.28);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
-    .proof-ticker{display:flex;gap:32px;overflow:hidden;padding:18px 0}
-    .proof-stat{
-      display:flex;align-items:center;gap:10px;white-space:nowrap;flex-shrink:0
-    }
-    .proof-stat strong{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300;color:var(--or)}
-    .proof-stat span{font-size:.8rem;color:rgba(248,244,238,.48)}
-    .proof-sep{color:rgba(191,150,80,.25);font-size:1.2rem}
+    .social-proof-section{background:rgba(7,24,43,.28);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);overflow:hidden}
+    .ticker-wrap{width:100%;overflow:hidden;padding:16px 0;mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent)}
+    .ticker-track{display:flex;gap:28px;width:max-content;animation:ticker 40s linear infinite}
+    .ticker-track:hover{animation-play-state:paused}
+    @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .proof-stat{display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0}
+    .proof-stat strong{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;color:var(--or)}
+    .proof-stat span{font-size:.76rem;color:rgba(248,244,238,.45)}
+    .proof-sep{color:rgba(191,150,80,.3);font-size:1rem;flex-shrink:0}
 
     /* ══ DIFFERENTIATOR ══ */
     .proofs-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
@@ -822,7 +823,10 @@
 
         <div class="hero-copy">
           <span class="eyebrow">1ère agence immobilière 100% digitale au Sénégal</span>
-          <h1 style="font-size:clamp(1.7rem,3.2vw,3rem);white-space:nowrap">Appartements vérifiés —<br><em style="font-size:.9em">la seule plateforme qui sécurise le bien et le locataire</em>.</h1>
+          <h1 style="font-size:clamp(1.6rem,2.8vw,2.6rem);text-align:justify;text-justify:inter-word;line-height:1.15">
+            Appartements vérifiés à Dakar —<br>
+            <em>la seule plateforme qui sécurise<br>le bien et le locataire</em>.
+          </h1>
           <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px;text-align:justify;text-justify:inter-word">
             Visitez à distance en 360° et candidatez avec un dossier qualifié — fini les mauvaises surprises.
           </p>
@@ -982,20 +986,25 @@
     </section>
 
     <!-- ══ PROOF TICKER ══ -->
-    <div class="social-proof-section">
-      <div class="container">
-        <div class="proof-ticker">
-          <div class="proof-stat"><strong>100%</strong><span>Biens vérifiés sur site</span></div>
+    <div class="social-proof-section" style="overflow:hidden">
+      <div class="ticker-wrap">
+        <div class="ticker-track" id="tickerTrack">
+          <div class="proof-stat"><strong>🛡️ Biens vérifiés</strong><span>100% contrôlés sur site</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>3</strong><span>Appartements premium VDN</span></div>
+          <div class="proof-stat"><strong>🌀 Visites 360°</strong><span>Explorez à distance</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>360°</strong><span>Visites virtuelles disponibles</span></div>
+          <div class="proof-stat"><strong>🔐 Moteur antifraude</strong><span>7 dossiers sur 10 signalés</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>48h</strong><span>Délai de réponse garanti</span></div>
+          <div class="proof-stat"><strong>⚡ Réponse 48h</strong><span>Délai garanti</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>Wave · OM · Stripe</strong><span>Paiements acceptés</span></div>
+          <div class="proof-stat"><strong>💳 Wave · OM · Stripe</strong><span>Paiements locaux & internationaux</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>Diaspora · Touristes · Business</strong><span>Profils accueillis</span></div>
+          <div class="proof-stat"><strong>🌍 Diaspora · Business · Expats</strong><span>Profils accueillis</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>📱 Dossier 100% digital</strong><span>Zéro paperasse</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>1ère agence digitale</strong><span>au Sénégal</span></div>
+          <div class="proof-sep">·</div>
         </div>
       </div>
     </div>
@@ -1133,7 +1142,23 @@
               </div>
               <div class="score-level" id="scoreLevel">—</div>
               <div class="score-reasons" id="scoreReasons"></div>
-              <button class="score-replay-btn" id="scoreReplay">↺ Rejouer la simulation</button>
+
+              <!-- Sélecteur de scénario -->
+              <div style="margin-bottom:10px">
+                <div style="font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.3);margin-bottom:8px;text-align:center">Choisir un profil</div>
+                <div style="display:flex;gap:6px;justify-content:center">
+                  <button class="scenario-btn active" data-scenario="fort" onclick="selectScenario('fort',this)" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(0,200,117,.35);background:rgba(0,200,117,.1);color:#77ffbe;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s">
+                    ✅ Fort
+                  </button>
+                  <button class="scenario-btn" data-scenario="moyen" onclick="selectScenario('moyen',this)" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(245,166,35,.3);background:rgba(245,166,35,.07);color:#ffd180;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s">
+                    ⚠️ Moyen
+                  </button>
+                  <button class="scenario-btn" data-scenario="faible" onclick="selectScenario('faible',this)" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.07);color:#ffb3b3;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s">
+                    ❌ Faible
+                  </button>
+                </div>
+              </div>
+              <button class="score-replay-btn" id="scoreReplay">↺ Rejouer</button>
             </div>
 
             <!-- Note propriétaire -->
@@ -2343,29 +2368,71 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
   // ── Moteur Kàddu — Animation score ─────────────────────────────────────────
-  const SCORE_SIMULATION = {
-    steps: [
-      { critere:'identite', delay:400,  fillW:88, label:'Identité vérifiée',       icon:'✓' },
-      { critere:'revenus',  delay:1200, fillW:72, label:'Revenus cohérents',        icon:'✓' },
-      { critere:'locatif',  delay:2000, fillW:80, label:'Situation locative stable',icon:'✓' },
-      { critere:'docs',     delay:2800, fillW:65, label:'Documents complets',       icon:'✓' },
-    ],
-    finalScore: 82,
-    reasons: [
-      { icon:'✦', text:'Identité confirmée par OTP' },
-      { icon:'✦', text:'Revenus déclarés × 3 le loyer' },
-      { icon:'△', text:'Premier logement autonome — profil à confirmer' },
-    ]
+  const SCENARIOS = {
+    fort: {
+      steps: [
+        { critere:'identite', delay:400,  fillW:95, label:'Identité vérifiée', icon:'✓' },
+        { critere:'revenus',  delay:1100, fillW:88, label:'Revenus solides × 4 le loyer', icon:'✓' },
+        { critere:'locatif',  delay:1800, fillW:90, label:'Historique locatif excellent', icon:'✓' },
+        { critere:'docs',     delay:2500, fillW:82, label:'Documents complets et cohérents', icon:'✓' },
+      ],
+      finalScore: 87,
+      levelLabel: 'Profil Fort',
+      levelCls: 'level-fort',
+      arcColor: '#00C875',
+      reasons: [
+        { icon:'✦', text:'Identité confirmée par OTP', color:'#77ffbe' },
+        { icon:'✦', text:'Revenus déclarés × 4 le loyer', color:'#77ffbe' },
+        { icon:'✦', text:'Historique locatif stable et vérifié', color:'#77ffbe' },
+      ]
+    },
+    moyen: {
+      steps: [
+        { critere:'identite', delay:400,  fillW:80, label:'Identité partielle', icon:'✓' },
+        { critere:'revenus',  delay:1100, fillW:55, label:'Revenus à la limite du loyer', icon:'△' },
+        { critere:'locatif',  delay:1800, fillW:60, label:'Premier logement autonome', icon:'△' },
+        { critere:'docs',     delay:2500, fillW:45, label:'Documents incomplets', icon:'△' },
+      ],
+      finalScore: 54,
+      levelLabel: 'Profil Moyen',
+      levelCls: 'level-moyen',
+      arcColor: '#F5A623',
+      reasons: [
+        { icon:'△', text:'Revenus insuffisants × 1.8 le loyer', color:'#ffd180' },
+        { icon:'△', text:'Premier logement — sans historique locatif', color:'#ffd180' },
+        { icon:'✦', text:'Identité confirmée', color:'rgba(248,244,238,.5)' },
+      ]
+    },
+    faible: {
+      steps: [
+        { critere:'identite', delay:400,  fillW:40, label:'Identité non vérifiable', icon:'✗' },
+        { critere:'revenus',  delay:1100, fillW:20, label:'Revenus non justifiés', icon:'✗' },
+        { critere:'locatif',  delay:1800, fillW:30, label:'Situation locative instable', icon:'✗' },
+        { critere:'docs',     delay:2500, fillW:15, label:'Documents manquants ou incohérents', icon:'✗' },
+      ],
+      finalScore: 18,
+      levelLabel: 'Profil Faible',
+      levelCls: 'level-faible',
+      arcColor: '#FF6B6B',
+      reasons: [
+        { icon:'✗', text:'Identité non vérifiable — OTP échoué', color:'#ffb3b3' },
+        { icon:'✗', text:'Aucun justificatif de revenus fourni', color:'#ffb3b3' },
+        { icon:'✗', text:'Incohérence entre déclarations et documents', color:'#ffb3b3' },
+      ]
+    },
   };
 
-  function getLevel(score) {
-    if (score >= 75) return { label:'Profil Fort', cls:'level-fort' };
-    if (score >= 50) return { label:'Profil Moyen', cls:'level-moyen' };
-    return { label:'Profil Faible', cls:'level-faible' };
+  let currentScenario = 'fort';
+
+  function selectScenario(name, btn) {
+    currentScenario = name;
+    document.querySelectorAll('.scenario-btn').forEach(b => b.style.opacity = '0.55');
+    if (btn) btn.style.opacity = '1';
+    animateScore();
   }
 
   function animateScore() {
-    // Reset
+    const sim = SCENARIOS[currentScenario] || SCENARIOS.fort;
     const arc = document.getElementById('scoreArc');
     const numEl = document.getElementById('scoreNum');
     const levelEl = document.getElementById('scoreLevel');
@@ -2373,60 +2440,56 @@
     if (!arc) return;
 
     arc.style.strokeDashoffset = '314';
+    arc.style.stroke = sim.arcColor;
     numEl.textContent = '0';
+    numEl.style.color = sim.arcColor;
     levelEl.textContent = '—';
     levelEl.className = 'score-level';
     reasonsEl.innerHTML = '';
 
     // Reset critères
-    SCORE_SIMULATION.steps.forEach(s => {
+    sim.steps.forEach(s => {
       const card = document.getElementById('crit-' + s.critere);
       const chk  = document.getElementById('chk-' + s.critere);
       const fill = card?.querySelector('.critere-fill');
       if (card) card.classList.remove('active');
       if (chk)  chk.textContent = '○';
-      if (fill) fill.style.width = '0';
+      if (fill) { fill.style.width = '0'; fill.style.background = sim.arcColor; }
     });
 
-    // Animate each critère sequentially
-    SCORE_SIMULATION.steps.forEach((step, i) => {
+    // Animate chaque critère
+    sim.steps.forEach((step, i) => {
       setTimeout(() => {
         const card = document.getElementById('crit-' + step.critere);
         const chk  = document.getElementById('chk-' + step.critere);
         const fill = card?.querySelector('.critere-fill');
         if (card) card.classList.add('active');
-        if (chk)  chk.textContent = '✓';
+        if (chk)  chk.textContent = step.icon;
         if (fill) fill.style.width = step.fillW + '%';
       }, step.delay);
     });
 
-    // Animate score number + arc after all critères
-    const finalDelay = SCORE_SIMULATION.steps[SCORE_SIMULATION.steps.length - 1].delay + 400;
+    // Score final
+    const finalDelay = sim.steps[sim.steps.length - 1].delay + 400;
     setTimeout(() => {
-      const target = SCORE_SIMULATION.finalScore;
-      const circumference = 314;
-      const offset = circumference - (target / 100) * circumference;
+      const target = sim.finalScore;
+      const offset = 314 - (target / 100) * 314;
       arc.style.strokeDashoffset = offset;
 
-      // Count-up number
       let current = 0;
-      const duration = 1400;
-      const step = target / (duration / 16);
+      const step = target / (1400 / 16);
       const timer = setInterval(() => {
         current = Math.min(current + step, target);
         numEl.textContent = Math.round(current);
         if (current >= target) {
           clearInterval(timer);
-          // Show level
-          const lv = getLevel(target);
-          levelEl.textContent = lv.label;
-          levelEl.className = 'score-level ' + lv.cls;
-          // Show reasons
-          SCORE_SIMULATION.reasons.forEach((r, ri) => {
+          levelEl.textContent = sim.levelLabel;
+          levelEl.className = 'score-level ' + sim.levelCls;
+          sim.reasons.forEach((r, ri) => {
             setTimeout(() => {
               const el = document.createElement('div');
               el.className = 'score-reason-item';
-              el.innerHTML = `<span style="color:var(--or);flex-shrink:0">${r.icon}</span><span>${r.text}</span>`;
+              el.innerHTML = `<span style="color:${r.color};flex-shrink:0">${r.icon}</span><span style="color:${r.color}">${r.text}</span>`;
               reasonsEl.appendChild(el);
             }, ri * 200);
           });
@@ -2508,18 +2571,29 @@
     grid.innerHTML = rows.map(row => {
       const photos = parsePh(row.photos);
       const main   = photos.find(p=>p.is_main)||photos[0];
-      const cat    = row.categorie==='meuble'?'Meublé':'Non meublé';
-      const fb     = FB[row.categorie]||FB.meuble;
+      const isMeuble = row.categorie === 'meuble';
+      const badgeCls = isMeuble ? '' : 'listing-badge-nm';
+      const badgeTxt = isMeuble ? 'Meublé' : 'Non meublé';
+      const fb = FB[row.categorie] || FB.meuble;
       return `
-      <article class="listing-card" data-bien="${row.slug}" style="cursor:pointer">
+      <article class="listing-card${isMeuble ? '' : ' nm'}" data-bien="${row.slug}" style="cursor:pointer">
         <div class="listing-media" style="background:${fb}">
           <div class="listing-media-inner">
             ${main?`<img src="${main.url}" alt="${row.titre||''}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy" onerror="this.style.display='none'">` : ''}
           </div>
           <div class="listing-media-overlay"></div>
-          <div class="listing-badge">${cat}</div>
-          <div class="listing-avail">Disponible</div>
-          <div class="listing-cta-overlay"><a class="btn btn-primary" href="#">Voir le bien →</a></div>
+          ${isMeuble
+            ? `<div class="listing-badge">${badgeTxt}</div>
+               <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>`
+            : `<span class="listing-badge-nm">${badgeTxt}</span>
+               <div class="listing-avail">Disponible</div>`
+          }
+          <div class="listing-cta-overlay">
+            ${isMeuble
+              ? `<button class="btn-explorer" onclick="openModal('${row.slug}')">Voir le bien →</button>`
+              : `<a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(row.titre||'')}&slug=${row.slug||''}">Postuler →</a>`
+            }
+          </div>
         </div>
         <div class="listing-body">
           <h3>${(row.titre||'').replace(/Le Petit (.+)/,'Le Petit <em>$1</em>')}</h3>
@@ -2530,8 +2604,14 @@
           </div>
           <div class="listing-desc">${(row.accroche||row.description||'').slice(0,120)}</div>
           <div class="listing-price-row">
-            <div class="listing-price"><strong>${row.prix||'—'}</strong><small>${row.prix_sub||''}</small></div>
-            <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(row.titre||'')}&slug=${row.slug||''}">Postuler</a>
+            <div class="listing-price">
+              <strong>${row.prix||'—'}</strong>
+              ${isMeuble ? `<small>${row.prix_sub||''}</small>` : `<span class="bail-tag">Bail longue durée</span>`}
+            </div>
+            ${isMeuble
+              ? `<button class="btn-explorer" onclick="openModal('${row.slug}')">Voir le bien →</button>`
+              : `<a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(row.titre||'')}&slug=${row.slug||''}">Postuler →</a>`
+            }
           </div>
         </div>
       </article>`;
@@ -2868,6 +2948,13 @@
   // Appel hero indépendant au démarrage — ne dépend pas des autres requêtes
   // Lance en parallèle sans attendre loadBiensFromSupabase
   loadHeroBien([]);
+  // ── Ticker infini — duplication du contenu ───────────────────────────────────
+  (function initTicker() {
+    const track = document.getElementById('tickerTrack');
+    if (!track) return;
+    // Clone le contenu pour créer la boucle seamless
+    track.innerHTML += track.innerHTML;
+  })();
   // ─────────────────────────────────────────────────────────────────────────────
   </script>
 
