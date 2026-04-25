@@ -822,7 +822,7 @@
 
         <div class="hero-copy">
           <span class="eyebrow">1ère agence immobilière 100% digitale au Sénégal</span>
-          <h1 style="font-size:clamp(2rem,3.8vw,3.6rem);white-space:nowrap">Appartements vérifiés —<br><em>la seule plateforme qui sécurise<br>le bien et le locataire</em>.</h1>
+          <h1 style="font-size:clamp(1.7rem,3.2vw,3rem);white-space:nowrap">Appartements vérifiés —<br><em style="font-size:.9em">la seule plateforme qui sécurise le bien et le locataire</em>.</h1>
           <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px;text-align:justify;text-justify:inter-word">
             Visitez à distance en 360° et candidatez avec un dossier qualifié — fini les mauvaises surprises.
           </p>
@@ -1783,6 +1783,24 @@
             </div>
           </div>
         </div>
+
+        <!-- Commercial assigné — style Manda -->
+        <div id="modalCommCard" style="display:none;margin:0 28px 20px;padding:16px;border:1px solid var(--bdr);border-radius:14px;background:rgba(7,24,43,.4);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div id="modalCommAvatar" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or);flex-shrink:0"></div>
+            <div>
+              <div style="font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Présenté par votre expert Kàddu</div>
+              <div id="modalCommNom" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;margin-bottom:2px"></div>
+              <div id="modalCommRole" style="font-size:.74rem;color:var(--muted)"></div>
+              <div id="modalCommReponse" style="font-size:.7rem;color:var(--green);margin-top:3px"></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px;align-items:flex-end">
+            <a id="modalCommTel" href="#" style="display:none;align-items:center;gap:6px;font-size:.8rem;color:rgba(248,244,238,.65);text-decoration:none" onclick="return true">📞 <span id="modalCommTelNum"></span></a>
+            <a id="modalCommWA" href="#" target="_blank" style="display:none;background:#25D366;color:#fff;padding:8px 14px;border-radius:999px;font-size:.72rem;font-weight:600;text-decoration:none">💬 WhatsApp</a>
+          </div>
+        </div>
+
       </div>
 
       <!-- CTA bar sticky bottom -->
@@ -2144,6 +2162,49 @@
       btn360.style.display = 'none';
     }
 
+    // Commercial assigné
+    const commCard = document.getElementById('modalCommCard');
+    const sbRow = b._sbRow;
+    const comm = sbRow?.commerciaux;
+    if (comm) {
+      commCard.style.display = 'flex';
+      // Avatar
+      const av = document.getElementById('modalCommAvatar');
+      av.innerHTML = comm.photo_url
+        ? `<img src="${comm.photo_url}" alt="${comm.nom||''}" style="width:100%;height:100%;object-fit:cover">`
+        : (comm.nom||'?').charAt(0).toUpperCase();
+      // Textes
+      document.getElementById('modalCommNom').textContent = comm.nom || '';
+      document.getElementById('modalCommRole').textContent = comm.role || 'Conseiller Kàddu';
+      const repEl = document.getElementById('modalCommReponse');
+      repEl.textContent = comm.reponse ? `⚡ ${comm.reponse}` : '';
+      repEl.style.display = comm.reponse ? 'block' : 'none';
+      // Téléphone
+      const telEl = document.getElementById('modalCommTel');
+      if (comm.telephone) {
+        telEl.style.display = 'flex';
+        telEl.href = `tel:${comm.telephone}`;
+        document.getElementById('modalCommTelNum').textContent = comm.telephone;
+      } else {
+        telEl.style.display = 'none';
+      }
+      // WhatsApp avec message personnalisé
+      const waEl = document.getElementById('modalCommWA');
+      if (comm.whatsapp) {
+        waEl.style.display = 'inline-flex';
+        const bienNom = (b.nom||'').replace(/<[^>]+>/g,'');
+        const waMsg = (comm.wa_message || 'Bonjour {nom_commercial}, je suis intéressé par {nom_appartement} sur Kaddu.net.')
+          .replace(/\{prenom_client\}/g, '')
+          .replace(/\{nom_appartement\}/g, bienNom)
+          .replace(/\{nom_commercial\}/g, comm.nom||'');
+        waEl.href = `https://wa.me/${comm.whatsapp}?text=${encodeURIComponent(waMsg)}`;
+      } else {
+        waEl.style.display = 'none';
+      }
+    } else {
+      commCard.style.display = 'none';
+    }
+
     // Gallery
     buildGallery(b);
 
@@ -2398,7 +2459,7 @@
   async function loadBiensFromSupabase() {
     try {
       const r = await fetch(
-        `${SB_URL}/rest/v1/biens?statut=neq.brouillon&order=created_at.asc&select=*,commerciaux(id,nom,role,telephone,whatsapp,photo_url)`,
+        `${SB_URL}/rest/v1/biens?statut=neq.brouillon&order=created_at.asc&select=*,commerciaux(id,nom,role,telephone,whatsapp,photo_url,reponse,wa_message)`,
         { headers:{ 'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON } }
       );
       if(!r.ok) return null;
