@@ -418,9 +418,120 @@
         </div>
         <div class="fg4">
           <div class="field"><label>Étage</label><input id="bEtage" placeholder="2ème"/></div>
-          <div class="field"><label>Capacité (pers.)</label><input id="bCapacite" type="number" placeholder="4"/></div>
           <div class="field"><label>Nb total étages</label><input id="bNbEtages" type="number" placeholder="5"/></div>
+          <div class="field"><label>Capacité (pers.)</label><input id="bCapacite" type="number" placeholder="4"/></div>
           <div class="field"><label>Année construction</label><input id="bAnnee" type="number" placeholder="2019"/></div>
+        </div>
+
+        <div class="slabel">Caractéristiques générales</div>
+        <div class="fg4">
+          <div class="field">
+            <label>Parking</label>
+            <select id="bParking"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+          <div class="field">
+            <label>Box / Garage</label>
+            <select id="bBox"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+          <div class="field">
+            <label>Cave</label>
+            <select id="bCave"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+          <div class="field">
+            <label>Ascenseur</label>
+            <select id="bAscenseur"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+        </div>
+        <div class="fg4">
+          <div class="field">
+            <label>Gardiennage</label>
+            <select id="bGardiennage"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+          <div class="field">
+            <label>Colocation acceptée</label>
+            <select id="bColocation"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+          <div class="field">
+            <label>Accessible PMR</label>
+            <select id="bPMR"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
+          </div>
+          <div class="field">
+            <label>Durée bail (mois)</label>
+            <input id="bDureeBail" type="number" placeholder="12"/>
+          </div>
+        </div>
+        <div class="fg2">
+          <div class="field"><label>Dépôt de garantie</label><input id="bDepotGarantie" placeholder="Ex: 1 027 €"/></div>
+          <div class="field"><label>Honoraires locataire</label><input id="bHonoraires" placeholder="Ex: 938 € TTC dont 216€ état des lieux"/></div>
+        </div>
+
+        <div class="slabel">Détail des charges</div>
+        <div class="fg3">
+          <div class="field"><label>Montant charges</label><input id="bChargesMontant" placeholder="Ex: 120 € / mois"/></div>
+          <div class="field">
+            <label>Type de charges</label>
+            <select id="bChargesType">
+              <option value="">—</option>
+              <option value="Provision">Provision</option>
+              <option value="Forfait">Forfait</option>
+              <option value="Incluses">Incluses</option>
+            </select>
+          </div>
+          <div class="field"><label>Charges locataire</label><input id="bChargesLocataire" placeholder="Ex: Eau, électricité"/></div>
+        </div>
+        <div class="fg2">
+          <div class="field">
+            <label>Inclus dans les charges (séparés par virgule)</label>
+            <input id="bChargesInclus" placeholder="Ordures, Entretien parties communes, Eau courante"/>
+          </div>
+          <div class="field">
+            <label>Non inclus dans les charges</label>
+            <input id="bChargesNonInclus" placeholder="Ménage, Eau chaude, Gaz, Gardien, Ascenseur, Internet, Électricité"/>
+          </div>
+        </div>
+
+        <div class="slabel">Mobilier & Équipements (cocher ce qui est présent)</div>
+
+        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">⚙️ Équipements</div>
+        <div class="check-grid" style="margin-bottom:14px">
+          <label class="check-item"><input type="checkbox" name="mob_raccord_machine" style="width:auto;accent-color:var(--or)"/> 🔌 Raccordement machine</label>
+          <label class="check-item"><input type="checkbox" name="mob_interphone" style="width:auto;accent-color:var(--or)"/> 📞 Interphone</label>
+          <label class="check-item"><input type="checkbox" name="mob_machine_laver" style="width:auto;accent-color:var(--or)"/> 🧺 Machine à laver</label>
+          <label class="check-item"><input type="checkbox" name="mob_toilettes_sep" style="width:auto;accent-color:var(--or)"/> 🚽 Toilettes séparées</label>
+          <label class="check-item"><input type="checkbox" name="mob_boite_lettres" style="width:auto;accent-color:var(--or)"/> 📬 Boîte aux lettres</label>
+          <label class="check-item"><input type="checkbox" name="mob_digicode" style="width:auto;accent-color:var(--or)"/> 🔑 Digicode</label>
+        </div>
+
+        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">🛏️ Couchage</div>
+        <div class="check-grid" style="margin-bottom:14px">
+          <label class="check-item"><input type="checkbox" name="mob_canape_lit" style="width:auto;accent-color:var(--or)"/> 🛋️ Canapé lit</label>
+          <label class="check-item"><input type="checkbox" name="mob_lit_double" style="width:auto;accent-color:var(--or)"/> 🛏️ Lit double</label>
+          <label class="check-item"><input type="checkbox" name="mob_lit_simple" style="width:auto;accent-color:var(--or)"/> 🛏️ Lit simple</label>
+          <label class="check-item"><input type="checkbox" name="mob_linge_lit" style="width:auto;accent-color:var(--or)"/> 🧻 Linge de lit fourni</label>
+        </div>
+
+        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">🍳 Cuisine</div>
+        <div class="check-grid" style="margin-bottom:14px">
+          <label class="check-item"><input type="checkbox" name="mob_congelateur" style="width:auto;accent-color:var(--or)"/> ❄️ Congélateur</label>
+          <label class="check-item"><input type="checkbox" name="mob_refrigerateur" style="width:auto;accent-color:var(--or)"/> 🧊 Réfrigérateur</label>
+          <label class="check-item"><input type="checkbox" name="mob_plaques" style="width:auto;accent-color:var(--or)"/> 🔥 Plaques de cuisson</label>
+          <label class="check-item"><input type="checkbox" name="mob_micro_ondes" style="width:auto;accent-color:var(--or)"/> 📡 Micro-ondes</label>
+          <label class="check-item"><input type="checkbox" name="mob_lave_vaisselle" style="width:auto;accent-color:var(--or)"/> 🍽️ Lave-vaisselle</label>
+          <label class="check-item"><input type="checkbox" name="mob_four" style="width:auto;accent-color:var(--or)"/> 🫕 Four</label>
+          <label class="check-item"><input type="checkbox" name="mob_cafetiere" style="width:auto;accent-color:var(--or)"/> ☕ Cafetière</label>
+          <label class="check-item"><input type="checkbox" name="mob_bouilloire" style="width:auto;accent-color:var(--or)"/> 🫖 Bouilloire</label>
+        </div>
+
+        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">🪑 Ameublement</div>
+        <div class="check-grid" style="margin-bottom:14px">
+          <label class="check-item"><input type="checkbox" name="mob_dressing" style="width:auto;accent-color:var(--or)"/> 🚪 Dressing</label>
+          <label class="check-item"><input type="checkbox" name="mob_bureau" style="width:auto;accent-color:var(--or)"/> 🖥️ Bureau</label>
+          <label class="check-item"><input type="checkbox" name="mob_tv" style="width:auto;accent-color:var(--or)"/> 📺 TV</label>
+          <label class="check-item"><input type="checkbox" name="mob_chaise" style="width:auto;accent-color:var(--or)"/> 🪑 Chaises</label>
+          <label class="check-item"><input type="checkbox" name="mob_table" style="width:auto;accent-color:var(--or)"/> 🪵 Table</label>
+          <label class="check-item"><input type="checkbox" name="mob_canape" style="width:auto;accent-color:var(--or)"/> 🛋️ Canapé</label>
+          <label class="check-item"><input type="checkbox" name="mob_armoire" style="width:auto;accent-color:var(--or)"/> 🗄️ Armoire</label>
+          <label class="check-item"><input type="checkbox" name="mob_miroir" style="width:auto;accent-color:var(--or)"/> 🪞 Miroir</label>
         </div>
 
         <div class="slabel">Équipements & services</div>
@@ -1121,8 +1232,13 @@ function openBienDrawer(id=null){
   const ids=["bTitre","bSlug","bRef","bAccroche","bAdresse","bQuartier","bVille","bImmeuble","bLat","bLng","bZoneCarte","bDescQuartier",
     "bPrix","bPrixSub","bCharges","bCaution","bFraisDossier","bDureeMin","bTypeBail","bPaiements","bCheckin","bCheckout",
     "bSurface","bPieces","bChambres","bSDB","bEtage","bCapacite","bNbEtages","bAnnee",
+    "bDepotGarantie","bHonoraires","bDureeBail","bChargesMontant","bChargesLocataire","bChargesInclus","bChargesNonInclus",
     "bEquipLibres","bDescription","bAtouts","bConditions","bVisite360","bVideo","bPdf","bId"];
   ids.forEach(i=>{const el=document.getElementById(i);if(el)el.value=""});
+  // Reset selects
+  ["bParking","bBox","bCave","bAscenseur","bGardiennage","bColocation","bPMR","bChargesType"].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value="";
+  });
   document.getElementById("bVille").value="Dakar";
   document.getElementById("bTypeBien").value="appartement";
   document.getElementById("bCategorie").value="meuble";
@@ -1185,6 +1301,28 @@ function openBienDrawer(id=null){
     document.getElementById("bCapacite").value=b.capacite||"";
     document.getElementById("bNbEtages").value=b.nb_etages||"";
     document.getElementById("bAnnee").value=b.annee||"";
+    // Nouveaux champs carac
+    document.getElementById("bParking").value=b.parking||"";
+    document.getElementById("bBox").value=b.box||"";
+    document.getElementById("bCave").value=b.cave||"";
+    document.getElementById("bAscenseur").value=b.ascenseur||"";
+    document.getElementById("bGardiennage").value=b.gardiennage||"";
+    document.getElementById("bColocation").value=b.colocation||"";
+    document.getElementById("bPMR").value=b.pmr||"";
+    document.getElementById("bDureeBail").value=b.duree_bail||"";
+    document.getElementById("bDepotGarantie").value=b.depot_garantie||"";
+    document.getElementById("bHonoraires").value=b.honoraires||"";
+    document.getElementById("bChargesMontant").value=b.charges_montant||"";
+    document.getElementById("bChargesType").value=b.charges_type||"";
+    document.getElementById("bChargesLocataire").value=b.charges_locataire||"";
+    document.getElementById("bChargesInclus").value=b.charges_inclus||"";
+    document.getElementById("bChargesNonInclus").value=b.charges_non_inclus||"";
+    // Mobilier
+    const mob=safeJson(b.mobilier,{});
+    document.querySelectorAll("input[name^='mob_']").forEach(cb=>{
+      cb.checked=mob[cb.name]||false;
+      cb.parentElement.classList.toggle("checked",!!mob[cb.name]);
+    });
     document.getElementById("bEquipLibres").value=b.equip_libres||"";
     document.getElementById("bDescription").value=b.description||"";
     document.getElementById("bAtouts").value=b.atouts||"";
@@ -1449,6 +1587,12 @@ document.getElementById("saveBienBtn").addEventListener("click",async()=>{
     commercial_id:document.getElementById("bCommercial").value||null,
     surface:vi("bSurface"),pieces:v("bPieces"),chambres:vi("bChambres"),sdb:vi("bSDB"),etage:v("bEtage"),
     capacite:vi("bCapacite"),nb_etages:vi("bNbEtages"),annee:vi("bAnnee"),
+    parking:v("bParking"),box:v("bBox"),cave:v("bCave"),ascenseur:v("bAscenseur"),
+    gardiennage:v("bGardiennage"),colocation:v("bColocation"),pmr:v("bPMR"),
+    duree_bail:vi("bDureeBail"),depot_garantie:v("bDepotGarantie"),honoraires:v("bHonoraires"),
+    charges_montant:v("bChargesMontant"),charges_type:v("bChargesType"),
+    charges_locataire:v("bChargesLocataire"),charges_inclus:v("bChargesInclus"),charges_non_inclus:v("bChargesNonInclus"),
+    mobilier:JSON.stringify(getMobilierBool()),
     equipements_bool:getEquipBool(),
     equip_libres:v("bEquipLibres"),
     description:v("bDescription"),atouts:v("bAtouts"),conditions:v("bConditions"),
@@ -1575,6 +1719,12 @@ function delCommConfirm(id){
     try{if(c?.photo_path)await delFile(c.photo_path);await sbDel("commerciaux",id);allComms=allComms.filter(x=>x.id!==id);renderComms();toast("Commercial supprimé.")}
     catch(e){toast("Erreur : "+e.message,"err")}
   });
+}
+
+function getMobilierBool(){
+  const o={};
+  document.querySelectorAll("input[name^='mob_']").forEach(cb=>{o[cb.name]=cb.checked});
+  return o;
 }
 
 function clearDispo(){
