@@ -467,9 +467,9 @@
     .critere-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
     .critere-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--orl));width:0;border-radius:2px;transition:width 1s ease}
     .critere-check{
-      font-size:1rem;color:rgba(248,244,238,.2);flex-shrink:0;transition:.3s;margin-top:1px;line-height:1
+      font-size:1rem;color:rgba(248,244,238,.2);flex-shrink:0;transition:color .3s;margin-top:1px;line-height:1
     }
-    .critere-card.active .critere-check{color:var(--green)}
+    /* Les couleurs sont appliquées dynamiquement par JS selon le scénario */
 
     /* Angles propriétaire / locataire */
     .angles-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -518,7 +518,61 @@
     .sr-result-mini-body p{font-size:.72rem;color:var(--muted)}
     .sr-result-mini-body .price{font-size:.88rem;color:var(--or);margin-top:5px;font-weight:600}
 
-    /* ══ DIFFÉRENCIATION MEUBLÉ / NON MEUBLÉ ══ */
+    /* ══ PAIEMENTS — wrap propre ══ */
+    .modal-cta-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    #modalConditions .cond-row:has(.cond-val-paiements){flex-wrap:wrap}
+    .cond-val-paiements{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+    .cond-val-paiements span{padding:3px 9px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;background:rgba(191,150,80,.06);color:var(--muted)}
+
+    /* ══ ACCORDIONS ══ */
+    .accord-wrap{margin:0 28px 28px;display:flex;flex-direction:column;gap:8px}
+    .accord-block{border:1px solid var(--bdr);border-radius:14px;overflow:hidden;background:rgba(7,24,43,.3)}
+    .accord-head{
+      width:100%;padding:16px 20px;background:transparent;border:none;
+      color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:500;
+      display:flex;align-items:center;justify-content:space-between;
+      cursor:pointer;transition:.18s;text-align:left;
+    }
+    .accord-head:hover{background:rgba(191,150,80,.05)}
+    .accord-icon{font-size:.8rem;color:var(--or);transition:transform .25s;display:inline-block}
+    .accord-head.closed .accord-icon{transform:rotate(180deg)}
+    .accord-body{padding:0 20px 18px;display:block}
+    .accord-body.hidden{display:none}
+    .accord-section-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin:12px 0 8px}
+    .accord-grid{border:1px solid rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
+    .accord-row{
+      display:grid;grid-template-columns:1fr auto 1fr auto;
+      border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .accord-row:last-child{border-bottom:none}
+    .accord-cell{padding:11px 16px;font-size:.84rem;display:flex;align-items:center;gap:8px}
+    .accord-cell-label{color:rgba(248,244,238,.6)}
+    .accord-cell-val{font-weight:600;color:var(--blanc)}
+    .accord-cell-val.oui{color:var(--green)}
+    .accord-cell-val.non{color:rgba(248,244,238,.35);text-decoration:line-through}
+    .accord-divider{width:1px;background:rgba(255,255,255,.05)}
+    /* Charges */
+    .charges-montant-row{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center;font-size:.88rem}
+    .charges-montant-row strong{font-size:1.05rem;color:var(--blanc)}
+    .charges-chips-wrap{padding:12px 16px}
+    .charges-chips-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .charges-chips{display:flex;flex-wrap:wrap;gap:7px}
+    .charges-chip{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 12px;border-radius:10px;min-width:70px;font-size:.72rem;text-align:center}
+    .chip-present{background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.2);color:#77ffbe}
+    .chip-absent{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:rgba(248,244,238,.3)}
+    .chip-absent .chip-icon{opacity:.3}
+    .chip-absent .chip-label{text-decoration:line-through}
+    .chip-icon{font-size:1.2rem}
+    /* Mobilier */
+    .mob-section{margin-bottom:16px}
+    .mob-section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.05)}
+    .mob-grid{display:flex;flex-wrap:wrap;gap:8px}
+    .mob-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 12px;border-radius:10px;min-width:60px;font-size:.72rem;text-align:center}
+    .mob-present{background:rgba(0,200,117,.07);border:1px solid rgba(0,200,117,.18);color:rgba(248,244,238,.8)}
+    .mob-absent{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);color:rgba(248,244,238,.25)}
+    .mob-absent .mob-icon{opacity:.25}
+    .mob-absent .mob-label{text-decoration:line-through}
+    .mob-icon{font-size:1.3rem}
     /* Badge non meublé — bleu acier sobre */
     .listing-badge-nm{
       position:absolute;top:14px;left:14px;z-index:2;
@@ -1809,6 +1863,61 @@
           </div>
         </div>
 
+        <!-- ══ 4 BLOCS DÉPLIABLES ══ -->
+        <div class="accord-wrap" id="modalAccordions">
+
+          <!-- 1. Caractéristiques -->
+          <div class="accord-block">
+            <button class="accord-head" onclick="toggleAccord(this)">
+              <span>Caractéristiques du bien</span>
+              <span class="accord-icon">∧</span>
+            </button>
+            <div class="accord-body" id="accord-carac">
+              <div class="accord-section-label">Général</div>
+              <div class="accord-grid" id="accord-carac-grid"></div>
+            </div>
+          </div>
+
+          <!-- 2. Charges -->
+          <div class="accord-block">
+            <button class="accord-head" onclick="toggleAccord(this)">
+              <span>Détail des charges</span>
+              <span class="accord-icon">∧</span>
+            </button>
+            <div class="accord-body" id="accord-charges">
+              <div id="accord-charges-content"></div>
+            </div>
+          </div>
+
+          <!-- 3. Mobilier -->
+          <div class="accord-block">
+            <button class="accord-head" onclick="toggleAccord(this)">
+              <span>Mobilier et équipement</span>
+              <span class="accord-icon">∧</span>
+            </button>
+            <div class="accord-body" id="accord-mobilier">
+              <div id="accord-mobilier-content"></div>
+            </div>
+          </div>
+
+          <!-- 4. Localisation -->
+          <div class="accord-block">
+            <button class="accord-head" onclick="toggleAccord(this)">
+              <span>Localisation</span>
+              <span class="accord-icon">∧</span>
+            </button>
+            <div class="accord-body" id="accord-map">
+              <div id="modalMap" style="height:280px;border-radius:10px;overflow:hidden;background:rgba(7,24,43,.5);position:relative;">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem" id="mapPlaceholder">📍 Coordonnées GPS non renseignées</div>
+              </div>
+              <a id="modalStreetViewBtn" href="#" target="_blank" style="display:none;margin-top:12px;padding:11px 20px;background:rgba(191,150,80,.12);border:1px solid var(--bds);color:var(--or);border-radius:999px;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px">
+                🗺️ Voir sur Street View
+              </a>
+            </div>
+          </div>
+
+        </div><!-- /accord-wrap -->
+
         <!-- Commercial assigné — style Manda -->
         <div id="modalCommCard" style="display:none;margin:0 28px 20px;padding:16px;border:1px solid var(--bdr);border-radius:14px;background:rgba(7,24,43,.4);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="display:flex;align-items:center;gap:12px">
@@ -2176,6 +2285,23 @@
     document.getElementById('modalPriceSub').textContent = b.prixSub;
     // CTA
     document.getElementById('modalCTA').href = b.tunnel;
+
+    // Paiements — affiché en chips séparés
+    const condEl = document.getElementById('modalConditions');
+    const paiements = b._sbRow?.paiements || b.conditions?.find(c=>c[0]==='Paiements')?.[1] || '';
+    const condData = b.conditions || [];
+    if (condEl) {
+      condEl.innerHTML = condData.map(([label, val]) => {
+        if (label === 'Paiements' && val) {
+          const chips = val.split('·').map(s=>s.trim()).filter(Boolean);
+          return `<div class="cond-row"><span class="cond-label">${label}</span><span class="cond-val cond-val-paiements">${chips.map(c=>`<span>${c}</span>`).join('')}</span></div>`;
+        }
+        return `<div class="cond-row"><span class="cond-label">${label}</span><span class="cond-val">${val}</span></div>`;
+      }).join('');
+    }
+
+    // 4 blocs dépliables
+    populateAccordions(b);
     document.getElementById('modalWhatsApp').href = b.whatsapp;
 
     // Bouton 360° — visible seulement si lien renseigné
@@ -2453,7 +2579,7 @@
       const chk  = document.getElementById('chk-' + s.critere);
       const fill = card?.querySelector('.critere-fill');
       if (card) card.classList.remove('active');
-      if (chk)  chk.textContent = '○';
+      if (chk)  { chk.textContent = '○'; chk.style.color = 'rgba(248,244,238,.2)'; }
       if (fill) { fill.style.width = '0'; fill.style.background = sim.arcColor; }
     });
 
@@ -2464,8 +2590,13 @@
         const chk  = document.getElementById('chk-' + step.critere);
         const fill = card?.querySelector('.critere-fill');
         if (card) card.classList.add('active');
-        if (chk)  chk.textContent = step.icon;
-        if (fill) fill.style.width = step.fillW + '%';
+        if (chk) {
+          chk.textContent = step.icon;
+          chk.style.color = currentScenario === 'fort' ? '#00C875'
+                          : currentScenario === 'moyen' ? '#F5A623'
+                          : '#FF6B6B';
+        }
+        if (fill) { fill.style.background = sim.arcColor; fill.style.width = step.fillW + '%'; }
       }, step.delay);
     });
 
@@ -2948,2933 +3079,175 @@
   // Appel hero indépendant au démarrage — ne dépend pas des autres requêtes
   // Lance en parallèle sans attendre loadBiensFromSupabase
   loadHeroBien([]);
-  // ── Ticker infini — duplication du contenu ───────────────────────────────────
-  (function initTicker() {
-    const track = document.getElementById('tickerTrack');
-    if (!track) return;
-    // Clone le contenu pour créer la boucle seamless
-    track.innerHTML += track.innerHTML;
-  })();
-  // ─────────────────────────────────────────────────────────────────────────────
-  </script>
-
-</body>
-</html>
-      content:"";
-      position:fixed;inset:0;z-index:-1;
-      background:
-        radial-gradient(ellipse 90% 60% at 70% -10%, rgba(191,150,80,.10) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at -10% 60%, rgba(191,150,80,.06) 0%, transparent 55%),
-        linear-gradient(180deg,#070c15 0%,#0a1628 40%,#07182b 100%);
-    }
-    a{text-decoration:none;color:inherit}
-    /* Justification globale des blocs de texte descriptifs */
-    .hero-text,.section-head-desc,
-    .value-card p,.how-card p,.proof-card-2 p,
-    .pain-card p,.cta-box p,.foot-text,
-    .bien-desc,.listing-desc,.modal-desc,
-    .testi-quote,.critere-desc,.angle-list li,
-    .score-reason-item span,.modal-equip-item span,
-    .entry-card p,.comm-desc{
-      text-align:justify;
-      text-justify:inter-word;
-    }
-    .container{max-width:1240px;margin:0 auto;padding:0 28px}
-    .section{padding:96px 0}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:.7rem;
-      color:var(--or);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px
-    }
-    .eyebrow::before{content:"";width:20px;height:1px;background:var(--or);flex-shrink:0}
-    h1,h2,h3{font-family:'Playfair Display',serif;font-weight:300;line-height:1.08}
-    h1 em,h2 em,h3 em{font-style:italic;color:var(--or)}
-    p{margin:0}
-
-    /* ══ NAV ══ */
-    .nav{
-      position:sticky;top:0;z-index:50;
-      backdrop-filter:blur(20px) saturate(1.4);
-      background:rgba(7,12,21,.82);
-      border-bottom:1px solid var(--bdr);
-    }
-    .nav-inner{
-      height:74px;display:flex;align-items:center;justify-content:space-between;gap:24px
-    }
-    .brand{display:flex;align-items:center;gap:14px}
-    .brand-mark{
-      width:40px;height:40px;border-radius:13px;
-      background:linear-gradient(145deg, rgba(191,150,80,.25), rgba(191,150,80,.06));
-      border:1px solid var(--bds);
-      display:flex;align-items:center;justify-content:center;
-      font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or);
-      box-shadow:0 0 20px rgba(191,150,80,.12)
-    }
-    .brand-text{display:flex;flex-direction:column;gap:1px}
-    .brand-name{font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
-    .brand-tag{font-size:.62rem;color:rgba(248,244,238,.35);letter-spacing:.14em;text-transform:uppercase}
-    .nav-links{display:flex;gap:26px;align-items:center}
-    .nav-links a{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.52);transition:.2s}
-    .nav-links a:hover{color:var(--or)}
-    .nav-cta{display:flex;gap:10px;align-items:center;flex-shrink:0}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
-      border:none;cursor:pointer;padding:13px 22px;border-radius:999px;
-      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.10em;
-      text-transform:uppercase;transition:.22s ease;white-space:nowrap
-    }
-    .btn-primary{background:var(--or);color:#0a0a0a}
-    .btn-primary:hover{background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}
-    .btn-secondary{background:transparent;color:var(--blanc);border:1px solid rgba(248,244,238,.16)}
-    .btn-secondary:hover{border-color:var(--or);color:var(--or)}
-    .btn-lg{padding:16px 28px;font-size:.82rem}
-    .btn-icon{font-size:.95rem;line-height:1}
-
-    /* ══ HERO ══ */
-    .hero{padding:68px 0 48px}
-    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:stretch;min-height:640px}
-    .hero-copy{padding:16px 0;display:flex;flex-direction:column;justify-content:center}
-    .hero-copy h1{font-size:var(--fs-h1);margin:14px 0 12px}
-    .hero-slogan{
-      display:inline-block;
-      padding-left:14px;border-left:2px solid var(--or);
-      color:rgba(248,244,238,.44);font-family:'Playfair Display',serif;
-      font-style:italic;font-size:1.0rem;margin-bottom:16px
-    }
-    .hero-text{font-size:1.0rem;color:rgba(248,244,238,.62);margin-bottom:24px;max-width:600px}
-    .hero-pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
-    .trust-pill{
-      border:1px solid var(--bdr);background:rgba(255,255,255,.03);
-      color:rgba(248,244,238,.54);border-radius:999px;padding:9px 14px;font-size:.74rem
-    }
-    .trust-pill strong{color:var(--or);font-weight:500}
-
-    /* Entry split */
-    .split-entry{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
-    .entry-card{
-      background:linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-      border:1px solid var(--bdr);border-radius:var(--radius);
-      padding:22px 20px;transition:.2s;
-    }
-    .entry-card:hover{border-color:rgba(191,150,80,.34)}
-    .entry-kicker{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:9px}
-    .entry-card h3{font-size:1.4rem;margin-bottom:7px;line-height:1.15}
-    .entry-card p{color:rgba(248,244,238,.52);font-size:.88rem;margin-bottom:14px}
-    .entry-points{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
-    .entry-points span{font-size:.80rem;color:rgba(248,244,238,.58)}
-    .entry-points span::before{content:"•";color:var(--or);margin-right:7px}
-
-    /* ══ HERO PANEL (right) ══ */
-    .hero-panel{
-      position:relative;
-      background:linear-gradient(160deg, rgba(191,150,80,.08), rgba(7,24,43,.6));
-      border:1px solid var(--bdr);border-radius:36px;
-      overflow:hidden;box-shadow:var(--shadow),var(--glow)
-    }
-    .hero-panel::before{
-      content:"";position:absolute;inset:0;
-      background-image:
-        linear-gradient(rgba(191,150,80,.035) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(191,150,80,.035) 1px,transparent 1px);
-      background-size:40px 40px;opacity:.8
-    }
-    .deco-k{
-      position:absolute;inset:auto auto 10px 10px;
-      font-family:'Playfair Display',serif;font-size:16rem;line-height:.9;
-      color:rgba(191,150,80,.045);user-select:none;pointer-events:none
-    }
-    .hero-stack{
-      position:relative;z-index:2;padding:24px;height:100%;
-      display:grid;grid-template-rows:auto auto 1fr;gap:14px
-    }
-    .metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .metric{
-      background:rgba(7,24,43,.65);border:1px solid rgba(191,150,80,.18);border-radius:20px;padding:16px 14px
-    }
-    .metric strong{display:block;font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:300;color:var(--or)}
-    .metric span{font-size:.68rem;color:rgba(248,244,238,.4);text-transform:uppercase;letter-spacing:.1em}
-
-    /* Featured property card in hero */
-    .hero-prop-card{
-      background:rgba(7,24,43,.8);border:1px solid rgba(191,150,80,.2);border-radius:24px;overflow:hidden
-    }
-    .hero-prop-img{
-      height:172px;position:relative;overflow:hidden;
-      background:linear-gradient(135deg, #1a2f1a 0%, #2d1f0a 40%, #0f1e30 100%);
-    }
-    .hero-prop-img-layer{
-      position:absolute;inset:0;
-      background:
-        radial-gradient(ellipse at 30% 60%, rgba(191,150,80,.18), transparent 50%),
-        radial-gradient(ellipse at 75% 20%, rgba(60,120,60,.12), transparent 40%);
-    }
-    /* Geometric apartment illustration */
-    .apt-illustration{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .apt-illustration svg{opacity:.85;width:100%;height:100%}
-    .hero-prop-badge{
-      position:absolute;top:12px;left:12px;
-      background:rgba(191,150,80,.9);color:#0a0a0a;
-      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-      padding:5px 10px;border-radius:999px;font-weight:700
-    }
-    .hero-prop-avail{
-      position:absolute;top:12px;right:12px;
-      background:rgba(0,200,117,.15);border:1px solid rgba(0,200,117,.35);color:#00C875;
-      font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
-      padding:5px 10px;border-radius:999px;display:flex;align-items:center;gap:5px
-    }
-    .hero-prop-avail::before{content:"";width:6px;height:6px;border-radius:50%;background:#00C875;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-    .hero-prop-body{padding:16px}
-    .hero-prop-body h4{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:300;margin-bottom:4px}
-    .hero-prop-body h4 em{font-style:italic;color:var(--or)}
-    .hero-prop-meta{font-size:.76rem;color:rgba(248,244,238,.44);margin-bottom:12px}
-    .hero-prop-specs{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-    .spec-chip{
-      background:rgba(191,150,80,.1);border:1px solid rgba(191,150,80,.2);
-      color:rgba(248,244,238,.7);font-size:.7rem;padding:4px 10px;border-radius:999px
-    }
-    .hero-prop-price-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .hero-prop-price{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;color:var(--or)}
-    .hero-prop-price small{font-size:.68rem;font-family:'DM Sans',sans-serif;color:rgba(248,244,238,.42);display:block;font-weight:300}
-
-    /* ══ SEARCH BAR ══ */
-    .search-bar-wrap{
-      background:linear-gradient(160deg, rgba(191,150,80,.07), rgba(255,255,255,.02));
-      border:1px solid var(--bds);border-radius:24px;padding:20px 24px;
-      margin-bottom:0;
-    }
-    .search-label{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:12px}
-    .search-fields{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
-    .search-field label{display:block;font-size:.72rem;color:rgba(248,244,238,.42);margin-bottom:6px;letter-spacing:.08em}
-    .search-field select,.search-field input{
-      width:100%;background:rgba(7,24,43,.7);border:1px solid var(--bdr);
-      color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.88rem;
-      padding:11px 14px;border-radius:14px;outline:none;appearance:none;
-      transition:.2s
-    }
-    .search-field select:focus,.search-field input:focus{border-color:var(--or)}
-    .search-field select option{background:#0d1b2a}
-
-    /* ══ PAIN SECTION ══ */
-    .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .pain-card{
-      border:1px solid var(--bdr);border-radius:var(--radius);
-      background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.015));
-      padding:26px;transition:.2s
-    }
-    .pain-card:hover{border-color:rgba(191,150,80,.28)}
-    .pain-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
-    .pain-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or)}
-    .pain-badge{font-size:.66rem;padding:5px 10px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.50)}
-    .pain-card h3{font-size:1.5rem;margin-bottom:10px}
-    .pain-card p{color:rgba(248,244,238,.54);margin-bottom:16px;font-size:.9rem}
-    .pain-list{display:flex;flex-direction:column;gap:9px}
-    .pain-list span{font-size:.83rem;color:rgba(248,244,238,.56)}
-    .pain-list span::before{content:"—";color:var(--or);margin-right:8px}
-
-    /* ══ VALUE GRID ══ */
-    .value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    .value-card{
-      border:1px solid var(--bdr);border-radius:var(--radius);
-      background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));
-      padding:22px;transition:.2s
-    }
-    .value-card:hover{border-color:var(--bds);transform:translateY(-2px)}
-    .value-icon{
-      width:48px;height:48px;border-radius:16px;margin-bottom:14px;
-      border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;
-      color:var(--or);font-size:1.05rem;background:rgba(191,150,80,.08)
-    }
-    .value-card h3{font-size:1.15rem;margin-bottom:7px}
-    .value-card p{font-size:.84rem;color:rgba(248,244,238,.50)}
-
-    /* ══ HOW IT WORKS ══ */
-    .how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    .how-card{
-      position:relative;padding:26px;border:1px solid var(--bdr);
-      border-radius:var(--radius);background:rgba(7,24,43,.4)
-    }
-    .how-num{
-      font-family:'Playfair Display',serif;font-size:3rem;line-height:1;color:rgba(191,150,80,.14);margin-bottom:12px
-    }
-    .how-card h3{font-size:1.12rem;margin-bottom:7px}
-    .how-card p{font-size:.83rem;color:rgba(248,244,238,.48)}
-
-    /* ══ SOCIAL PROOF ══ */
-    .social-proof-section{background:rgba(7,24,43,.28);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);overflow:hidden}
-    .ticker-wrap{width:100%;overflow:hidden;padding:16px 0;mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent)}
-    .ticker-track{display:flex;gap:28px;width:max-content;animation:ticker 40s linear infinite}
-    .ticker-track:hover{animation-play-state:paused}
-    @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    .proof-stat{display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0}
-    .proof-stat strong{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;color:var(--or)}
-    .proof-stat span{font-size:.76rem;color:rgba(248,244,238,.45)}
-    .proof-sep{color:rgba(191,150,80,.3);font-size:1rem;flex-shrink:0}
-
-    /* ══ DIFFERENTIATOR ══ */
-    .proofs-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
-    .proof-card-2{
-      border:1px solid var(--bdr);border-radius:var(--radius);
-      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-      padding:30px
-    }
-    .proof-card-2 h3{font-size:1.65rem;margin-bottom:10px}
-    .proof-card-2 p{color:rgba(248,244,238,.54);margin-bottom:18px;font-size:.94rem}
-    .proof-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .proof-item{
-      border:1px solid rgba(191,150,80,.12);border-radius:22px;padding:16px;background:rgba(255,255,255,.02)
-    }
-    .proof-item strong{display:block;font-size:.93rem;margin-bottom:4px}
-    .proof-item span{font-size:.76rem;color:rgba(248,244,238,.44)}
-
-    /* ══ LISTINGS ══ */
-    /* ══ LISTING GRID — 4 colonnes style Manda ══ */
-    .listing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    .listing-card{
-      border:1px solid var(--bdr);border-radius:16px;
-      background:var(--card);overflow:hidden;
-      transition:.28s ease;cursor:pointer;
-      display:flex;flex-direction:column;
-    }
-    .listing-card:hover{border-color:var(--bds);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.28)}
-    .listing-card:hover .listing-cta-overlay{opacity:1}
-    .listing-media{height:190px;position:relative;overflow:hidden}
-    .listing-media-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-    .listing-media-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,rgba(11,32,57,.85) 100%)}
-    .listing-cta-overlay{
-      position:absolute;inset:0;background:rgba(7,24,43,.65);backdrop-filter:blur(4px);
-      display:flex;align-items:center;justify-content:center;opacity:0;transition:.22s
-    }
-    .listing-badge{
-      position:absolute;top:10px;left:10px;z-index:2;
-      background:rgba(191,150,80,.9);color:#0a0a0a;
-      font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
-      padding:4px 9px;border-radius:999px;font-weight:700
-    }
-    .listing-avail{
-      position:absolute;top:10px;right:10px;z-index:2;
-      background:rgba(0,200,117,.12);border:1px solid rgba(0,200,117,.35);color:#00C875;
-      font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
-      padding:4px 9px;border-radius:999px;display:flex;align-items:center;gap:4px
-    }
-    .listing-avail::before{content:"";width:5px;height:5px;border-radius:50%;background:#00C875}
-    .listing-body{padding:13px 14px;flex:1;display:flex;flex-direction:column;gap:5px}
-    .listing-body h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;line-height:1.2;margin:0}
-    .listing-meta{font-size:.72rem;color:rgba(248,244,238,.4);display:flex;align-items:center;gap:5px}
-    .listing-meta::before{content:"📍";font-size:.64rem}
-    .listing-specs{display:flex;flex-wrap:wrap;gap:4px}
-    .listing-spec{font-size:.64rem;padding:2px 7px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.58);background:rgba(191,150,80,.05)}
-    .listing-desc{font-size:.76rem;color:rgba(248,244,238,.46);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;text-align:left}
-    .listing-price-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid rgba(191,150,80,.1);margin-top:auto}
-    .listing-price strong{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;color:var(--or)}
-    .listing-price small{font-size:.6rem;color:rgba(248,244,238,.35);display:block}
-
-
-    /* Apartment SVG illustrations */
-    .apt-bg-1{background:linear-gradient(145deg,#0e1f12 0%,#1c2d10 30%,#0f1e2a 60%,#0a1520 100%)}
-    .apt-bg-2{background:linear-gradient(145deg,#1a1008 0%,#2d1f0a 35%,#1a2830 60%,#081520 100%)}
-    .apt-bg-3{background:linear-gradient(145deg,#08101a 0%,#0f1a28 35%,#1a1508 60%,#0d1d15 100%)}
-
-    /* ══ CTA FINAL ══ */
-    .cta-band{
-      border:1px solid var(--bdr);border-radius:36px;padding:36px;
-      background:linear-gradient(160deg, rgba(191,150,80,.08), rgba(255,255,255,.02))
-    }
-    .section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:28px}
-    .section-head h2{font-size:var(--fs-h2);max-width:600px}
-    .section-head-desc{max-width:480px;color:rgba(248,244,238,.52);font-size:.94rem}
-    .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .cta-box{
-      border:1px solid rgba(191,150,80,.14);border-radius:28px;padding:28px;background:rgba(7,24,43,.32);transition:.2s
-    }
-    .cta-box:hover{border-color:rgba(191,150,80,.30)}
-    .cta-box h3{font-size:1.5rem;margin-bottom:8px}
-    .cta-box p{color:rgba(248,244,238,.54);margin-bottom:18px;font-size:.92rem}
-
-    /* ══ TESTIMONIALS ══ */
-    .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
-    .testi-card{
-      border:1px solid var(--bdr);border-radius:22px;padding:22px;
-      background:rgba(7,24,43,.36)
-    }
-    .testi-stars{color:var(--or);font-size:.95rem;margin-bottom:10px;letter-spacing:2px}
-    .testi-quote{font-size:.88rem;color:rgba(248,244,238,.62);line-height:1.6;margin-bottom:14px;font-style:italic}
-    .testi-author{font-size:.76rem;color:rgba(248,244,238,.38);display:flex;align-items:center;gap:8px}
-    .testi-author::before{content:"";width:18px;height:1px;background:rgba(191,150,80,.3)}
-
-    /* ══ FOOTER ══ */
-    footer{padding:40px 0 28px;border-top:1px solid var(--bdr);background:rgba(0,0,0,.15)}
-    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:22px;align-items:start}
-    .foot-kicker{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:9px}
-    .foot-text{max-width:360px;color:rgba(248,244,238,.44);font-size:.88rem}
-    .foot-col a{display:block;color:rgba(248,244,238,.44);font-size:.82rem;margin:9px 0;transition:.2s}
-    .foot-col a:hover{color:var(--or)}
-    .foot-bottom{
-      display:flex;justify-content:space-between;gap:18px;align-items:center;
-      padding-top:20px;margin-top:20px;border-top:1px solid rgba(191,150,80,.08);
-      font-size:.73rem;color:rgba(248,244,238,.30)
-    }
-
-    /* ══ MOTEUR KADDU ══ */
-    .moteur-layout{display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:start}
-    
-    /* Score card */
-    .moteur-score-col{display:flex;flex-direction:column;gap:16px;position:sticky;top:100px}
-    .score-card{
-      border:1px solid var(--bds);border-radius:28px;padding:26px 22px;
-      background:linear-gradient(160deg,rgba(191,150,80,.08),rgba(7,24,43,.6));
-      text-align:center;
-    }
-    .score-label-top{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:18px}
-    .score-ring-wrap{position:relative;width:150px;height:150px;margin:0 auto 14px}
-    .score-ring{width:100%;height:100%}
-    .score-arc{transition:stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1)}
-    .score-center{
-      position:absolute;inset:0;display:flex;flex-direction:column;
-      align-items:center;justify-content:center;gap:0
-    }
-    .score-num{
-      font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:300;
-      color:var(--or);line-height:1;transition:color .3s
-    }
-    .score-slash{font-size:.72rem;color:rgba(248,244,238,.38);margin-top:2px}
-    .score-level{
-      font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-      padding:5px 14px;border-radius:999px;display:inline-block;margin:0 auto 14px;
-      transition:all .3s
-    }
-    .level-fort{background:rgba(0,200,117,.14);color:#77ffbe;border:1px solid rgba(0,200,117,.3)}
-    .level-moyen{background:rgba(245,166,35,.12);color:#ffd180;border:1px solid rgba(245,166,35,.28)}
-    .level-faible{background:rgba(255,107,107,.12);color:#ffb3b3;border:1px solid rgba(255,107,107,.28)}
-    .score-reasons{
-      display:flex;flex-direction:column;gap:6px;margin-bottom:16px;min-height:60px;
-      text-align:left
-    }
-    .score-reason-item{
-      font-size:.76rem;color:rgba(248,244,238,.6);
-      display:flex;align-items:flex-start;gap:7px;padding:5px 8px;
-      border-radius:8px;background:rgba(255,255,255,.03);
-      border:1px solid rgba(191,150,80,.08);line-height:1.4
-    }
-    .score-replay-btn{
-      background:transparent;border:1px solid var(--bdr);color:rgba(248,244,238,.45);
-      font-size:.72rem;padding:8px 16px;border-radius:999px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;letter-spacing:.08em;transition:.2s
-    }
-    .score-replay-btn:hover{border-color:var(--or);color:var(--or)}
-    
-    /* Propriétaire note */
-    .score-owner-note{
-      border:1px solid var(--bdr);border-radius:16px;padding:14px 16px;
-      background:rgba(7,24,43,.4);
-      display:flex;gap:10px;align-items:flex-start;font-size:.78rem
-    }
-    .son-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px}
-    .score-owner-note strong{display:block;color:var(--or);font-size:.74rem;letter-spacing:.06em;margin-bottom:3px}
-    .score-owner-note span{color:rgba(248,244,238,.45);line-height:1.55}
-
-    /* Critères */
-    .criteres-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-    .critere-card{
-      border:1px solid var(--bdr);border-radius:18px;padding:16px;
-      background:rgba(7,24,43,.35);
-      display:flex;align-items:flex-start;gap:12px;
-      transition:.3s;
-    }
-    .critere-card.active{
-      border-color:rgba(191,150,80,.4);
-      background:rgba(191,150,80,.07);
-      box-shadow:0 0 20px rgba(191,150,80,.06)
-    }
-    .critere-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
-    .critere-body{flex:1;min-width:0}
-    .critere-label{font-size:.82rem;font-weight:700;margin-bottom:4px;color:var(--blanc)}
-    .critere-desc{font-size:.74rem;color:rgba(248,244,238,.48);line-height:1.5;margin-bottom:8px}
-    .critere-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
-    .critere-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--orl));width:0;border-radius:2px;transition:width 1s ease}
-    .critere-check{
-      font-size:1rem;color:rgba(248,244,238,.2);flex-shrink:0;transition:.3s;margin-top:1px;line-height:1
-    }
-    .critere-card.active .critere-check{color:var(--green)}
-
-    /* Angles propriétaire / locataire */
-    .angles-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .angle-card{
-      border:1px solid var(--bdr);border-radius:22px;padding:22px;
-      background:rgba(7,24,43,.35);
-    }
-    .angle-proprio{border-color:rgba(191,150,80,.2);background:linear-gradient(160deg,rgba(191,150,80,.07),rgba(7,24,43,.4))}
-    .angle-locataire{border-color:rgba(83,183,255,.15);background:linear-gradient(160deg,rgba(83,183,255,.05),rgba(7,24,43,.4))}
-    .angle-kicker{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
-    .angle-locataire .angle-kicker{color:var(--blue, #53b7ff)}
-    .angle-card h3{font-size:1.15rem;margin-bottom:12px;line-height:1.25}
-    .angle-list{list-style:none;display:flex;flex-direction:column;gap:7px}
-    .angle-list li{font-size:.82rem;color:rgba(248,244,238,.62);display:flex;align-items:flex-start;gap:7px;line-height:1.4}
-    .angle-list li::before{content:"✦";color:var(--or);font-size:.62rem;margin-top:3px;flex-shrink:0}
-    .angle-locataire .angle-list li::before{color:#53b7ff}
-
-    @media(max-width:1100px){
-      .moteur-layout{grid-template-columns:1fr}
-      .moteur-score-col{position:static;flex-direction:row;flex-wrap:wrap}
-      .score-card{flex:1;min-width:260px}
-      .score-owner-note{flex:1;min-width:240px}
-    }
-    @media(max-width:700px){
-      .criteres-grid{grid-template-columns:1fr}
-      .angles-grid{grid-template-columns:1fr}
-      .moteur-score-col{flex-direction:column}
-    }
-
-    /* ══ SEARCH CHIPS ══ */
-    .sr-chip{
-      padding:7px 13px;border:1px solid var(--bdr);border-radius:999px;
-      background:rgba(255,255,255,.03);color:rgba(248,244,238,.55);
-      font-family:'DM Sans',sans-serif;font-size:.76rem;cursor:pointer;transition:.18s
-    }
-    .sr-chip:hover{border-color:rgba(191,150,80,.3);color:var(--txt)}
-    .sr-chip.active{background:rgba(191,150,80,.14);border-color:var(--or);color:var(--or);font-weight:600}
-    .sr-result-mini{
-      border:1px solid var(--bdr);border-radius:12px;overflow:hidden;
-      background:rgba(7,24,43,.5);cursor:pointer;transition:.2s
-    }
-    .sr-result-mini:hover{border-color:var(--bds);transform:translateY(-2px)}
-    .sr-result-mini img{width:100%;height:110px;object-fit:cover;display:block}
-    .sr-result-mini-body{padding:10px}
-    .sr-result-mini-body h4{font-size:.88rem;font-family:'Playfair Display',serif;font-weight:300;margin-bottom:3px}
-    .sr-result-mini-body p{font-size:.72rem;color:var(--muted)}
-    .sr-result-mini-body .price{font-size:.88rem;color:var(--or);margin-top:5px;font-weight:600}
-
-    /* ══ DIFFÉRENCIATION MEUBLÉ / NON MEUBLÉ ══ */
-    /* Badge non meublé — bleu acier sobre */
-    .listing-badge-nm{
-      position:absolute;top:14px;left:14px;z-index:2;
-      background:rgba(74,120,180,.88);color:#e8f0ff;
-      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-      padding:5px 10px;border-radius:999px;font-weight:700;
-      border:1px solid rgba(120,170,240,.3);
-    }
-    /* Card non meublé — bordure et fond légèrement différents */
-    .listing-card.nm{border-color:rgba(74,120,180,.22)}
-    .listing-card.nm:hover{border-color:rgba(74,120,180,.45)}
-    .listing-card.nm .listing-media-overlay{
-      background:linear-gradient(to bottom,transparent 40%,rgba(8,18,36,.88) 100%)
-    }
-    /* Prix et label long terme */
-    .listing-price .bail-tag{
-      display:inline-block;margin-top:3px;
-      font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
-      color:rgba(74,158,255,.75);background:rgba(74,120,180,.12);
-      border:1px solid rgba(74,120,180,.2);
-      padding:2px 8px;border-radius:999px;
-    }
-    /* Specs non meublé — couleur plus neutre */
-    .listing-card.nm .listing-spec{
-      border-color:rgba(74,120,180,.2);
-      background:rgba(74,120,180,.06);
-      color:rgba(248,244,238,.6);
-    }
-    /* CTA "Explorer" meublé */
-    .btn-explorer{
-      background:var(--or);color:#0a0a0a;
-      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-      padding:11px 18px;border-radius:999px;border:none;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;
-      letter-spacing:.08em;text-transform:uppercase;transition:.22s;white-space:nowrap
-    }
-    .btn-explorer:hover{background:var(--orl);transform:translateY(-1px);box-shadow:0 6px 18px rgba(191,150,80,.25)}
-    /* CTA "Postuler" non meublé — plus sobre, long terme */
-    .btn-postuler-lt{
-      background:rgba(74,120,180,.12);color:rgba(148,195,255,.85);
-      border:1px solid rgba(74,120,180,.28);
-      display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-      padding:11px 18px;border-radius:999px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;
-      letter-spacing:.08em;text-transform:uppercase;transition:.22s;white-space:nowrap;
-      text-decoration:none
-    }
-    .btn-postuler-lt:hover{background:rgba(74,120,180,.22);border-color:rgba(74,158,255,.4);color:#b8deff}
-
-    /* ══ RESPONSIVE ══ */
-    @media (max-width:1100px){
-      .hero-grid,.proofs-grid,.footer-grid{grid-template-columns:1fr}
-      .value-grid,.how-grid{grid-template-columns:1fr 1fr}
-      .listing-grid{grid-template-columns:1fr 1fr}
-      .pain-grid,.split-entry,.cta-grid,.proof-list{grid-template-columns:1fr}
-      .hero-panel{min-height:auto}
-      .section-head{flex-direction:column;align-items:start}
-      .search-fields{grid-template-columns:1fr;gap:10px}
-      .testimonials-grid{grid-template-columns:1fr 1fr}
-    }
-    @media (max-width:760px){
-      .nav-links{display:none}
-      .nav-cta .btn-secondary{display:none}
-      .hero{padding:40px 0 20px}
-      .section{padding:64px 0}
-      .value-grid,.how-grid,.listing-grid,.pain-grid,.cta-grid,.testimonials-grid{grid-template-columns:1fr}
-      .container{padding:0 18px}
-      .hero-copy h1{font-size:clamp(2.3rem,9vw,3.2rem)}
-      .hero-pills{gap:8px}
-      .split-entry{grid-template-columns:1fr}
-      .footer-grid{grid-template-columns:1fr 1fr}
-      .foot-bottom{flex-direction:column;align-items:start;gap:6px}
-      .proof-ticker{gap:24px}
-    }
-
-    /* ══ MODAL ══ */
-    .modal-backdrop{
-      position:fixed;inset:0;z-index:200;
-      background:rgba(5,10,18,.88);
-      backdrop-filter:blur(12px);
-      display:flex;align-items:center;justify-content:center;
-      padding:20px;
-      opacity:0;pointer-events:none;
-      transition:opacity .28s ease;
-    }
-    .modal-backdrop.open{opacity:1;pointer-events:all}
-    .modal{
-      background:linear-gradient(160deg,#0b1e33,#081525);
-      border:1px solid var(--bds);
-      border-radius:32px;
-      width:100%;max-width:960px;
-      max-height:90vh;
-      overflow-y:auto;
-      box-shadow:0 32px 80px rgba(0,0,0,.5),0 0 80px rgba(191,150,80,.08);
-      transform:translateY(18px) scale(.98);
-      transition:transform .3s ease, opacity .3s ease;
-      scrollbar-width:thin;scrollbar-color:rgba(191,150,80,.2) transparent;
-    }
-    .modal-backdrop.open .modal{transform:translateY(0) scale(1)}
-    .modal-header{
-      position:sticky;top:0;z-index:10;
-      background:rgba(8,21,37,.92);backdrop-filter:blur(12px);
-      border-bottom:1px solid var(--bdr);
-      padding:18px 24px;
-      display:flex;align-items:center;justify-content:space-between;gap:16px;
-      border-radius:32px 32px 0 0;
-    }
-    .modal-header-left{display:flex;align-items:center;gap:14px}
-    .modal-badge-pill{
-      background:rgba(191,150,80,.15);border:1px solid rgba(191,150,80,.3);
-      color:var(--or);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
-      padding:5px 12px;border-radius:999px;font-weight:600
-    }
-    .modal-avail-pill{
-      background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.3);color:#00C875;
-      font-size:.66rem;padding:5px 12px;border-radius:999px;
-      display:flex;align-items:center;gap:6px
-    }
-    .modal-avail-pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#00C875;animation:pulse 2s infinite}
-    .modal-close{
-      width:38px;height:38px;border-radius:50%;
-      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-      color:rgba(248,244,238,.6);font-size:1.1rem;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      transition:.2s;flex-shrink:0
-    }
-    .modal-close:hover{background:rgba(191,150,80,.15);color:var(--or);border-color:rgba(191,150,80,.3)}
-
-    /* Gallery */
-    .modal-gallery{
-      position:relative;
-      height:clamp(300px, 56vh, 500px);
-      overflow:hidden;cursor:pointer;
-      background:#060e1a;
-    }
-    @media(max-width:640px){.modal-gallery{height:clamp(260px,60vw,380px)}}
-    .gallery-track{
-      display:flex;height:100%;
-      transition:transform .38s cubic-bezier(.4,0,.2,1);
-    }
-    .gallery-slide{
-      min-width:100%;height:100%;position:relative;flex-shrink:0;
-      overflow:hidden;
-    }
-    /* Fond flouté (même image, agrandie et floutée) — visible sur photos portrait */
-    .gallery-slide-bg{
-      position:absolute;inset:-10%;
-      background-size:cover;background-position:center;
-      filter:blur(22px) brightness(.45) saturate(.8);
-      transform:scale(1.1);
-      z-index:0;
-    }
-    /* Photo principale centrée par-dessus le fond */
-    .gallery-slide img{
-      position:relative;z-index:1;
-      max-width:100%;max-height:100%;
-      width:auto;height:auto;
-      object-fit:contain;
-      display:block;
-      margin:0 auto;
-      /* Légère ombre pour détacher la photo du fond flouté */
-      filter:drop-shadow(0 2px 18px rgba(0,0,0,.45));
-    }
-    /* Pour les photos paysage : on les laisse couvrir toute la surface */
-    .gallery-slide.is-landscape img{
-      width:100%;height:100%;
-      object-fit:cover;
-      filter:none;
-    }
-    .gallery-slide.is-landscape .gallery-slide-bg{
-      display:none;
-    }
-    .gallery-slide .slide-placeholder{
-      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-      font-size:.8rem;color:rgba(248,244,238,.3);letter-spacing:.1em;text-transform:uppercase;
-      position:relative;z-index:1;
-    }
-    .gallery-overlay{
-      position:absolute;inset:0;z-index:2;
-      background:linear-gradient(to bottom, transparent 55%, rgba(8,21,37,.6) 100%);
-      pointer-events:none
-    }
-    .gallery-nav{
-      position:absolute;top:50%;transform:translateY(-50%);
-      width:44px;height:44px;border-radius:50%;
-      background:rgba(8,21,37,.72);backdrop-filter:blur(8px);
-      border:1px solid var(--bdr);color:var(--blanc);
-      cursor:pointer;display:flex;align-items:center;justify-content:center;
-      font-size:1.1rem;transition:.2s;z-index:5;
-      pointer-events:all
-    }
-    .gallery-nav:hover{background:rgba(191,150,80,.25);border-color:var(--or)}
-    .gallery-prev{left:14px}
-    .gallery-next{right:14px}
-    .gallery-dots{
-      position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
-      display:flex;gap:6px;z-index:5
-    }
-    .gallery-dot{
-      width:6px;height:6px;border-radius:50%;
-      background:rgba(248,244,238,.3);border:none;cursor:pointer;padding:0;transition:.2s
-    }
-    .gallery-dot.active{background:var(--or);width:18px;border-radius:3px}
-    .gallery-counter{
-      position:absolute;bottom:14px;right:14px;z-index:5;
-      background:rgba(0,0,0,.45);backdrop-filter:blur(6px);
-      color:rgba(248,244,238,.7);font-size:.72rem;padding:4px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.08)
-    }
-
-    /* Modal body */
-    .modal-body{padding:28px}
-    .modal-title-row{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:6px}
-    .modal-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;line-height:1.1}
-    .modal-title em{font-style:italic;color:var(--or)}
-    .modal-location{font-size:.85rem;color:rgba(248,244,238,.42);margin-bottom:18px;display:flex;align-items:center;gap:6px}
-    .modal-location::before{content:"📍";font-size:.8rem}
-    .modal-specs-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
-    .modal-spec{
-      background:rgba(191,150,80,.09);border:1px solid rgba(191,150,80,.2);
-      color:rgba(248,244,238,.75);font-size:.76rem;padding:6px 14px;border-radius:999px
-    }
-    .modal-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;margin-bottom:24px}
-    @media(max-width:680px){.modal-grid{grid-template-columns:1fr}}
-    .modal-desc-label{
-      font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px
-    }
-    .modal-desc{font-size:.92rem;color:rgba(248,244,238,.6);line-height:1.7;margin-bottom:18px}
-    .modal-equip-list{display:flex;flex-direction:column;gap:8px}
-    .modal-equip-item{
-      display:flex;align-items:center;gap:10px;
-      font-size:.84rem;color:rgba(248,244,238,.62);
-      padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.025);
-      border:1px solid rgba(191,150,80,.08)
-    }
-    .modal-equip-item span:first-child{font-size:1rem}
-    .modal-conditions{
-      background:rgba(7,24,43,.5);border:1px solid var(--bdr);
-      border-radius:18px;padding:18px;margin-bottom:22px
-    }
-    .modal-conditions-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:10px}
-    .modal-cond-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(191,150,80,.07);font-size:.86rem}
-    .modal-cond-row:last-child{border-bottom:none}
-    .modal-cond-label{color:rgba(248,244,238,.45)}
-    .modal-cond-value{color:var(--blanc);font-weight:500}
-    .modal-cta-bar{
-      display:flex;align-items:center;justify-content:space-between;gap:16px;
-      padding:20px 24px;
-      border-top:1px solid var(--bdr);
-      background:rgba(7,24,43,.5);
-      border-radius:0 0 32px 32px;
-      position:sticky;bottom:0;
-      backdrop-filter:blur(12px);
-    }
-    .modal-price-big{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:300;color:var(--or)}
-    .modal-price-sub{font-size:.72rem;color:rgba(248,244,238,.38);margin-top:1px}
-    .modal-cta-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .btn-whatsapp{
-      background:#25D366;color:#fff;
-      display:inline-flex;align-items:center;gap:.6rem;
-      padding:13px 18px;border-radius:999px;
-      font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;letter-spacing:.06em;
-      transition:.2s;border:none;cursor:pointer;text-decoration:none
-    }
-    .btn-whatsapp:hover{background:#20bc59;transform:translateY(-1px)}
-    @media(max-width:600px){
-      .modal-cta-bar{flex-direction:column;align-items:stretch;gap:12px}
-      .modal-cta-actions{flex-direction:column}
-      .modal-cta-actions .btn,.btn-whatsapp{width:100%;justify-content:center}
-    }
-  </style>
-</head>
-<body>
-
-  <!-- ══ NAV ══ -->
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="/" class="brand" aria-label="Kàddu Accueil">
-        <div class="brand-mark">K</div>
-        <div class="brand-text">
-          <div class="brand-name">Kàddu</div>
-          <div class="brand-tag">La parole qui engage</div>
-        </div>
-      </a>
-      <div class="nav-links">
-        <a href="#proprietaires">Propriétaires</a>
-        <a href="#locataires">Locataires</a>
-        <a href="#confiance">Pourquoi Kàddu</a>
-        <a href="#biens">Biens</a>
-      </div>
-      <div class="nav-cta">
-        <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
-        <a class="btn btn-primary" href="#cta-final">Confier mon bien</a>
-      </div>
-    </div>
-  </nav>
-
-  <main>
-    <!-- ══ HERO ══ -->
-    <section class="hero">
-      <div class="container hero-grid">
-
-        <div class="hero-copy">
-          <span class="eyebrow">1ère agence immobilière 100% digitale au Sénégal</span>
-          <h1 style="font-size:clamp(1.6rem,2.8vw,2.6rem);text-align:justify;text-justify:inter-word;line-height:1.15">
-            Appartements vérifiés à Dakar —<br>
-            <em>la seule plateforme qui sécurise<br>le bien et le locataire</em>.
-          </h1>
-          <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px;text-align:justify;text-justify:inter-word">
-            Visitez à distance en 360° et candidatez avec un dossier qualifié — fini les mauvaises surprises.
-          </p>
-          <p style="font-size:.76rem;color:rgba(248,244,238,.38);margin-bottom:20px;letter-spacing:.04em">
-            Dossiers analysés automatiquement · Sélection basée sur des données réelles
-          </p>
-
-          <!-- Chips minimalistes Point 5 -->
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px">
-            <span style="padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;color:rgba(248,244,238,.62);background:rgba(255,255,255,.03);letter-spacing:.06em">Visites 360°</span>
-            <span style="padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;color:rgba(248,244,238,.62);background:rgba(255,255,255,.03);letter-spacing:.06em">Moteur antifraude puissant</span>
-            <span style="padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;font-size:.74rem;color:rgba(248,244,238,.62);background:rgba(255,255,255,.03);letter-spacing:.06em">Dossier 100% digital</span>
-          </div>
-
-          <!-- Search bar fonctionnelle -->
-          <div class="search-bar-wrap">
-            <div class="search-label">Trouver un bien</div>
-            <div class="search-fields">
-              <div class="search-field">
-                <label>Ville</label>
-                <select id="searchVille" onchange="updateQuartiers()">
-                  <option value="">Toutes les villes</option>
-                  <option value="Dakar" selected>Dakar</option>
-                  <option value="Thiès">Thiès</option>
-                  <option value="Saint-Louis">Saint-Louis</option>
-                  <option value="Ziguinchor">Ziguinchor</option>
-                  <option value="Kaolack">Kaolack</option>
-                  <option value="Mbour">Mbour</option>
-                  <option value="Touba">Touba</option>
-                  <option value="Rufisque">Rufisque</option>
-                  <option value="Saly">Saly</option>
-                  <option value="Diourbel">Diourbel</option>
-                  <option value="Tambacounda">Tambacounda</option>
-                </select>
-              </div>
-              <div class="search-field">
-                <label>Quartier</label>
-                <select id="searchQuartier">
-                  <option value="">Tous les quartiers</option>
-                  <optgroup label="Plateau · Centre">
-                    <option>Plateau</option>
-                    <option>Médina</option>
-                    <option>Fann · Point E · Amitié</option>
-                    <option>Gueule Tapée · Fass · Colobane</option>
-                    <option>Gorée</option>
-                  </optgroup>
-                  <optgroup label="Almadies · VDN">
-                    <option>Almadies</option>
-                    <option>Mermoz · Sacré-Cœur</option>
-                    <option>Ngor</option>
-                    <option>Ouakam</option>
-                    <option>Yoff</option>
-                    <option>Sipres VDN</option>
-                    <option>Sipres VDN 2</option>
-                    <option>Les Mamelles</option>
-                  </optgroup>
-                  <optgroup label="Grand Dakar · Sud">
-                    <option>Grand Dakar</option>
-                    <option>HLM</option>
-                    <option>Sicap Liberté</option>
-                    <option>Dieuppeul · Derklé</option>
-                    <option>Biscuiterie</option>
-                    <option>Hann Bel Air</option>
-                    <option>Rebeuss</option>
-                    <option>Colobane</option>
-                  </optgroup>
-                  <optgroup label="Parcelles · Nord">
-                    <option>Parcelles Assainies</option>
-                    <option>Grand Yoff</option>
-                    <option>Cambérène</option>
-                    <option>Patte d'Oie</option>
-                    <option>Liberté</option>
-                  </optgroup>
-                  <optgroup label="Pikine · Guédiawaye">
-                    <option>Pikine</option>
-                    <option>Guédiawaye</option>
-                    <option>Thiaroye</option>
-                    <option>Yeumbeul</option>
-                    <option>Keur Massar</option>
-                  </optgroup>
-                  <optgroup label="Rufisque · Périphérie">
-                    <option>Rufisque</option>
-                    <option>Bargny</option>
-                    <option>Diamniadio</option>
-                    <option>Lac Rose</option>
-                  </optgroup>
-                </select>
-              </div>
-              <div class="search-field">
-                <label>Catégorie</label>
-                <select id="searchCategorie">
-                  <option value="">Meublé & non meublé</option>
-                  <option value="meuble">Meublé</option>
-                  <option value="non_meuble">Non meublé</option>
-                </select>
-              </div>
-              <button class="btn btn-primary btn-lg" onclick="openSearchOverlay()">Rechercher</button>
-            </div>
-          </div>
-
-          <!-- Parcours 3 étapes — Point 6 -->
-          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:16px;font-size:.74rem;color:rgba(248,244,238,.38)">
-            <span style="color:rgba(248,244,238,.55)">① Explorez les biens</span>
-            <span style="color:rgba(191,150,80,.4)">→</span>
-            <span style="color:rgba(248,244,238,.55)">② Visitez de chez vous en 360°</span>
-            <span style="color:rgba(191,150,80,.4)">→</span>
-            <span style="color:rgba(248,244,238,.55)">③ Candidatez en ligne</span>
-          </div>
-        </div>
-
-        <!-- Hero panel: featured property card — chargé dynamiquement depuis Supabase -->
-        <aside class="hero-panel" aria-label="Bien en vedette">
-          <div class="deco-k">K</div>
-          <div class="hero-stack">
-            <div class="metric-row">
-              <div class="metric"><strong>360°</strong><span>Visites immersives</span></div>
-              <div class="metric"><strong>24/7</strong><span>Parcours digital</span></div>
-              <div class="metric"><strong>100%</strong><span>Vérifié Kàddu</span></div>
-            </div>
-
-            <!-- Card du bien coup de cœur — peuplée par JS -->
-            <div class="hero-prop-card" id="heroPropCard">
-              <div class="hero-prop-img apt-bg-1" id="heroPropImg">
-                <div class="hero-prop-img-layer"></div>
-                <div id="heroPropImgInner" style="position:absolute;inset:0;z-index:1"></div>
-                <div class="hero-prop-badge" id="heroPropBadge">Meublé · Coup de cœur</div>
-                <div class="hero-prop-avail" id="heroPropAvail">Disponible</div>
-              </div>
-              <div class="hero-prop-body">
-                <h4 id="heroPropNom">Le Petit <em>Bantukay</em></h4>
-                <div class="hero-prop-meta" id="heroPropMeta">Sipres VDN 2, Dakar · Immeuble AÏDARA</div>
-                <div class="hero-prop-specs" id="heroPropSpecs">
-                  <span class="spec-chip">F3 · 3 pièces</span>
-                  <span class="spec-chip">Climatisé</span>
-                  <span class="spec-chip">WiFi inclus</span>
-                  <span class="spec-chip">Gardiennage</span>
-                </div>
-                <div class="hero-prop-price-row">
-                  <div class="hero-prop-price" id="heroPropPrice">
-                    À partir de 50 000 FCFA
-                    <small>/ nuit · prix selon durée</small>
-                  </div>
-                  <button class="btn btn-primary" id="heroPropBtn" onclick="openHeroBien()">Voir le bien →</button>
-                </div>
-              </div>
-            </div>
-
-            <div style="display:flex;gap:10px;align-items:center;padding:6px 2px">
-              <div style="width:8px;height:8px;border-radius:50%;background:var(--or)"></div>
-              <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
-              <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
-              <span style="font-size:.7rem;color:rgba(248,244,238,.32);margin-left:4px">Sélection premium · Dakar</span>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- ══ PROOF TICKER ══ -->
-    <div class="social-proof-section" style="overflow:hidden">
-      <div class="ticker-wrap">
-        <div class="ticker-track" id="tickerTrack">
-          <div class="proof-stat"><strong>🛡️ Biens vérifiés</strong><span>100% contrôlés sur site</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>🌀 Visites 360°</strong><span>Explorez à distance</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>🔐 Moteur antifraude</strong><span>7 dossiers sur 10 signalés</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>⚡ Réponse 48h</strong><span>Délai garanti</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>💳 Wave · OM · Stripe</strong><span>Paiements locaux & internationaux</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>🌍 Diaspora · Business · Expats</strong><span>Profils accueillis</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>📱 Dossier 100% digital</strong><span>Zéro paperasse</span></div>
-          <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>1ère agence digitale</strong><span>au Sénégal</span></div>
-          <div class="proof-sep">·</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ PAIN ══ -->
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Le constat marché</span>
-            <h2>Le même système déçoit <em>les deux côtés</em>.</h2>
-          </div>
-          <p class="section-head-desc">Le problème n'est pas l'offre ou la demande. C'est l'expérience : trop peu de transparence pour les propriétaires, trop peu de sérieux pour les locataires.</p>
-        </div>
-        <div class="pain-grid">
-          <article class="pain-card" id="proprietaires">
-            <div class="pain-top">
-              <div class="pain-label">Propriétaires</div>
-              <div class="pain-badge">Frustration terrain</div>
-            </div>
-            <h3>Usés par des agences qui <em>encaissent</em> sans vraiment servir</h3>
-            <p>Manque de réactivité, reporting pauvre, absence de différenciation, peu de visibilité sur la qualité réelle des candidats.</p>
-            <div class="pain-list">
-              <span>Peu de suivi après signature</span>
-              <span>Communication floue ou tardive</span>
-              <span>Peu de valeur ajoutée perçue</span>
-            </div>
-          </article>
-          <article class="pain-card" id="locataires">
-            <div class="pain-top">
-              <div class="pain-label">Locataires</div>
-              <div class="pain-badge">Frustration terrain</div>
-            </div>
-            <h3>Déçus par des visites et intermédiaires qui <em>dégradent</em> le dossier</h3>
-            <p>Temps perdu, annonces peu fiables, attentes mal gérées, et des pratiques qui desservent le candidat sérieux.</p>
-            <div class="pain-list">
-              <span>Visites inutiles ou mal préparées</span>
-              <span>Dossier mal valorisé</span>
-              <span>Manque de confiance dans le processus</span>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ VALUE ══ -->
-    <section class="section" id="confiance">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Pourquoi Kàddu</span>
-            <h2>Une réponse pensée comme un <em>système de confiance</em>.</h2>
-          </div>
-          <p class="section-head-desc">Kàddu apporte des preuves, de la structure et une meilleure orchestration du parcours — du bien jusqu'au dossier.</p>
-        </div>
-        <div class="value-grid">
-          <article class="value-card">
-            <div class="value-icon">🔐</div>
-            <h3>Vérification intelligente</h3>
-            <p>Dossier digital structuré, scoring automatique et logique de qualification antifraude en support de décision.</p>
-          </article>
-          <article class="value-card">
-            <div class="value-icon">🌀</div>
-            <h3>Visites 360°</h3>
-            <p>Moins de déplacements inutiles, meilleure projection, et meilleure perception de la qualité du bien.</p>
-          </article>
-          <article class="value-card">
-            <div class="value-icon">⚡</div>
-            <h3>Réactivité digitale</h3>
-            <p>Une plateforme plus rapide et plus claire que des échanges éclatés entre agences, courtiers et WhatsApp.</p>
-          </article>
-          <article class="value-card">
-            <div class="value-icon">💳</div>
-            <h3>Paiements adaptés</h3>
-            <p>Wave, Orange Money, Stripe, virement : une expérience pensée pour les usages réels du marché sénégalais.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ MOTEUR KADDU — SECTION ANTIFRAUDE ══ -->
-    <section class="section" id="moteur">
-      <div class="container">
-
-        <!-- Stat choc — Point 2 -->
-        <div style="
-          display:flex;align-items:center;gap:20px;
-          border:1px solid rgba(191,150,80,.22);border-radius:18px;
-          background:linear-gradient(135deg,rgba(191,150,80,.07),rgba(7,24,43,.5));
-          padding:18px 24px;margin-bottom:36px;flex-wrap:wrap
-        ">
-          <div style="font-size:2.4rem;flex-shrink:0">🔍</div>
-          <div>
-            <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:300;margin-bottom:4px">
-              En moyenne, <em style="color:var(--or);font-style:italic">7 dossiers sur 10</em> reçus sans Kàddu présentent des incohérences détectées par notre moteur.
-            </div>
-            <div style="font-size:.76rem;color:rgba(248,244,238,.38);letter-spacing:.06em">
-              Identité · Revenus · Situation locative · Cohérence documentaire
-            </div>
-          </div>
-        </div>
-
-        <div class="section-head" style="margin-bottom:40px">
-          <div>
-            <span class="eyebrow">Le moteur Kàddu</span>
-            <h2>La qualification, <em>pas la sélection au hasard</em>.</h2>
-          </div>
-          <p class="section-head-desc">Kàddu ne se contente pas de collecter un dossier. Chaque candidature est analysée sur 4 dimensions et produit un score de confiance exploitable par le propriétaire.</p>
-        </div>
-
-        <!-- Score demo + 4 critères -->
-        <div class="moteur-layout">
-
-          <!-- LEFT : Score visuel animé -->
-          <div class="moteur-score-col">
-            <div class="score-card" id="scoreCard">
-              <div class="score-label-top">Score de confiance</div>
-              <div class="score-ring-wrap">
-                <svg class="score-ring" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(191,150,80,.1)" stroke-width="8"/>
-                  <circle cx="60" cy="60" r="50" fill="none" stroke="url(#scoreGrad)" stroke-width="8"
-                    stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314"
-                    class="score-arc" id="scoreArc" transform="rotate(-90 60 60)"/>
-                  <defs>
-                    <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#BF9650"/>
-                      <stop offset="100%" stop-color="#DDB96E"/>
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div class="score-center">
-                  <span class="score-num" id="scoreNum">0</span>
-                  <span class="score-slash">/ 100</span>
-                </div>
-              </div>
-              <div class="score-level" id="scoreLevel">—</div>
-              <div class="score-reasons" id="scoreReasons"></div>
-
-              <!-- Sélecteur de scénario -->
-              <div style="margin-bottom:10px">
-                <div style="font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.3);margin-bottom:8px;text-align:center">Choisir un profil</div>
-                <div style="display:flex;gap:6px;justify-content:center">
-                  <button class="scenario-btn active" data-scenario="fort" onclick="selectScenario('fort',this)" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(0,200,117,.35);background:rgba(0,200,117,.1);color:#77ffbe;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s">
-                    ✅ Fort
-                  </button>
-                  <button class="scenario-btn" data-scenario="moyen" onclick="selectScenario('moyen',this)" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(245,166,35,.3);background:rgba(245,166,35,.07);color:#ffd180;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s">
-                    ⚠️ Moyen
-                  </button>
-                  <button class="scenario-btn" data-scenario="faible" onclick="selectScenario('faible',this)" style="flex:1;padding:7px 10px;border-radius:8px;border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.07);color:#ffb3b3;font-size:.72rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s">
-                    ❌ Faible
-                  </button>
-                </div>
-              </div>
-              <button class="score-replay-btn" id="scoreReplay">↺ Rejouer</button>
-            </div>
-
-            <!-- Note propriétaire -->
-            <div class="score-owner-note">
-              <div class="son-icon">🔐</div>
-              <div>
-                <strong>Visible propriétaire uniquement</strong>
-                <span>Le score 0-100 et les signaux détectés sont accessibles dans le tableau de bord admin — jamais exposés au locataire.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- RIGHT : 4 critères + deux angles -->
-          <div class="moteur-right">
-
-            <!-- 4 piliers -->
-            <div class="criteres-grid" id="criteresGrid">
-              <div class="critere-card" id="crit-identite">
-                <div class="critere-icon">🪪</div>
-                <div class="critere-body">
-                  <div class="critere-label">Identité</div>
-                  <div class="critere-desc">Vérification du nom, prénom, date de naissance et numéro de téléphone avec OTP.</div>
-                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
-                </div>
-                <div class="critere-check" id="chk-identite">○</div>
-              </div>
-              <div class="critere-card" id="crit-revenus">
-                <div class="critere-icon">💼</div>
-                <div class="critere-body">
-                  <div class="critere-label">Capacité financière</div>
-                  <div class="critere-desc">Statut professionnel, niveau de revenus déclarés et cohérence avec le loyer visé.</div>
-                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
-                </div>
-                <div class="critere-check" id="chk-revenus">○</div>
-              </div>
-              <div class="critere-card" id="crit-locatif">
-                <div class="critere-icon">🏠</div>
-                <div class="critere-body">
-                  <div class="critere-label">Situation locative</div>
-                  <div class="critere-desc">Historique locatif, motif de recherche, nombre d'occupants et projet de séjour.</div>
-                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
-                </div>
-                <div class="critere-check" id="chk-locatif">○</div>
-              </div>
-              <div class="critere-card" id="crit-docs">
-                <div class="critere-icon">📎</div>
-                <div class="critere-body">
-                  <div class="critere-label">Documents</div>
-                  <div class="critere-desc">Pièce d'identité, justificatif de revenus ou d'activité, et cohérence documentaire globale.</div>
-                  <div class="critere-bar"><div class="critere-fill" data-w="0"></div></div>
-                </div>
-                <div class="critere-check" id="chk-docs">○</div>
-              </div>
-            </div>
-
-            <!-- Deux angles : propriétaire / locataire -->
-            <div class="angles-grid">
-              <div class="angle-card angle-proprio">
-                <div class="angle-kicker">Pour le propriétaire</div>
-                <h3>Moins de temps perdu,<br><em>plus de signaux utiles</em>.</h3>
-                <ul class="angle-list">
-                  <li>Score de confiance 0-100 par candidature</li>
-                  <li>Motifs détaillés : points forts et signaux d'alerte</li>
-                  <li>Classement automatique des candidats</li>
-                  <li>Décision éclairée, pas intuitive</li>
-                </ul>
-                <a class="btn btn-primary btn-sm" href="#cta-final" style="margin-top:16px;width:fit-content">Confier mon bien →</a>
-              </div>
-              <div class="angle-card angle-locataire">
-                <div class="angle-kicker">Pour le locataire</div>
-                <h3>Votre sérieux <em>enfin reconnu</em><br>et valorisé.</h3>
-                <ul class="angle-list">
-                  <li>Dossier guidé, structuré et complet</li>
-                  <li>Les candidats sérieux ne sont plus noyés dans la masse</li>
-                  <li>Processus transparent, réponse rapide</li>
-                  <li>Aucun frais de dossier via Kàddu</li>
-                </ul>
-                <a class="btn btn-secondary btn-sm" href="/tunnel/dossier-v2-step1.html" style="margin-top:16px;width:fit-content">Déposer mon dossier →</a>
-              </div>
-            </div>
-
-          </div><!-- /moteur-right -->
-        </div><!-- /moteur-layout -->
-
-      </div>
-    </section>
-
-    <!-- ══ HOW IT WORKS ══ -->
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Comment ça marche</span>
-            <h2>Un parcours simple, pour <em>les deux parties</em>.</h2>
-          </div>
-          <p class="section-head-desc">Kàddu simplifie ce qui est souvent mal exécuté : présentation du bien, qualification, dossier, échanges, décision.</p>
-        </div>
-        <div class="how-grid">
-          <article class="how-card">
-            <div class="how-num">01</div>
-            <h3>Le bien est mieux présenté</h3>
-            <p>Contenu premium, meilleure lisibilité, et plus de projection dès la première visite digitale.</p>
-          </article>
-          <article class="how-card">
-            <div class="how-num">02</div>
-            <h3>Le locataire se qualifie</h3>
-            <p>Le dossier devient un outil de clarté, pas un obstacle opaque ni une source de pénalisation.</p>
-          </article>
-          <article class="how-card">
-            <div class="how-num">03</div>
-            <h3>Le propriétaire reprend la main</h3>
-            <p>Moins de bruit, plus de signaux utiles, et une lecture plus nette des candidatures reçues.</p>
-          </article>
-          <article class="how-card">
-            <div class="how-num">04</div>
-            <h3>La relation devient plus saine</h3>
-            <p>Moins de perte de temps, plus de confiance, et une meilleure qualité de service des deux côtés.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ DIFFERENTIATOR ══ -->
-    <section class="section">
-      <div class="container proofs-grid">
-        <article class="proof-card-2">
-          <span class="eyebrow">Ce qui différencie Kàddu</span>
-          <h3>Pas une agence de plus. Une <em>expérience immobilière orchestrée</em>.</h3>
-          <p>Le rôle de Kàddu n'est pas seulement de diffuser un bien. La plateforme organise la confiance entre les deux parties : meilleure présentation, meilleure qualification, meilleure expérience.</p>
-          <a class="btn btn-primary" href="#biens">Découvrir les biens disponibles →</a>
-        </article>
-        <div class="proof-list">
-          <div class="proof-item">
-            <strong>Dossier locataire guidé</strong>
-            <span>Un dépôt plus fluide, plus clair, mieux valorisé côté candidat.</span>
-          </div>
-          <div class="proof-item">
-            <strong>Antifraude en support</strong>
-            <span>Le digital aide à qualifier, sans alourdir le parcours.</span>
-          </div>
-          <div class="proof-item">
-            <strong>Présentation premium</strong>
-            <span>Le bien inspire plus confiance et gagne en crédibilité.</span>
-          </div>
-          <div class="proof-item">
-            <strong>Canaux de paiement modernes</strong>
-            <span>Pensé pour les usages réels du marché sénégalais.</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ LISTINGS ══ -->
-    <section class="section" id="biens">
-      <div class="container">
-
-        <!-- Titre style Manda -->
-        <div style="text-align:center;margin-bottom:36px">
-          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--or);font-weight:300;margin-bottom:8px">Votre futur bien vous attend</div>
-          <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:400;color:var(--blanc)">Nos dernières annonces</h2>
-        </div>
-
-        <div class="listing-grid" id="listingGrid">
-
-          <!-- ── BANTUKAY · Meublé ── -->
-          <article class="listing-card" data-bien="bantukay" style="cursor:pointer">
-            <div class="listing-media apt-bg-1">
-              <div class="listing-media-inner">
-                <img src="/assets/images/biens/meubles/bantukay-01.jpeg"
-                     alt="Le Petit Bantukay"
-                     style="width:100%;height:100%;object-fit:cover;display:block"
-                     onerror="this.style.display='none'">
-              </div>
-              <div class="listing-media-overlay"></div>
-              <div class="listing-badge">Meublé</div>
-              <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>
-              <div class="listing-cta-overlay">
-                <button class="btn-explorer" onclick="openModal('bantukay')">Voir le bien →</button>
-              </div>
-            </div>
-            <div class="listing-body">
-              <h3>Le Petit <em>Bantukay</em></h3>
-              <div class="listing-meta">Sipres VDN 2, Dakar</div>
-              <div class="listing-specs">
-                <span class="listing-spec">F3 · 3 pièces</span>
-                <span class="listing-spec">Climatisé</span>
-                <span class="listing-spec">WiFi inclus</span>
-                <span class="listing-spec">Gardiennage</span>
-              </div>
-              <div class="listing-desc">Appartement meublé premium avec salon spacieux, chambre principale et chambre d'appoint. Idéal pour séjours business ou diaspora.</div>
-              <div class="listing-price-row">
-                <div class="listing-price">
-                  <strong>50 000 FCFA</strong>
-                  <small>/ nuit · tarif mensuel disponible</small>
-                </div>
-                <button class="btn-explorer" onclick="openModal('bantukay')">Voir le bien →</button>
-              </div>
-            </div>
-          </article>
-
-          <!-- ── SUXALIKAY · Meublé ── -->
-          <article class="listing-card" data-bien="suxalikay" style="cursor:pointer">
-            <div class="listing-media apt-bg-2">
-              <div class="listing-media-inner">
-                <img src="/assets/images/biens/meubles/suxalikay-01.jpeg"
-                     alt="Le Petit Suxalikay"
-                     style="width:100%;height:100%;object-fit:cover;display:block"
-                     onerror="this.style.display='none'">
-              </div>
-              <div class="listing-media-overlay"></div>
-              <div class="listing-badge">Meublé</div>
-              <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>
-              <div class="listing-cta-overlay">
-                <button class="btn-explorer" onclick="openModal('suxalikay')">Voir le bien →</button>
-              </div>
-            </div>
-            <div class="listing-body">
-              <h3>Le Petit <em>Suxalikay</em></h3>
-              <div class="listing-meta">Sipres VDN 2, Dakar</div>
-              <div class="listing-specs">
-                <span class="listing-spec">F2 · 2 pièces</span>
-                <span class="listing-spec">Cuisine équipée</span>
-                <span class="listing-spec">WiFi</span>
-                <span class="listing-spec">Sécurisé</span>
-              </div>
-              <div class="listing-desc">Studio haut de gamme avec cuisine américaine équipée. Parfait pour un séjour de travail ou une mission de courte durée.</div>
-              <div class="listing-price-row">
-                <div class="listing-price">
-                  <strong>Sur demande</strong>
-                  <small>Visite digitale 360° disponible</small>
-                </div>
-                <button class="btn-explorer" onclick="openModal('suxalikay')">Voir le bien →</button>
-              </div>
-            </div>
-          </article>
-
-          <!-- ── NOPALUKAY · Meublé ── -->
-          <article class="listing-card" data-bien="nopalukay" style="cursor:pointer">
-            <div class="listing-media apt-bg-3">
-              <div class="listing-media-inner">
-                <img src="/assets/images/biens/meubles/nopalukay-01.jpeg"
-                     alt="Le Petit Nopalukay"
-                     style="width:100%;height:100%;object-fit:cover;display:block"
-                     onerror="this.style.display='none'">
-              </div>
-              <div class="listing-media-overlay"></div>
-              <div class="listing-badge">Meublé</div>
-              <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>
-              <div class="listing-cta-overlay">
-                <button class="btn-explorer" onclick="openModal('nopalukay')">Voir le bien →</button>
-              </div>
-            </div>
-            <div class="listing-body">
-              <h3>Le Petit <em>Nopalukay</em></h3>
-              <div class="listing-meta">Sipres VDN 2, Dakar</div>
-              <div class="listing-specs">
-                <span class="listing-spec">F3 · Salon séparé</span>
-                <span class="listing-spec">Climatisé</span>
-                <span class="listing-spec">Netflix</span>
-                <span class="listing-spec">Gardiennage</span>
-              </div>
-              <div class="listing-desc">Appartement lumineux avec salon séparé, idéal pour familles ou couples. Atmosphère cosy et équipements haut de gamme.</div>
-              <div class="listing-price-row">
-                <div class="listing-price">
-                  <strong>Dossier prioritaire</strong>
-                  <small>Déposez votre candidature</small>
-                </div>
-                <button class="btn-explorer" onclick="openModal('nopalukay')">Voir le bien →</button>
-              </div>
-            </div>
-          </article>
-
-          <!-- ── NOFLAY · Non meublé ── -->
-          <article class="listing-card nm" data-bien="noflay" style="cursor:pointer">
-            <div class="listing-media" style="background:linear-gradient(145deg,#0d1824,#101c30,#0a1420)">
-              <div class="listing-media-inner">
-                <img src="/assets/images/biens/non-meubles/noflay-01.jpeg"
-                     alt="Noflay Étage 3A"
-                     style="width:100%;height:100%;object-fit:cover;display:block"
-                     onerror="this.style.display='none'">
-              </div>
-              <div class="listing-media-overlay"></div>
-              <span class="listing-badge-nm">Non meublé</span>
-              <div class="listing-avail">Disponible</div>
-              <div class="listing-cta-overlay">
-                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Noflay%20Etage%203A">Postuler →</a>
-              </div>
-            </div>
-            <div class="listing-body">
-              <h3>Noflay <em>Étage 3A</em></h3>
-              <div class="listing-meta">Sipres VDN 2, Dakar</div>
-              <div class="listing-specs">
-                <span class="listing-spec">3ème étage</span>
-                <span class="listing-spec">Lumineux</span>
-                <span class="listing-spec">Gardiennage</span>
-                <span class="listing-spec">Parking</span>
-              </div>
-              <div class="listing-desc">Appartement vide au 3ème étage, idéal pour une installation durable. Quartier résidentiel calme, immeuble sécurisé, parking inclus.</div>
-              <div class="listing-price-row">
-                <div class="listing-price">
-                  <strong>Sur demande</strong>
-                  <span class="bail-tag">Bail longue durée</span>
-                </div>
-                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Noflay%20Etage%203A">Postuler →</a>
-              </div>
-            </div>
-          </article>
-
-          <!-- ── DALAL · Non meublé ── -->
-          <article class="listing-card nm" data-bien="dalal" style="cursor:pointer">
-            <div class="listing-media" style="background:linear-gradient(145deg,#0e1520,#141e2c,#0a1018)">
-              <div class="listing-media-inner">
-                <img src="/assets/images/biens/non-meubles/dalal-01.jpeg"
-                     alt="Dalal Étage 1A"
-                     style="width:100%;height:100%;object-fit:cover;display:block"
-                     onerror="this.style.display='none'">
-              </div>
-              <div class="listing-media-overlay"></div>
-              <span class="listing-badge-nm">Non meublé</span>
-              <div class="listing-avail">Disponible</div>
-              <div class="listing-cta-overlay">
-                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Dalal%20Etage%201A">Postuler →</a>
-              </div>
-            </div>
-            <div class="listing-body">
-              <h3>Dalal <em>Étage 1A</em></h3>
-              <div class="listing-meta">Sipres VDN 2, Dakar</div>
-              <div class="listing-specs">
-                <span class="listing-spec">1er étage</span>
-                <span class="listing-spec">Accessible</span>
-                <span class="listing-spec">Parking</span>
-                <span class="listing-spec">Sécurisé</span>
-              </div>
-              <div class="listing-desc">Appartement vide au 1er étage, accès facile, parking sécurisé. Parfait pour une famille ou un professionnel cherchant à s'établir durablement.</div>
-              <div class="listing-price-row">
-                <div class="listing-price">
-                  <strong>Sur demande</strong>
-                  <span class="bail-tag">Bail longue durée</span>
-                </div>
-                <a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=Dalal%20Etage%201A">Postuler →</a>
-              </div>
-            </div>
-          </article>
-
-        </div>
-
-        <!-- Bouton découvrir tous les logements -->
-        <div style="text-align:center;margin-top:32px">
-          <a href="/biens/" class="btn btn-secondary" style="padding:14px 32px;font-size:.82rem;border-radius:999px;letter-spacing:.1em;display:inline-flex;align-items:center;gap:8px">
-            Découvrir tous nos logements →
-          </a>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ══ TESTIMONIALS ══ -->
-    <section class="section">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Ce que disent nos locataires</span>
-            <h2>Une expérience qui <em>rassure</em> avant même l'arrivée.</h2>
-          </div>
-        </div>
-        <div class="testimonials-grid">
-          <div class="testi-card">
-            <div class="testi-stars">★★★★★</div>
-            <p class="testi-quote">« Depuis Paris, j'ai pu tout faire à distance. Le dossier est clair, la réponse rapide, et l'appartement était exactement comme présenté. Zéro mauvaise surprise. »</p>
-            <div class="testi-author">Mariama D. — Paris, séjour 3 semaines</div>
-          </div>
-          <div class="testi-card">
-            <div class="testi-stars">★★★★★</div>
-            <p class="testi-quote">« J'avais essayé d'autres agences avant. Avec Kàddu c'est différent — on sait exactement ce qu'on fait, pourquoi, et on reçoit une vraie réponse. »</p>
-            <div class="testi-author">Cheikh B. — Mission business Dakar</div>
-          </div>
-          <div class="testi-card">
-            <div class="testi-stars">★★★★★</div>
-            <p class="testi-quote">« Le Petit Bantukay est exactement ce qu'il faut pour un séjour prolongé. Tout est pensé. J'ai payé via Wave sans friction. Je reviens sans hésiter. »</p>
-            <div class="testi-author">Fatou K. — Dakar, séjour mensuel</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══ CTA FINAL ══ -->
-    <section class="section" id="cta-final">
-      <div class="container">
-        <div class="cta-band">
-          <div class="section-head" style="margin-bottom:22px">
-            <div>
-              <span class="eyebrow">Choisissez votre entrée</span>
-              <h2>Kàddu répond aux <em>deux frustrations du marché</em>.</h2>
-            </div>
-            <p class="section-head-desc">Une home claire, deux promesses distinctes, et une même logique de confiance.</p>
-          </div>
-          <div class="cta-grid">
-            <article class="cta-box">
-              <h3>Vous êtes <em>propriétaire</em></h3>
-              <p>Vous cherchez une solution plus réactive, plus claire et plus alignée avec la qualité de votre bien à Dakar. Zéro intermédiaire flou.</p>
-              <a class="btn btn-primary btn-lg" href="mailto:contact@kaddu.net?subject=Confier%20mon%20bien%20%C3%A0%20K%C3%A0ddu">Confier mon bien →</a>
-            </article>
-            <article class="cta-box">
-              <h3>Vous êtes <em>locataire</em></h3>
-              <p>Vous voulez éviter les parcours décevants et déposer un dossier sérieux, propre et bien valorisé. Le tunnel prend moins de 10 minutes.</p>
-              <a class="btn btn-secondary btn-lg" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier →</a>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="foot-kicker">Kàddu</div>
-          <div class="foot-text">Plateforme immobilière digitale premium conçue pour réconcilier propriétaires exigeants et locataires sérieux à Dakar.</div>
-        </div>
-        <div class="foot-col">
-          <div class="foot-kicker">Parcours</div>
-          <a href="#proprietaires">Propriétaires</a>
-          <a href="#locataires">Locataires</a>
-          <a href="/tunnel/dossier-v2-step1.html">Dossier locataire</a>
-        </div>
-        <div class="foot-col">
-          <div class="foot-kicker">Plateforme</div>
-          <a href="#confiance">Pourquoi Kàddu</a>
-          <a href="#biens">Biens disponibles</a>
-          <a href="#cta-final">Contact</a>
-        </div>
-        <div class="foot-col">
-          <div class="foot-kicker">Paiements</div>
-          <a href="#">Wave</a>
-          <a href="#">Orange Money</a>
-          <a href="#">Stripe · PayPal · Virement</a>
-        </div>
-      </div>
-      <div class="foot-bottom">
-        <span>© Kàddu — La parole qui engage.</span>
-        <span>kaddu.net · contact@kaddu.net</span>
-      </div>
-    </div>
-  </footer>
-
-
-  <!-- ══ SEARCH OVERLAY — Point 4 ══ -->
-  <div id="searchOverlay" style="
-    position:fixed;inset:0;z-index:250;
-    background:rgba(4,10,20,.82);backdrop-filter:blur(16px);
-    display:none;align-items:flex-start;justify-content:center;
-    padding:60px 20px 20px;overflow-y:auto;
-  ">
-    <div style="
-      width:100%;max-width:780px;
-      background:linear-gradient(160deg,#0b1e33,#07182b);
-      border:1px solid var(--bds);border-radius:24px;
-      box-shadow:0 24px 64px rgba(0,0,0,.5);
-      overflow:hidden;
-    ">
-      <!-- Header -->
-      <div style="padding:22px 24px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <div>
-          <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--or);margin-bottom:5px">Recherche avancée</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300">Trouvez votre <em style="color:var(--or)">bien idéal</em></h3>
-        </div>
-        <button onclick="closeSearchOverlay()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(248,244,238,.6);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
-      </div>
-
-      <!-- Champs de recherche -->
-      <div style="padding:22px 24px">
-
-        <!-- Ligne 1 : Lieu -->
-        <div style="margin-bottom:16px">
-          <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Adresse, quartier, ville…</label>
-          <input id="srLieu" type="text" placeholder="Ex : Sipres VDN, Almadies, Dakar…" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.9rem;border-radius:10px;font-family:inherit;outline:none" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--bdr)'"/>
-        </div>
-
-        <!-- Ligne 2 : Type + Catégorie + Budget -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
-          <div>
-            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Catégorie</label>
-            <select id="srCategorie" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
-              <option value="">Meublé & non meublé</option>
-              <option value="meuble">Meublé</option>
-              <option value="non_meuble">Non meublé</option>
-            </select>
-          </div>
-          <div>
-            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Loyer max (FCFA/mois)</label>
-            <select id="srLoyer" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
-              <option value="">Tous budgets</option>
-              <option value="100000">≤ 100 000</option>
-              <option value="200000">≤ 200 000</option>
-              <option value="350000">≤ 350 000</option>
-              <option value="500000">≤ 500 000</option>
-              <option value="750000">≤ 750 000</option>
-              <option value="1000000">≤ 1 000 000</option>
-            </select>
-          </div>
-          <div>
-            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Surface min (m²)</label>
-            <select id="srSurface" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
-              <option value="">Toutes surfaces</option>
-              <option value="20">≥ 20 m²</option>
-              <option value="40">≥ 40 m²</option>
-              <option value="60">≥ 60 m²</option>
-              <option value="80">≥ 80 m²</option>
-              <option value="100">≥ 100 m²</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Ligne 3 : Pièces + Chambres + Durée -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px">
-          <div>
-            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Nb de pièces</label>
-            <select id="srPieces" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
-              <option value="">Peu importe</option>
-              <option value="1">1 pièce (studio)</option>
-              <option value="2">2 pièces (F2)</option>
-              <option value="3">3 pièces (F3)</option>
-              <option value="4">4 pièces (F4)</option>
-              <option value="5">5 pièces et +</option>
-            </select>
-          </div>
-          <div>
-            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Durée souhaitée</label>
-            <select id="srDuree" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;appearance:none">
-              <option value="">Peu importe</option>
-              <option value="court">Courte durée (nuits)</option>
-              <option value="moyen">Moyen terme (semaines)</option>
-              <option value="long">Longue durée (mois)</option>
-            </select>
-          </div>
-          <div>
-            <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px">Disponibilité</label>
-            <input id="srDispo" type="date" style="width:100%;padding:12px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:10px;font-family:inherit;outline:none;color-scheme:dark"/>
-          </div>
-        </div>
-
-        <!-- Ligne 4 : Équipements chips -->
-        <div style="margin-bottom:20px">
-          <label style="display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:9px">Équipements souhaités</label>
-          <div style="display:flex;flex-wrap:wrap;gap:8px" id="srEquipChips">
-            <button class="sr-chip" data-eq="clim" onclick="toggleChip(this)">❄️ Climatisation</button>
-            <button class="sr-chip" data-eq="wifi" onclick="toggleChip(this)">📶 WiFi</button>
-            <button class="sr-chip" data-eq="parking" onclick="toggleChip(this)">🅿️ Parking</button>
-            <button class="sr-chip" data-eq="gardien" onclick="toggleChip(this)">🔒 Gardiennage</button>
-            <button class="sr-chip" data-eq="piscine" onclick="toggleChip(this)">🏊 Piscine</button>
-            <button class="sr-chip" data-eq="ascenseur" onclick="toggleChip(this)">🛗 Ascenseur</button>
-            <button class="sr-chip" data-eq="cuisine_eq" onclick="toggleChip(this)">🍳 Cuisine équipée</button>
-            <button class="sr-chip" data-eq="balcon" onclick="toggleChip(this)">🌿 Balcon / Terrasse</button>
-            <button class="sr-chip" data-eq="lave_linge" onclick="toggleChip(this)">🧺 Lave-linge</button>
-            <button class="sr-chip" data-eq="generateur" onclick="toggleChip(this)">⚡ Groupe électrogène</button>
-            <button class="sr-chip" data-eq="eau_chaude" onclick="toggleChip(this)">🚿 Eau chaude</button>
-            <button class="sr-chip" data-eq="linge_maison" onclick="toggleChip(this)">🛏️ Linge fourni</button>
-          </div>
-        </div>
-
-        <!-- Boutons action -->
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <button onclick="launchSearch()" style="flex:1;padding:14px 20px;background:var(--or);color:#0a0a0a;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:.82rem;letter-spacing:.08em;cursor:pointer;transition:.2s" onmouseover="this.style.background='#DDB96E'" onmouseout="this.style.background='var(--or)'">Voir les biens disponibles →</button>
-          <button onclick="showAlerteForm()" style="padding:14px 20px;background:transparent;color:var(--or);border:1px solid rgba(191,150,80,.3);border-radius:999px;font-family:inherit;font-weight:700;font-size:.82rem;letter-spacing:.08em;cursor:pointer;white-space:nowrap;transition:.2s">🔔 Créer une alerte</button>
-        </div>
-      </div>
-
-      <!-- Résultats inline -->
-      <div id="srResults" style="display:none;border-top:1px solid var(--bdr);padding:20px 24px">
-        <div id="srResultsList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px"></div>
-      </div>
-
-      <!-- Formulaire alerte -->
-      <div id="alerteForm" style="display:none;border-top:1px solid var(--bdr);padding:22px 24px;background:rgba(191,150,80,.04)">
-        <div style="font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:12px">🔔 Créer une alerte — soyez notifié dès qu'un bien correspond</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
-          <div>
-            <label style="display:block;font-size:.68rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Prénom *</label>
-            <input id="alertePrenom" type="text" placeholder="Votre prénom" style="width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:8px;font-family:inherit;outline:none"/>
-          </div>
-          <div>
-            <label style="display:block;font-size:.68rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Email ou WhatsApp *</label>
-            <input id="alerteContact" type="text" placeholder="Email ou +221 77…" style="width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);color:var(--txt);font-size:.85rem;border-radius:8px;font-family:inherit;outline:none"/>
-          </div>
-        </div>
-        <div style="margin-bottom:14px">
-          <label style="display:block;font-size:.68rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Fréquence de notification</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(248,244,238,.6);cursor:pointer"><input type="radio" name="alerteFreq" value="immediat" checked style="accent-color:var(--or);width:auto"> Immédiate</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(248,244,238,.6);cursor:pointer"><input type="radio" name="alerteFreq" value="quotidien" style="accent-color:var(--or);width:auto"> Quotidienne</label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:rgba(248,244,238,.6);cursor:pointer"><input type="radio" name="alerteFreq" value="hebdo" style="accent-color:var(--or);width:auto"> Hebdomadaire</label>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <button onclick="saveAlerte()" style="padding:12px 24px;background:var(--or);color:#0a0a0a;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:.8rem;cursor:pointer">Enregistrer mon alerte</button>
-          <button onclick="hideAlerteForm()" style="padding:12px 16px;background:transparent;color:rgba(248,244,238,.45);border:1px solid var(--bdr);border-radius:999px;font-family:inherit;font-size:.8rem;cursor:pointer">Annuler</button>
-          <span id="alerteMsg" style="font-size:.78rem;color:var(--green);display:none">✓ Alerte enregistrée !</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ══ MODAL BIEN ══ -->
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal" id="modalBox">
-
-      <!-- Header sticky -->
-      <div class="modal-header">
-        <div class="modal-header-left">
-          <span class="modal-badge-pill" id="modalBadge">Meublé</span>
-          <span class="modal-avail-pill">Disponible</span>
-        </div>
-        <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
-      </div>
-
-      <!-- Gallery -->
-      <div class="modal-gallery" id="modalGallery">
-        <div class="gallery-track" id="galleryTrack"></div>
-        <div class="gallery-overlay"></div>
-        <button class="gallery-nav gallery-prev" id="galleryPrev" aria-label="Photo précédente">‹</button>
-        <button class="gallery-nav gallery-next" id="galleryNext" aria-label="Photo suivante">›</button>
-        <div class="gallery-dots" id="galleryDots"></div>
-        <div class="gallery-counter" id="galleryCounter">1 / 1</div>
-      </div>
-
-      <!-- Body -->
-      <div class="modal-body">
-        <div class="modal-title-row">
-          <h2 class="modal-title" id="modalTitle"></h2>
-        </div>
-        <div class="modal-location" id="modalLocation"></div>
-        <div class="modal-specs-row" id="modalSpecs"></div>
-
-        <div class="modal-grid">
-          <div>
-            <div class="modal-desc-label">À propos du bien</div>
-            <div class="modal-desc" id="modalDesc"></div>
-            <div class="modal-desc-label" style="margin-top:18px">Équipements inclus</div>
-            <div class="modal-equip-list" id="modalEquip"></div>
-          </div>
-          <div>
-            <div class="modal-conditions">
-              <div class="modal-conditions-title">Conditions de location</div>
-              <div id="modalConditions"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Commercial assigné — style Manda -->
-        <div id="modalCommCard" style="display:none;margin:0 28px 20px;padding:16px;border:1px solid var(--bdr);border-radius:14px;background:rgba(7,24,43,.4);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div id="modalCommAvatar" style="width:52px;height:52px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or);flex-shrink:0"></div>
-            <div>
-              <div style="font-size:.68rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Présenté par votre expert Kàddu</div>
-              <div id="modalCommNom" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;margin-bottom:2px"></div>
-              <div id="modalCommRole" style="font-size:.74rem;color:var(--muted)"></div>
-              <div id="modalCommReponse" style="font-size:.7rem;color:var(--green);margin-top:3px"></div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:7px;align-items:flex-end">
-            <a id="modalCommTel" href="#" style="display:none;align-items:center;gap:6px;font-size:.8rem;color:rgba(248,244,238,.65);text-decoration:none" onclick="return true">📞 <span id="modalCommTelNum"></span></a>
-            <a id="modalCommWA" href="#" target="_blank" style="display:none;background:#25D366;color:#fff;padding:8px 14px;border-radius:999px;font-size:.72rem;font-weight:600;text-decoration:none">💬 WhatsApp</a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- CTA bar sticky bottom -->
-      <div class="modal-cta-bar">
-        <div>
-          <div class="modal-price-big" id="modalPrice">—</div>
-          <div class="modal-price-sub" id="modalPriceSub"></div>
-        </div>
-        <div class="modal-cta-actions">
-          <a id="modal360Btn" href="#" target="_blank" style="display:none;align-items:center;gap:6px;padding:12px 16px;border:1px solid rgba(191,150,80,.28);border-radius:999px;background:rgba(191,150,80,.08);color:var(--or);font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:.2s;text-decoration:none">
-            🌀 Voir en 360°
-          </a>
-          <a class="btn-whatsapp" id="modalWhatsApp" href="#" target="_blank">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            WhatsApp
-          </a>
-          <a class="btn btn-primary btn-lg" id="modalCTA" href="#">Déposer mon dossier →</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-  // ── Photo loader ────────────────────────────────────────────────────────────
-  // Génère automatiquement jusqu'à maxPhotos candidats pour un bien.
-  // Gère le mix .jpg / .jpeg et les deux formats de numéro : "01" et "1".
-  // L'img HTML utilise onerror pour sauter silencieusement les manquantes.
-  // Le dossier est /assets/images/biens/meubles/ pour tous les meublés.
-
-  const PHOTO_BASE = '/assets/images/biens/';
-  const MAX_PHOTOS = 30;
-
-  function buildPhotoCandidates(name, subfolder) {
-    const base = subfolder ? `${PHOTO_BASE}${subfolder}/` : `${PHOTO_BASE}meubles/`;
-    const candidates = [];
-    for (let i = 1; i <= MAX_PHOTOS; i++) {
-      const n2 = String(i).padStart(2, '0');
-      const n1 = String(i);
-      candidates.push(
-        `${base}${name}-${n2}.jpeg`,
-        `${base}${name}-${n2}.jpg`,
-        `${base}${name}-${n1}.jpeg`,
-        `${base}${name}-${n1}.jpg`,
-      );
-    }
-    return candidates;
+  // ── Toggle accordion ────────────────────────────────────────────────────────
+  function toggleAccord(btn) {
+    const body = btn.nextElementSibling;
+    const closed = btn.classList.toggle('closed');
+    body.classList.toggle('hidden', closed);
   }
 
-  // ── Data des biens ──────────────────────────────────────────────────────────
-  const BIENS = {
-    bantukay: {
-      nom: 'Le Petit <em>Bantukay</em>',
-      badge: 'Meublé · Coup de cœur',
-      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
-      specs: ['F3 · 3 pièces', 'Climatisé', 'WiFi inclus', 'Parking', 'Gardiennage', 'Eau chaude'],
-      desc: `Appartement meublé premium situé au cœur du quartier résidentiel Sipres VDN 2. 
-      Composé d'un salon spacieux, d'une chambre principale confortable et d'une chambre d'appoint, 
-      le Petit Bantukay est pensé pour des séjours en toute autonomie. Idéal pour les professionnels 
-      en mission, les membres de la diaspora de retour au pays ou les voyageurs exigeants qui 
-      ne veulent pas sacrifier le confort.`,
-      equip: [
-        ['🛋️', 'Salon meublé complet'],
-        ['🛏️', 'Chambres avec lits doubles'],
-        ['❄️', 'Climatisation dans chaque pièce'],
-        ['📶', 'WiFi fibre haut débit'],
-        ['📺', 'Télévision écran plat'],
-        ['🍳', 'Cuisine équipée (micro-ondes, réfrigérateur)'],
-        ['🚿', 'Eau chaude garantie'],
-        ['🔒', 'Gardiennage 24h/24'],
-      ],
-      conditions: [
-        ['Durée minimale', '3 nuits'],
-        ['Caution', '1 nuit à l\'arrivée'],
-        ['Paiements', 'Wave · Orange Money · Virement · Stripe'],
-        ['Check-in', 'Flexible · 14h – 22h'],
-        ['Check-out', '12h00'],
-        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
-      ],
-      prix: '50 000 FCFA',
-      prixSub: '/ nuit · tarifs dégressifs au mois',
-      tunnel: '/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Bantukay',
-      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Le%20Petit%20Bantukay%20sur%20Kaddu.net',
-      photoCandidates: buildPhotoCandidates('bantukay'),
-      fallbackGradient: 'linear-gradient(145deg,#0e1f12,#2d1f0a,#0f1e2a)',
-    },
-    suxalikay: {
-      nom: 'Le Petit <em>Suxalikay</em>',
-      badge: 'Meublé',
-      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
-      specs: ['F2 · 2 pièces', 'Cuisine équipée', 'WiFi', 'Sécurisé', 'Eau chaude'],
-      desc: `Studio haut de gamme avec cuisine américaine entièrement équipée. 
-      Conçu pour l'autonomie totale, le Petit Suxalikay offre une ambiance chaleureuse 
-      dans un espace optimisé. Parfait pour un séjour de travail, une mission de courte 
-      durée ou un voyageur solo qui apprécie le confort sans superflu.`,
-      equip: [
-        ['🛏️', 'Lit double confortable'],
-        ['🍳', 'Cuisine américaine équipée'],
-        ['❄️', 'Climatisation'],
-        ['📶', 'WiFi inclus'],
-        ['📺', 'Télévision'],
-        ['🔒', 'Immeuble sécurisé'],
-        ['🚿', 'Salle de bain privative'],
-        ['🧺', 'Linge de maison fourni'],
-      ],
-      conditions: [
-        ['Durée minimale', '3 nuits'],
-        ['Caution', '1 nuit à l\'arrivée'],
-        ['Paiements', 'Wave · Orange Money · Virement · Stripe'],
-        ['Check-in', 'Flexible · 14h – 22h'],
-        ['Check-out', '12h00'],
-        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
-      ],
-      prix: 'Sur demande',
-      prixSub: 'Contactez-nous pour un tarif personnalisé',
-      tunnel: '/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Suxalikay',
-      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Le%20Petit%20Suxalikay%20sur%20Kaddu.net',
-      photoCandidates: buildPhotoCandidates('suxalikay'),
-      fallbackGradient: 'linear-gradient(145deg,#1a1008,#2d1f0a,#1a2830)',
-    },
-    nopalukay: {
-      nom: 'Le Petit <em>Nopalukay</em>',
-      badge: 'Meublé',
-      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
-      specs: ['F3 · Salon séparé', 'Climatisé', 'Netflix', 'Gardiennage', 'Parking'],
-      desc: `Appartement lumineux avec salon entièrement séparé, idéal pour les familles 
-      ou les couples. Atmosphère cosy, équipements haut de gamme et vue dégagée. 
-      Le Petit Nopalukay est pensé pour ceux qui veulent se sentir chez eux à Dakar, 
-      sans les contraintes hôtelières.`,
-      equip: [
-        ['🛋️', 'Salon séparé spacieux'],
-        ['🛏️', 'Chambre principale + chambre d\'appoint'],
-        ['❄️', 'Climatisation multi-split'],
-        ['📶', 'WiFi haut débit'],
-        ['📺', 'Netflix inclus'],
-        ['🍳', 'Cuisine équipée complète'],
-        ['🔒', 'Gardiennage 24h/24'],
-        ['🅿️', 'Parking sécurisé'],
-      ],
-      conditions: [
-        ['Durée minimale', '3 nuits'],
-        ['Caution', '1 nuit à l\'arrivée'],
-        ['Paiements', 'Wave · Orange Money · Virement · Stripe'],
-        ['Check-in', 'Flexible · 14h – 22h'],
-        ['Check-out', '12h00'],
-        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
-      ],
-      prix: 'Dossier prioritaire',
-      prixSub: 'Déposez votre candidature pour obtenir le tarif',
-      tunnel: '/tunnel/dossier-v2-step1.html?bien=Le%20petit%20Nopalukay',
-      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Le%20Petit%20Nopalukay%20sur%20Kaddu.net',
-      photoCandidates: buildPhotoCandidates('nopalukay'),
-      fallbackGradient: 'linear-gradient(145deg,#08101a,#0f1a28,#1a1508)',
-    },
-    noflay: {
-      nom: 'Noflay <em>Étage 3A</em>',
-      badge: 'Non meublé',
-      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
-      specs: ['Non meublé', '3ème étage', 'Gardiennage 24h', 'Parking'],
-      desc: `Appartement non meublé lumineux au 3ème étage d'un immeuble résidentiel sécurisé de Sipres VDN 2. 
-      Espace bien conçu, idéal pour une installation durable. Parfait pour une famille ou un professionnel 
-      cherchant à s'établir dans un quartier prisé de Dakar.`,
-      equip: [
-        ['🔒', 'Gardiennage 24h/24'],
-        ['🅿️', 'Parking sécurisé'],
-        ['💧', 'Eau courante'],
-        ['⚡', 'Électricité'],
-        ['🪟', 'Lumineux · 3ème étage'],
-      ],
-      conditions: [
-        ['Type de bail', 'Location longue durée'],
-        ['Caution', '2 mois de loyer'],
-        ['Paiements', 'Wave · Orange Money · Virement'],
-        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
-      ],
-      prix: 'Sur demande',
-      prixSub: 'Bail longue durée · Contactez-nous',
-      tunnel: '/tunnel/dossier-v2-step1.html?bien=Noflay%20Etage%203A',
-      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Noflay%20%C3%89tage%203A%20sur%20Kaddu.net',
-      photoCandidates: buildPhotoCandidates('noflay', 'non-meubles'),
-      fallbackGradient: 'linear-gradient(145deg,#0d1a10,#1a2a0d,#0a1520)',
-    },
-    dalal: {
-      nom: 'Dalal <em>Étage 1A</em>',
-      badge: 'Non meublé',
-      location: 'Sipres VDN 2, Dakar · Immeuble AÏDARA',
-      specs: ['Non meublé', '1er étage', 'Parking', 'Accessible'],
-      desc: `Appartement non meublé au 1er étage, accessible et fonctionnel. 
-      Bien conçu pour une installation durable, avec un accès facile et un parking sécurisé. 
-      Parfait pour une famille ou un professionnel cherchant à s'établir dans un quartier 
-      résidentiel calme et bien desservi de la VDN.`,
-      equip: [
-        ['🅿️', 'Parking sécurisé'],
-        ['🔒', 'Immeuble sécurisé'],
-        ['💧', 'Eau courante'],
-        ['⚡', 'Électricité'],
-        ['🚪', 'Accès facile · 1er étage'],
-      ],
-      conditions: [
-        ['Type de bail', 'Location longue durée'],
-        ['Caution', '2 mois de loyer'],
-        ['Paiements', 'Wave · Orange Money · Virement'],
-        ['Dépôt dossier', 'Obligatoire (tunnel Kàddu)'],
-      ],
-      prix: 'Sur demande',
-      prixSub: 'Bail longue durée · Contactez-nous',
-      tunnel: '/tunnel/dossier-v2-step1.html?bien=Dalal%20Etage%201A',
-      whatsapp: 'https://wa.me/221XXXXXXXXX?text=Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9%20par%20Dalal%20%C3%89tage%201A%20sur%20Kaddu.net',
-      photoCandidates: buildPhotoCandidates('dalal', 'non-meubles'),
-      fallbackGradient: 'linear-gradient(145deg,#100d1a,#1a0d2a,#080f1a)',
-    },
-  };
-
-  // ── Geo data — quartiers par ville ──────────────────────────────────────────
-  const QUARTIERS_PAR_VILLE = {
-    'Dakar': ['Plateau','Médina','Fann · Point E · Amitié','Gueule Tapée · Fass · Colobane','Almadies','Mermoz · Sacré-Cœur','Ngor','Ouakam','Yoff','Sipres VDN','Sipres VDN 2','Les Mamelles','Grand Dakar','HLM','Sicap Liberté','Dieuppeul · Derklé','Biscuiterie','Hann Bel Air','Parcelles Assainies','Grand Yoff','Cambérène','Patte d\'Oie','Liberté','Pikine','Guédiawaye','Thiaroye','Yeumbeul','Keur Massar','Rufisque','Bargny','Diamniadio','Lac Rose'],
-    'Thiès': ['Centre-ville Thiès','Thiès Nord','Thiès Sud','Mbour Route','Tassette','Keur Moussa'],
-    'Saint-Louis': ['Île de Saint-Louis','Sor','Guet Ndar','Langue de Barbarie','Bango','Thiaka Ndiaye'],
-    'Ziguinchor': ['Centre Ziguinchor','Boucotte','Kandialang','Lyndiane','Tilène Ziguinchor'],
-    'Kaolack': ['Centre Kaolack','Médina Baye','Léona','Sam-Sam','Ndangane'],
-    'Mbour': ['Centre Mbour','Saly Portudal','Nianing','Pointe Sarène','Warang'],
-    'Touba': ['Centre Touba','Darou Khoudoss','Guédé Bousso','Ndamatou'],
-    'Rufisque': ['Centre Rufisque','Colobane Rufisque','Mbao','Bargny','Sébikotane'],
-    'Saly': ['Saly Portudal','Saly Nord','Saly Sud','Nguérigne','Somone'],
-  };
-
-  function updateQuartiers() {
-    const ville = document.getElementById('searchVille')?.value;
-    const sel   = document.getElementById('searchQuartier');
-    if (!sel) return;
-    const quartiers = QUARTIERS_PAR_VILLE[ville] || [];
-    sel.innerHTML = `<option value="">Tous les quartiers</option>` +
-      quartiers.map(q => `<option value="${q}">${q}</option>`).join('');
-  }
-
-  // ── Search / Filter fonctionnel ──────────────────────────────────────────────
-  function filterBiens() {
-    const ville     = document.getElementById('searchVille')?.value?.toLowerCase() || '';
-    const quartier  = document.getElementById('searchQuartier')?.value?.toLowerCase() || '';
-    const categorie = document.getElementById('searchCategorie')?.value || '';
-
-    // Scroll vers les listings
-    document.getElementById('biens')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // Si Supabase a chargé les cards dynamiques, filtrer dessus
-    // Sinon filtrer les cards statiques
-    setTimeout(() => {
-      const cards = document.querySelectorAll('.listing-card[data-bien]');
-      let visible = 0;
-      cards.forEach(card => {
-        const slug = card.dataset.bien;
-        const b    = BIENS[slug];
-        if (!b) { card.style.display = ''; visible++; return; }
-
-        const loc  = (b.location || '').toLowerCase();
-        const cat  = (b._sbRow?.categorie || (b.badge?.toLowerCase().includes('non') ? 'non_meuble' : 'meuble'));
-
-        const matchVille    = !ville    || loc.includes(ville);
-        const matchQuartier = !quartier || loc.includes(quartier);
-        const matchCat      = !categorie || cat === categorie;
-
-        if (matchVille && matchQuartier && matchCat) {
-          card.style.display = '';
-          card.style.animation = 'fadeIn .3s ease';
-          visible++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      // Message si aucun résultat
-      const grid = document.querySelector('.listing-grid');
-      const noResult = document.getElementById('noFilterResult');
-      if (visible === 0 && grid) {
-        if (!noResult) {
-          const msg = document.createElement('div');
-          msg.id = 'noFilterResult';
-          msg.style.cssText = 'grid-column:1/-1;text-align:center;padding:40px;color:rgba(248,244,238,.4);font-size:.9rem';
-          msg.innerHTML = 'Aucun bien disponible pour ces critères. <button onclick="resetFilter()" style="color:var(--or);background:none;border:none;cursor:pointer;font-size:.9rem;text-decoration:underline">Réinitialiser</button>';
-          grid.appendChild(msg);
-        }
-      } else if (noResult) {
-        noResult.remove();
-      }
-    }, 400);
-  }
-
-  function resetFilter() {
-    document.querySelectorAll('.listing-card').forEach(c => c.style.display = '');
-    const noResult = document.getElementById('noFilterResult');
-    if (noResult) noResult.remove();
-    if (document.getElementById('searchVille'))    document.getElementById('searchVille').value = 'Dakar';
-    if (document.getElementById('searchQuartier')) document.getElementById('searchQuartier').value = '';
-    if (document.getElementById('searchCategorie'))document.getElementById('searchCategorie').value = '';
-    updateQuartiers();
-  }
-  // ─────────────────────────────────────────────────────────────────────────────
-  let currentSlide = 0;
-  let currentBien = null;
-
-  // ── DOM refs ────────────────────────────────────────────────────────────────
-  const backdrop   = document.getElementById('modalBackdrop');
-  const modalClose = document.getElementById('modalClose');
-  const galleryTrack = document.getElementById('galleryTrack');
-  const galleryDots  = document.getElementById('galleryDots');
-  const galleryCounter = document.getElementById('galleryCounter');
-  const galleryPrev = document.getElementById('galleryPrev');
-  const galleryNext = document.getElementById('galleryNext');
-
-  // ── Open modal ──────────────────────────────────────────────────────────────
-  function openModal(bienKey) {
-    const b = BIENS[bienKey];
-    if (!b) return;
-    currentBien = b;
-    currentSlide = 0;
-
-    // Badge
-    document.getElementById('modalBadge').textContent = b.badge;
-    // Title
-    document.getElementById('modalTitle').innerHTML = b.nom;
-    // Location
-    document.getElementById('modalLocation').textContent = b.location;
-    // Specs
-    document.getElementById('modalSpecs').innerHTML = b.specs
-      .map(s => `<span class="modal-spec">${s}</span>`).join('');
-    // Desc — préserve les sauts de ligne et la mise en page saisie dans l'admin
-    const descEl = document.getElementById('modalDesc');
-    const rawDesc = b.desc || '';
-    // Convertit \n en <br>, préserve les espaces multiples, échappe le HTML sauf <br>
-    descEl.innerHTML = rawDesc
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/\n/g,'<br>')
-      .replace(/\t/g,'&nbsp;&nbsp;&nbsp;&nbsp;');
-    // Retire text-align:justify sur la description pour respecter les sauts de ligne intentionnels
-    descEl.style.textAlign = 'left';
-    // Equip
-    document.getElementById('modalEquip').innerHTML = b.equip
-      .map(([icon, label]) => `<div class="modal-equip-item"><span>${icon}</span><span>${label}</span></div>`).join('');
-    // Conditions
-    document.getElementById('modalConditions').innerHTML = b.conditions
-      .map(([label, val]) => `
-        <div class="modal-cond-row">
-          <span class="modal-cond-label">${label}</span>
-          <span class="modal-cond-value">${val}</span>
-        </div>`).join('');
-    // Prix
-    document.getElementById('modalPrice').textContent = b.prix;
-    document.getElementById('modalPriceSub').textContent = b.prixSub;
-    // CTA
-    document.getElementById('modalCTA').href = b.tunnel;
-    document.getElementById('modalWhatsApp').href = b.whatsapp;
-
-    // Bouton 360° — visible seulement si lien renseigné
-    const btn360 = document.getElementById('modal360Btn');
-    if (b.visite360) {
-      btn360.href = b.visite360;
-      btn360.style.display = 'inline-flex';
-    } else {
-      btn360.style.display = 'none';
-    }
-
-    // Commercial assigné
-    const commCard = document.getElementById('modalCommCard');
-    const sbRow = b._sbRow;
-    const comm = sbRow?.commerciaux;
-    if (comm) {
-      commCard.style.display = 'flex';
-      // Avatar
-      const av = document.getElementById('modalCommAvatar');
-      av.innerHTML = comm.photo_url
-        ? `<img src="${comm.photo_url}" alt="${comm.nom||''}" style="width:100%;height:100%;object-fit:cover">`
-        : (comm.nom||'?').charAt(0).toUpperCase();
-      // Textes
-      document.getElementById('modalCommNom').textContent = comm.nom || '';
-      document.getElementById('modalCommRole').textContent = comm.role || 'Conseiller Kàddu';
-      const repEl = document.getElementById('modalCommReponse');
-      repEl.textContent = comm.reponse ? `⚡ ${comm.reponse}` : '';
-      repEl.style.display = comm.reponse ? 'block' : 'none';
-      // Téléphone
-      const telEl = document.getElementById('modalCommTel');
-      if (comm.telephone) {
-        telEl.style.display = 'flex';
-        telEl.href = `tel:${comm.telephone}`;
-        document.getElementById('modalCommTelNum').textContent = comm.telephone;
-      } else {
-        telEl.style.display = 'none';
-      }
-      // WhatsApp avec message personnalisé
-      const waEl = document.getElementById('modalCommWA');
-      if (comm.whatsapp) {
-        waEl.style.display = 'inline-flex';
-        const bienNom = (b.nom||'').replace(/<[^>]+>/g,'');
-        const waMsg = (comm.wa_message || 'Bonjour {nom_commercial}, je suis intéressé par {nom_appartement} sur Kaddu.net.')
-          .replace(/\{prenom_client\}/g, '')
-          .replace(/\{nom_appartement\}/g, bienNom)
-          .replace(/\{nom_commercial\}/g, comm.nom||'');
-        waEl.href = `https://wa.me/${comm.whatsapp}?text=${encodeURIComponent(waMsg)}`;
-      } else {
-        waEl.style.display = 'none';
-      }
-    } else {
-      commCard.style.display = 'none';
-    }
-
-    // Gallery
-    buildGallery(b);
-
-    // Open
-    document.body.style.overflow = 'hidden';
-    backdrop.classList.add('open');
-    // Reset scroll inside modal
-    document.getElementById('modalBox').scrollTop = 0;
-  }
-
-  // ── Build gallery ───────────────────────────────────────────────────────────
-  // Stratégie : on insère tous les candidats dans des <img> cachés.
-  // Chaque img qui charge avec succès → ajoutée aux slides réels.
-  // Les doublons (même numéro en .jpeg ET .jpg) sont dédupliqués par numéro.
-  // La galerie se construit progressivement à mesure que les images se chargent.
-
-  function buildGallery(b) {
-    const candidates = b.photoCandidates || [];
-    const bienName = b.nom.replace(/<[^>]+>/g, '');
-    const fallback = b.fallbackGradient;
-
-    // Réinitialise l'état
-    galleryTrack.innerHTML = '';
-    galleryDots.innerHTML = '';
-    galleryCounter.textContent = '…';
-    galleryPrev.style.display = 'none';
-    galleryNext.style.display = 'none';
-
-    // Placeholder de chargement
-    galleryTrack.innerHTML = `<div class="gallery-slide"><div class="slide-placeholder" style="background:${fallback}">Chargement…</div></div>`;
-
-    let loadedPhotos = []; // [{src, num}]
-    let seenNums = new Set(); // évite les doublons (01 = 1)
-    let pending = candidates.length;
-
-    if (!candidates.length) {
-      galleryTrack.innerHTML = `<div class="gallery-slide"><div class="slide-placeholder" style="background:${fallback}">Photos à venir</div></div>`;
-      galleryCounter.textContent = '0 / 0';
-      return;
-    }
-
-    // Extrait le numéro depuis le nom de fichier (ex: "bantukay-01.jpeg" → 1)
-    function extractNum(src) {
-      const m = src.match(/-(\d+)\.(jpe?g)$/i);
-      return m ? parseInt(m[1], 10) : null;
-    }
-
-    function rebuildSlides() {
-      // Trie par numéro croissant
-      loadedPhotos.sort((a, b) => a.num - b.num);
-
-      if (!loadedPhotos.length) {
-        galleryTrack.innerHTML = `<div class="gallery-slide"><div class="slide-placeholder" style="background:${fallback}">Photos disponibles prochainement</div></div>`;
-        galleryCounter.textContent = '0 / 0';
-        galleryPrev.style.display = 'none';
-        galleryNext.style.display = 'none';
-        return;
-      }
-
-      galleryTrack.innerHTML = loadedPhotos.map((p, i) => `
-        <div class="gallery-slide">
-          <img src="${p.src}" alt="Photo ${i+1} — ${bienName}" loading="lazy"/>
-        </div>
-      `).join('');
-
-      galleryDots.innerHTML = loadedPhotos.map((_, i) =>
-        `<button class="gallery-dot${i===0?' active':''}" data-idx="${i}" aria-label="Photo ${i+1}"></button>`
-      ).join('');
-
-      const total = loadedPhotos.length;
-      galleryCounter.textContent = `1 / ${total}`;
-      galleryPrev.style.display = total > 1 ? 'flex' : 'none';
-      galleryNext.style.display = total > 1 ? 'flex' : 'none';
-
-      // Met à jour currentBien avec les photos réellement chargées
-      if (currentBien) currentBien._loadedPhotos = loadedPhotos;
-
-      goToSlide(0);
-    }
-
-    // Teste chaque candidat via un <img> temporaire hors DOM
-    candidates.forEach(src => {
-      const img = new Image();
-      img.onload = () => {
-        const num = extractNum(src);
-        if (num !== null && !seenNums.has(num)) {
-          seenNums.add(num);
-          loadedPhotos.push({ src, num });
-        }
-        pending--;
-        if (pending === 0) rebuildSlides();
-      };
-      img.onerror = () => {
-        pending--;
-        if (pending === 0) rebuildSlides();
-      };
-      img.src = src;
-    });
-  }
-
-  function goToSlide(idx) {
-    const loaded = currentBien?._loadedPhotos;
-    const total = loaded ? loaded.length : 1;
-    if (total === 0) return;
-    currentSlide = (idx + total) % total;
-    galleryTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
-    galleryCounter.textContent = `${currentSlide + 1} / ${total}`;
-    document.querySelectorAll('.gallery-dot').forEach((d, i) => {
-      d.classList.toggle('active', i === currentSlide);
-    });
-  }
-
-  galleryPrev.addEventListener('click', () => goToSlide(currentSlide - 1));
-  galleryNext.addEventListener('click', () => goToSlide(currentSlide + 1));
-  galleryDots.addEventListener('click', e => {
-    if (e.target.dataset.idx !== undefined) goToSlide(+e.target.dataset.idx);
-  });
-
-  // Swipe touch support
-  let touchStartX = 0;
-  document.getElementById('modalGallery').addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, {passive:true});
-  document.getElementById('modalGallery').addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 40) goToSlide(currentSlide + (diff > 0 ? 1 : -1));
-  }, {passive:true});
-
-  // ── Close modal ─────────────────────────────────────────────────────────────
-  function closeModal() {
-    backdrop.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  modalClose.addEventListener('click', closeModal);
-  backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-  // ── Moteur Kàddu — Animation score ─────────────────────────────────────────
-  const SCENARIOS = {
-    fort: {
-      steps: [
-        { critere:'identite', delay:400,  fillW:95, label:'Identité vérifiée', icon:'✓' },
-        { critere:'revenus',  delay:1100, fillW:88, label:'Revenus solides × 4 le loyer', icon:'✓' },
-        { critere:'locatif',  delay:1800, fillW:90, label:'Historique locatif excellent', icon:'✓' },
-        { critere:'docs',     delay:2500, fillW:82, label:'Documents complets et cohérents', icon:'✓' },
-      ],
-      finalScore: 87,
-      levelLabel: 'Profil Fort',
-      levelCls: 'level-fort',
-      arcColor: '#00C875',
-      reasons: [
-        { icon:'✦', text:'Identité confirmée par OTP', color:'#77ffbe' },
-        { icon:'✦', text:'Revenus déclarés × 4 le loyer', color:'#77ffbe' },
-        { icon:'✦', text:'Historique locatif stable et vérifié', color:'#77ffbe' },
-      ]
-    },
-    moyen: {
-      steps: [
-        { critere:'identite', delay:400,  fillW:80, label:'Identité partielle', icon:'✓' },
-        { critere:'revenus',  delay:1100, fillW:55, label:'Revenus à la limite du loyer', icon:'△' },
-        { critere:'locatif',  delay:1800, fillW:60, label:'Premier logement autonome', icon:'△' },
-        { critere:'docs',     delay:2500, fillW:45, label:'Documents incomplets', icon:'△' },
-      ],
-      finalScore: 54,
-      levelLabel: 'Profil Moyen',
-      levelCls: 'level-moyen',
-      arcColor: '#F5A623',
-      reasons: [
-        { icon:'△', text:'Revenus insuffisants × 1.8 le loyer', color:'#ffd180' },
-        { icon:'△', text:'Premier logement — sans historique locatif', color:'#ffd180' },
-        { icon:'✦', text:'Identité confirmée', color:'rgba(248,244,238,.5)' },
-      ]
-    },
-    faible: {
-      steps: [
-        { critere:'identite', delay:400,  fillW:40, label:'Identité non vérifiable', icon:'✗' },
-        { critere:'revenus',  delay:1100, fillW:20, label:'Revenus non justifiés', icon:'✗' },
-        { critere:'locatif',  delay:1800, fillW:30, label:'Situation locative instable', icon:'✗' },
-        { critere:'docs',     delay:2500, fillW:15, label:'Documents manquants ou incohérents', icon:'✗' },
-      ],
-      finalScore: 18,
-      levelLabel: 'Profil Faible',
-      levelCls: 'level-faible',
-      arcColor: '#FF6B6B',
-      reasons: [
-        { icon:'✗', text:'Identité non vérifiable — OTP échoué', color:'#ffb3b3' },
-        { icon:'✗', text:'Aucun justificatif de revenus fourni', color:'#ffb3b3' },
-        { icon:'✗', text:'Incohérence entre déclarations et documents', color:'#ffb3b3' },
-      ]
-    },
-  };
-
-  let currentScenario = 'fort';
-
-  function selectScenario(name, btn) {
-    currentScenario = name;
-    document.querySelectorAll('.scenario-btn').forEach(b => b.style.opacity = '0.55');
-    if (btn) btn.style.opacity = '1';
-    animateScore();
-  }
-
-  function animateScore() {
-    const sim = SCENARIOS[currentScenario] || SCENARIOS.fort;
-    const arc = document.getElementById('scoreArc');
-    const numEl = document.getElementById('scoreNum');
-    const levelEl = document.getElementById('scoreLevel');
-    const reasonsEl = document.getElementById('scoreReasons');
-    if (!arc) return;
-
-    arc.style.strokeDashoffset = '314';
-    arc.style.stroke = sim.arcColor;
-    numEl.textContent = '0';
-    numEl.style.color = sim.arcColor;
-    levelEl.textContent = '—';
-    levelEl.className = 'score-level';
-    reasonsEl.innerHTML = '';
-
-    // Reset critères
-    sim.steps.forEach(s => {
-      const card = document.getElementById('crit-' + s.critere);
-      const chk  = document.getElementById('chk-' + s.critere);
-      const fill = card?.querySelector('.critere-fill');
-      if (card) card.classList.remove('active');
-      if (chk)  chk.textContent = '○';
-      if (fill) { fill.style.width = '0'; fill.style.background = sim.arcColor; }
-    });
-
-    // Animate chaque critère
-    sim.steps.forEach((step, i) => {
-      setTimeout(() => {
-        const card = document.getElementById('crit-' + step.critere);
-        const chk  = document.getElementById('chk-' + step.critere);
-        const fill = card?.querySelector('.critere-fill');
-        if (card) card.classList.add('active');
-        if (chk)  chk.textContent = step.icon;
-        if (fill) fill.style.width = step.fillW + '%';
-      }, step.delay);
-    });
-
-    // Score final
-    const finalDelay = sim.steps[sim.steps.length - 1].delay + 400;
-    setTimeout(() => {
-      const target = sim.finalScore;
-      const offset = 314 - (target / 100) * 314;
-      arc.style.strokeDashoffset = offset;
-
-      let current = 0;
-      const step = target / (1400 / 16);
-      const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        numEl.textContent = Math.round(current);
-        if (current >= target) {
-          clearInterval(timer);
-          levelEl.textContent = sim.levelLabel;
-          levelEl.className = 'score-level ' + sim.levelCls;
-          sim.reasons.forEach((r, ri) => {
-            setTimeout(() => {
-              const el = document.createElement('div');
-              el.className = 'score-reason-item';
-              el.innerHTML = `<span style="color:${r.color};flex-shrink:0">${r.icon}</span><span style="color:${r.color}">${r.text}</span>`;
-              reasonsEl.appendChild(el);
-            }, ri * 200);
-          });
-        }
-      }, 16);
-    }, finalDelay);
-  }
-
-  // Start animation when section enters viewport
-  const moteurSection = document.getElementById('moteur');
-  if (moteurSection) {
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          setTimeout(animateScore, 300);
-          obs.disconnect();
-        }
-      });
-    }, { threshold: 0.3 });
-    obs.observe(moteurSection);
-  }
-
-  document.getElementById('scoreReplay')?.addEventListener('click', animateScore);
-  // ────────────────────────────────────────────────────────────────────────────
-
-  // ── Supabase — Chargement dynamique des biens ────────────────────────────────
-  const SB_URL  = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-  const SB_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
-
-  async function loadBiensFromSupabase() {
-    try {
-      const r = await fetch(
-        `${SB_URL}/rest/v1/biens?statut=neq.brouillon&order=created_at.asc&select=*,commerciaux(id,nom,role,telephone,whatsapp,photo_url,reponse,wa_message)`,
-        { headers:{ 'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON } }
-      );
-      if(!r.ok) return null;
-      const rows = await r.json();
-      return Array.isArray(rows) && rows.length ? rows : null;
-    } catch(_){ return null; }
-  }
-
-  function parsePh(p){ if(!p)return[]; if(Array.isArray(p))return p; try{return JSON.parse(p)}catch{return[]} }
-
-  function buildBienObj(row) {
-    const photos = parsePh(row.photos);
-    const comm   = row.commerciaux;
-    const waMsg  = encodeURIComponent('Bonjour, je suis intéressé par '+(row.titre||'')+' sur Kaddu.net');
-    return {
-      nom:      (row.titre||'').replace(/Le Petit (.+)/,'Le Petit <em>$1</em>'),
-      badge:    row.categorie==='meuble'?'Meublé':'Non meublé',
-      location: [row.quartier,row.ville,row.immeuble].filter(Boolean).join(' · '),
-      specs:    [],
-      desc:     row.description||row.accroche||'',
-      equip:    (row.equip_libres||'').split('\n').filter(Boolean).map(l=>{const m=l.match(/^(.{1,3})\s+(.+)$/);return m?[m[1],m[2]]:['✦',l]}),
-      conditions:[
-        row.duree_min &&['Durée minimale',row.duree_min],
-        row.caution   &&['Caution',row.caution],
-        row.paiements &&['Paiements',row.paiements],
-        row.checkin   &&['Check-in',row.checkin],
-        row.checkout  &&['Check-out',row.checkout],
-        ['Dépôt dossier','Obligatoire (tunnel Kàddu)'],
-      ].filter(Boolean),
-      prix:     row.prix||'—',
-      prixSub:  row.prix_sub||'',
-      tunnel:   `/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(row.titre||'')}&slug=${row.slug||''}`,
-      whatsapp: `https://wa.me/${comm?.whatsapp||'221XXXXXXXXX'}?text=${waMsg}`,
-      // Photos Supabase Storage — URLs directes, pas de candidates à tester
-      photoCandidates: [],
-      sbPhotos: photos,
-      fallbackGradient:'linear-gradient(145deg,#0e1f12,#2d1f0a,#0f1e2a)',
-      _sbRow: row,
-    };
-  }
-
-  function renderCardsFromSupabase(rows) {
-    const grid = document.querySelector('.listing-grid');
-    if(!grid) return;
-    const FB = { meuble:'linear-gradient(145deg,#0e1f12,#2d1f0a,#0f1e2a)', non_meuble:'linear-gradient(145deg,#08101a,#0f1a28,#1a1508)' };
-    grid.innerHTML = rows.map(row => {
-      const photos = parsePh(row.photos);
-      const main   = photos.find(p=>p.is_main)||photos[0];
-      const isMeuble = row.categorie === 'meuble';
-      const badgeCls = isMeuble ? '' : 'listing-badge-nm';
-      const badgeTxt = isMeuble ? 'Meublé' : 'Non meublé';
-      const fb = FB[row.categorie] || FB.meuble;
-      return `
-      <article class="listing-card${isMeuble ? '' : ' nm'}" data-bien="${row.slug}" style="cursor:pointer">
-        <div class="listing-media" style="background:${fb}">
-          <div class="listing-media-inner">
-            ${main?`<img src="${main.url}" alt="${row.titre||''}" style="width:100%;height:100%;object-fit:cover;display:block" loading="lazy" onerror="this.style.display='none'">` : ''}
-          </div>
-          <div class="listing-media-overlay"></div>
-          ${isMeuble
-            ? `<div class="listing-badge">${badgeTxt}</div>
-               <div class="listing-avail" style="background:rgba(7,24,43,.65);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.25);color:var(--or);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px;position:absolute;top:14px;right:14px;z-index:2">🌀 360° disponible</div>`
-            : `<span class="listing-badge-nm">${badgeTxt}</span>
-               <div class="listing-avail">Disponible</div>`
-          }
-          <div class="listing-cta-overlay">
-            ${isMeuble
-              ? `<button class="btn-explorer" onclick="openModal('${row.slug}')">Voir le bien →</button>`
-              : `<a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(row.titre||'')}&slug=${row.slug||''}">Postuler →</a>`
-            }
-          </div>
-        </div>
-        <div class="listing-body">
-          <h3>${(row.titre||'').replace(/Le Petit (.+)/,'Le Petit <em>$1</em>')}</h3>
-          <div class="listing-meta">${row.quartier||'Dakar'}</div>
-          <div class="listing-specs">
-            ${row.pieces  ?`<span class="listing-spec">${row.pieces}</span>`:''}
-            ${row.surface ?`<span class="listing-spec">${row.surface} m²</span>`:''}
-          </div>
-          <div class="listing-desc">${(row.accroche||row.description||'').slice(0,120)}</div>
-          <div class="listing-price-row">
-            <div class="listing-price">
-              <strong>${row.prix||'—'}</strong>
-              ${isMeuble ? `<small>${row.prix_sub||''}</small>` : `<span class="bail-tag">Bail longue durée</span>`}
-            </div>
-            ${isMeuble
-              ? `<button class="btn-explorer" onclick="openModal('${row.slug}')">Voir le bien →</button>`
-              : `<a class="btn-postuler-lt" href="/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(row.titre||'')}&slug=${row.slug||''}">Postuler →</a>`
-            }
-          </div>
-        </div>
-      </article>`;
-    }).join('');
-
-    // Injecte dans BIENS pour que la modale fonctionne
-    rows.forEach(row => { BIENS[row.slug] = buildBienObj(row); });
-    wireCards();
-  }
-
-  // Patch buildGallery pour gérer sbPhotos (URLs directes Supabase)
-  const _origBuildGallery = buildGallery;
-
-  // Crée un slide avec fond flouté intelligent
-  function makeSlide(src, alt, isFirst) {
-    const slide = document.createElement('div');
-    slide.className = 'gallery-slide';
-    slide.dataset.src = src;
-
-    // Fond flouté (toujours présent, masqué si paysage)
-    const bg = document.createElement('div');
-    bg.className = 'gallery-slide-bg';
-    bg.style.backgroundImage = `url(${src})`;
-    slide.appendChild(bg);
-
-    // Photo principale
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = alt;
-    img.loading = isFirst ? 'eager' : 'lazy';
-    img.style.cssText = 'display:block;max-width:100%;max-height:100%;width:auto;height:auto;margin:0 auto;position:relative;z-index:1;';
-
-    // Détection ratio après chargement
-    img.onload = () => {
-      const ratio = img.naturalWidth / img.naturalHeight;
-      if (ratio > 1.1) {
-        // Paysage → cover plein cadre, pas de fond flouté visible
-        slide.classList.add('is-landscape');
-        img.style.cssText = 'display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;';
-      }
-      // Portrait → on garde contain + fond flouté → rien à changer
-    };
-
-    slide.appendChild(img);
-    return slide;
-  }
-
-  buildGallery = function(b) {
-    if(b.sbPhotos && b.sbPhotos.length) {
-      const sorted   = [...b.sbPhotos].sort((a,z)=>(a.ordre??0)-(z.ordre??0));
-      const bienName = b.nom.replace(/<[^>]+>/g,'');
-
-      galleryTrack.innerHTML = '';
-      sorted.forEach((p,i) => {
-        galleryTrack.appendChild(makeSlide(p.url, `Photo ${i+1} — ${bienName}`, i===0));
-      });
-
-      galleryDots.innerHTML = sorted.map((_,i)=>
-        `<button class="gallery-dot${i===0?' active':''}" data-idx="${i}" aria-label="Photo ${i+1}"></button>`
-      ).join('');
-      const total = sorted.length;
-      galleryCounter.textContent = `1 / ${total}`;
-      galleryPrev.style.display = total>1?'flex':'none';
-      galleryNext.style.display = total>1?'flex':'none';
-      b._loadedPhotos = sorted.map(p=>({src:p.url,num:p.ordre??0}));
-      goToSlide(0);
-    } else {
-      _origBuildGallery(b);
-    }
-  };
-
-  function wireCards() {
-    document.querySelectorAll('.listing-card[data-bien]').forEach(card => {
-      card.addEventListener('click', e => {
-        if(e.target.closest('a,button')) return;
-        openModal(card.dataset.bien);
-      });
-      const overlay = card.querySelector('.listing-cta-overlay .btn');
-      if(overlay) overlay.addEventListener('click', e => { e.preventDefault(); openModal(card.dataset.bien); });
-    });
-  }
-
-  // Démarrage : essaie Supabase, sinon fallback statique
-  loadBiensFromSupabase().then(rows => {
-    if(rows) {
-      renderCardsFromSupabase(rows);
-    } else {
-      wireCards(); // fallback statique
-    }
-  });
-  </script>
-
-  <script>
-  // ══ POINT 1 — Tunnel : vider localStorage à la fermeture ══════════════════
-  // On marque un timestamp à chaque écriture tunnel
-  // Si > 30 min ou onglet fermé → purge au prochain chargement
-  (function purgeTunnelIfStale() {
-    const TUNNEL_KEYS = [
-      'kaddu_step1','kaddu_step2','kaddu_step3','kaddu_step4',
-      'kaddu_bien','kaddu_prenom','kaddu_nom','kaddu_email',
-      'kaddu_tel','kaddu_otp','dossier_data','tunnel_data',
-      'kaddu_tunnel_ts'
+  // ── Populate 4 accordion blocks ─────────────────────────────────────────────
+  function populateAccordions(b) {
+    const row = b._sbRow || {};
+    const yn = v => v === 'oui' ? ['Oui','oui'] : v === 'non' ? ['Non','non'] : ['—',''];
+
+    // ── 1. CARACTÉRISTIQUES ──────────────────────────────────────────────────
+    const caracData = [
+      ['🅿️ Parking',        ...yn(row.parking),     '🚘 Colocation', ...yn(row.colocation)],
+      ['📦 Box / Garage',   ...yn(row.box),          '🏢 Étage',      row.etage&&row.nb_etages ? row.etage+' / '+row.nb_etages : row.etage||'—', ''],
+      ['🪣 Cave',           ...yn(row.cave),          '💂 Gardiennage',...yn(row.gardiennage)],
+      ['💰 Honoraires',     row.honoraires||'—','',  '🛗 Ascenseur',  ...yn(row.ascenseur)],
+      ['📅 Durée du bail',  row.duree_bail ? row.duree_bail+' mois' : '—','', '🏦 Dépôt garantie', row.depot_garantie||'—',''],
+      ['♿ Accessible PMR', ...yn(row.pmr),'','','',''],
     ];
-    const ts = localStorage.getItem('kaddu_tunnel_ts');
-    const THIRTY_MIN = 30 * 60 * 1000;
-    if (ts && Date.now() - parseInt(ts) > THIRTY_MIN) {
-      TUNNEL_KEYS.forEach(k => localStorage.removeItem(k));
-      localStorage.removeItem('kaddu_tunnel_ts');
-    }
-    // Purge aussi si sessionStorage ne confirme pas la session active
-    // (fermeture d'onglet = nouvelle session)
-    if (!sessionStorage.getItem('kaddu_session_active')) {
-      TUNNEL_KEYS.forEach(k => localStorage.removeItem(k));
-      localStorage.removeItem('kaddu_tunnel_ts');
-    }
-    sessionStorage.setItem('kaddu_session_active', '1');
-  })();
-
-  // ══ POINT 2 & 3 — Hero panel dynamique ══════════════════════════════════════
-  // Lit le bien marqué coup_de_coeur depuis Supabase
-  // Affiche sa photo principale et ouvre sa modale au clic
-
-  let heroBienSlug = 'bantukay'; // fallback statique
-
-  async function loadHeroBien(allRows) {
-    let hero = null;
-    try {
-      // Requête directe coup_de_coeur — sans filtre statut pour éviter les blocages RLS
-      const r = await fetch(
-        `${SB_URL}/rest/v1/biens?coup_de_coeur=eq.true&select=id,titre,slug,categorie,statut,prix,prix_sub,pieces,photos,quartier,ville,immeuble,coup_de_coeur&limit=1`,
-        { headers:{ 'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON } }
-      );
-      const rows = await r.json();
-      console.log('[Kàddu Hero] coup_de_coeur query:', r.status, rows);
-      if (r.ok && Array.isArray(rows) && rows.length) hero = rows[0];
-    } catch(e) {
-      console.warn('[Kàddu Hero] query failed:', e);
-    }
-
-    // Fallback : premier meublé dans allRows
-    if (!hero && allRows?.length) {
-      hero = allRows.find(r => r.categorie === 'meuble') || allRows[0];
-      console.log('[Kàddu Hero] fallback to:', hero?.slug);
-    }
-
-    if (!hero) {
-      console.warn('[Kàddu Hero] no bien found — keeping static content');
-      return;
-    }
-
-    heroBienSlug = hero.slug;
-    const photos = parsePh(hero.photos);
-    const main   = photos.find(p => p.is_main) || photos[0];
-
-    // Image principale — Supabase Storage en priorité, GitHub en fallback
-    const imgDiv = document.getElementById('heroPropImgInner');
-    if (imgDiv) {
-      if (main?.url) {
-        imgDiv.innerHTML = `<img src="${main.url}" alt="${hero.titre||''}"
-          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block"
-          onerror="this.style.display='none'">`;
-      } else {
-        // Fallback GitHub statique si pas de photo Supabase
-        const slug = hero.slug || 'bantukay';
-        imgDiv.innerHTML = `<img src="/assets/images/biens/meubles/${slug}-01.jpeg" alt="${hero.titre||''}"
-          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block"
-          onerror="this.style.display='none'">`;
-      }
-    }
-
-    // Textes
-    const nom = (hero.titre||'').replace(/Le Petit (.+)/, 'Le Petit <em>$1</em>');
-    const nomEl = document.getElementById('heroPropNom');
-    if (nomEl) nomEl.innerHTML = nom;
-
-    const metaEl = document.getElementById('heroPropMeta');
-    if (metaEl) metaEl.textContent = [hero.quartier, hero.ville, hero.immeuble].filter(Boolean).join(' · ');
-
-    const badgeEl = document.getElementById('heroPropBadge');
-    if (badgeEl) badgeEl.textContent = hero.coup_de_coeur ? 'Meublé · Coup de cœur' : (hero.categorie === 'meuble' ? 'Meublé' : 'Non meublé');
-
-    const priceEl = document.getElementById('heroPropPrice');
-    if (priceEl) priceEl.innerHTML = `${hero.prix || 'Sur demande'}<small>${hero.prix_sub ? ' · '+hero.prix_sub : ''}</small>`;
-
-    // Specs
-    const specsEl = document.getElementById('heroPropSpecs');
-    if (specsEl && hero.pieces) {
-      const specs = Array.isArray(hero.specs) ? hero.specs : [];
-      specsEl.innerHTML = [hero.pieces, ...specs.slice(0,3)]
-        .filter(Boolean).map(s => `<span class="spec-chip">${s}</span>`).join('');
-    }
-  }
-
-  function openHeroBien() {
-    if (BIENS[heroBienSlug]) {
-      openModal(heroBienSlug);
-    } else {
-      // Scroll vers les biens si pas dans BIENS
-      document.getElementById('biens')?.scrollIntoView({behavior:'smooth'});
-    }
-  }
-
-  // ══ POINT 4 — Overlay recherche avancée ═════════════════════════════════════
-
-  function openSearchOverlay() {
-    document.getElementById('searchOverlay').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('srLieu')?.focus(), 100);
-  }
-
-  function closeSearchOverlay() {
-    document.getElementById('searchOverlay').style.display = 'none';
-    document.body.style.overflow = '';
-  }
-
-  document.getElementById('searchOverlay').addEventListener('click', e => {
-    if (e.target === document.getElementById('searchOverlay')) closeSearchOverlay();
-  });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.getElementById('searchOverlay').style.display === 'flex') {
-      closeSearchOverlay();
-    }
-  });
-
-  function toggleChip(btn) {
-    btn.classList.toggle('active');
-  }
-
-  function launchSearch() {
-    const lieu      = document.getElementById('srLieu')?.value?.trim().toLowerCase() || '';
-    const categorie = document.getElementById('srCategorie')?.value || '';
-    const pieces    = document.getElementById('srPieces')?.value || '';
-    const surface   = parseInt(document.getElementById('srSurface')?.value) || 0;
-    const activeEq  = [...document.querySelectorAll('.sr-chip.active')].map(c => c.dataset.eq);
-
-    // Filtre sur les cards de la page
-    const cards = document.querySelectorAll('.listing-card[data-bien]');
-    let visible = 0;
-    cards.forEach(card => {
-      const slug = card.dataset.bien;
-      const b    = BIENS[slug];
-      if (!b) { card.style.display = ''; visible++; return; }
-      const loc  = (b.location || '').toLowerCase();
-      const cat  = b._sbRow?.categorie || (b.badge?.toLowerCase().includes('non') ? 'non_meuble' : 'meuble');
-      const surf = b._sbRow?.surface || 0;
-      const eq   = b._sbRow?.equipements_bool || {};
-
-      const matchLieu = !lieu || loc.includes(lieu);
-      const matchCat  = !categorie || cat === categorie;
-      const matchPieces = !pieces || (b._sbRow?.chambres >= parseInt(pieces));
-      const matchSurf = !surface || surf >= surface;
-      const matchEq   = activeEq.every(e => eq[e]);
-
-      if (matchLieu && matchCat && matchPieces && matchSurf && matchEq) {
-        card.style.display = ''; visible++;
-      } else {
-        card.style.display = 'none';
-      }
-    });
-
-    // Résultats inline dans l'overlay
-    const resultsEl = document.getElementById('srResults');
-    const listEl    = document.getElementById('srResultsList');
-    const matching  = [...cards].filter(c => c.style.display !== 'none');
-
-    if (matching.length > 0) {
-      listEl.innerHTML = matching.map(card => {
-        const slug = card.dataset.bien;
-        const b = BIENS[slug];
-        const img = card.querySelector('.listing-media img');
-        return `<div class="sr-result-mini" onclick="closeSearchOverlay();openModal('${slug}')">
-          ${img ? `<img src="${img.src}" alt="${b?.nom?.replace(/<[^>]+>/g,'')||''}" loading="lazy" onerror="this.style.display='none'">` : '<div style="height:110px;background:rgba(191,150,80,.1)"></div>'}
-          <div class="sr-result-mini-body">
-            <h4>${b?.nom?.replace(/<[^>]+>/g,'') || slug}</h4>
-            <p>${b?._sbRow?.quartier || 'Dakar'}</p>
-            <p class="price">${b?.prix || '—'}</p>
-          </div>
-        </div>`;
+    const caracGrid = document.getElementById('accord-carac-grid');
+    if (caracGrid) {
+      caracGrid.innerHTML = caracData.map(([l1,v1,c1,l2,v2,c2]) => {
+        const half1 = `<div class="accord-cell accord-cell-label">${l1}</div><div class="accord-cell accord-cell-val ${c1||''}">${v1}</div>`;
+        const half2 = l2 ? `<div class="accord-cell accord-cell-label">${l2}</div><div class="accord-cell accord-cell-val ${c2||''}">${v2}</div>` : `<div class="accord-cell"></div><div class="accord-cell"></div>`;
+        return `<div class="accord-row">${half1}<div class="accord-divider"></div>${half2}</div>`;
       }).join('');
-      resultsEl.style.display = 'block';
+    }
+
+    // ── 2. CHARGES ───────────────────────────────────────────────────────────
+    const chargesEl = document.getElementById('accord-charges-content');
+    if (chargesEl) {
+      const inclus   = (row.charges_inclus||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const nonInclus = (row.charges_non_inclus||'').split(',').map(s=>s.trim()).filter(Boolean);
+      const CHARGE_ICONS = {
+        'Ordures':'🗑️','Entretien parties communes':'👥','Eau courante':'💧',
+        'Ménage':'🧹','Eau chaude':'🚿','Gaz':'🔥','Gardien':'👤','Ascenseur':'🛗',
+        'Internet':'📶','Internet (Fibre)':'📶','Chauffage':'♨️','Électricité':'💡',
+        'default':'✦'
+      };
+      const chipHtml = arr => arr.map(item=>{
+        const icon = CHARGE_ICONS[item]||CHARGE_ICONS.default;
+        return `<div class="charges-chip ${arr===inclus?'chip-present':'chip-absent'}"><span class="chip-icon">${icon}</span><span class="chip-label">${item}</span></div>`;
+      }).join('');
+
+      chargesEl.innerHTML = `
+        ${row.charges_montant ? `<div class="charges-montant-row"><span style="color:var(--muted)">Montant</span><strong>${row.charges_montant}</strong></div>` : ''}
+        ${row.charges_type ? `<div class="charges-montant-row"><span style="color:var(--muted)">Type de charges</span><strong>${row.charges_type}</strong></div>` : ''}
+        ${inclus.length ? `<div class="charges-chips-wrap"><div class="charges-chips-label">Inclus dans les charges</div><div class="charges-chips">${chipHtml(inclus)}</div></div>` : ''}
+        ${nonInclus.length ? `<div class="charges-chips-wrap"><div class="charges-chips-label">Non inclus dans les charges</div><div class="charges-chips">${chipHtml(nonInclus)}</div></div>` : ''}
+        ${!row.charges_montant&&!inclus.length&&!nonInclus.length ? '<p style="color:var(--muted);font-size:.84rem;padding:12px 0">Détail des charges non renseigné.</p>' : ''}
+      `;
+    }
+
+    // ── 3. MOBILIER ──────────────────────────────────────────────────────────
+    const mob = typeof row.mobilier === 'string' ? (() => { try { return JSON.parse(row.mobilier) } catch { return {} } })() : (row.mobilier || {});
+    const MOB_CATEGORIES = [
+      { label: 'Équipements', items: [
+        {key:'mob_raccord_machine',icon:'🔌',label:'Raccordement machine'},
+        {key:'mob_interphone',icon:'📞',label:'Interphone'},
+        {key:'mob_machine_laver',icon:'🧺',label:'Machine à laver'},
+        {key:'mob_toilettes_sep',icon:'🚽',label:'Toilettes séparées'},
+        {key:'mob_boite_lettres',icon:'📬',label:'Boîte aux lettres'},
+        {key:'mob_digicode',icon:'🔑',label:'Digicode'},
+      ]},
+      { label: 'Couchage', items: [
+        {key:'mob_canape_lit',icon:'🛋️',label:'Canapé lit'},
+        {key:'mob_lit_double',icon:'🛏️',label:'Lit double'},
+        {key:'mob_lit_simple',icon:'🛏️',label:'Lit simple'},
+        {key:'mob_linge_lit',icon:'🧻',label:'Linge de lit'},
+      ]},
+      { label: 'Cuisine', items: [
+        {key:'mob_congelateur',icon:'❄️',label:'Congélateur'},
+        {key:'mob_refrigerateur',icon:'🧊',label:'Réfrigérateur'},
+        {key:'mob_plaques',icon:'🔥',label:'Plaques'},
+        {key:'mob_micro_ondes',icon:'📡',label:'Micro-ondes'},
+        {key:'mob_lave_vaisselle',icon:'🍽️',label:'Lave-vaisselle'},
+        {key:'mob_four',icon:'🫕',label:'Four'},
+        {key:'mob_cafetiere',icon:'☕',label:'Cafetière'},
+        {key:'mob_bouilloire',icon:'🫖',label:'Bouilloire'},
+      ]},
+      { label: 'Ameublement', items: [
+        {key:'mob_dressing',icon:'🚪',label:'Dressing'},
+        {key:'mob_bureau',icon:'🖥️',label:'Bureau'},
+        {key:'mob_tv',icon:'📺',label:'TV'},
+        {key:'mob_chaise',icon:'🪑',label:'Chaises'},
+        {key:'mob_table',icon:'🪵',label:'Table'},
+        {key:'mob_canape',icon:'🛋️',label:'Canapé'},
+        {key:'mob_armoire',icon:'🗄️',label:'Armoire'},
+        {key:'mob_miroir',icon:'🪞',label:'Miroir'},
+      ]},
+    ];
+    const mobEl = document.getElementById('accord-mobilier-content');
+    if (mobEl) {
+      // Only show section if at least one item defined
+      const hasAny = MOB_CATEGORIES.some(cat => cat.items.some(it => it.key in mob));
+      mobEl.innerHTML = hasAny
+        ? MOB_CATEGORIES.map(cat => `
+            <div class="mob-section">
+              <div class="mob-section-title">${cat.label}</div>
+              <div class="mob-grid">
+                ${cat.items.map(it => {
+                  const present = mob[it.key];
+                  if (!(it.key in mob) && !present) return ''; // skip unset
+                  return `<div class="mob-chip ${present ? 'mob-present' : 'mob-absent'}">
+                    <span class="mob-icon">${it.icon}</span>
+                    <span class="mob-label">${it.label}</span>
+                  </div>`;
+                }).join('')}
+              </div>
+            </div>`).join('')
+        : '<p style="color:var(--muted);font-size:.84rem;padding:4px 0">Mobilier non renseigné pour ce bien.</p>';
+    }
+
+    // ── 4. LOCALISATION ──────────────────────────────────────────────────────
+    const mapEl = document.getElementById('modalMap');
+    const svBtn  = document.getElementById('modalStreetViewBtn');
+    const lat = parseFloat(row.lat), lng = parseFloat(row.lng);
+
+    if (mapEl && !isNaN(lat) && !isNaN(lng)) {
+      document.getElementById('mapPlaceholder')?.remove();
+      // Leaflet dark map
+      if (!window._leafletLoaded) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(link);
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.onload = () => { window._leafletLoaded = true; renderLeaflet(mapEl, lat, lng); };
+        document.head.appendChild(script);
+      } else {
+        renderLeaflet(mapEl, lat, lng);
+      }
+      if (svBtn) {
+        svBtn.href = `https://www.google.com/maps?q=${lat},${lng}&layer=c&cbll=${lat},${lng}`;
+        svBtn.style.display = 'inline-flex';
+      }
     } else {
-      listEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted);font-size:.88rem">Aucun bien ne correspond à ces critères.</div>`;
-      resultsEl.style.display = 'block';
+      if (svBtn) svBtn.style.display = 'none';
+      if (mapEl) mapEl.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.84rem">📍 Coordonnées GPS non renseignées pour ce bien.<br><small>À renseigner dans l\'admin → Localisation</small></div>';
     }
   }
 
-  function showAlerteForm() {
-    document.getElementById('alerteForm').style.display = 'block';
-    document.getElementById('alertePrenom')?.focus();
+  function renderLeaflet(container, lat, lng) {
+    container.innerHTML = '';
+    // Destroy existing map instance if any
+    if (container._leaflet_id) {
+      try { window.L.map(container).remove(); } catch(_) {}
+      delete container._leaflet_id;
+    }
+    const map = window.L.map(container, { zoomControl:true, scrollWheelZoom:false }).setView([lat, lng], 16);
+    // CartoDB dark tiles (free, no API key)
+    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap © CartoDB',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+    // Gold marker
+    const icon = window.L.divIcon({
+      html: `<div style="width:16px;height:16px;border-radius:50%;background:#BF9650;border:3px solid #F8F4EE;box-shadow:0 0 12px rgba(191,150,80,.6)"></div>`,
+      className: '',
+      iconSize: [16,16],
+      iconAnchor: [8,8]
+    });
+    window.L.marker([lat, lng], {icon}).addTo(map);
   }
-  function hideAlerteForm() {
-    document.getElementById('alerteForm').style.display = 'none';
-  }
-
-  async function saveAlerte() {
-    const prenom  = document.getElementById('alertePrenom')?.value.trim();
-    const contact = document.getElementById('alerteContact')?.value.trim();
-    const freq    = document.querySelector('input[name="alerteFreq"]:checked')?.value || 'immediat';
-    if (!prenom || !contact) { alert('Merci de renseigner votre prénom et contact.'); return; }
-
-    const criteres = {
-      lieu:      document.getElementById('srLieu')?.value.trim() || null,
-      categorie: document.getElementById('srCategorie')?.value || null,
-      loyer_max: document.getElementById('srLoyer')?.value || null,
-      surface_min: document.getElementById('srSurface')?.value || null,
-      pieces:    document.getElementById('srPieces')?.value || null,
-      duree:     document.getElementById('srDuree')?.value || null,
-      equipements: [...document.querySelectorAll('.sr-chip.active')].map(c => c.dataset.eq),
-    };
-
-    try {
-      await fetch(`${SB_URL}/rest/v1/alertes_biens`, {
-        method: 'POST',
-        headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ prenom, contact, frequence: freq, criteres: JSON.stringify(criteres), created_at: new Date().toISOString() })
-      });
-    } catch (_) {}
-
-    document.getElementById('alerteMsg').style.display = 'inline';
-    setTimeout(() => {
-      hideAlerteForm();
-      document.getElementById('alerteMsg').style.display = 'none';
-    }, 2500);
-  }
-
-  // ══ Patch loadBiensFromSupabase pour passer rows au hero ════════════════════
-  const _origLoadBiens = loadBiensFromSupabase;
-  loadBiensFromSupabase = async function() {
-    const rows = await _origLoadBiens();
-    if (rows) loadHeroBien(rows);
-    return rows;
-  };
-
-  // Appel hero indépendant au démarrage — ne dépend pas des autres requêtes
-  // Lance en parallèle sans attendre loadBiensFromSupabase
-  loadHeroBien([]);
-  // ── Ticker infini — duplication du contenu ───────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────────
   (function initTicker() {
     const track = document.getElementById('tickerTrack');
     if (!track) return;
