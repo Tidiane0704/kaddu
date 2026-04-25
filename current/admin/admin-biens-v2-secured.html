@@ -312,6 +312,23 @@
             </select>
           </div>
         </div>
+
+        <!-- Coup de cœur toggle -->
+        <div class="field" style="margin-bottom:16px">
+          <label>Mise en avant</label>
+          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 14px;border:1px solid var(--bdr);border-radius:5px;background:rgba(255,255,255,.02);transition:.2s" id="coupDeCoeurLabel">
+            <div style="position:relative;width:44px;height:24px;flex-shrink:0">
+              <input type="checkbox" id="bCoupDeCoeur" style="position:absolute;opacity:0;width:0;height:0" onchange="updateCoupDeCoeurUI()"/>
+              <div id="coupDeCoeurTrack" style="position:absolute;inset:0;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--bdr);transition:.2s"></div>
+              <div id="coupDeCoeurThumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:rgba(248,244,238,.4);transition:.2s"></div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700" id="coupDeCoeurText">Coup de cœur désactivé</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Ce bien s'affiche en vedette sur la homepage · Un seul bien à la fois</div>
+            </div>
+          </label>
+        </div>
+
         <div class="field"><label>Accroche courte (affiché en hero)</label><input id="bAccroche" placeholder="Appartement premium avec vue dégagée, WiFi fibre et gardiennage 24h."/></div>
       </div>
 
@@ -758,6 +775,7 @@ function renderBiens(){
         <div class="no-img" style="${main?"display:none":""}">📷 Aucune photo</div>
         <span class="bc-sbadge ${sc}">${sl}</span>
         <span class="bc-tbadge">${esc(CLABELS[b.categorie]||b.categorie)}</span>
+        ${b.coup_de_coeur?`<span style="position:absolute;bottom:9px;left:9px;background:rgba(191,150,80,.9);color:#111;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px">⭐ Coup de cœur</span>`:""}
       </div>
       <div class="bc-body">
         ${comm?`<div class="comm-tag"><div class="cavatar">${comm.photo_url?`<img src="${esc(comm.photo_url)}" alt="${esc(comm.nom)}">`:(comm.nom||"?").charAt(0)}</div><span>${esc(comm.nom)}</span></div>`:""}
@@ -826,6 +844,8 @@ function openBienDrawer(id=null){
   document.getElementById("bCategorie").value="meuble";
   document.getElementById("bStatut").value="brouillon";
   document.getElementById("bDispo").value="";
+  document.getElementById("bCoupDeCoeur").checked=false;
+  updateCoupDeCoeurUI();
   editPhotos=[];
   document.getElementById("uploadBar").style.width="0";
 
@@ -846,6 +866,8 @@ function openBienDrawer(id=null){
     document.getElementById("bTypeBien").value=b.type_bien||"appartement";
     document.getElementById("bCategorie").value=b.categorie||"meuble";
     document.getElementById("bStatut").value=b.statut||"brouillon";
+    document.getElementById("bCoupDeCoeur").checked=b.coup_de_coeur||false;
+    updateCoupDeCoeurUI();
     document.getElementById("bAccroche").value=b.accroche||"";
     document.getElementById("bAdresse").value=b.adresse||"";
     document.getElementById("bQuartier").value=b.quartier||"";
@@ -1040,9 +1062,12 @@ document.getElementById("saveBienBtn").addEventListener("click",async()=>{
   const slug=document.getElementById("bSlug").value.trim();
   if(!titre||!slug){toast("Titre et slug obligatoires.","err");return}
 
+  const coupDeCoeur = document.getElementById("bCoupDeCoeur").checked;
+
   const payload={
     titre,slug,
     ref_interne:v("bRef"),type_bien:v("bTypeBien"),categorie:v("bCategorie"),statut:v("bStatut"),accroche:v("bAccroche"),
+    coup_de_coeur: coupDeCoeur,
     adresse:v("bAdresse"),quartier:v("bQuartier"),ville:v("bVille")||"Dakar",immeuble:v("bImmeuble"),
     lat:vn("bLat"),lng:vn("bLng"),zone_carte:v("bZoneCarte"),desc_quartier:v("bDescQuartier"),
     prix:v("bPrix"),prix_sub:v("bPrixSub"),charges:v("bCharges"),caution:v("bCaution"),
@@ -1066,6 +1091,14 @@ document.getElementById("saveBienBtn").addEventListener("click",async()=>{
   document.getElementById("saveStatus").textContent="";
 
   try{
+    // Si coup de cœur activé → désactiver sur tous les autres biens d'abord
+    if(coupDeCoeur){
+      const others = allBiens.filter(b=>b.coup_de_coeur && b.id!==bId);
+      for(const other of others){
+        await sbPatch("biens",other.id,{coup_de_coeur:false,updated_at:new Date().toISOString()});
+        other.coup_de_coeur=false;
+      }
+    }
     let res;
     if(bId){
       res=await sbPatch("biens",bId,payload);
@@ -1075,12 +1108,42 @@ document.getElementById("saveBienBtn").addEventListener("click",async()=>{
       res=await sbPost("biens",{...payload,created_at:new Date().toISOString()});
       if(Array.isArray(res)&&res[0])allBiens.unshift(res[0]);
     }
-    closeBienDrawer();renderBiens();toast(bId?"Bien mis à jour ✓":"Bien créé ✓");
+    closeBienDrawer();renderBiens();
+    toast(bId?"Bien mis à jour ✓"+(coupDeCoeur?" · ⭐ Coup de cœur activé":""):"Bien créé ✓");
   }catch(e){
     document.getElementById("saveStatus").textContent="Erreur : "+e.message;
     toast("Erreur : "+e.message,"err");
   }finally{btn.disabled=false;btn.textContent="💾 Enregistrer"}
 });
+
+// Toggle UI coup de cœur
+function updateCoupDeCoeurUI(){
+  const checked = document.getElementById("bCoupDeCoeur")?.checked;
+  const track   = document.getElementById("coupDeCoeurTrack");
+  const thumb   = document.getElementById("coupDeCoeurThumb");
+  const text    = document.getElementById("coupDeCoeurText");
+  const label   = document.getElementById("coupDeCoeurLabel");
+  if(!track) return;
+  if(checked){
+    track.style.background  = "rgba(191,150,80,.35)";
+    track.style.borderColor = "var(--or)";
+    thumb.style.background  = "var(--or)";
+    thumb.style.left        = "23px";
+    text.textContent        = "⭐ Coup de cœur activé — affiché en vedette sur la homepage";
+    text.style.color        = "var(--or)";
+    label.style.borderColor = "var(--bds)";
+    label.style.background  = "rgba(191,150,80,.06)";
+  } else {
+    track.style.background  = "rgba(255,255,255,.08)";
+    track.style.borderColor = "var(--bdr)";
+    thumb.style.background  = "rgba(248,244,238,.4)";
+    thumb.style.left        = "3px";
+    text.textContent        = "Coup de cœur désactivé";
+    text.style.color        = "var(--txt)";
+    label.style.borderColor = "var(--bdr)";
+    label.style.background  = "rgba(255,255,255,.02)";
+  }
+}
 
 function v(id){return document.getElementById(id)?.value.trim()||null}
 function vn(id){const x=parseFloat(document.getElementById(id)?.value);return isNaN(x)?null:x}
