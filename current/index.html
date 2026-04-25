@@ -301,57 +301,47 @@
     .proof-item span{font-size:.76rem;color:rgba(248,244,238,.44)}
 
     /* ══ LISTINGS ══ */
-    .listing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    /* ══ LISTING GRID — 4 colonnes style Manda ══ */
+    .listing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
     .listing-card{
-      border:1px solid var(--bdr);border-radius:var(--radius);
+      border:1px solid var(--bdr);border-radius:16px;
       background:var(--card);overflow:hidden;
-      transition:.28s ease;cursor:pointer
+      transition:.28s ease;cursor:pointer;
+      display:flex;flex-direction:column;
     }
-    .listing-card:hover{border-color:var(--bds);transform:translateY(-4px);box-shadow:0 20px 48px rgba(0,0,0,.3)}
+    .listing-card:hover{border-color:var(--bds);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.28)}
     .listing-card:hover .listing-cta-overlay{opacity:1}
-    .listing-media{
-      height:230px;position:relative;overflow:hidden
-    }
-    /* Stylized apartment illustrations per unit */
-    .listing-media-inner{
-      position:absolute;inset:0;
-      display:flex;align-items:center;justify-content:center
-    }
-    .listing-media-overlay{
-      position:absolute;inset:0;
-      background:linear-gradient(to bottom, transparent 40%, rgba(11,32,57,.9) 100%)
-    }
+    .listing-media{height:190px;position:relative;overflow:hidden}
+    .listing-media-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .listing-media-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,rgba(11,32,57,.85) 100%)}
     .listing-cta-overlay{
-      position:absolute;inset:0;
-      background:rgba(7,24,43,.7);backdrop-filter:blur(4px);
-      display:flex;align-items:center;justify-content:center;
-      opacity:0;transition:.25s
+      position:absolute;inset:0;background:rgba(7,24,43,.65);backdrop-filter:blur(4px);
+      display:flex;align-items:center;justify-content:center;opacity:0;transition:.22s
     }
     .listing-badge{
-      position:absolute;top:14px;left:14px;
+      position:absolute;top:10px;left:10px;z-index:2;
       background:rgba(191,150,80,.9);color:#0a0a0a;
-      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-      padding:5px 10px;border-radius:999px;font-weight:700;z-index:2
+      font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+      padding:4px 9px;border-radius:999px;font-weight:700
     }
     .listing-avail{
-      position:absolute;top:14px;right:14px;z-index:2;
-      background:rgba(0,200,117,.15);border:1px solid rgba(0,200,117,.4);color:#00C875;
-      font-size:.62rem;padding:5px 10px;border-radius:999px;display:flex;align-items:center;gap:5px
+      position:absolute;top:10px;right:10px;z-index:2;
+      background:rgba(0,200,117,.12);border:1px solid rgba(0,200,117,.35);color:#00C875;
+      font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+      padding:4px 9px;border-radius:999px;display:flex;align-items:center;gap:4px
     }
     .listing-avail::before{content:"";width:5px;height:5px;border-radius:50%;background:#00C875}
-    .listing-body{padding:20px}
-    .listing-body h3{font-size:1.25rem;margin-bottom:5px}
-    .listing-meta{font-size:.78rem;color:rgba(248,244,238,.42);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    .listing-meta::before{content:"📍";font-size:.7rem}
-    .listing-specs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-    .listing-spec{
-      font-size:.7rem;padding:4px 10px;border-radius:999px;
-      background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.16);color:rgba(248,244,238,.68)
-    }
-    .listing-desc{font-size:.83rem;color:rgba(248,244,238,.50);margin-bottom:16px;line-height:1.55}
-    .listing-price-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:14px;border-top:1px solid rgba(191,150,80,.1)}
-    .listing-price strong{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300;color:var(--or)}
-    .listing-price small{font-size:.66rem;color:rgba(248,244,238,.38);display:block}
+    .listing-body{padding:13px 14px;flex:1;display:flex;flex-direction:column;gap:5px}
+    .listing-body h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;line-height:1.2;margin:0}
+    .listing-meta{font-size:.72rem;color:rgba(248,244,238,.4);display:flex;align-items:center;gap:5px}
+    .listing-meta::before{content:"📍";font-size:.64rem}
+    .listing-specs{display:flex;flex-wrap:wrap;gap:4px}
+    .listing-spec{font-size:.64rem;padding:2px 7px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.58);background:rgba(191,150,80,.05)}
+    .listing-desc{font-size:.76rem;color:rgba(248,244,238,.46);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;text-align:left}
+    .listing-price-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid rgba(191,150,80,.1);margin-top:auto}
+    .listing-price strong{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;color:var(--or)}
+    .listing-price small{font-size:.6rem;color:rgba(248,244,238,.35);display:block}
+
 
     /* Apartment SVG illustrations */
     .apt-bg-1{background:linear-gradient(145deg,#0e1f12 0%,#1c2d10 30%,#0f1e2a 60%,#0a1520 100%)}
@@ -580,7 +570,8 @@
     /* ══ RESPONSIVE ══ */
     @media (max-width:1100px){
       .hero-grid,.proofs-grid,.footer-grid{grid-template-columns:1fr}
-      .value-grid,.how-grid,.listing-grid{grid-template-columns:1fr 1fr}
+      .value-grid,.how-grid{grid-template-columns:1fr 1fr}
+      .listing-grid{grid-template-columns:1fr 1fr}
       .pain-grid,.split-entry,.cta-grid,.proof-list{grid-template-columns:1fr}
       .hero-panel{min-height:auto}
       .section-head{flex-direction:column;align-items:start}
@@ -1298,12 +1289,11 @@
     <!-- ══ LISTINGS ══ -->
     <section class="section" id="biens">
       <div class="container">
-        <div class="section-head">
-          <div>
-            <span class="eyebrow">Sélection Kàddu · VDN Dakar</span>
-            <h2>Des biens présentés avec <em>clarté et projection</em>.</h2>
-          </div>
-          <p class="section-head-desc">Chaque appartement est photographié, décrit avec précision et présenté avec un dossier de candidature guidé.</p>
+
+        <!-- Titre style Manda -->
+        <div style="text-align:center;margin-bottom:36px">
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;color:var(--or);font-weight:300;margin-bottom:8px">Votre futur bien vous attend</div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:400;color:var(--blanc)">Nos dernières annonces</h2>
         </div>
 
         <div class="listing-grid" id="listingGrid">
@@ -1489,6 +1479,14 @@
           </article>
 
         </div>
+
+        <!-- Bouton découvrir tous les logements -->
+        <div style="text-align:center;margin-top:32px">
+          <a href="/biens/" class="btn btn-secondary" style="padding:14px 32px;font-size:.82rem;border-radius:999px;letter-spacing:.1em;display:inline-flex;align-items:center;gap:8px">
+            Découvrir tous nos logements →
+          </a>
+        </div>
+
       </div>
     </section>
 
@@ -2110,8 +2108,16 @@
     // Specs
     document.getElementById('modalSpecs').innerHTML = b.specs
       .map(s => `<span class="modal-spec">${s}</span>`).join('');
-    // Desc
-    document.getElementById('modalDesc').textContent = b.desc;
+    // Desc — préserve les sauts de ligne et la mise en page saisie dans l'admin
+    const descEl = document.getElementById('modalDesc');
+    const rawDesc = b.desc || '';
+    // Convertit \n en <br>, préserve les espaces multiples, échappe le HTML sauf <br>
+    descEl.innerHTML = rawDesc
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\n/g,'<br>')
+      .replace(/\t/g,'&nbsp;&nbsp;&nbsp;&nbsp;');
+    // Retire text-align:justify sur la description pour respecter les sauts de ligne intentionnels
+    descEl.style.textAlign = 'left';
     // Equip
     document.getElementById('modalEquip').innerHTML = b.equip
       .map(([icon, label]) => `<div class="modal-equip-item"><span>${icon}</span><span>${label}</span></div>`).join('');
