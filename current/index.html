@@ -2590,22 +2590,30 @@
   let heroBienSlug = 'bantukay'; // fallback statique
 
   async function loadHeroBien(allRows) {
-    // Requête dédiée pour récupérer le bien coup_de_coeur avec ses photos complètes
     let hero = null;
     try {
+      // Requête directe coup_de_coeur — sans filtre statut pour éviter les blocages RLS
       const r = await fetch(
-        `${SB_URL}/rest/v1/biens?coup_de_coeur=eq.true&statut=neq.brouillon&select=*&limit=1`,
+        `${SB_URL}/rest/v1/biens?coup_de_coeur=eq.true&select=id,titre,slug,categorie,statut,prix,prix_sub,pieces,photos,quartier,ville,immeuble,coup_de_coeur&limit=1`,
         { headers:{ 'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON } }
       );
-      if (r.ok) {
-        const rows = await r.json();
-        if (rows.length) hero = rows[0];
-      }
-    } catch(_) {}
+      const rows = await r.json();
+      console.log('[Kàddu Hero] coup_de_coeur query:', r.status, rows);
+      if (r.ok && Array.isArray(rows) && rows.length) hero = rows[0];
+    } catch(e) {
+      console.warn('[Kàddu Hero] query failed:', e);
+    }
 
-    // Fallback : premier meublé disponible dans les rows déjà chargés
-    if (!hero) hero = allRows?.find(r => r.categorie === 'meuble' && r.statut !== 'brouillon');
-    if (!hero) return;
+    // Fallback : premier meublé dans allRows
+    if (!hero && allRows?.length) {
+      hero = allRows.find(r => r.categorie === 'meuble') || allRows[0];
+      console.log('[Kàddu Hero] fallback to:', hero?.slug);
+    }
+
+    if (!hero) {
+      console.warn('[Kàddu Hero] no bien found — keeping static content');
+      return;
+    }
 
     heroBienSlug = hero.slug;
     const photos = parsePh(hero.photos);
@@ -2789,6 +2797,10 @@
     if (rows) loadHeroBien(rows);
     return rows;
   };
+
+  // Appel hero indépendant au démarrage — ne dépend pas des autres requêtes
+  // Lance en parallèle sans attendre loadBiensFromSupabase
+  loadHeroBien([]);
   // ─────────────────────────────────────────────────────────────────────────────
   </script>
 
