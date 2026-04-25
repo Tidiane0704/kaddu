@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tous nos logements — Kàddu · Dakar</title>
+  <meta name="description" content="Découvrez tous les appartements meublés et non meublés disponibles à Dakar — vérifiés Kàddu, visites 360°, dossier digital."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --or:#BF9650;--orl:#DDB96E;--nbl:#07182B;--card:#0b2039;
+      --txt:#F8F4EE;--muted:rgba(248,244,238,.55);
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);
+      --green:#00C875;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#070c15;color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.7}
+    body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 80% 50% at 70% 0%,rgba(191,150,80,.08),transparent 55%),linear-gradient(180deg,#070c15 0%,#0a1628 50%,#07182b 100%)}
+    a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    h1,h2,h3{font-family:'Playfair Display',serif;font-weight:300;line-height:1.1}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(7,12,21,.85);border-bottom:1px solid var(--bdr);height:68px;display:flex;align-items:center}
+    .nav-inner{max-width:1300px;margin:0 auto;padding:0 28px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(191,150,80,.06));border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:var(--or)}
+    .brand-text{display:flex;flex-direction:column;gap:1px}
+    .brand-name{font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+    .brand-tag{font-size:.6rem;color:rgba(248,244,238,.3);letter-spacing:.12em;text-transform:uppercase}
+    .nav-back{font-size:.76rem;color:rgba(248,244,238,.48);display:flex;align-items:center;gap:6px;transition:.2s}
+    .nav-back:hover{color:var(--or)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:none;cursor:pointer;padding:11px 20px;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:.22s;white-space:nowrap}
+    .btn-primary{background:var(--or);color:#0a0a0a}
+    .btn-primary:hover{background:var(--orl);transform:translateY(-1px)}
+    .btn-secondary{background:transparent;color:var(--txt);border:1px solid rgba(248,244,238,.16)}
+    .btn-secondary:hover{border-color:var(--or);color:var(--or)}
+
+    /* CONTAINER */
+    .container{max-width:1300px;margin:0 auto;padding:0 28px}
+
+    /* PAGE HEADER */
+    .page-header{padding:48px 0 36px;text-align:center}
+    .page-header .eyebrow{display:inline-flex;align-items:center;gap:.6rem;color:var(--or);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px}
+    .page-header .eyebrow::before{content:"";width:18px;height:1px;background:var(--or)}
+    .page-header h1{font-size:clamp(2rem,4vw,3rem);margin-bottom:10px}
+    .page-header p{font-size:.95rem;color:var(--muted);max-width:520px;margin:0 auto}
+
+    /* FILTERS BAR */
+    .filters-bar{
+      background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:16px;
+      padding:16px 20px;margin-bottom:32px;
+      display:flex;gap:12px;align-items:end;flex-wrap:wrap
+    }
+    .filter-group{display:flex;flex-direction:column;gap:6px;min-width:140px;flex:1}
+    .filter-group label{font-size:.65rem;color:var(--or);text-transform:uppercase;letter-spacing:.14em}
+    .filter-group select,.filter-group input{
+      padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);
+      color:var(--txt);font-size:.82rem;font-family:'DM Sans',sans-serif;
+      border-radius:8px;outline:none;appearance:none;transition:.18s
+    }
+    .filter-group select:focus,.filter-group input:focus{border-color:var(--or)}
+    .filter-group select option{background:#0b2039}
+    .filter-actions{display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+    .filter-count{font-size:.78rem;color:var(--muted);white-space:nowrap;align-self:center}
+
+    /* CHIPS CATEGORIE */
+    .cat-chips{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+    .cat-chip{
+      padding:8px 16px;border:1px solid var(--bdr);border-radius:999px;
+      font-size:.76rem;cursor:pointer;transition:.18s;background:rgba(255,255,255,.02);color:var(--muted)
+    }
+    .cat-chip.active{background:rgba(191,150,80,.14);border-color:var(--or);color:var(--or);font-weight:600}
+    .cat-chip:hover:not(.active){border-color:rgba(191,150,80,.28);color:var(--txt)}
+
+    /* GRID */
+    .biens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;min-height:300px}
+
+    /* CARD */
+    .bien-card{
+      border:1px solid var(--bdr);border-radius:16px;background:var(--card);
+      overflow:hidden;cursor:pointer;transition:.26s;display:flex;flex-direction:column
+    }
+    .bien-card:hover{border-color:var(--bds);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.28)}
+    .bien-card:hover .card-overlay{opacity:1}
+    .card-img{height:210px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(191,150,80,.12),rgba(7,24,43,.9))}
+    .card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+    .bien-card:hover .card-img img{transform:scale(1.04)}
+    .card-overlay{position:absolute;inset:0;background:rgba(7,24,43,.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;opacity:0;transition:.22s}
+    .card-badge{position:absolute;top:10px;left:10px;z-index:2;padding:4px 9px;border-radius:999px;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+    .badge-meuble{background:rgba(191,150,80,.9);color:#0a0a0a}
+    .badge-nm{background:rgba(74,120,180,.88);color:#e8f0ff;border:1px solid rgba(120,170,240,.3)}
+    .card-360{position:absolute;top:10px;right:10px;z-index:2;background:rgba(7,24,43,.7);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.28);color:var(--or);font-size:.6rem;padding:4px 9px;border-radius:999px;letter-spacing:.08em;text-transform:uppercase}
+    .card-status{position:absolute;bottom:10px;left:10px;z-index:2;background:rgba(0,200,117,.12);border:1px solid rgba(0,200,117,.35);color:#00C875;font-size:.6rem;padding:4px 9px;border-radius:999px;display:flex;align-items:center;gap:4px}
+    .card-status::before{content:"";width:5px;height:5px;border-radius:50%;background:#00C875}
+    .card-body{padding:15px 16px;flex:1;display:flex;flex-direction:column;gap:6px}
+    .card-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;line-height:1.2}
+    .card-body h3 em{font-style:italic;color:var(--or)}
+    .card-location{font-size:.74rem;color:rgba(248,244,238,.4);display:flex;align-items:center;gap:4px}
+    .card-location::before{content:"📍";font-size:.65rem}
+    .card-specs{display:flex;flex-wrap:wrap;gap:4px}
+    .card-spec{font-size:.65rem;padding:3px 8px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.58)}
+    .card-desc{font-size:.78rem;color:rgba(248,244,238,.46);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid rgba(191,150,80,.1);margin-top:auto}
+    .card-price{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;color:var(--or)}
+    .card-price small{font-size:.6rem;color:rgba(248,244,238,.35);display:block;font-family:'DM Sans',sans-serif}
+    .card-cta-meuble{background:var(--or);color:#0a0a0a;padding:8px 14px;border-radius:999px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;transition:.2s;white-space:nowrap}
+    .card-cta-meuble:hover{background:var(--orl)}
+    .card-cta-nm{background:rgba(74,120,180,.12);color:rgba(148,195,255,.85);border:1px solid rgba(74,120,180,.28);padding:8px 14px;border-radius:999px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s;white-space:nowrap;text-decoration:none;display:inline-flex}
+    .card-cta-nm:hover{background:rgba(74,120,180,.22)}
+    .bail-tag{display:inline-block;font-size:.62rem;color:rgba(74,158,255,.72);background:rgba(74,120,180,.1);border:1px solid rgba(74,120,180,.18);padding:2px 7px;border-radius:999px;margin-top:2px}
+
+    /* EMPTY + LOADER */
+    .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+    .empty-state .icon{font-size:3rem;margin-bottom:14px}
+    .loader{grid-column:1/-1;display:flex;justify-content:center;padding:60px 0}
+    .loader-dot{width:8px;height:8px;border-radius:50%;background:var(--or);animation:ldot 1.2s infinite}
+    @keyframes ldot{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+
+    /* PAGINATION */
+    .pagination{display:flex;justify-content:center;gap:8px;margin-top:36px;flex-wrap:wrap}
+    .page-btn{padding:8px 14px;border:1px solid var(--bdr);border-radius:8px;background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;font-size:.8rem;transition:.18s;font-family:'DM Sans',sans-serif}
+    .page-btn:hover{border-color:var(--or);color:var(--or)}
+    .page-btn.active{background:rgba(191,150,80,.14);border-color:var(--or);color:var(--or);font-weight:700}
+
+    /* FOOTER */
+    footer{padding:36px 0 24px;border-top:1px solid var(--bdr);margin-top:64px;background:rgba(0,0,0,.12)}
+    .footer-bottom{display:flex;justify-content:space-between;gap:14px;align-items:center;font-size:.72rem;color:rgba(248,244,238,.26)}
+
+    /* RESPONSIVE */
+    @media(max-width:900px){.biens-grid{grid-template-columns:1fr 1fr}.filters-bar{flex-direction:column}.filter-group{min-width:100%}}
+    @media(max-width:580px){.biens-grid{grid-template-columns:1fr}.nav-inner{padding:0 16px}.container{padding:0 16px}}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <div class="brand-mark">K</div>
+      <div class="brand-text">
+        <div class="brand-name">Kàddu</div>
+        <div class="brand-tag">La parole qui engage</div>
+      </div>
+    </a>
+    <a href="/" class="nav-back">← Accueil</a>
+    <a class="btn btn-primary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="eyebrow">Sélection Kàddu · Dakar</div>
+      <h1>Tous nos <em>logements</em></h1>
+      <p>Appartements vérifiés, meublés et non meublés — visites 360°, dossier digital, paiement sécurisé.</p>
+    </div>
+
+    <!-- CATEGORY CHIPS -->
+    <div class="cat-chips">
+      <div class="cat-chip active" data-cat="">Tous les biens</div>
+      <div class="cat-chip" data-cat="meuble">🛋️ Meublés</div>
+      <div class="cat-chip" data-cat="non_meuble">🏠 Non meublés</div>
+    </div>
+
+    <!-- FILTERS BAR -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <label>Quartier / Ville</label>
+        <input id="fLieu" type="text" placeholder="Ex : VDN, Almadies…" oninput="applyFilters()"/>
+      </div>
+      <div class="filter-group">
+        <label>Nb de pièces</label>
+        <select id="fPieces" onchange="applyFilters()">
+          <option value="">Toutes</option>
+          <option value="1">1 pièce</option>
+          <option value="2">2 pièces</option>
+          <option value="3">3 pièces</option>
+          <option value="4">4+ pièces</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Surface min (m²)</label>
+        <select id="fSurface" onchange="applyFilters()">
+          <option value="">Toutes</option>
+          <option value="30">≥ 30 m²</option>
+          <option value="50">≥ 50 m²</option>
+          <option value="70">≥ 70 m²</option>
+          <option value="100">≥ 100 m²</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Statut</label>
+        <select id="fStatut" onchange="applyFilters()">
+          <option value="">Tous</option>
+          <option value="disponible">Disponible</option>
+          <option value="reserve">Réservé</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <span class="filter-count" id="filterCount"></span>
+        <button class="btn btn-secondary" onclick="resetFilters()" style="padding:9px 16px;font-size:.72rem">Réinitialiser</button>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="biens-grid" id="biensGrid">
+      <div class="loader"><div class="loader-dot"></div></div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination" id="pagination"></div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© Kàddu — La parole qui engage · kaddu.net</span>
+      <span>Plateforme immobilière 100% digitale · Dakar, Sénégal</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MODAL BIEN (simplifié) ══ -->
+<div id="modalBg" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px">
+  <div id="modalBox" style="width:100%;max-width:700px;max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#0b1e33,#081525);border:1px solid var(--bds);border-radius:24px;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="position:sticky;top:0;z-index:10;background:rgba(8,21,37,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:10px;align-items:center">
+        <span id="mBadge" style="padding:4px 10px;border-radius:999px;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase"></span>
+        <span style="background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.3);color:#00C875;font-size:.62rem;padding:4px 10px;border-radius:999px">Disponible</span>
+      </div>
+      <button onclick="closeModal()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(248,244,238,.6);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- Gallery -->
+    <div id="mGallery" style="height:300px;overflow:hidden;position:relative;background:#060e1a"></div>
+    <!-- Body -->
+    <div style="padding:22px">
+      <h2 id="mTitre" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:300;margin-bottom:6px"></h2>
+      <div id="mLocation" style="font-size:.84rem;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:5px">📍</div>
+      <div id="mSpecs" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px"></div>
+      <div style="font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px">À propos du bien</div>
+      <div id="mDesc" style="font-size:.9rem;color:rgba(248,244,238,.6);line-height:1.75;margin-bottom:18px;white-space:pre-line"></div>
+      <div style="font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Conditions</div>
+      <div id="mConditions" style="background:rgba(7,24,43,.5);border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:18px"></div>
+    </div>
+    <!-- CTA -->
+    <div style="position:sticky;bottom:0;background:rgba(8,21,37,.95);backdrop-filter:blur(10px);border-top:1px solid var(--bdr);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <div id="mPrix" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:300;color:var(--or)"></div>
+        <div id="mPrixSub" style="font-size:.7rem;color:rgba(248,244,238,.35)"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a id="m360Btn" href="#" target="_blank" style="display:none;align-items:center;gap:5px;padding:11px 15px;border:1px solid rgba(191,150,80,.28);border-radius:999px;background:rgba(191,150,80,.08);color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:.2s;text-decoration:none">🌀 Voir en 360°</a>
+        <a id="mWA" href="#" target="_blank" style="background:#25D366;color:#fff;padding:11px 15px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 WhatsApp</a>
+        <a id="mCTA" href="#" style="background:var(--or);color:#0a0a0a;padding:11px 20px;border-radius:999px;font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Déposer mon dossier →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ CONFIG ════════════════════════════════════════
+const SB   = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
+const ANON = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+
+// ══ STATE ═════════════════════════════════════════
+let allBiens = [];
+let filtered = [];
+let currentCat = '';
+let currentPage = 1;
+const PER_PAGE = 12;
+
+// ══ LOAD ══════════════════════════════════════════
+async function loadBiens() {
+  try {
+    const r = await fetch(
+      `${SB}/rest/v1/biens?statut=neq.brouillon&order=coup_de_coeur.desc,created_at.desc&select=*`,
+      { headers:{ 'apikey':ANON,'Authorization':'Bearer '+ANON } }
+    );
+    if (!r.ok) throw new Error(await r.text());
+    allBiens = await r.json();
+    filtered = [...allBiens];
+    document.getElementById('filterCount').textContent = `${allBiens.length} bien${allBiens.length>1?'s':''}`;
+    render();
+  } catch(e) {
+    console.error(e);
+    document.getElementById('biensGrid').innerHTML = `<div class="empty-state"><div class="icon">🏠</div><p>Impossible de charger les biens.</p></div>`;
+  }
+}
+
+function parsePh(p){ if(!p)return[]; if(Array.isArray(p))return p; try{return JSON.parse(p)}catch{return[]} }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+// ══ RENDER ════════════════════════════════════════
+function render() {
+  const start = (currentPage-1)*PER_PAGE;
+  const page  = filtered.slice(start, start+PER_PAGE);
+  const grid  = document.getElementById('biensGrid');
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Aucun bien ne correspond à ces critères.</p><button onclick="resetFilters()" style="margin-top:14px;padding:10px 20px;background:rgba(191,150,80,.12);border:1px solid var(--bds);color:var(--or);border-radius:999px;cursor:pointer;font-family:inherit">Réinitialiser les filtres</button></div>`;
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = page.map(b => {
+    const photos = parsePh(b.photos);
+    const main   = photos.find(p=>p.is_main) || photos[0];
+    const cat    = b.categorie === 'meuble';
+    const specs  = [];
+    if (b.pieces)    specs.push(b.pieces);
+    if (b.surface)   specs.push(b.surface+'m²');
+    if (b.chambres)  specs.push(b.chambres+' ch.');
+
+    return `<article class="bien-card" onclick="openModal('${esc(b.id)}')">
+      <div class="card-img">
+        ${main ? `<img src="${esc(main.url)}" alt="${esc(b.titre)}" loading="lazy" onerror="this.style.display='none'">` : ''}
+        <div class="card-overlay">
+          <button style="background:${cat?'var(--or)':'rgba(74,120,180,.88)'};color:${cat?'#0a0a0a':'#e8f0ff'};padding:10px 18px;border-radius:999px;border:none;cursor:pointer;font-weight:700;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase">
+            ${cat ? 'Voir le bien →' : 'Postuler →'}
+          </button>
+        </div>
+        <span class="card-badge ${cat?'badge-meuble':'badge-nm'}">${cat?'Meublé':'Non meublé'}</span>
+        ${b.visite_360 ? `<span class="card-360">🌀 360°</span>` : ''}
+        ${b.coup_de_coeur ? `<span style="position:absolute;bottom:10px;right:10px;z-index:2;background:rgba(191,150,80,.9);color:#0a0a0a;font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:999px">⭐ Coup de cœur</span>` : ''}
+        <span class="card-status">${b.statut==='disponible'?'Disponible':b.statut==='reserve'?'Réservé':'Disponible'}</span>
+      </div>
+      <div class="card-body">
+        <h3>${esc(b.titre||'—')}</h3>
+        <div class="card-location">${esc(b.quartier||'')}${b.immeuble?' · '+esc(b.immeuble):''}</div>
+        <div class="card-specs">${specs.map(s=>`<span class="card-spec">${esc(s)}</span>`).join('')}</div>
+        <div class="card-desc">${esc(b.accroche || b.description || '')}</div>
+        <div class="card-footer">
+          <div class="card-price">
+            ${esc(b.prix||'Sur demande')}
+            ${b.prix_sub ? `<small>${esc(b.prix_sub)}</small>` : ''}
+            ${!cat ? `<span class="bail-tag">Bail longue durée</span>` : ''}
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+
+  renderPagination();
+  document.getElementById('filterCount').textContent = `${filtered.length} bien${filtered.length>1?'s':''}`;
+}
+
+function renderPagination() {
+  const total = Math.ceil(filtered.length / PER_PAGE);
+  if (total <= 1) { document.getElementById('pagination').innerHTML=''; return; }
+  let html = '';
+  for(let i=1;i<=total;i++){
+    html += `<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  if (currentPage < total) html += `<button class="page-btn" onclick="goPage(${currentPage+1})">Suivant →</button>`;
+  document.getElementById('pagination').innerHTML = html;
+}
+
+function goPage(n){
+  currentPage = n;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══ FILTERS ═══════════════════════════════════════
+function applyFilters() {
+  const lieu    = document.getElementById('fLieu').value.toLowerCase().trim();
+  const pieces  = document.getElementById('fPieces').value;
+  const surface = parseInt(document.getElementById('fSurface').value)||0;
+  const statut  = document.getElementById('fStatut').value;
+
+  filtered = allBiens.filter(b => {
+    const loc = ((b.quartier||'')+(b.adresse||'')+(b.ville||'')).toLowerCase();
+    if (currentCat && b.categorie !== currentCat) return false;
+    if (lieu && !loc.includes(lieu)) return false;
+    if (pieces && b.chambres < parseInt(pieces)) return false;
+    if (surface && (b.surface||0) < surface) return false;
+    if (statut && b.statut !== statut) return false;
+    return true;
+  });
+  currentPage = 1;
+  render();
+}
+
+function resetFilters() {
+  document.getElementById('fLieu').value = '';
+  document.getElementById('fPieces').value = '';
+  document.getElementById('fSurface').value = '';
+  document.getElementById('fStatut').value = '';
+  currentCat = '';
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.cat-chip[data-cat=""]').classList.add('active');
+  filtered = [...allBiens];
+  currentPage = 1;
+  render();
+}
+
+document.querySelectorAll('.cat-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentCat = chip.dataset.cat;
+    applyFilters();
+  });
+});
+
+// ══ MODAL ═════════════════════════════════════════
+function openModal(id) {
+  const b = allBiens.find(x=>x.id===id);
+  if(!b) return;
+
+  const cat = b.categorie==='meuble';
+  const badgeEl = document.getElementById('mBadge');
+  badgeEl.textContent = cat ? 'Meublé' : 'Non meublé';
+  badgeEl.style.background = cat ? 'rgba(191,150,80,.9)' : 'rgba(74,120,180,.88)';
+  badgeEl.style.color = cat ? '#0a0a0a' : '#e8f0ff';
+
+  // Gallery
+  const photos = parsePh(b.photos).sort((a,z)=>(a.ordre??0)-(z.ordre??0));
+  const gallery = document.getElementById('mGallery');
+  if (photos.length) {
+    gallery.innerHTML = `
+      <div id="mGTrack" style="display:flex;height:100%;transition:transform .35s ease"></div>
+      <button onclick="mGPrev()" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(8,21,37,.7);border:1px solid var(--bdr);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:5">‹</button>
+      <button onclick="mGNext()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(8,21,37,.7);border:1px solid var(--bdr);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:5">›</button>
+      <div style="position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.45);color:rgba(255,255,255,.6);font-size:.7rem;padding:3px 9px;border-radius:999px" id="mGCounter">1/${photos.length}</div>`;
+    const track = document.getElementById('mGTrack');
+    track.innerHTML = photos.map(p=>`
+      <div style="min-width:100%;height:100%;position:relative;background:#060e1a;display:flex;align-items:center;justify-content:center">
+        <img src="${esc(p.url)}" style="max-width:100%;max-height:100%;object-fit:contain;display:block" onerror="this.style.display='none'">
+        <div style="position:absolute;inset:0;background-image:url(${esc(p.url)});background-size:cover;background-position:center;filter:blur(18px) brightness(.4);z-index:-1"></div>
+      </div>`).join('');
+    window._mGIdx = 0;
+    window._mGTotal = photos.length;
+  } else {
+    gallery.innerHTML = `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem">Photos disponibles prochainement</div>`;
+  }
+
+  document.getElementById('mTitre').innerHTML = esc(b.titre||'—').replace(/Le Petit (.+)/,'Le Petit <em>$1</em>');
+  document.getElementById('mLocation').innerHTML = `📍 ${esc([b.quartier,b.ville,b.immeuble].filter(Boolean).join(' · '))}`;
+
+  const specs = [b.pieces,b.surface?b.surface+'m²':null,b.chambres?b.chambres+' ch.':null].filter(Boolean);
+  document.getElementById('mSpecs').innerHTML = specs.map(s=>`<span style="padding:5px 12px;border-radius:999px;border:1px solid var(--bdr);font-size:.76rem;color:rgba(248,244,238,.65)">${esc(s)}</span>`).join('');
+
+  document.getElementById('mDesc').textContent = b.description || b.accroche || '';
+
+  const conds = [
+    b.duree_min   && ['Durée minimale', b.duree_min],
+    b.caution     && ['Caution', b.caution],
+    b.paiements   && ['Paiements', b.paiements],
+    b.checkin     && ['Check-in', b.checkin],
+    b.checkout    && ['Check-out', b.checkout],
+  ].filter(Boolean);
+  document.getElementById('mConditions').innerHTML = conds.length
+    ? conds.map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(191,150,80,.07);font-size:.84rem"><span style="color:var(--muted)">${esc(l)}</span><span style="font-weight:500">${esc(v)}</span></div>`).join('')
+    : `<p style="font-size:.82rem;color:var(--muted)">Conditions disponibles sur demande.</p>`;
+
+  document.getElementById('mPrix').textContent = b.prix || 'Sur demande';
+  document.getElementById('mPrixSub').textContent = b.prix_sub || '';
+
+  const btn360 = document.getElementById('m360Btn');
+  if (b.visite_360) { btn360.href=b.visite_360; btn360.style.display='inline-flex'; }
+  else btn360.style.display='none';
+
+  const waMsg = encodeURIComponent('Bonjour, je suis intéressé par '+b.titre+' sur Kaddu.net');
+  document.getElementById('mWA').href = `https://wa.me/221XXXXXXXXX?text=${waMsg}`;
+  document.getElementById('mCTA').href = `/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(b.titre||'')}&slug=${b.slug||''}`;
+
+  document.getElementById('modalBg').style.display='flex';
+  document.getElementById('modalBox').scrollTop=0;
+  document.body.style.overflow='hidden';
+}
+
+function mGPrev(){ if(window._mGTotal<=1)return; window._mGIdx=(window._mGIdx-1+window._mGTotal)%window._mGTotal; mGUpdate(); }
+function mGNext(){ if(window._mGTotal<=1)return; window._mGIdx=(window._mGIdx+1)%window._mGTotal; mGUpdate(); }
+function mGUpdate(){ document.getElementById('mGTrack').style.transform=`translateX(-${window._mGIdx*100}%)`; document.getElementById('mGCounter').textContent=`${window._mGIdx+1}/${window._mGTotal}`; }
+
+function closeModal(){
+  document.getElementById('modalBg').style.display='none';
+  document.body.style.overflow='';
+}
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===document.getElementById('modalBg'))closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// ══ START ═════════════════════════════════════════
+loadBiens();
+</script>
+</body>
+</html>
