@@ -46,6 +46,9 @@
     /* FORMS */
     input,select,textarea{width:100%;padding:10px 13px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:13px;font-family:Arial,sans-serif;transition:.15s}
     input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
+    /* Placeholders très discrets — on voit clairement si un champ est rempli ou vide */
+    input::placeholder,textarea::placeholder{color:rgba(248,244,238,.22);font-style:italic}
+    input:focus::placeholder,textarea:focus::placeholder{color:rgba(248,244,238,.18)}
     select option{background:#0b2039}
     textarea{min-height:80px;resize:vertical}
     label{display:block;font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:.13em;margin-bottom:5px}
@@ -641,31 +644,86 @@ let commPhotoFile = null;
 let dragSrc = null;
 let pendingConfirm = null;
 
-// Équipements standards
-const EQUIPS = [
-  {id:"clim",label:"Climatisation"},
-  {id:"wifi",label:"WiFi / Fibre"},
-  {id:"parking",label:"Parking"},
-  {id:"gardien",label:"Gardiennage 24h"},
-  {id:"ascenseur",label:"Ascenseur"},
-  {id:"balcon",label:"Balcon / Terrasse"},
-  {id:"piscine",label:"Piscine"},
-  {id:"cuisine_eq",label:"Cuisine équipée"},
-  {id:"lave_linge",label:"Lave-linge"},
-  {id:"seche_linge",label:"Sèche-linge"},
-  {id:"lave_vaisselle",label:"Lave-vaisselle"},
-  {id:"micro_ondes",label:"Micro-ondes"},
-  {id:"frigo",label:"Réfrigérateur"},
-  {id:"four",label:"Four"},
-  {id:"tv",label:"Télévision"},
-  {id:"netflix",label:"Netflix inclus"},
-  {id:"eau_chaude",label:"Eau chaude"},
-  {id:"digicode",label:"Digicode / Interphone"},
-  {id:"videosurveillance",label:"Vidéosurveillance"},
-  {id:"meuble",label:"Entièrement meublé"},
-  {id:"linge_maison",label:"Linge de maison fourni"},
-  {id:"menage",label:"Service ménage"},
+// Équipements organisés par catégorie
+const EQUIP_CATEGORIES = [
+  {
+    label: "🏠 Essentiels",
+    items: [
+      {id:"clim",label:"Climatisation"},
+      {id:"clim_toutes_pieces",label:"Clim dans toutes les pièces"},
+      {id:"ventilateurs",label:"Ventilateurs en complément"},
+      {id:"eau_chaude",label:"Eau chaude"},
+      {id:"wifi",label:"WiFi / Fibre"},
+      {id:"tv",label:"Télévision"},
+      {id:"frigo",label:"Réfrigérateur"},
+      {id:"cuisine_eq",label:"Cuisine équipée"},
+      {id:"micro_ondes",label:"Micro-ondes"},
+      {id:"four",label:"Four"},
+      {id:"lave_linge",label:"Lave-linge"},
+      {id:"seche_linge",label:"Sèche-linge"},
+      {id:"lave_vaisselle",label:"Lave-vaisselle"},
+      {id:"meuble",label:"Entièrement meublé"},
+    ]
+  },
+  {
+    label: "⚡ Ultra différenciants · Dakar",
+    items: [
+      {id:"suppresseur_eau",label:"Suppresseur / pression d'eau renforcée"},
+      {id:"reservoir_eau",label:"Réservoir d'eau / autonomie coupures"},
+      {id:"groupe_elec",label:"Groupe électrogène / back-up électricité"},
+      {id:"serrure_elec",label:"Serrure électronique / accès autonome"},
+      {id:"self_checkin",label:"Arrivée autonome (self check-in)"},
+      {id:"securite_renforcee",label:"Sécurité renforcée (porte blindée, badges)"},
+    ]
+  },
+  {
+    label: "🧳 Long séjour · Diaspora · Business",
+    items: [
+      {id:"espace_travail",label:"Espace de travail (bureau + chaise)"},
+      {id:"iptv",label:"Chaînes internationales / IPTV"},
+      {id:"multiprises",label:"Multiprises / adaptateurs internationaux"},
+      {id:"rangements",label:"Rangements optimisés (placards, dressing)"},
+      {id:"netflix",label:"Netflix inclus"},
+    ]
+  },
+  {
+    label: "🧼 Confort expérience hôtel",
+    items: [
+      {id:"menage",label:"Ménage professionnel régulier"},
+      {id:"kit_accueil",label:"Kit d'accueil (eau, café, thé…)"},
+      {id:"literie_premium",label:"Literie premium"},
+      {id:"linge_maison",label:"Serviettes & draps renouvelés"},
+      {id:"produits_base",label:"Produits de base fournis (savon, papier…)"},
+    ]
+  },
+  {
+    label: "🌍 Digital & Confiance · ADN Kàddu",
+    items: [
+      {id:"visite_360_eq",label:"Visite virtuelle 360° disponible"},
+      {id:"resa_securisee",label:"Réservation sécurisée en ligne"},
+      {id:"paiement_mobile",label:"Paiement mobile local (Wave / Orange Money)"},
+      {id:"paiement_intl",label:"Paiements internationaux (PayPal, Stripe)"},
+      {id:"dossier_securise",label:"Dossier locataire sécurisé (anti-fraude)"},
+    ]
+  },
+  {
+    label: "🚗 Pratique local",
+    items: [
+      {id:"parking",label:"Parking sécurisé"},
+      {id:"proximite_commerce",label:"Proximité supermarché / VDN"},
+      {id:"acces_taxi",label:"Accès facile taxi / VTC"},
+      {id:"assistance",label:"Service assistance / maintenance rapide"},
+      {id:"gardien",label:"Gardiennage 24h"},
+      {id:"ascenseur",label:"Ascenseur"},
+      {id:"balcon",label:"Balcon / Terrasse"},
+      {id:"piscine",label:"Piscine"},
+      {id:"digicode",label:"Digicode / Interphone"},
+      {id:"videosurveillance",label:"Vidéosurveillance"},
+    ]
+  },
 ];
+// Flatten pour compatibilité avec l'existant
+const EQUIPS = EQUIP_CATEGORIES.flatMap(c => c.items);
 
 const PHOTO_TAGS = ["salon","chambre","cuisine","salle_de_bain","facade","terrasse","bureau","entree","autre"];
 
@@ -846,6 +904,7 @@ function openBienDrawer(id=null){
   document.getElementById("bDispo").value="";
   document.getElementById("bCoupDeCoeur").checked=false;
   updateCoupDeCoeurUI();
+  customEquips=[];
   editPhotos=[];
   document.getElementById("uploadBar").style.width="0";
 
@@ -933,11 +992,92 @@ function slugify(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u0
 
 function buildEquipGrid(boolMap){
   const map=typeof boolMap==="object"&&boolMap?boolMap:{};
-  document.getElementById("equipGrid").innerHTML=EQUIPS.map(e=>`
-    <label class="check-item ${map[e.id]?"checked":""}">
-      <input type="checkbox" name="eq_${e.id}" ${map[e.id]?"checked":""} onchange="this.parentElement.classList.toggle('checked',this.checked)"/>
-      ${esc(e.label)}
-    </label>
+  const container=document.getElementById("equipGrid");
+
+  container.innerHTML = EQUIP_CATEGORIES.map((cat,ci)=>`
+    <div style="grid-column:1/-1;margin-top:${ci>0?'16px':'0'}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;font-weight:700">${cat.label}</div>
+        <button type="button" onclick="toggleCategory('cat_${ci}',this)"
+          style="font-size:10px;padding:3px 10px;border:1px solid var(--bdr);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer;font-family:Arial">
+          Tout cocher
+        </button>
+      </div>
+      <div class="check-grid" id="cat_${ci}">
+        ${cat.items.map(e=>`
+          <label class="check-item ${map[e.id]?"checked":""}">
+            <input type="checkbox" name="eq_${e.id}" ${map[e.id]?"checked":""}
+              onchange="this.parentElement.classList.toggle('checked',this.checked);updateCatBtn('cat_${ci}')"/>
+            ${esc(e.label)}
+          </label>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  // Zone d'ajout d'équipements libres supplémentaires
+  const addZone = document.createElement("div");
+  addZone.style.cssText = "grid-column:1/-1;margin-top:14px";
+  addZone.innerHTML = `
+    <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:8px">+ Ajouter un équipement personnalisé</div>
+    <div style="display:flex;gap:8px">
+      <input id="newEquipInput" placeholder="Ex: Jacuzzi, Salle de sport…"
+        style="flex:1;padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:12px;border-radius:5px;font-family:Arial"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomEquip()}"/>
+      <button type="button" onclick="addCustomEquip()"
+        style="padding:8px 14px;background:rgba(191,150,80,.12);border:1px solid var(--bds);color:var(--or);border-radius:5px;cursor:pointer;font-size:12px;font-weight:700;font-family:Arial">+ Ajouter</button>
+    </div>
+    <div id="customEquipsList" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+  `;
+  container.appendChild(addZone);
+}
+
+function toggleCategory(catId, btn){
+  const grid = document.getElementById(catId);
+  if(!grid) return;
+  const checkboxes = grid.querySelectorAll('input[type=checkbox]');
+  const allChecked = [...checkboxes].every(c=>c.checked);
+  checkboxes.forEach(c=>{
+    c.checked = !allChecked;
+    c.parentElement.classList.toggle('checked', !allChecked);
+  });
+  btn.textContent = allChecked ? 'Tout cocher' : 'Tout décocher';
+}
+
+function updateCatBtn(catId){
+  const grid = document.getElementById(catId);
+  if(!grid) return;
+  const checkboxes = grid.querySelectorAll('input[type=checkbox]');
+  const btn = grid.previousElementSibling?.querySelector('button');
+  if(!btn) return;
+  const allChecked = [...checkboxes].every(c=>c.checked);
+  btn.textContent = allChecked ? 'Tout décocher' : 'Tout cocher';
+}
+
+let customEquips = [];
+function addCustomEquip(){
+  const input = document.getElementById("newEquipInput");
+  const val = input?.value.trim();
+  if(!val) return;
+  customEquips.push(val);
+  input.value = "";
+  renderCustomEquips();
+  // Ajoute aussi dans le textarea bEquipLibres
+  const ta = document.getElementById("bEquipLibres");
+  if(ta) ta.value = (ta.value ? ta.value+"\n" : "") + "✦ "+val;
+}
+function removeCustomEquip(i){
+  customEquips.splice(i,1);
+  renderCustomEquips();
+}
+function renderCustomEquips(){
+  const el = document.getElementById("customEquipsList");
+  if(!el) return;
+  el.innerHTML = customEquips.map((e,i)=>`
+    <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);border-radius:999px;font-size:11px;color:var(--txt)">
+      ${esc(e)}
+      <button type="button" onclick="removeCustomEquip(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0;line-height:1">✕</button>
+    </span>
   `).join("");
 }
 
@@ -1087,8 +1227,12 @@ document.getElementById("saveBienBtn").addEventListener("click",async()=>{
 
   const bId=document.getElementById("bId").value;
   const btn=document.getElementById("saveBienBtn");
-  btn.disabled=true;btn.textContent="Enregistrement…";
+  btn.disabled=true;btn.textContent="Vérification session…";
   document.getElementById("saveStatus").textContent="";
+
+  // Refresh token silencieux avant sauvegarde
+  await ensureFreshToken();
+  btn.textContent="Enregistrement…";
 
   try{
     // Si coup de cœur activé → désactiver sur tous les autres biens d'abord
@@ -1264,7 +1408,36 @@ document.getElementById("saveCommBtn").addEventListener("click",async()=>{
 function persistSess(s){try{localStorage.setItem("kaddu_admin_session",JSON.stringify({access_token:s.access_token,refresh_token:s.refresh_token,expires_at:Date.now()+(s.expires_in||3600)*1000}))}catch(_){}}
 function loadSess(){try{const r=localStorage.getItem("kaddu_admin_session");if(!r)return null;const s=JSON.parse(r);if(s.expires_at&&Date.now()>s.expires_at-60000)return null;return s}catch(_){return null}}
 function clearSess(){localStorage.removeItem("kaddu_admin_session");session=null}
+
 async function signIn(email,pw){const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"apikey":ANON,"Content-Type":"application/json"},body:JSON.stringify({email,password:pw})});const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||"Identifiants incorrects.");return d}
+
+// Refresh silencieux du token avant chaque opération critique
+async function ensureFreshToken(){
+  if(!session) return;
+  const expiresAt = session.expires_at || 0;
+  // Si le token expire dans moins de 5 min → refresh
+  if(Date.now() > expiresAt - 5*60*1000){
+    try{
+      const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{
+        method:"POST",
+        headers:{"apikey":ANON,"Content-Type":"application/json"},
+        body:JSON.stringify({refresh_token:session.refresh_token})
+      });
+      if(r.ok){
+        const d=await r.json();
+        session={...d,expires_at:Date.now()+(d.expires_in||3600)*1000};
+        persistSess(session);
+      } else {
+        // Token refresh impossible → déconnexion propre
+        toast("Session expirée — veuillez vous reconnecter.","err");
+        clearSess();
+        setTimeout(()=>location.reload(),1500);
+      }
+    }catch(_){
+      toast("Erreur réseau — vérifiez votre connexion.","err");
+    }
+  }
+}
 function showApp(){document.getElementById("authOverlay").style.display="none"}
 
 function initAuth(){
