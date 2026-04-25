@@ -148,6 +148,7 @@
     .photo-tag-sel{font-size:11px;padding:5px 8px;margin-top:4px}
 
     /* COMMERCIAUX PAGE */
+    .comm-panel{display:none}.comm-panel.active{display:block}
     .comm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
     .comm-card{border:1px solid var(--bdr);background:var(--card);border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:.2s}
     .comm-card:hover{border-color:var(--bds)}
@@ -469,37 +470,161 @@
       <h2 id="commDrawerTitle">Nouveau <em>commercial</em></h2>
       <button class="btn btn-ghost btn-icon" id="closeCommDrawer">✕</button>
     </div>
-    <div class="drawer-body" style="padding-top:20px">
-      <div class="slabel" style="margin-top:0">Identité</div>
-      <div class="fg2">
-        <div class="field"><label>Prénom et Nom *</label><input id="cNom" placeholder="Moussa Diallo"/></div>
-        <div class="field"><label>Rôle / Titre</label><input id="cRole" placeholder="Commercial Kaddu · Dakar"/></div>
-      </div>
-      <div class="slabel">Contacts</div>
-      <div class="fg2">
-        <div class="field"><label>Téléphone</label><input id="cTel" placeholder="+221 77 000 00 00"/></div>
-        <div class="field"><label>WhatsApp (format international)</label><input id="cWa" placeholder="221770000000"/></div>
-      </div>
-      <div class="field"><label>Email</label><input id="cEmail" type="email" placeholder="moussa@kaddu.net"/></div>
-      <div class="slabel">Présentation</div>
-      <div class="field"><label>Description courte</label><textarea id="cDesc" placeholder="Commercial terrain spécialisé en location meublée sur l'axe VDN. Disponible 7j/7."></textarea></div>
-      <div class="slabel">Statut</div>
-      <div class="field">
-        <label>Statut</label>
-        <select id="cStatut"><option value="actif">Actif</option><option value="inactif">Inactif</option></select>
-      </div>
-      <div class="slabel">Photo de profil</div>
-      <div class="photos-zone">
-        <div class="upload-btn-area" id="commPhotoBtn">📷 Choisir une photo de profil</div>
-        <input type="file" id="commPhotoInput" accept="image/jpeg,image/png,image/webp"/>
-        <div id="commPhotoPrev" style="margin-top:10px"></div>
-      </div>
-      <input type="hidden" id="cId"/>
+
+    <!-- Sous-onglets -->
+    <div style="display:flex;gap:3px;margin:0 22px;padding:10px 0;border-bottom:1px solid var(--bdr)">
+      <button class="dtab active" data-cpanel="cp-identite">Identité</button>
+      <button class="dtab" data-cpanel="cp-contact">Contact</button>
+      <button class="dtab" data-cpanel="cp-profil">Profil</button>
+      <button class="dtab" data-cpanel="cp-stats">Stats & Badges</button>
     </div>
+
+    <div class="drawer-body" style="padding-top:18px">
+
+      <!-- 1. IDENTITÉ -->
+      <div class="comm-panel active" id="cp-identite">
+        <div class="slabel" style="margin-top:0">Photo de profil <span style="color:var(--red);font-size:10px">OBLIGATOIRE</span></div>
+        <div class="photos-zone" style="display:flex;align-items:center;gap:20px;padding:16px">
+          <div id="commPhotoPreviewLarge" style="width:90px;height:90px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:28px;color:var(--or);flex-shrink:0;cursor:pointer" onclick="document.getElementById('commPhotoInput').click()">
+            📷
+          </div>
+          <div style="flex:1">
+            <div class="upload-btn-area" id="commPhotoBtn" style="margin-bottom:8px">📷 Choisir une photo de profil</div>
+            <input type="file" id="commPhotoInput" accept="image/jpeg,image/png,image/webp"/>
+            <p style="font-size:10px;color:var(--muted);line-height:1.5">Format carré recommandé (ex: 400×400px). La photo apparaît sur la page bien et dans le tunnel locataire. Impact direct sur la confiance perçue.</p>
+          </div>
+        </div>
+
+        <div class="slabel">Identité</div>
+        <div class="fg2">
+          <div class="field"><label>Prénom et Nom *</label><input id="cNom" placeholder="Ex: Moussa Diallo"/></div>
+          <div class="field"><label>Rôle / Titre</label><input id="cRole" placeholder="Ex: Conseiller Kàddu · VDN"/></div>
+        </div>
+
+        <div class="slabel">Spécialité</div>
+        <div class="field">
+          <label>Domaine de spécialisation</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px" id="specialiteChips">
+            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_court" style="width:auto;accent-color:var(--or)"/> Location courte durée</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_long" style="width:auto;accent-color:var(--or)"/> Long séjour diaspora</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_business" style="width:auto;accent-color:var(--or)"/> Logement business</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_expat" style="width:auto;accent-color:var(--or)"/> Relocation expats</label>
+          </div>
+        </div>
+
+        <div class="slabel">Langues parlées</div>
+        <div class="field">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px" id="languesChips">
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_fr" style="width:auto;accent-color:var(--or)"/> 🇫🇷 Français</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_en" style="width:auto;accent-color:var(--or)"/> 🇬🇧 Anglais</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_wo" style="width:auto;accent-color:var(--or)"/> 🇸🇳 Wolof</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ar" style="width:auto;accent-color:var(--or)"/> 🇸🇦 Arabe</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_pt" style="width:auto;accent-color:var(--or)"/> 🇵🇹 Portugais</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_es" style="width:auto;accent-color:var(--or)"/> 🇪🇸 Espagnol</label>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input id="cAutreLangInput" placeholder="Autre langue… (ex: Mandingue, Pulaar, Sérère)" style="flex:1;font-size:12px"/>
+            <button type="button" onclick="addAutreLang()" style="padding:8px 12px;background:rgba(191,150,80,.1);border:1px solid var(--bds);color:var(--or);border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;font-family:Arial;flex-shrink:0">+ Ajouter</button>
+          </div>
+          <div id="autresLangues" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+        </div>
+
+        <div class="slabel">Statut</div>
+        <div class="field">
+          <select id="cStatut"><option value="actif">Actif</option><option value="inactif">Inactif</option></select>
+        </div>
+      </div>
+
+      <!-- 2. CONTACT -->
+      <div class="comm-panel" id="cp-contact">
+        <div class="slabel" style="margin-top:0">Coordonnées</div>
+        <div class="fg2">
+          <div class="field"><label>Téléphone</label><input id="cTel" placeholder="+221 77 000 00 00"/></div>
+          <div class="field"><label>WhatsApp (format international sans +)</label><input id="cWa" placeholder="221770000000"/></div>
+        </div>
+        <div class="field"><label>Email</label><input id="cEmail" type="email" placeholder="moussa@kaddu.net"/></div>
+
+        <div class="slabel">Disponibilité</div>
+        <div class="fg2">
+          <div class="field">
+            <label>Temps de réponse moyen</label>
+            <select id="cReponse">
+              <option value="">Non précisé</option>
+              <option value="< 1h">Répond en moins d'1h</option>
+              <option value="< 3h">Répond en moins de 3h</option>
+              <option value="< 24h">Répond sous 24h</option>
+              <option value="sous 48h">Répond sous 48h</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Disponibilité</label>
+            <select id="cDispo">
+              <option value="">Non précisé</option>
+              <option value="7j/7">7j/7</option>
+              <option value="Lun – Ven">Lun – Ven</option>
+              <option value="Lun – Sam">Lun – Sam</option>
+              <option value="Sur rendez-vous">Sur rendez-vous</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Aperçu message WhatsApp -->
+        <div class="slabel">Aperçu message WhatsApp auto</div>
+        <div style="border:1px solid rgba(37,211,102,.2);border-radius:10px;background:rgba(37,211,102,.05);padding:14px;font-size:12px;color:rgba(248,244,238,.6);line-height:1.6">
+          <div style="font-size:10px;color:rgba(37,211,102,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Message envoyé automatiquement</div>
+          "Bonjour <span id="waPreviewNom" style="color:var(--or)">Prénom</span>, je suis intéressé par [Nom du bien] sur Kaddu.net. Pouvez-vous me contacter ?"
+        </div>
+        <p style="font-size:10px;color:var(--muted);margin-top:6px">Le message est pré-rempli avec le prénom du commercial et le nom du bien — le prospect n'a plus qu'à envoyer.</p>
+      </div>
+
+      <!-- 3. PROFIL -->
+      <div class="comm-panel" id="cp-profil">
+        <div class="slabel" style="margin-top:0">Description</div>
+        <div class="field"><textarea id="cDesc" style="min-height:120px" placeholder="Spécialiste de la location meublée sur l'axe VDN depuis 3 ans.&#10;&#10;J'accompagne les familles de la diaspora, les expatriés et les professionnels en mission à Dakar.&#10;&#10;Mon engagement : une réponse rapide, des biens vérifiés, zéro mauvaise surprise."></textarea></div>
+        <p style="font-size:10px;color:var(--muted);margin-top:4px">Les sauts de ligne sont conservés à l'affichage. Écrivez comme vous parlez.</p>
+
+        <!-- Engagement Kàddu (non modifiable) -->
+        <div class="slabel">Engagement Kàddu <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(appliqué automatiquement à tous les profils)</span></div>
+        <div style="border:1px solid rgba(191,150,80,.2);border-radius:8px;padding:12px 14px;background:rgba(191,150,80,.05);font-size:12px;color:rgba(248,244,238,.6);pointer-events:none">
+          ✔ Biens vérifiés &nbsp;·&nbsp; ✔ Dossiers sécurisés &nbsp;·&nbsp; ✔ Zéro mauvaise surprise
+        </div>
+      </div>
+
+      <!-- 4. STATS & BADGES -->
+      <div class="comm-panel" id="cp-stats">
+        <div class="slabel" style="margin-top:0">Statistiques (social proof)</div>
+        <div class="fg2">
+          <div class="field"><label>Biens gérés</label><input id="cBiensGeres" type="number" placeholder="Ex: 5"/></div>
+          <div class="field"><label>Locataires accompagnés</label><input id="cLocataires" type="number" placeholder="Ex: 120"/></div>
+        </div>
+        <div class="fg2">
+          <div class="field"><label>Taux de satisfaction (%)</label><input id="cSatisfaction" type="number" min="0" max="100" placeholder="Ex: 98"/></div>
+          <div class="field"><label>Texte stat libre</label><input id="cStatLibre" placeholder="Ex: +120 séjours accompagnés via Kàddu"/></div>
+        </div>
+
+        <div class="slabel">Badges de confiance</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px" id="badgesChips">
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_verifie" style="width:auto;accent-color:var(--or)"/> 🛡️ Profil vérifié</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_super" style="width:auto;accent-color:var(--or)"/> ⭐ Super conseiller</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_50res" style="width:auto;accent-color:var(--or)"/> 🏅 +50 réservations</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_100pc" style="width:auto;accent-color:var(--or)"/> ✅ 100% dossiers traités</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_reponse" style="width:auto;accent-color:var(--or)"/> ⚡ Réponse ultra-rapide</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_diaspora" style="width:auto;accent-color:var(--or)"/> 🌍 Spécialiste diaspora</label>
+        </div>
+
+        <div class="slabel">Aperçu carte commercial</div>
+        <div style="border:1px solid var(--bdr);border-radius:12px;padding:16px;background:rgba(255,255,255,.02)" id="commCardPreview">
+          <p style="font-size:11px;color:var(--muted);text-align:center">Remplissez les champs pour prévisualiser</p>
+        </div>
+      </div>
+
+    </div><!-- /drawer-body -->
+
     <div class="drawer-foot">
       <button class="btn btn-ghost btn-sm" id="cancelCommDrawer">Annuler</button>
       <button class="btn btn-primary" id="saveCommBtn">💾 Enregistrer</button>
     </div>
+    <input type="hidden" id="cId"/>
   </div>
 </div>
 
@@ -1318,7 +1443,7 @@ function renderComms(){
         ${c.whatsapp?`<div class="comm-contact"><a href="https://wa.me/${esc(c.whatsapp)}" target="_blank" style="color:#25D366">💬 WhatsApp</a></div>`:""}
         ${c.email?`<div class="comm-contact">✉️ ${esc(c.email)}</div>`:""}
       </div>
-      ${c.description?`<div class="comm-desc">${esc(c.description)}</div>`:""}
+      ${c.description?`<div class="comm-desc" style="white-space:pre-line">${esc(c.description)}</div>`:""}
       <div class="comm-acts">
         <button class="btn btn-ghost btn-sm ec-btn" data-id="${c.id}">✏️ Modifier</button>
         ${c.statut==="actif"
@@ -1345,13 +1470,80 @@ function delCommConfirm(id){
   });
 }
 
+// ── Sous-onglets drawer commercial ────────────────────────────────────────────
+document.querySelectorAll("[data-cpanel]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-cpanel]").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".comm-panel").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.cpanel).classList.add("active");
+  });
+});
+
+let autresLangues=[];
+
+function addAutreLang(){
+  const inp=document.getElementById("cAutreLangInput");
+  const val=inp?.value.trim();if(!val)return;
+  autresLangues.push(val);inp.value="";
+  renderAutresLangues();
+}
+function removeAutreLang(i){autresLangues.splice(i,1);renderAutresLangues()}
+function renderAutresLangues(){
+  const el=document.getElementById("autresLangues");if(!el)return;
+  el.innerHTML=autresLangues.map((l,i)=>`<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);border-radius:999px;font-size:11px">${esc(l)}<button type="button" onclick="removeAutreLang(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0">✕</button></span>`).join("");
+}
+
+// Preview WA nom
+document.getElementById("cNom")?.addEventListener("input",function(){
+  const prenom=this.value.split(" ")[0]||"Prénom";
+  const el=document.getElementById("waPreviewNom");if(el)el.textContent=prenom;
+});
+
+// Preview carte commercial en temps réel
+function updateCommPreviewCard(){
+  const nom=document.getElementById("cNom")?.value||"";
+  const role=document.getElementById("cRole")?.value||"";
+  const reponse=document.getElementById("cReponse")?.value||"";
+  const badges=[...document.querySelectorAll('#badgesChips input:checked')].map(c=>c.name);
+  const preview=document.getElementById("commCardPreview");
+  if(!preview)return;
+  const photoSrc=commPhotoFile?URL.createObjectURL(commPhotoFile):(document.querySelector("#commPhotoPreviewLarge img")?.src||"");
+  preview.innerHTML=`<div style="display:flex;gap:12px;align-items:center">
+    <div style="width:48px;height:48px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">
+      ${photoSrc?`<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover">`:(nom.charAt(0)||"?")}
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:14px">${esc(nom)||"Nom prénom"}</div>
+      <div style="font-size:11px;color:var(--muted)">${esc(role)||"Rôle"}</div>
+      ${reponse?`<div style="font-size:10px;color:var(--green);margin-top:2px">⚡ ${esc(reponse)}</div>`:""}
+    </div>
+  </div>
+  ${badges.length?`<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">${badges.map(b=>{const LABELS={"badge_verifie":"🛡️ Profil vérifié","badge_super":"⭐ Super conseiller","badge_50res":"🏅 +50 réservations","badge_100pc":"✅ 100% dossiers traités","badge_reponse":"⚡ Réponse ultra-rapide","badge_diaspora":"🌍 Spécialiste diaspora"};return`<span style="font-size:10px;padding:3px 8px;border-radius:999px;background:rgba(191,150,80,.1);border:1px solid var(--bdr)">${LABELS[b]||b}</span>`}).join("")}</div>`:""}
+  <div style="margin-top:10px;font-size:11px;color:rgba(248,244,238,.4);border-top:1px solid var(--bdr);padding-top:8px">✔ Biens vérifiés · ✔ Dossiers sécurisés · ✔ Zéro mauvaise surprise</div>`;
+}
+["cNom","cRole","cReponse"].forEach(id=>document.getElementById(id)?.addEventListener("input",updateCommPreviewCard));
+document.querySelectorAll('#badgesChips input').forEach(c=>c.addEventListener("change",updateCommPreviewCard));
+
 function openCommDrawer(id=null){
   const c=id?allComms.find(x=>x.id===id):null;
   document.getElementById("commDrawerTitle").innerHTML=c?`Modifier <em>${esc(c.nom)}</em>`:`Nouveau <em>commercial</em>`;
   commPhotoFile=null;
-  document.getElementById("commPhotoPrev").innerHTML="";
-  ["cNom","cRole","cTel","cWa","cEmail","cDesc","cId"].forEach(i=>{const el=document.getElementById(i);if(el)el.value=""});
+  autresLangues=[];
+
+  // Reset champs
+  ["cNom","cRole","cTel","cWa","cEmail","cDesc","cId","cBiensGeres","cLocataires","cSatisfaction","cStatLibre"].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value=""});
+  ["cStatut","cReponse","cDispo"].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value=""});
   document.getElementById("cStatut").value="actif";
+
+  // Reset checkboxes
+  document.querySelectorAll("#specialiteChips input, #languesChips input, #badgesChips input").forEach(c=>{c.checked=false;c.parentElement.classList.remove("checked")});
+  renderAutresLangues();
+
+  // Reset photo
+  const photoDiv=document.getElementById("commPhotoPreviewLarge");
+  if(photoDiv)photoDiv.innerHTML="📷";
+
   if(c){
     document.getElementById("cId").value=c.id;
     document.getElementById("cNom").value=c.nom||"";
@@ -1361,17 +1553,49 @@ function openCommDrawer(id=null){
     document.getElementById("cEmail").value=c.email||"";
     document.getElementById("cDesc").value=c.description||"";
     document.getElementById("cStatut").value=c.statut||"actif";
-    if(c.photo_url)document.getElementById("commPhotoPrev").innerHTML=`<img src="${esc(c.photo_url)}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--bds)">`;
+    document.getElementById("cReponse").value=c.reponse||"";
+    document.getElementById("cDispo").value=c.disponibilite||"";
+    document.getElementById("cBiensGeres").value=c.biens_geres||"";
+    document.getElementById("cLocataires").value=c.locataires||"";
+    document.getElementById("cSatisfaction").value=c.satisfaction||"";
+    document.getElementById("cStatLibre").value=c.stat_libre||"";
+
+    // Spécialités
+    const sp=c.specialites||{};
+    Object.keys(sp).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&sp[k]){el.checked=true;el.parentElement.classList.add("checked")}});
+
+    // Langues
+    const lg=c.langues||{};
+    Object.keys(lg).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&lg[k]){el.checked=true;el.parentElement.classList.add("checked")}});
+    autresLangues=c.autres_langues||[];renderAutresLangues();
+
+    // Badges
+    const bg=c.badges||{};
+    Object.keys(bg).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&bg[k]){el.checked=true;el.parentElement.classList.add("checked")}});
+
+    // Photo
+    if(c.photo_url&&photoDiv)photoDiv.innerHTML=`<img src="${esc(c.photo_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   }
+
+  // Reset onglet
+  document.querySelectorAll("[data-cpanel]").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".comm-panel").forEach(p=>p.classList.remove("active"));
+  document.querySelector("[data-cpanel='cp-identite']")?.classList.add("active");
+  document.getElementById("cp-identite")?.classList.add("active");
+
   document.getElementById("commDrawer").classList.add("open");
   document.getElementById("commDrawerPanel").scrollTop=0;
+  updateCommPreviewCard();
 }
 
 document.getElementById("commPhotoBtn").addEventListener("click",()=>document.getElementById("commPhotoInput").click());
+document.getElementById("commPhotoPreviewLarge")?.addEventListener("click",()=>document.getElementById("commPhotoInput").click());
 document.getElementById("commPhotoInput").addEventListener("change",e=>{
   const f=e.target.files[0];if(!f)return;commPhotoFile=f;
   const url=URL.createObjectURL(f);
-  document.getElementById("commPhotoPrev").innerHTML=`<img src="${url}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--or)">`;
+  const photoDiv=document.getElementById("commPhotoPreviewLarge");
+  if(photoDiv)photoDiv.innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  updateCommPreviewCard();
 });
 
 function closeCommDrawer(){document.getElementById("commDrawer").classList.remove("open")}
@@ -1387,6 +1611,7 @@ document.getElementById("saveCommBtn").addEventListener("click",async()=>{
   const nom=document.getElementById("cNom").value.trim();
   if(!nom){toast("Nom obligatoire.","err");return}
   const btn=document.getElementById("saveCommBtn");btn.disabled=true;btn.textContent="…";
+  await ensureFreshToken();
   try{
     const cId=document.getElementById("cId").value;
     const existing=cId?allComms.find(c=>c.id===cId):null;
@@ -1396,7 +1621,25 @@ document.getElementById("saveCommBtn").addEventListener("click",async()=>{
       photo_url=await uploadFile(commPhotoFile,path);photo_path=path;
       if(existing?.photo_path)await delFile(existing.photo_path);
     }
-    const payload={nom,role:v("cRole"),telephone:v("cTel"),whatsapp:v("cWa"),email:v("cEmail"),description:v("cDesc"),statut:document.getElementById("cStatut").value,photo_url,photo_path,updated_at:new Date().toISOString()};
+
+    // Collecte spécialités, langues, badges
+    const specialites={};document.querySelectorAll("#specialiteChips input").forEach(c=>{specialites[c.name]=c.checked});
+    const langues={};document.querySelectorAll("#languesChips input").forEach(c=>{langues[c.name]=c.checked});
+    const badges={};document.querySelectorAll("#badgesChips input").forEach(c=>{badges[c.name]=c.checked});
+
+    const payload={
+      nom,role:v("cRole"),telephone:v("cTel"),whatsapp:v("cWa"),email:v("cEmail"),
+      description:v("cDesc"),statut:document.getElementById("cStatut").value,
+      reponse:v("cReponse"),disponibilite:v("cDispo"),
+      biens_geres:vi("cBiensGeres"),locataires:vi("cLocataires"),
+      satisfaction:vi("cSatisfaction"),stat_libre:v("cStatLibre"),
+      specialites:JSON.stringify(specialites),
+      langues:JSON.stringify(langues),
+      autres_langues:JSON.stringify(autresLangues),
+      badges:JSON.stringify(badges),
+      photo_url,photo_path,
+      updated_at:new Date().toISOString()
+    };
     if(cId){await sbPatch("commerciaux",cId,payload);const i=allComms.findIndex(c=>c.id===cId);if(i!==-1)allComms[i]={...allComms[i],...payload,id:cId}}
     else{const r=await sbPost("commerciaux",{...payload,created_at:new Date().toISOString()});if(Array.isArray(r)&&r[0])allComms.unshift(r[0])}
     closeCommDrawer();renderComms();toast(cId?"Commercial mis à jour ✓":"Commercial créé ✓");
