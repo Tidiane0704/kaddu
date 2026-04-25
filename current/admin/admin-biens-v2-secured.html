@@ -519,6 +519,10 @@
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_en" style="width:auto;accent-color:var(--or)"/> 🇬🇧 Anglais</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_wo" style="width:auto;accent-color:var(--or)"/> 🇸🇳 Wolof</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ar" style="width:auto;accent-color:var(--or)"/> 🇸🇦 Arabe</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ha" style="width:auto;accent-color:var(--or)"/> 🇲🇦 Hassania</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_hw" style="width:auto;accent-color:var(--or)"/> 🇳🇬 Haoussa</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_zh" style="width:auto;accent-color:var(--or)"/> 🇨🇳 Mandarin</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ru" style="width:auto;accent-color:var(--or)"/> 🇷🇺 Russe</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_pt" style="width:auto;accent-color:var(--or)"/> 🇵🇹 Portugais</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_es" style="width:auto;accent-color:var(--or)"/> 🇪🇸 Espagnol</label>
           </div>
@@ -568,13 +572,33 @@
           </div>
         </div>
 
-        <!-- Aperçu message WhatsApp -->
-        <div class="slabel">Aperçu message WhatsApp auto</div>
-        <div style="border:1px solid rgba(37,211,102,.2);border-radius:10px;background:rgba(37,211,102,.05);padding:14px;font-size:12px;color:rgba(248,244,238,.6);line-height:1.6">
-          <div style="font-size:10px;color:rgba(37,211,102,.6);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Message envoyé automatiquement</div>
-          "Bonjour <span id="waPreviewNom" style="color:var(--or)">Prénom</span>, je suis intéressé par [Nom du bien] sur Kaddu.net. Pouvez-vous me contacter ?"
+        <!-- Aperçu + modèle message WhatsApp modifiable -->
+        <div class="slabel">Message WhatsApp — modèle personnalisable</div>
+        <div style="margin-bottom:8px">
+          <textarea id="cWaMessage" rows="9" style="font-size:12px;line-height:1.7"
+            placeholder="Message WhatsApp par défaut…">Bonjour {prenom_client} 👋,
+
+Merci pour votre intérêt pour {nom_appartement}.
+
+Je suis {nom_commercial}, en charge de l'accompagnement sur ce bien. Vous pouvez dès maintenant :
+✔ explorer l'appartement à distance avec la visite 360°
+✔ déposer votre dossier en quelques minutes
+✔ réserver en toute sécurité via Kàddu
+
+Je reste disponible pour répondre à vos questions et vous accompagner à chaque étape.
+
+À très vite 😊</textarea>
         </div>
-        <p style="font-size:10px;color:var(--muted);margin-top:6px">Le message est pré-rempli avec le prénom du commercial et le nom du bien — le prospect n'a plus qu'à envoyer.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+          <button type="button" onclick="insertWaVar('{prenom_client}')" style="padding:4px 9px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or);border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">{prenom_client}</button>
+          <button type="button" onclick="insertWaVar('{nom_appartement}')" style="padding:4px 9px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or);border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">{nom_appartement}</button>
+          <button type="button" onclick="insertWaVar('{nom_commercial}')" style="padding:4px 9px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or);border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">{nom_commercial}</button>
+          <button type="button" onclick="resetWaMessage()" style="padding:4px 9px;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);color:#ffb3b3;border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">↺ Réinitialiser</button>
+        </div>
+        <p style="font-size:10px;color:var(--muted);line-height:1.5">Les variables <code style="background:rgba(191,150,80,.1);padding:1px 5px;border-radius:3px">{prenom_client}</code>, <code style="background:rgba(191,150,80,.1);padding:1px 5px;border-radius:3px">{nom_appartement}</code> et <code style="background:rgba(191,150,80,.1);padding:1px 5px;border-radius:3px">{nom_commercial}</code> sont remplacées automatiquement lors de l'envoi.</p>
+
+        <div class="slabel">Aperçu message WhatsApp</div>
+        <div style="border:1px solid rgba(37,211,102,.2);border-radius:10px;background:rgba(37,211,102,.04);padding:14px;font-size:12px;color:rgba(248,244,238,.6);line-height:1.7;white-space:pre-line" id="waMessagePreview"></div>
       </div>
 
       <!-- 3. PROFIL -->
@@ -602,13 +626,18 @@
           <div class="field"><label>Texte stat libre</label><input id="cStatLibre" placeholder="Ex: +120 séjours accompagnés via Kàddu"/></div>
         </div>
 
-        <div class="slabel">Badges de confiance</div>
+        <div class="slabel">Badges Kàddu (type Superhost)</div>
         <div style="display:flex;flex-wrap:wrap;gap:8px" id="badgesChips">
           <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_verifie" style="width:auto;accent-color:var(--or)"/> 🛡️ Profil vérifié</label>
           <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_super" style="width:auto;accent-color:var(--or)"/> ⭐ Super conseiller</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_top" style="width:auto;accent-color:var(--or)"/> 🏆 Top Conseiller Kàddu</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_reponse" style="width:auto;accent-color:var(--or)"/> ⚡ Réponse Rapide</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_hotel" style="width:auto;accent-color:var(--or)"/> ⭐ Exigence Hôtelière</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_proprete" style="width:auto;accent-color:var(--or)"/> 🧼 Qualité & Propreté Garantie</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_intl" style="width:auto;accent-color:var(--or)"/> 🌍 Expérience Internationale</label>
+          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_premium" style="width:auto;accent-color:var(--or)"/> 🤝 Accompagnement Premium</label>
           <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_50res" style="width:auto;accent-color:var(--or)"/> 🏅 +50 réservations</label>
           <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_100pc" style="width:auto;accent-color:var(--or)"/> ✅ 100% dossiers traités</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_reponse" style="width:auto;accent-color:var(--or)"/> ⚡ Réponse ultra-rapide</label>
           <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_diaspora" style="width:auto;accent-color:var(--or)"/> 🌍 Spécialiste diaspora</label>
         </div>
 
@@ -889,11 +918,13 @@ document.querySelectorAll(".tab-btn").forEach(b=>b.addEventListener("click",()=>
 }));
 
 // Drawer sub-tabs
-document.querySelectorAll(".dtab").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".dtab").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".dpanel").forEach(x=>x.classList.remove("active"));
+// Onglets drawer bien — scopés strictement au panel bien
+document.querySelectorAll("#bienDrawerPanel .dtab").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#bienDrawerPanel .dtab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll("#bienDrawerPanel .dpanel").forEach(x=>x.classList.remove("active"));
   b.classList.add("active");
-  document.getElementById(b.dataset.dpanel).classList.add("active");
+  const panel=document.getElementById(b.dataset.dpanel);
+  if(panel)panel.classList.add("active");
 }));
 
 // ══ SUPABASE REST ════════════════════════════════
@@ -1103,9 +1134,13 @@ function openBienDrawer(id=null){
   });
   document.getElementById("bSlug").addEventListener("input",function(){this.dataset.manual="1"});
 
-  // Switch to identite tab
-  document.querySelectorAll(".dtab").forEach(t=>{t.classList.remove("active");document.getElementById(t.dataset.dpanel).classList.remove("active")});
-  document.querySelector(".dtab[data-dpanel='dp-identite']").classList.add("active");
+  // Switch to identite tab — ciblage strict sur les onglets du drawer bien uniquement
+  document.querySelectorAll("#bienDrawerPanel .dtab").forEach(t=>{
+    t.classList.remove("active");
+    const panel=document.getElementById(t.dataset.dpanel);
+    if(panel)panel.classList.remove("active");
+  });
+  document.querySelector("#bienDrawerPanel .dtab[data-dpanel='dp-identite']").classList.add("active");
   document.getElementById("dp-identite").classList.add("active");
 
   document.getElementById("bienDrawer").classList.add("open");
@@ -1470,6 +1505,42 @@ function delCommConfirm(id){
   });
 }
 
+const WA_DEFAULT = `Bonjour {prenom_client} 👋,
+
+Merci pour votre intérêt pour {nom_appartement}.
+
+Je suis {nom_commercial}, en charge de l'accompagnement sur ce bien. Vous pouvez dès maintenant :
+✔ explorer l'appartement à distance avec la visite 360°
+✔ déposer votre dossier en quelques minutes
+✔ réserver en toute sécurité via Kàddu
+
+Je reste disponible pour répondre à vos questions et vous accompagner à chaque étape.
+
+À très vite 😊`;
+
+function insertWaVar(v){
+  const ta=document.getElementById("cWaMessage");if(!ta)return;
+  const s=ta.selectionStart,e=ta.selectionEnd;
+  ta.value=ta.value.slice(0,s)+v+ta.value.slice(e);
+  ta.selectionStart=ta.selectionEnd=s+v.length;
+  ta.focus();updateWaPreview();
+}
+function resetWaMessage(){
+  const ta=document.getElementById("cWaMessage");if(ta)ta.value=WA_DEFAULT;
+  updateWaPreview();
+}
+function updateWaPreview(){
+  const ta=document.getElementById("cWaMessage");
+  const prev=document.getElementById("waMessagePreview");
+  if(!ta||!prev)return;
+  const nom=document.getElementById("cNom")?.value?.split(" ")[0]||"Prénom commercial";
+  prev.textContent=ta.value
+    .replace(/\{prenom_client\}/g,"[Prénom client]")
+    .replace(/\{nom_appartement\}/g,"[Nom du bien]")
+    .replace(/\{nom_commercial\}/g,nom);
+}
+document.getElementById("cWaMessage")?.addEventListener("input",updateWaPreview);
+
 // ── Sous-onglets drawer commercial ────────────────────────────────────────────
 document.querySelectorAll("[data-cpanel]").forEach(btn=>{
   btn.addEventListener("click",()=>{
@@ -1535,6 +1606,10 @@ function openCommDrawer(id=null){
   ["cNom","cRole","cTel","cWa","cEmail","cDesc","cId","cBiensGeres","cLocataires","cSatisfaction","cStatLibre"].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value=""});
   ["cStatut","cReponse","cDispo"].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value=""});
   document.getElementById("cStatut").value="actif";
+  // Message WA par défaut
+  const waTa=document.getElementById("cWaMessage");
+  if(waTa)waTa.value=WA_DEFAULT;
+  updateWaPreview();
 
   // Reset checkboxes
   document.querySelectorAll("#specialiteChips input, #languesChips input, #badgesChips input").forEach(c=>{c.checked=false;c.parentElement.classList.remove("checked")});
@@ -1559,6 +1634,10 @@ function openCommDrawer(id=null){
     document.getElementById("cLocataires").value=c.locataires||"";
     document.getElementById("cSatisfaction").value=c.satisfaction||"";
     document.getElementById("cStatLibre").value=c.stat_libre||"";
+    // Message WA personnalisé ou défaut
+    const waTa=document.getElementById("cWaMessage");
+    if(waTa)waTa.value=c.wa_message||WA_DEFAULT;
+    updateWaPreview();
 
     // Spécialités
     const sp=c.specialites||{};
@@ -1633,6 +1712,7 @@ document.getElementById("saveCommBtn").addEventListener("click",async()=>{
       reponse:v("cReponse"),disponibilite:v("cDispo"),
       biens_geres:vi("cBiensGeres"),locataires:vi("cLocataires"),
       satisfaction:vi("cSatisfaction"),stat_libre:v("cStatLibre"),
+      wa_message:v("cWaMessage"),
       specialites:JSON.stringify(specialites),
       langues:JSON.stringify(langues),
       autres_langues:JSON.stringify(autresLangues),
