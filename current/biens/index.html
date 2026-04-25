@@ -3,2048 +3,494 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kàddu Admin — Biens V2</title>
+  <title>Tous nos logements — Kàddu · Dakar</title>
+  <meta name="description" content="Découvrez tous les appartements meublés et non meublés disponibles à Dakar — vérifiés Kàddu, visites 360°, dossier digital."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
   <style>
     :root{
       --or:#BF9650;--orl:#DDB96E;--nbl:#07182B;--card:#0b2039;
       --txt:#F8F4EE;--muted:rgba(248,244,238,.55);
-      --bdr:rgba(191,150,80,.18);--bds:rgba(191,150,80,.34);
-      --green:#00C875;--red:#FF6B6B;--orange:#F5A623;--blue:#53b7ff;
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);
+      --green:#00C875;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:15px}
-    body{font-family:Arial,sans-serif;background:var(--nbl);color:var(--txt);min-height:100vh}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:#070c15;color:var(--txt);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.7}
+    body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 80% 50% at 70% 0%,rgba(191,150,80,.08),transparent 55%),linear-gradient(180deg,#070c15 0%,#0a1628 50%,#07182b 100%)}
     a{text-decoration:none;color:inherit}
+    img{display:block;max-width:100%}
+    h1,h2,h3{font-family:'Playfair Display',serif;font-weight:300;line-height:1.1}
 
     /* NAV */
-    nav{position:sticky;top:0;z-index:40;background:rgba(7,24,43,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--bdr);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .brand{font-family:Georgia,serif;font-size:24px;color:var(--or);white-space:nowrap}
-    .nav-tabs{display:flex;gap:3px}
-    .tab-btn{padding:7px 16px;border:none;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;transition:.15s;background:transparent;color:rgba(248,244,238,.45)}
-    .tab-btn.active{background:rgba(191,150,80,.14);color:var(--or);border:1px solid var(--bds)}
-    .tab-btn:hover:not(.active){color:var(--txt)}
-    .nav-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
-
-    /* BUTTONS */
-    .btn{padding:9px 15px;border:none;cursor:pointer;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:5px;transition:.15s;border-radius:4px;letter-spacing:.04em;white-space:nowrap}
+    nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(7,12,21,.85);border-bottom:1px solid var(--bdr);height:68px;display:flex;align-items:center}
+    .nav-inner{max-width:1300px;margin:0 auto;padding:0 28px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(191,150,80,.06));border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1rem;color:var(--or)}
+    .brand-text{display:flex;flex-direction:column;gap:1px}
+    .brand-name{font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+    .brand-tag{font-size:.6rem;color:rgba(248,244,238,.3);letter-spacing:.12em;text-transform:uppercase}
+    .nav-back{font-size:.76rem;color:rgba(248,244,238,.48);display:flex;align-items:center;gap:6px;transition:.2s}
+    .nav-back:hover{color:var(--or)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:none;cursor:pointer;padding:11px 20px;border-radius:999px;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:.22s;white-space:nowrap}
     .btn-primary{background:var(--or);color:#0a0a0a}
-    .btn-primary:hover{background:var(--orl)}
-    .btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--bdr)}
-    .btn-ghost:hover{border-color:var(--or);color:var(--or)}
-    .btn-danger{background:transparent;color:#ffb3b3;border:1px solid rgba(255,107,107,.32)}
-    .btn-danger:hover{background:rgba(255,107,107,.1)}
-    .btn-sm{padding:6px 11px;font-size:11px}
-    .btn-icon{width:30px;height:30px;padding:0;border-radius:50%;justify-content:center;font-size:13px}
-    .btn-green{background:rgba(0,200,117,.12);color:#77ffbe;border:1px solid rgba(0,200,117,.3)}
-    .btn-green:hover{background:rgba(0,200,117,.22)}
-    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn-primary:hover{background:var(--orl);transform:translateY(-1px)}
+    .btn-secondary{background:transparent;color:var(--txt);border:1px solid rgba(248,244,238,.16)}
+    .btn-secondary:hover{border-color:var(--or);color:var(--or)}
 
-    /* LAYOUT */
-    .wrap{max-width:1560px;margin:0 auto;padding:20px 24px}
-    .page{display:none}.page.active{display:block}
+    /* CONTAINER */
+    .container{max-width:1300px;margin:0 auto;padding:0 28px}
 
-    /* FORMS */
-    input,select,textarea{width:100%;padding:10px 13px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:13px;font-family:Arial,sans-serif;transition:.15s}
-    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--or)}
-    /* Placeholders très discrets — on voit clairement si un champ est rempli ou vide */
-    input::placeholder,textarea::placeholder{color:rgba(248,244,238,.22);font-style:italic}
-    input:focus::placeholder,textarea:focus::placeholder{color:rgba(248,244,238,.18)}
-    select option{background:#0b2039}
-    textarea{min-height:80px;resize:vertical}
-    label{display:block;font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:.13em;margin-bottom:5px}
-    .field{margin-bottom:13px}
-    .fg2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-    .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
-    .fg4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:13px}
+    /* PAGE HEADER */
+    .page-header{padding:48px 0 36px;text-align:center}
+    .page-header .eyebrow{display:inline-flex;align-items:center;gap:.6rem;color:var(--or);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px}
+    .page-header .eyebrow::before{content:"";width:18px;height:1px;background:var(--or)}
+    .page-header h1{font-size:clamp(2rem,4vw,3rem);margin-bottom:10px}
+    .page-header p{font-size:.95rem;color:var(--muted);max-width:520px;margin:0 auto}
 
-    /* STATS */
-    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-bottom:16px}
-    .stat{border:1px solid var(--bdr);background:var(--card);padding:14px}
-    .stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--or);margin-bottom:7px}
-    .stat .v{font-family:Georgia,serif;font-size:30px}
+    /* FILTERS BAR */
+    .filters-bar{
+      background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:16px;
+      padding:16px 20px;margin-bottom:32px;
+      display:flex;gap:12px;align-items:end;flex-wrap:wrap
+    }
+    .filter-group{display:flex;flex-direction:column;gap:6px;min-width:140px;flex:1}
+    .filter-group label{font-size:.65rem;color:var(--or);text-transform:uppercase;letter-spacing:.14em}
+    .filter-group select,.filter-group input{
+      padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);
+      color:var(--txt);font-size:.82rem;font-family:'DM Sans',sans-serif;
+      border-radius:8px;outline:none;appearance:none;transition:.18s
+    }
+    .filter-group select:focus,.filter-group input:focus{border-color:var(--or)}
+    .filter-group select option{background:#0b2039}
+    .filter-actions{display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+    .filter-count{font-size:.78rem;color:var(--muted);white-space:nowrap;align-self:center}
 
-    /* TOOLBAR */
-    .toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
-    .toolbar-left{display:flex;gap:8px;flex:1;flex-wrap:wrap}
-    .toolbar input{max-width:260px}
-    .toolbar select{max-width:170px}
+    /* CHIPS CATEGORIE */
+    .cat-chips{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+    .cat-chip{
+      padding:8px 16px;border:1px solid var(--bdr);border-radius:999px;
+      font-size:.76rem;cursor:pointer;transition:.18s;background:rgba(255,255,255,.02);color:var(--muted)
+    }
+    .cat-chip.active{background:rgba(191,150,80,.14);border-color:var(--or);color:var(--or);font-weight:600}
+    .cat-chip:hover:not(.active){border-color:rgba(191,150,80,.28);color:var(--txt)}
 
-    /* BIENS GRID */
-    .biens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
-    .bien-card{border:1px solid var(--bdr);background:var(--card);border-radius:5px;overflow:hidden;transition:.2s}
-    .bien-card:hover{border-color:var(--bds)}
-    .bcimg{height:170px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(191,150,80,.18),rgba(7,24,43,.85))}
-    .bcimg img{width:100%;height:100%;object-fit:cover;display:block}
-    .bcimg .no-img{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
-    .bc-sbadge{position:absolute;top:9px;left:9px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.07em}
-    .s-publie{background:rgba(0,200,117,.9);color:#002a18}
-    .s-disponible{background:rgba(0,200,117,.9);color:#002a18}
-    .s-reserve{background:rgba(245,166,35,.9);color:#1a0d00}
-    .s-loue{background:rgba(178,140,255,.85);color:#1a0028}
-    .s-indisponible{background:rgba(255,107,107,.85);color:#2a0000}
-    .s-brouillon{background:rgba(140,140,140,.8);color:#111}
-    .bc-tbadge{position:absolute;top:9px;right:9px;background:rgba(191,150,80,.9);color:#111;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700}
-    .bc-body{padding:14px}
-    .bc-body h3{font-family:Georgia,serif;font-size:18px;font-weight:400;margin-bottom:3px}
-    .bc-body h3 em{font-style:italic;color:var(--or)}
-    .bc-meta{font-size:11px;color:var(--muted);margin-bottom:8px}
-    .bc-price{font-family:Georgia,serif;font-size:20px;color:var(--or);margin-bottom:8px}
-    .bc-specs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
-    .spec-tag{font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--bdr);color:var(--muted)}
-    .bc-actions{display:flex;gap:7px;flex-wrap:wrap}
-    .comm-tag{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-bottom:7px}
-    .cavatar{width:20px;height:20px;border-radius:50%;background:rgba(191,150,80,.18);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--or);overflow:hidden;flex-shrink:0}
-    .cavatar img{width:100%;height:100%;object-fit:cover}
-    .photo-count{font-size:10px;padding:2px 7px;border-radius:999px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--muted)}
+    /* GRID */
+    .biens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;min-height:300px}
 
-    /* EDIT PANEL DRAWER */
-    .drawer-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);display:none;align-items:stretch;justify-content:flex-end}
-    .drawer-overlay.open{display:flex}
-    .drawer{width:100%;max-width:780px;height:100vh;overflow-y:auto;background:#091724;border-left:1px solid var(--bds);display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(191,150,80,.2) transparent}
-    .drawer-head{position:sticky;top:0;z-index:10;background:rgba(9,23,36,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .drawer-head h2{font-family:Georgia,serif;font-size:22px;font-weight:400}
-    .drawer-head h2 em{color:var(--or);font-style:italic}
-    .drawer-tabs{display:flex;gap:3px;margin:0 22px;padding:12px 0;border-bottom:1px solid var(--bdr)}
-    .dtab{padding:6px 14px;border:none;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;transition:.15s;background:transparent;color:rgba(248,244,238,.4)}
-    .dtab.active{background:rgba(191,150,80,.14);color:var(--or);border:1px solid rgba(191,150,80,.3)}
-    .drawer-body{padding:20px 22px;flex:1}
-    .dpanel{display:none}.dpanel.active{display:block}
-    .drawer-foot{position:sticky;bottom:0;background:rgba(9,23,36,.97);backdrop-filter:blur(10px);border-top:1px solid var(--bdr);padding:14px 22px;display:flex;gap:8px;justify-content:flex-end;align-items:center}
-    .slabel{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--or);border-bottom:1px solid var(--bdr);padding-bottom:7px;margin-bottom:14px;margin-top:20px}
-    .slabel:first-child{margin-top:0}
+    /* CARD */
+    .bien-card{
+      border:1px solid var(--bdr);border-radius:16px;background:var(--card);
+      overflow:hidden;cursor:pointer;transition:.26s;display:flex;flex-direction:column
+    }
+    .bien-card:hover{border-color:var(--bds);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.28)}
+    .bien-card:hover .card-overlay{opacity:1}
+    .card-img{height:210px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(191,150,80,.12),rgba(7,24,43,.9))}
+    .card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+    .bien-card:hover .card-img img{transform:scale(1.04)}
+    .card-overlay{position:absolute;inset:0;background:rgba(7,24,43,.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;opacity:0;transition:.22s}
+    .card-badge{position:absolute;top:10px;left:10px;z-index:2;padding:4px 9px;border-radius:999px;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+    .badge-meuble{background:rgba(191,150,80,.9);color:#0a0a0a}
+    .badge-nm{background:rgba(74,120,180,.88);color:#e8f0ff;border:1px solid rgba(120,170,240,.3)}
+    .card-360{position:absolute;top:10px;right:10px;z-index:2;background:rgba(7,24,43,.7);backdrop-filter:blur(6px);border:1px solid rgba(191,150,80,.28);color:var(--or);font-size:.6rem;padding:4px 9px;border-radius:999px;letter-spacing:.08em;text-transform:uppercase}
+    .card-status{position:absolute;bottom:10px;left:10px;z-index:2;background:rgba(0,200,117,.12);border:1px solid rgba(0,200,117,.35);color:#00C875;font-size:.6rem;padding:4px 9px;border-radius:999px;display:flex;align-items:center;gap:4px}
+    .card-status::before{content:"";width:5px;height:5px;border-radius:50%;background:#00C875}
+    .card-body{padding:15px 16px;flex:1;display:flex;flex-direction:column;gap:6px}
+    .card-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;line-height:1.2}
+    .card-body h3 em{font-style:italic;color:var(--or)}
+    .card-location{font-size:.74rem;color:rgba(248,244,238,.4);display:flex;align-items:center;gap:4px}
+    .card-location::before{content:"📍";font-size:.65rem}
+    .card-specs{display:flex;flex-wrap:wrap;gap:4px}
+    .card-spec{font-size:.65rem;padding:3px 8px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.58)}
+    .card-desc{font-size:.78rem;color:rgba(248,244,238,.46);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid rgba(191,150,80,.1);margin-top:auto}
+    .card-price{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;color:var(--or)}
+    .card-price small{font-size:.6rem;color:rgba(248,244,238,.35);display:block;font-family:'DM Sans',sans-serif}
+    .card-cta-meuble{background:var(--or);color:#0a0a0a;padding:8px 14px;border-radius:999px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:none;cursor:pointer;transition:.2s;white-space:nowrap}
+    .card-cta-meuble:hover{background:var(--orl)}
+    .card-cta-nm{background:rgba(74,120,180,.12);color:rgba(148,195,255,.85);border:1px solid rgba(74,120,180,.28);padding:8px 14px;border-radius:999px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s;white-space:nowrap;text-decoration:none;display:inline-flex}
+    .card-cta-nm:hover{background:rgba(74,120,180,.22)}
+    .bail-tag{display:inline-block;font-size:.62rem;color:rgba(74,158,255,.72);background:rgba(74,120,180,.1);border:1px solid rgba(74,120,180,.18);padding:2px 7px;border-radius:999px;margin-top:2px}
 
-    /* CHECKBOX GRID */
-    .check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
-    .check-item{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(248,244,238,.65);cursor:pointer;padding:7px 10px;border:1px solid rgba(191,150,80,.1);border-radius:4px;transition:.15s}
-    .check-item:hover{border-color:rgba(191,150,80,.3)}
-    .check-item input[type=checkbox]{width:auto;accent-color:var(--or);cursor:pointer}
-    .check-item.checked{border-color:rgba(191,150,80,.35);background:rgba(191,150,80,.07);color:var(--txt)}
+    /* EMPTY + LOADER */
+    .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+    .empty-state .icon{font-size:3rem;margin-bottom:14px}
+    .loader{grid-column:1/-1;display:flex;justify-content:center;padding:60px 0}
+    .loader-dot{width:8px;height:8px;border-radius:50%;background:var(--or);animation:ldot 1.2s infinite}
+    @keyframes ldot{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
 
-    /* PHOTOS ZONE */
-    .photos-zone{border:2px dashed rgba(191,150,80,.22);border-radius:5px;padding:18px;background:rgba(255,255,255,.015)}
-    .upload-btn-area{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:1px solid var(--bdr);background:rgba(191,150,80,.06);color:var(--or);cursor:pointer;font-size:12px;font-weight:700;border-radius:4px;width:100%;margin-bottom:12px;transition:.15s;user-select:none}
-    .upload-btn-area:hover{background:rgba(191,150,80,.13)}
-    #photosFileInput{display:none}
-    .upload-bar-wrap{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-bottom:12px;overflow:hidden}
-    .upload-bar{height:100%;background:var(--or);width:0;transition:width .25s;border-radius:2px}
+    /* PAGINATION */
+    .pagination{display:flex;justify-content:center;gap:8px;margin-top:36px;flex-wrap:wrap}
+    .page-btn{padding:8px 14px;border:1px solid var(--bdr);border-radius:8px;background:rgba(255,255,255,.03);color:var(--muted);cursor:pointer;font-size:.8rem;transition:.18s;font-family:'DM Sans',sans-serif}
+    .page-btn:hover{border-color:var(--or);color:var(--or)}
+    .page-btn.active{background:rgba(191,150,80,.14);border-color:var(--or);color:var(--or);font-weight:700}
 
-    /* PHOTOS GRID */
-    .photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-    .photo-item{position:relative;border-radius:5px;overflow:hidden;border:2px solid transparent;aspect-ratio:4/3;background:rgba(255,255,255,.04);cursor:grab;user-select:none}
-    .photo-item:active{cursor:grabbing}
-    .photo-item.is-main{border-color:var(--or)}
-    .photo-item.drag-over{border-color:var(--orl);outline:2px dashed var(--orl)}
-    .photo-item.dragging{opacity:.35;transform:scale(.97)}
-    .photo-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
-    .photo-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;transition:.18s;padding:6px}
-    .photo-item:hover .photo-overlay{opacity:1}
-    .photo-actions{display:flex;gap:5px}
-    .main-ribbon{position:absolute;bottom:0;left:0;right:0;background:rgba(191,150,80,.92);text-align:center;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0a0a0a;padding:3px}
-    .photo-num{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.55);color:rgba(248,244,238,.7);font-size:9px;padding:2px 6px;border-radius:999px}
+    /* FOOTER */
+    footer{padding:36px 0 24px;border-top:1px solid var(--bdr);margin-top:64px;background:rgba(0,0,0,.12)}
+    .footer-bottom{display:flex;justify-content:space-between;gap:14px;align-items:center;font-size:.72rem;color:rgba(248,244,238,.26)}
 
-    /* PHOTO META (below each photo) */
-    .photo-meta{margin-top:6px}
-    .photo-meta input{font-size:11px;padding:5px 8px}
-    .photo-tag-sel{font-size:11px;padding:5px 8px;margin-top:4px}
-
-    /* COMMERCIAUX PAGE */
-    .comm-panel{display:none}.comm-panel.active{display:block}
-    .comm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-    .comm-card{border:1px solid var(--bdr);background:var(--card);border-radius:5px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:.2s}
-    .comm-card:hover{border-color:var(--bds)}
-    .comm-top{display:flex;align-items:center;gap:12px}
-    .comm-av{width:52px;height:52px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:18px;color:var(--or);flex-shrink:0}
-    .comm-av img{width:100%;height:100%;object-fit:cover}
-    .comm-info h3{font-family:Georgia,serif;font-size:17px;font-weight:400;margin-bottom:2px}
-    .comm-role{font-size:11px;color:var(--muted)}
-    .comm-stat-a{color:var(--green);font-size:10px;font-weight:700;margin-top:2px}
-    .comm-stat-i{color:var(--muted);font-size:10px;font-weight:700;margin-top:2px}
-    .comm-contacts{display:flex;flex-direction:column;gap:5px}
-    .comm-contact{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
-    .comm-desc{font-size:12px;color:rgba(248,244,238,.45);line-height:1.5}
-    .comm-acts{display:flex;gap:7px;padding-top:7px;border-top:1px solid var(--bdr)}
-
-    /* MODALS */
-    .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center}
-    .modal-backdrop.open{display:flex}
-    .modal-box{background:#091724;border:1px solid var(--bds);border-radius:8px;padding:30px;max-width:400px;width:100%;margin:20px}
-    .modal-box h3{font-family:Georgia,serif;font-size:20px;font-weight:400;margin-bottom:9px}
-    .modal-box p{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:20px}
-    .modal-acts{display:flex;gap:9px;justify-content:flex-end}
-
-    /* TOASTS */
-    #toastZone{position:fixed;bottom:22px;right:22px;z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
-    .toast{padding:11px 16px;border-radius:5px;font-size:12px;font-weight:700;max-width:320px;animation:tin .22s ease;pointer-events:auto;display:flex;align-items:center;gap:9px}
-    .t-ok{background:rgba(0,200,117,.14);border:1px solid rgba(0,200,117,.38);color:#77ffbe}
-    .t-err{background:rgba(255,107,107,.11);border:1px solid rgba(255,107,107,.38);color:#ffb3b3}
-    .t-inf{background:rgba(83,183,255,.11);border:1px solid rgba(83,183,255,.38);color:#b8e1ff}
-    @keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-    /* AUTH */
-    #authOverlay{position:fixed;inset:0;z-index:9999;background:var(--nbl);display:flex;align-items:center;justify-content:center}
-    .auth-box{width:100%;max-width:410px;padding:38px 30px;background:var(--card);border:1px solid var(--bdr)}
-    .auth-box h2{font-family:Georgia,serif;font-size:28px;font-weight:400;margin-bottom:5px}
-    .auth-box h2 em{font-style:italic;color:var(--or)}
-    .auth-sub{color:var(--muted);font-size:13px;margin-bottom:26px;line-height:1.6}
-    .al{display:block;font-size:10px;color:var(--or);text-transform:uppercase;letter-spacing:.13em;margin-bottom:6px;margin-top:14px}
-    .ai{width:100%;padding:12px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:14px}
-    .ai:focus{outline:none;border-color:var(--or)}
-    .ab{width:100%;margin-top:20px;padding:13px;background:var(--or);color:#111;border:none;font-weight:700;font-size:14px;cursor:pointer}
-    .ab:disabled{opacity:.5;cursor:not-allowed}
-    .ae{display:none;margin-top:11px;padding:9px 12px;border:1px solid rgba(255,107,107,.28);background:rgba(255,107,107,.07);color:#ffb3b3;font-size:12px}
-    .ald{display:none;margin-top:11px;color:var(--muted);font-size:12px;text-align:center}
-
-    /* SETUP SQL */
-    .sql-block{background:rgba(0,0,0,.32);border:1px solid rgba(191,150,80,.1);border-radius:4px;padding:15px;font-family:monospace;font-size:11px;color:rgba(248,244,238,.5);white-space:pre;overflow-x:auto;line-height:1.75;margin-bottom:14px}
-    .info-bar{padding:12px 16px;border:1px solid rgba(83,183,255,.22);background:rgba(83,183,255,.07);color:#b8e1ff;font-size:12px;border-radius:4px;margin-bottom:16px;line-height:1.6}
-    .sh3{font-family:Georgia,serif;font-weight:400;font-size:18px;color:var(--or);margin:20px 0 10px}
-
-    /* EMPTY */
-    .empty{padding:50px 28px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed rgba(191,150,80,.1);border-radius:5px}
-    .empty .ei{font-size:32px;margin-bottom:10px}
-
-    /* BADGE */
-    .badge{display:inline-block;padding:3px 9px;font-size:10px;font-weight:700;border-radius:999px}
-    .b-ok{background:rgba(0,200,117,.12);color:#77ffbe;border:1px solid rgba(0,200,117,.28)}
-    .b-warn{background:rgba(245,166,35,.1);color:#ffd180;border:1px solid rgba(245,166,35,.25)}
-    .b-off{background:rgba(140,140,140,.1);color:#c9c9c9;border:1px solid rgba(140,140,140,.25)}
-
-    @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.fg2,.fg3,.fg4{grid-template-columns:1fr}.biens-grid{grid-template-columns:1fr}}
-    @media(max-width:640px){.nav-tabs{display:none}.drawer{max-width:100vw}.wrap{padding:14px 12px}}
+    /* RESPONSIVE */
+    @media(max-width:900px){.biens-grid{grid-template-columns:1fr 1fr}.filters-bar{flex-direction:column}.filter-group{min-width:100%}}
+    @media(max-width:580px){.biens-grid{grid-template-columns:1fr}.nav-inner{padding:0 16px}.container{padding:0 16px}}
   </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div id="authOverlay">
-  <div class="auth-box">
-    <div style="display:inline-block;padding:3px 9px;border:1px solid var(--bdr);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Kàddu · Admin sécurisé</div>
-    <h2>Biens <em>& Médias</em></h2>
-    <p class="auth-sub">Back-office de gestion des biens immobiliers, photos et équipe commerciale.</p>
-    <label class="al" for="authEmail">Email</label>
-    <input class="ai" id="authEmail" type="email" placeholder="contact@kaddu.net" autocomplete="email"/>
-    <label class="al" for="authPassword">Mot de passe</label>
-    <input class="ai" id="authPassword" type="password" autocomplete="current-password"/>
-    <button class="ab" id="authBtn">Connexion</button>
-    <div class="ae" id="authError"></div>
-    <div class="ald" id="authLoading">Authentification…</div>
-  </div>
-</div>
-
-<!-- NAV -->
 <nav>
-  <div class="brand">Kàddu Admin</div>
-  <div class="nav-tabs">
-    <button class="tab-btn active" data-tab="biens">🏠 Biens</button>
-    <button class="tab-btn" data-tab="commerciaux">👤 Commerciaux</button>
-    <button class="tab-btn" data-tab="setup">⚙️ Setup SQL</button>
-  </div>
-  <div class="nav-right">
-    <a class="btn btn-ghost btn-sm" href="admin-dossiers-v3-secured.html">📋 Dossiers</a>
-    <a class="btn btn-ghost btn-sm" href="dashboard-kaddu-kpi-secured.html">📊 KPIs</a>
-    <button class="btn btn-ghost btn-sm" id="logoutBtn">Déconnexion</button>
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <div class="brand-mark">K</div>
+      <div class="brand-text">
+        <div class="brand-name">Kàddu</div>
+        <div class="brand-tag">La parole qui engage</div>
+      </div>
+    </a>
+    <a href="/" class="nav-back">← Accueil</a>
+    <a class="btn btn-primary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
   </div>
 </nav>
 
-<div id="toastZone"></div>
+<main>
+  <div class="container">
 
-<!-- CONFIRM MODAL -->
-<div class="modal-backdrop" id="confirmModal">
-  <div class="modal-box">
-    <h3 id="confirmTitle">Confirmer</h3>
-    <p id="confirmMsg">Êtes-vous sûr ?</p>
-    <div class="modal-acts">
-      <button class="btn btn-ghost btn-sm" id="confirmCancel">Annuler</button>
-      <button class="btn btn-danger btn-sm" id="confirmOk">Confirmer</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════ DRAWER BIEN ══ -->
-<div class="drawer-overlay" id="bienDrawer">
-  <div class="drawer" id="bienDrawerPanel">
-    <div class="drawer-head">
-      <h2 id="drawerTitle">Nouveau <em>bien</em></h2>
-      <button class="btn btn-ghost btn-icon" id="closeDrawer">✕</button>
-    </div>
-    <div class="drawer-tabs">
-      <button class="dtab active" data-dpanel="dp-identite">Identité</button>
-      <button class="dtab" data-dpanel="dp-localisation">Localisation</button>
-      <button class="dtab" data-dpanel="dp-commercial-data">Commercial</button>
-      <button class="dtab" data-dpanel="dp-carac">Caractéristiques</button>
-      <button class="dtab" data-dpanel="dp-editorial">Contenu</button>
-      <button class="dtab" data-dpanel="dp-medias">Médias & Photos</button>
-    </div>
-    <div class="drawer-body">
-
-      <!-- 1. IDENTITÉ -->
-      <div class="dpanel active" id="dp-identite">
-        <div class="slabel">Identité du bien</div>
-        <div class="fg2">
-          <div class="field"><label>Titre *</label><input id="bTitre" placeholder="Le Petit Bantukay"/></div>
-          <div class="field"><label>Slug URL *</label><input id="bSlug" placeholder="bantukay"/></div>
-        </div>
-        <div class="fg2">
-          <div class="field"><label>Référence interne</label><input id="bRef" placeholder="KDU-001"/></div>
-          <div class="field">
-            <label>Type de bien</label>
-            <select id="bTypeBien">
-              <option value="appartement">Appartement</option>
-              <option value="studio">Studio</option>
-              <option value="maison">Maison</option>
-              <option value="bureau">Bureau</option>
-              <option value="villa">Villa</option>
-            </select>
-          </div>
-        </div>
-        <div class="fg2">
-          <div class="field">
-            <label>Catégorie</label>
-            <select id="bCategorie">
-              <option value="meuble">Meublé</option>
-              <option value="non_meuble">Non meublé</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Statut *</label>
-            <select id="bStatut">
-              <option value="brouillon">Brouillon</option>
-              <option value="disponible">Disponible</option>
-              <option value="reserve">Réservé</option>
-              <option value="loue">Loué</option>
-              <option value="indisponible">Indisponible</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Coup de cœur toggle -->
-        <div class="field" style="margin-bottom:16px">
-          <label>Mise en avant</label>
-          <label style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:12px 14px;border:1px solid var(--bdr);border-radius:5px;background:rgba(255,255,255,.02);transition:.2s" id="coupDeCoeurLabel">
-            <div style="position:relative;width:44px;height:24px;flex-shrink:0">
-              <input type="checkbox" id="bCoupDeCoeur" style="position:absolute;opacity:0;width:0;height:0" onchange="updateCoupDeCoeurUI()"/>
-              <div id="coupDeCoeurTrack" style="position:absolute;inset:0;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--bdr);transition:.2s"></div>
-              <div id="coupDeCoeurThumb" style="position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:rgba(248,244,238,.4);transition:.2s"></div>
-            </div>
-            <div>
-              <div style="font-size:13px;font-weight:700" id="coupDeCoeurText">Coup de cœur désactivé</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:2px">Ce bien s'affiche en vedette sur la homepage · Un seul bien à la fois</div>
-            </div>
-          </label>
-        </div>
-
-        <div class="field"><label>Accroche courte (affiché en hero)</label><input id="bAccroche" placeholder="Appartement premium avec vue dégagée, WiFi fibre et gardiennage 24h."/></div>
-      </div>
-
-      <!-- 2. LOCALISATION -->
-      <div class="dpanel" id="dp-localisation">
-        <div class="slabel">Localisation</div>
-        <div class="fg2">
-          <div class="field"><label>Adresse complète</label><input id="bAdresse" placeholder="Rue des Orchidées, VDN 2"/></div>
-          <div class="field"><label>Quartier</label><input id="bQuartier" placeholder="Sipres VDN 2"/></div>
-        </div>
-        <div class="fg2">
-          <div class="field"><label>Ville</label><input id="bVille" placeholder="Dakar" value="Dakar"/></div>
-          <div class="field"><label>Immeuble / Résidence</label><input id="bImmeuble" placeholder="Immeuble AÏDARA"/></div>
-        </div>
-        <div class="fg2">
-          <div class="field"><label>Latitude GPS</label><input id="bLat" type="number" step="0.000001" placeholder="14.7167"/></div>
-          <div class="field"><label>Longitude GPS</label><input id="bLng" type="number" step="0.000001" placeholder="-17.4677"/></div>
-        </div>
-        <div class="field"><label>Zone affichée sur carte (texte libre)</label><input id="bZoneCarte" placeholder="À 5 min de l'aéroport, proche Almadies et Sea Plaza"/></div>
-        <div class="field"><label>Description du quartier</label><textarea id="bDescQuartier" placeholder="Le quartier Sipres VDN 2 est un secteur résidentiel prisé, calme et sécurisé, à proximité des grandes artères commerçantes."></textarea></div>
-      </div>
-
-      <!-- 3. DONNÉES COMMERCIALES -->
-      <div class="dpanel" id="dp-commercial-data">
-        <div class="slabel">Prix et conditions financières</div>
-        <div class="fg3">
-          <div class="field"><label>Prix affiché</label><input id="bPrix" placeholder="50 000 FCFA"/></div>
-          <div class="field"><label>Sous-titre prix</label><input id="bPrixSub" placeholder="/ nuit · tarif mensuel disponible"/></div>
-          <div class="field"><label>Charges mensuelles</label><input id="bCharges" placeholder="Incluses"/></div>
-        </div>
-        <div class="fg3">
-          <div class="field"><label>Caution</label><input id="bCaution" placeholder="1 mois de loyer"/></div>
-          <div class="field">
-            <label>Frais de dossier</label><input id="bFraisDossier" placeholder="Gratuit via Kàddu"/>
-          </div>
-          <div class="field">
-            <label>Date de disponibilité</label>
-            <div style="display:flex;gap:8px;align-items:center">
-              <input id="bDispo" type="date" style="flex:1"/>
-              <button type="button" onclick="clearDispo()" title="Effacer la date" style="padding:8px 10px;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.25);color:#ffb3b3;border-radius:5px;cursor:pointer;font-size:11px;font-family:Arial;flex-shrink:0">✕</button>
-            </div>
-            <label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0">
-              <input type="checkbox" id="bNonDisponible" style="width:auto;accent-color:var(--or)" onchange="toggleNonDispo(this)"/>
-              Marquer comme non disponible (vide la date)
-            </label>
-          </div>
-        </div>
-        <div class="fg3">
-          <div class="field"><label>Durée minimum de location</label><input id="bDureeMin" placeholder="3 nuits"/></div>
-          <div class="field"><label>Type de bail</label><input id="bTypeBail" placeholder="Location meublée courte durée"/></div>
-          <div class="field"><label>Paiements acceptés</label><input id="bPaiements" placeholder="Wave · Orange Money · Stripe · Virement"/></div>
-        </div>
-        <div class="fg2">
-          <div class="field"><label>Check-in</label><input id="bCheckin" placeholder="Flexible · 14h – 22h"/></div>
-          <div class="field"><label>Check-out</label><input id="bCheckout" placeholder="12h00"/></div>
-        </div>
-
-        <div class="slabel">Commercial affecté</div>
-        <div class="field">
-          <label>Commercial responsable</label>
-          <select id="bCommercial"><option value="">— Aucun —</option></select>
-        </div>
-        <div id="commPreview" style="display:none;margin-top:10px;padding:12px;border:1px solid var(--bdr);border-radius:4px;background:rgba(255,255,255,.02)">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div class="comm-av" id="cpAvatar" style="width:44px;height:44px;font-size:15px"></div>
-            <div>
-              <div id="cpNom" style="font-weight:700;font-size:14px"></div>
-              <div id="cpRole" style="font-size:11px;color:var(--muted)"></div>
-              <div id="cpContact" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. CARACTÉRISTIQUES -->
-      <div class="dpanel" id="dp-carac">
-        <div class="slabel">Dimensions</div>
-        <div class="fg4">
-          <div class="field"><label>Surface (m²)</label><input id="bSurface" type="number" placeholder="65"/></div>
-          <div class="field"><label>Pièces</label><input id="bPieces" placeholder="F3 · 3 pièces"/></div>
-          <div class="field"><label>Chambres</label><input id="bChambres" type="number" placeholder="2"/></div>
-          <div class="field"><label>Salles de bain</label><input id="bSDB" type="number" placeholder="1"/></div>
-        </div>
-        <div class="fg4">
-          <div class="field"><label>Étage</label><input id="bEtage" placeholder="2ème"/></div>
-          <div class="field"><label>Nb total étages</label><input id="bNbEtages" type="number" placeholder="5"/></div>
-          <div class="field"><label>Capacité (pers.)</label><input id="bCapacite" type="number" placeholder="4"/></div>
-          <div class="field"><label>Année construction</label><input id="bAnnee" type="number" placeholder="2019"/></div>
-        </div>
-
-        <div class="slabel">Caractéristiques générales</div>
-        <div class="fg4">
-          <div class="field">
-            <label>Parking</label>
-            <select id="bParking"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-          <div class="field">
-            <label>Box / Garage</label>
-            <select id="bBox"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-          <div class="field">
-            <label>Cave</label>
-            <select id="bCave"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-          <div class="field">
-            <label>Ascenseur</label>
-            <select id="bAscenseur"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-        </div>
-        <div class="fg4">
-          <div class="field">
-            <label>Gardiennage</label>
-            <select id="bGardiennage"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-          <div class="field">
-            <label>Colocation acceptée</label>
-            <select id="bColocation"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-          <div class="field">
-            <label>Accessible PMR</label>
-            <select id="bPMR"><option value="">—</option><option value="oui">Oui</option><option value="non">Non</option></select>
-          </div>
-          <div class="field">
-            <label>Durée bail (mois)</label>
-            <input id="bDureeBail" type="number" placeholder="12"/>
-          </div>
-        </div>
-        <div class="fg2">
-          <div class="field"><label>Dépôt de garantie</label><input id="bDepotGarantie" placeholder="Ex: 1 027 €"/></div>
-          <div class="field"><label>Honoraires locataire</label><input id="bHonoraires" placeholder="Ex: 938 € TTC dont 216€ état des lieux"/></div>
-        </div>
-
-        <div class="slabel">Détail des charges</div>
-        <div class="fg3">
-          <div class="field"><label>Montant charges</label><input id="bChargesMontant" placeholder="Ex: 120 € / mois"/></div>
-          <div class="field">
-            <label>Type de charges</label>
-            <select id="bChargesType">
-              <option value="">—</option>
-              <option value="Provision">Provision</option>
-              <option value="Forfait">Forfait</option>
-              <option value="Incluses">Incluses</option>
-            </select>
-          </div>
-          <div class="field"><label>Charges locataire</label><input id="bChargesLocataire" placeholder="Ex: Eau, électricité"/></div>
-        </div>
-        <div class="fg2">
-          <div class="field">
-            <label>Inclus dans les charges (séparés par virgule)</label>
-            <input id="bChargesInclus" placeholder="Ordures, Entretien parties communes, Eau courante"/>
-          </div>
-          <div class="field">
-            <label>Non inclus dans les charges</label>
-            <input id="bChargesNonInclus" placeholder="Ménage, Eau chaude, Gaz, Gardien, Ascenseur, Internet, Électricité"/>
-          </div>
-        </div>
-
-        <div class="slabel">Mobilier & Équipements (cocher ce qui est présent)</div>
-
-        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">⚙️ Équipements</div>
-        <div class="check-grid" style="margin-bottom:14px">
-          <label class="check-item"><input type="checkbox" name="mob_raccord_machine" style="width:auto;accent-color:var(--or)"/> 🔌 Raccordement machine</label>
-          <label class="check-item"><input type="checkbox" name="mob_interphone" style="width:auto;accent-color:var(--or)"/> 📞 Interphone</label>
-          <label class="check-item"><input type="checkbox" name="mob_machine_laver" style="width:auto;accent-color:var(--or)"/> 🧺 Machine à laver</label>
-          <label class="check-item"><input type="checkbox" name="mob_toilettes_sep" style="width:auto;accent-color:var(--or)"/> 🚽 Toilettes séparées</label>
-          <label class="check-item"><input type="checkbox" name="mob_boite_lettres" style="width:auto;accent-color:var(--or)"/> 📬 Boîte aux lettres</label>
-          <label class="check-item"><input type="checkbox" name="mob_digicode" style="width:auto;accent-color:var(--or)"/> 🔑 Digicode</label>
-        </div>
-
-        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">🛏️ Couchage</div>
-        <div class="check-grid" style="margin-bottom:14px">
-          <label class="check-item"><input type="checkbox" name="mob_canape_lit" style="width:auto;accent-color:var(--or)"/> 🛋️ Canapé lit</label>
-          <label class="check-item"><input type="checkbox" name="mob_lit_double" style="width:auto;accent-color:var(--or)"/> 🛏️ Lit double</label>
-          <label class="check-item"><input type="checkbox" name="mob_lit_simple" style="width:auto;accent-color:var(--or)"/> 🛏️ Lit simple</label>
-          <label class="check-item"><input type="checkbox" name="mob_linge_lit" style="width:auto;accent-color:var(--or)"/> 🧻 Linge de lit fourni</label>
-        </div>
-
-        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">🍳 Cuisine</div>
-        <div class="check-grid" style="margin-bottom:14px">
-          <label class="check-item"><input type="checkbox" name="mob_congelateur" style="width:auto;accent-color:var(--or)"/> ❄️ Congélateur</label>
-          <label class="check-item"><input type="checkbox" name="mob_refrigerateur" style="width:auto;accent-color:var(--or)"/> 🧊 Réfrigérateur</label>
-          <label class="check-item"><input type="checkbox" name="mob_plaques" style="width:auto;accent-color:var(--or)"/> 🔥 Plaques de cuisson</label>
-          <label class="check-item"><input type="checkbox" name="mob_micro_ondes" style="width:auto;accent-color:var(--or)"/> 📡 Micro-ondes</label>
-          <label class="check-item"><input type="checkbox" name="mob_lave_vaisselle" style="width:auto;accent-color:var(--or)"/> 🍽️ Lave-vaisselle</label>
-          <label class="check-item"><input type="checkbox" name="mob_four" style="width:auto;accent-color:var(--or)"/> 🫕 Four</label>
-          <label class="check-item"><input type="checkbox" name="mob_cafetiere" style="width:auto;accent-color:var(--or)"/> ☕ Cafetière</label>
-          <label class="check-item"><input type="checkbox" name="mob_bouilloire" style="width:auto;accent-color:var(--or)"/> 🫖 Bouilloire</label>
-        </div>
-
-        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">🪑 Ameublement</div>
-        <div class="check-grid" style="margin-bottom:14px">
-          <label class="check-item"><input type="checkbox" name="mob_dressing" style="width:auto;accent-color:var(--or)"/> 🚪 Dressing</label>
-          <label class="check-item"><input type="checkbox" name="mob_bureau" style="width:auto;accent-color:var(--or)"/> 🖥️ Bureau</label>
-          <label class="check-item"><input type="checkbox" name="mob_tv" style="width:auto;accent-color:var(--or)"/> 📺 TV</label>
-          <label class="check-item"><input type="checkbox" name="mob_chaise" style="width:auto;accent-color:var(--or)"/> 🪑 Chaises</label>
-          <label class="check-item"><input type="checkbox" name="mob_table" style="width:auto;accent-color:var(--or)"/> 🪵 Table</label>
-          <label class="check-item"><input type="checkbox" name="mob_canape" style="width:auto;accent-color:var(--or)"/> 🛋️ Canapé</label>
-          <label class="check-item"><input type="checkbox" name="mob_armoire" style="width:auto;accent-color:var(--or)"/> 🗄️ Armoire</label>
-          <label class="check-item"><input type="checkbox" name="mob_miroir" style="width:auto;accent-color:var(--or)"/> 🪞 Miroir</label>
-        </div>
-
-        <div class="slabel">Équipements & services</div>
-        <div class="check-grid" id="equipGrid">
-          <!-- Populated by JS -->
-        </div>
-
-        <div class="slabel">Équipements libres (un par ligne)</div>
-        <div class="field"><textarea id="bEquipLibres" placeholder="🛋️ Salon meublé complet&#10;🛏️ Lit double confortable&#10;❄️ Climatisation multi-split&#10;📶 WiFi fibre haut débit&#10;📺 Smart TV · Netflix inclus"></textarea></div>
-      </div>
-
-      <!-- 5. CONTENU ÉDITORIAL -->
-      <div class="dpanel" id="dp-editorial">
-        <div class="slabel">Descriptions</div>
-        <div class="field"><label>Description principale *</label><textarea id="bDescription" style="min-height:130px" placeholder="Appartement meublé premium situé au cœur du quartier résidentiel Sipres VDN 2…"></textarea></div>
-        <div class="slabel">Atouts du bien (un par ligne)</div>
-        <div class="field"><textarea id="bAtouts" placeholder="✦ Vue dégagée sur le quartier résidentiel&#10;✦ Gardiennage 24h/24 et parking sécurisé&#10;✦ WiFi fibre inclus sans limitation&#10;✦ Idéal pour séjours business et diaspora"></textarea></div>
-        <div class="slabel">Conditions de location</div>
-        <div class="field"><textarea id="bConditions" placeholder="Caution d'une nuit remboursable à la sortie. Dossier locataire obligatoire via le tunnel Kàddu. Animaux non acceptés."></textarea></div>
-      </div>
-
-      <!-- 6. MÉDIAS & PHOTOS -->
-      <div class="dpanel" id="dp-medias">
-        <div class="slabel">Liens médias</div>
-        <div class="fg2">
-          <div class="field"><label>Visite 360° / Matterport</label><input id="bVisite360" placeholder="https://my.matterport.com/show/…"/></div>
-          <div class="field"><label>Vidéo (YouTube / TikTok)</label><input id="bVideo" placeholder="https://www.youtube.com/watch?v=…"/></div>
-        </div>
-        <div class="field"><label>Document PDF (règlement, plan…)</label><input id="bPdf" placeholder="https://…/plan-bantukay.pdf"/></div>
-
-        <div class="slabel">Photos du bien</div>
-        <div class="photos-zone">
-          <div class="upload-btn-area" id="photosUploadBtn">📷 Ajouter des photos (JPEG, PNG, WebP)</div>
-          <input type="file" id="photosFileInput" multiple accept="image/jpeg,image/png,image/webp"/>
-          <div class="upload-bar-wrap"><div class="upload-bar" id="uploadBar"></div></div>
-          <div class="photos-grid" id="photosGrid">
-            <div style="color:var(--muted);font-size:11px;grid-column:1/-1;text-align:center;padding:12px">Aucune photo · cliquez pour en ajouter</div>
-          </div>
-          <p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.6">
-            ⣿ Glissez pour réorganiser · ⭐ Photo principale · 🗑 Supprimer · Ajoutez une légende et un tag à chaque photo
-          </p>
-        </div>
-      </div>
-
-    </div><!-- /drawer-body -->
-    <div class="drawer-foot">
-      <span id="saveStatus" style="font-size:11px;color:var(--muted)"></span>
-      <button class="btn btn-ghost btn-sm" id="cancelDrawer">Annuler</button>
-      <button class="btn btn-primary" id="saveBienBtn">💾 Enregistrer</button>
-    </div>
-    <input type="hidden" id="bId"/>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════ DRAWER COMMERCIAL ══ -->
-<div class="drawer-overlay" id="commDrawer">
-  <div class="drawer" id="commDrawerPanel">
-    <div class="drawer-head">
-      <h2 id="commDrawerTitle">Nouveau <em>commercial</em></h2>
-      <button class="btn btn-ghost btn-icon" id="closeCommDrawer">✕</button>
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="eyebrow">Sélection Kàddu · Dakar</div>
+      <h1>Tous nos <em>logements</em></h1>
+      <p>Appartements vérifiés, meublés et non meublés — visites 360°, dossier digital, paiement sécurisé.</p>
     </div>
 
-    <!-- Sous-onglets -->
-    <div style="display:flex;gap:3px;margin:0 22px;padding:10px 0;border-bottom:1px solid var(--bdr)">
-      <button class="dtab active" data-cpanel="cp-identite">Identité</button>
-      <button class="dtab" data-cpanel="cp-contact">Contact</button>
-      <button class="dtab" data-cpanel="cp-profil">Profil</button>
-      <button class="dtab" data-cpanel="cp-stats">Stats & Badges</button>
+    <!-- CATEGORY CHIPS -->
+    <div class="cat-chips">
+      <div class="cat-chip active" data-cat="">Tous les biens</div>
+      <div class="cat-chip" data-cat="meuble">🛋️ Meublés</div>
+      <div class="cat-chip" data-cat="non_meuble">🏠 Non meublés</div>
     </div>
 
-    <div class="drawer-body" style="padding-top:18px">
-
-      <!-- 1. IDENTITÉ -->
-      <div class="comm-panel active" id="cp-identite">
-        <div class="slabel" style="margin-top:0">Photo de profil <span style="color:var(--red);font-size:10px">OBLIGATOIRE</span></div>
-        <div class="photos-zone" style="display:flex;align-items:center;gap:20px;padding:16px">
-          <div id="commPhotoPreviewLarge" style="width:90px;height:90px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:28px;color:var(--or);flex-shrink:0;cursor:pointer" onclick="document.getElementById('commPhotoInput').click()">
-            📷
-          </div>
-          <div style="flex:1">
-            <div class="upload-btn-area" id="commPhotoBtn" style="margin-bottom:8px">📷 Choisir une photo de profil</div>
-            <input type="file" id="commPhotoInput" accept="image/jpeg,image/png,image/webp"/>
-            <p style="font-size:10px;color:var(--muted);line-height:1.5">Format carré recommandé (ex: 400×400px). La photo apparaît sur la page bien et dans le tunnel locataire. Impact direct sur la confiance perçue.</p>
-          </div>
-        </div>
-
-        <div class="slabel">Identité</div>
-        <div class="fg2">
-          <div class="field"><label>Prénom et Nom *</label><input id="cNom" placeholder="Ex: Moussa Diallo"/></div>
-          <div class="field"><label>Rôle / Titre</label><input id="cRole" placeholder="Ex: Conseiller Kàddu · VDN"/></div>
-        </div>
-
-        <div class="slabel">Spécialité</div>
-        <div class="field">
-          <label>Domaine de spécialisation</label>
-          <div style="display:flex;flex-wrap:wrap;gap:8px" id="specialiteChips">
-            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_court" style="width:auto;accent-color:var(--or)"/> Location courte durée</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_long" style="width:auto;accent-color:var(--or)"/> Long séjour diaspora</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_business" style="width:auto;accent-color:var(--or)"/> Logement business</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 14px"><input type="checkbox" name="sp_expat" style="width:auto;accent-color:var(--or)"/> Relocation expats</label>
-          </div>
-        </div>
-
-        <div class="slabel">Langues parlées</div>
-        <div class="field">
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px" id="languesChips">
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_fr" style="width:auto;accent-color:var(--or)"/> 🇫🇷 Français</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_en" style="width:auto;accent-color:var(--or)"/> 🇬🇧 Anglais</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_wo" style="width:auto;accent-color:var(--or)"/> 🇸🇳 Wolof</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ar" style="width:auto;accent-color:var(--or)"/> 🇸🇦 Arabe</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ha" style="width:auto;accent-color:var(--or)"/> 🇲🇷 Hassania</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_hw" style="width:auto;accent-color:var(--or)"/> 🇳🇬 Haoussa</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_zh" style="width:auto;accent-color:var(--or)"/> 🇨🇳 Mandarin</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ru" style="width:auto;accent-color:var(--or)"/> 🇷🇺 Russe</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_pt" style="width:auto;accent-color:var(--or)"/> 🇵🇹 Portugais</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_es" style="width:auto;accent-color:var(--or)"/> 🇪🇸 Espagnol</label>
-          </div>
-          <div style="display:flex;gap:8px">
-            <input id="cAutreLangInput" placeholder="Autre langue… (ex: Mandingue, Pulaar, Sérère)" style="flex:1;font-size:12px"/>
-            <button type="button" onclick="addAutreLang()" style="padding:8px 12px;background:rgba(191,150,80,.1);border:1px solid var(--bds);color:var(--or);border-radius:5px;cursor:pointer;font-size:11px;font-weight:700;font-family:Arial;flex-shrink:0">+ Ajouter</button>
-          </div>
-          <div id="autresLangues" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-        </div>
-
-        <div class="slabel">Statut</div>
-        <div class="field">
-          <select id="cStatut"><option value="actif">Actif</option><option value="inactif">Inactif</option></select>
-        </div>
+    <!-- FILTERS BAR -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <label>Quartier / Ville</label>
+        <input id="fLieu" type="text" placeholder="Ex : VDN, Almadies…" oninput="applyFilters()"/>
       </div>
-
-      <!-- 2. CONTACT -->
-      <div class="comm-panel" id="cp-contact">
-        <div class="slabel" style="margin-top:0">Coordonnées</div>
-        <div class="fg2">
-          <div class="field"><label>Téléphone</label><input id="cTel" placeholder="+221 77 000 00 00"/></div>
-          <div class="field"><label>WhatsApp (format international sans +)</label><input id="cWa" placeholder="221770000000"/></div>
-        </div>
-        <div class="field"><label>Email</label><input id="cEmail" type="email" placeholder="moussa@kaddu.net"/></div>
-
-        <div class="slabel">Disponibilité</div>
-        <div class="fg2">
-          <div class="field">
-            <label>Temps de réponse moyen</label>
-            <select id="cReponse">
-              <option value="">Non précisé</option>
-              <option value="< 1h">Répond en moins d'1h</option>
-              <option value="< 3h">Répond en moins de 3h</option>
-              <option value="< 24h">Répond sous 24h</option>
-              <option value="sous 48h">Répond sous 48h</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Disponibilité</label>
-            <select id="cDispo">
-              <option value="">Non précisé</option>
-              <option value="7j/7">7j/7</option>
-              <option value="Lun – Ven">Lun – Ven</option>
-              <option value="Lun – Sam">Lun – Sam</option>
-              <option value="Sur rendez-vous">Sur rendez-vous</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Aperçu + modèle message WhatsApp modifiable -->
-        <div class="slabel">Message WhatsApp — modèle personnalisable</div>
-        <div style="margin-bottom:8px">
-          <textarea id="cWaMessage" rows="9" style="font-size:12px;line-height:1.7"
-            placeholder="Message WhatsApp par défaut…">Bonjour {prenom_client} 👋,
-
-Merci pour votre intérêt pour {nom_appartement}.
-
-Je suis {nom_commercial}, en charge de l'accompagnement sur ce bien. Vous pouvez dès maintenant :
-✔ explorer l'appartement à distance avec la visite 360°
-✔ déposer votre dossier en quelques minutes
-✔ réserver en toute sécurité via Kàddu
-
-Je reste disponible pour répondre à vos questions et vous accompagner à chaque étape.
-
-À très vite 😊</textarea>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-          <button type="button" onclick="insertWaVar('{prenom_client}')" style="padding:4px 9px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or);border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">{prenom_client}</button>
-          <button type="button" onclick="insertWaVar('{nom_appartement}')" style="padding:4px 9px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or);border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">{nom_appartement}</button>
-          <button type="button" onclick="insertWaVar('{nom_commercial}')" style="padding:4px 9px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or);border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">{nom_commercial}</button>
-          <button type="button" onclick="resetWaMessage()" style="padding:4px 9px;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);color:#ffb3b3;border-radius:999px;font-size:10px;cursor:pointer;font-family:Arial">↺ Réinitialiser</button>
-        </div>
-        <p style="font-size:10px;color:var(--muted);line-height:1.5">Les variables <code style="background:rgba(191,150,80,.1);padding:1px 5px;border-radius:3px">{prenom_client}</code>, <code style="background:rgba(191,150,80,.1);padding:1px 5px;border-radius:3px">{nom_appartement}</code> et <code style="background:rgba(191,150,80,.1);padding:1px 5px;border-radius:3px">{nom_commercial}</code> sont remplacées automatiquement lors de l'envoi.</p>
-
-        <div class="slabel">Aperçu message WhatsApp</div>
-        <div style="border:1px solid rgba(37,211,102,.2);border-radius:10px;background:rgba(37,211,102,.04);padding:14px;font-size:12px;color:rgba(248,244,238,.6);line-height:1.7;white-space:pre-line" id="waMessagePreview"></div>
-      </div>
-
-      <!-- 3. PROFIL -->
-      <div class="comm-panel" id="cp-profil">
-        <div class="slabel" style="margin-top:0">Description</div>
-        <div class="field"><textarea id="cDesc" style="min-height:120px" placeholder="Spécialiste de la location meublée sur l'axe VDN depuis 3 ans.&#10;&#10;J'accompagne les familles de la diaspora, les expatriés et les professionnels en mission à Dakar.&#10;&#10;Mon engagement : une réponse rapide, des biens vérifiés, zéro mauvaise surprise."></textarea></div>
-        <p style="font-size:10px;color:var(--muted);margin-top:4px">Les sauts de ligne sont conservés à l'affichage. Écrivez comme vous parlez.</p>
-
-        <!-- Engagement Kàddu (non modifiable) -->
-        <div class="slabel">Engagement Kàddu <span style="color:var(--muted);font-size:9px;text-transform:none;letter-spacing:0">(appliqué automatiquement à tous les profils)</span></div>
-        <div style="border:1px solid rgba(191,150,80,.2);border-radius:8px;padding:12px 14px;background:rgba(191,150,80,.05);font-size:12px;color:rgba(248,244,238,.6);pointer-events:none">
-          ✔ Biens vérifiés &nbsp;·&nbsp; ✔ Dossiers sécurisés &nbsp;·&nbsp; ✔ Zéro mauvaise surprise
-        </div>
-      </div>
-
-      <!-- 4. STATS & BADGES -->
-      <div class="comm-panel" id="cp-stats">
-        <div class="slabel" style="margin-top:0">Statistiques (social proof)</div>
-        <div class="fg2">
-          <div class="field"><label>Biens gérés</label><input id="cBiensGeres" type="number" placeholder="Ex: 5"/></div>
-          <div class="field"><label>Locataires accompagnés</label><input id="cLocataires" type="number" placeholder="Ex: 120"/></div>
-        </div>
-        <div class="fg2">
-          <div class="field"><label>Taux de satisfaction (%)</label><input id="cSatisfaction" type="number" min="0" max="100" placeholder="Ex: 98"/></div>
-          <div class="field"><label>Texte stat libre</label><input id="cStatLibre" placeholder="Ex: +120 séjours accompagnés via Kàddu"/></div>
-        </div>
-
-        <div class="slabel">Badges Kàddu (type Superhost)</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px" id="badgesChips">
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_verifie" style="width:auto;accent-color:var(--or)"/> 🛡️ Profil vérifié</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_super" style="width:auto;accent-color:var(--or)"/> ⭐ Super conseiller</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_top" style="width:auto;accent-color:var(--or)"/> 🏆 Top Conseiller Kàddu</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_reponse" style="width:auto;accent-color:var(--or)"/> ⚡ Réponse Rapide</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_hotel" style="width:auto;accent-color:var(--or)"/> ⭐ Exigence Hôtelière</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_proprete" style="width:auto;accent-color:var(--or)"/> 🧼 Qualité & Propreté Garantie</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_intl" style="width:auto;accent-color:var(--or)"/> 🌍 Expérience Internationale</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_premium" style="width:auto;accent-color:var(--or)"/> 🤝 Accompagnement Premium</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_50res" style="width:auto;accent-color:var(--or)"/> 🏅 +50 réservations</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_100pc" style="width:auto;accent-color:var(--or)"/> ✅ 100% dossiers traités</label>
-          <label class="check-item" style="border-radius:8px;padding:8px 14px"><input type="checkbox" name="badge_diaspora" style="width:auto;accent-color:var(--or)"/> 🌍 Spécialiste diaspora</label>
-        </div>
-
-        <div class="slabel">Aperçu carte commercial</div>
-        <div style="border:1px solid var(--bdr);border-radius:12px;padding:16px;background:rgba(255,255,255,.02)" id="commCardPreview">
-          <p style="font-size:11px;color:var(--muted);text-align:center">Remplissez les champs pour prévisualiser</p>
-        </div>
-      </div>
-
-    </div><!-- /drawer-body -->
-
-    <div class="drawer-foot">
-      <button class="btn btn-ghost btn-sm" id="cancelCommDrawer">Annuler</button>
-      <button class="btn btn-primary" id="saveCommBtn">💾 Enregistrer</button>
-    </div>
-    <input type="hidden" id="cId"/>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════ PAGES ══ -->
-<div class="wrap">
-
-  <!-- BIENS -->
-  <div class="page active" id="page-biens">
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <input id="searchBiens" placeholder="Titre, quartier, référence…" style="max-width:250px"/>
-        <select id="filterCat" style="max-width:160px">
-          <option value="">Tous types</option>
-          <option value="meuble">Meublés</option>
-          <option value="non_meuble">Non meublés</option>
+      <div class="filter-group">
+        <label>Nb de pièces</label>
+        <select id="fPieces" onchange="applyFilters()">
+          <option value="">Toutes</option>
+          <option value="1">1 pièce</option>
+          <option value="2">2 pièces</option>
+          <option value="3">3 pièces</option>
+          <option value="4">4+ pièces</option>
         </select>
-        <select id="filterStat" style="max-width:160px">
-          <option value="">Tous statuts</option>
+      </div>
+      <div class="filter-group">
+        <label>Surface min (m²)</label>
+        <select id="fSurface" onchange="applyFilters()">
+          <option value="">Toutes</option>
+          <option value="30">≥ 30 m²</option>
+          <option value="50">≥ 50 m²</option>
+          <option value="70">≥ 70 m²</option>
+          <option value="100">≥ 100 m²</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Statut</label>
+        <select id="fStatut" onchange="applyFilters()">
+          <option value="">Tous</option>
           <option value="disponible">Disponible</option>
           <option value="reserve">Réservé</option>
-          <option value="loue">Loué</option>
-          <option value="indisponible">Indisponible</option>
-          <option value="brouillon">Brouillon</option>
-        </select>
-        <select id="filterComm" style="max-width:180px" onchange="renderBiens()">
-          <option value="">Tous (avec/sans commercial)</option>
-          <option value="sans">⚠️ Sans commercial affecté</option>
-          <option value="avec">✓ Avec commercial</option>
         </select>
       </div>
-      <button class="btn btn-primary" id="newBienBtn">+ Nouveau bien</button>
+      <div class="filter-actions">
+        <span class="filter-count" id="filterCount"></span>
+        <button class="btn btn-secondary" onclick="resetFilters()" style="padding:9px 16px;font-size:.72rem">Réinitialiser</button>
+      </div>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="k">Total</div><div class="v" id="stTotal">—</div></div>
-      <div class="stat"><div class="k">Disponibles</div><div class="v" id="stDispo">—</div></div>
-      <div class="stat"><div class="k">Loués</div><div class="v" id="stLoue">—</div></div>
-      <div class="stat"><div class="k">Meublés</div><div class="v" id="stMeuble">—</div></div>
-      <div class="stat"><div class="k">Brouillons</div><div class="v" id="stBrouillon">—</div></div>
-    </div>
+
+    <!-- GRID -->
     <div class="biens-grid" id="biensGrid">
-      <div class="empty"><div class="ei">🏠</div>Chargement…</div>
+      <div class="loader"><div class="loader-dot"></div></div>
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination" id="pagination"></div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">
+      <span>© Kàddu — La parole qui engage · kaddu.net</span>
+      <span>Plateforme immobilière 100% digitale · Dakar, Sénégal</span>
     </div>
   </div>
+</footer>
 
-  <!-- COMMERCIAUX -->
-  <div class="page" id="page-commerciaux">
-    <div class="toolbar">
-      <div class="toolbar-left">
-        <input id="searchComm" placeholder="Nom du commercial…" style="max-width:250px"/>
-        <select id="filterCommStat" style="max-width:160px">
-          <option value="">Tous statuts</option>
-          <option value="actif">Actifs</option>
-          <option value="inactif">Inactifs</option>
-        </select>
+<!-- ══ MODAL BIEN (simplifié) ══ -->
+<div id="modalBg" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:20px">
+  <div id="modalBox" style="width:100%;max-width:700px;max-height:90vh;overflow-y:auto;background:linear-gradient(160deg,#0b1e33,#081525);border:1px solid var(--bds);border-radius:24px;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="position:sticky;top:0;z-index:10;background:rgba(8,21,37,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;gap:10px;align-items:center">
+        <span id="mBadge" style="padding:4px 10px;border-radius:999px;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase"></span>
+        <span style="background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.3);color:#00C875;font-size:.62rem;padding:4px 10px;border-radius:999px">Disponible</span>
       </div>
-      <button class="btn btn-primary" id="newCommBtn">+ Nouveau commercial</button>
+      <button onclick="closeModal()" style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(248,244,238,.6);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
     </div>
-    <div class="comm-grid" id="commGrid">
-      <div class="empty"><div class="ei">👤</div>Chargement…</div>
+    <!-- Gallery -->
+    <div id="mGallery" style="height:300px;overflow:hidden;position:relative;background:#060e1a"></div>
+    <!-- Body -->
+    <div style="padding:22px">
+      <h2 id="mTitre" style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:300;margin-bottom:6px"></h2>
+      <div id="mLocation" style="font-size:.84rem;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:5px">📍</div>
+      <div id="mSpecs" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px"></div>
+      <div style="font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px">À propos du bien</div>
+      <div id="mDesc" style="font-size:.9rem;color:rgba(248,244,238,.6);line-height:1.75;margin-bottom:18px;white-space:pre-line"></div>
+      <div style="font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Conditions</div>
+      <div id="mConditions" style="background:rgba(7,24,43,.5);border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:18px"></div>
+    </div>
+    <!-- CTA -->
+    <div style="position:sticky;bottom:0;background:rgba(8,21,37,.95);backdrop-filter:blur(10px);border-top:1px solid var(--bdr);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <div id="mPrix" style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:300;color:var(--or)"></div>
+        <div id="mPrixSub" style="font-size:.7rem;color:rgba(248,244,238,.35)"></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a id="m360Btn" href="#" target="_blank" style="display:none;align-items:center;gap:5px;padding:11px 15px;border:1px solid rgba(191,150,80,.28);border-radius:999px;background:rgba(191,150,80,.08);color:var(--or);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:.2s;text-decoration:none">🌀 Voir en 360°</a>
+        <a id="mWA" href="#" target="_blank" style="background:#25D366;color:#fff;padding:11px 15px;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-decoration:none;display:inline-flex;align-items:center;gap:6px">💬 WhatsApp</a>
+        <a id="mCTA" href="#" style="background:var(--or);color:#0a0a0a;padding:11px 20px;border-radius:999px;font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;text-decoration:none">Déposer mon dossier →</a>
+      </div>
     </div>
   </div>
-
-  <!-- SETUP SQL -->
-  <div class="page" id="page-setup">
-    <div class="info-bar">⚠️ Exécutez ces blocs SQL <strong>une seule fois</strong> dans Supabase → SQL Editor → New Query. Respectez l'ordre.</div>
-    <div class="sh3">1. Table <code>commerciaux</code> (avant biens car FK)</div>
-    <div class="sql-block">CREATE TABLE IF NOT EXISTS commerciaux (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  nom TEXT NOT NULL,
-  role TEXT,
-  telephone TEXT,
-  whatsapp TEXT,
-  email TEXT,
-  description TEXT,
-  statut TEXT NOT NULL DEFAULT 'actif',
-  photo_url TEXT,
-  photo_path TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);</div>
-    <div class="sh3">2. Table <code>biens</code></div>
-    <div class="sql-block">CREATE TABLE IF NOT EXISTS biens (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  titre TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
-  ref_interne TEXT,
-  type_bien TEXT DEFAULT 'appartement',
-  categorie TEXT NOT NULL DEFAULT 'meuble',
-  statut TEXT NOT NULL DEFAULT 'brouillon',
-  accroche TEXT,
-  adresse TEXT, quartier TEXT, ville TEXT DEFAULT 'Dakar', immeuble TEXT,
-  lat NUMERIC, lng NUMERIC, zone_carte TEXT,
-  desc_quartier TEXT,
-  prix TEXT, prix_sub TEXT, charges TEXT, caution TEXT,
-  frais_dossier TEXT, disponibilite DATE, duree_min TEXT,
-  type_bail TEXT, paiements TEXT, checkin TEXT, checkout TEXT,
-  commercial_id UUID REFERENCES commerciaux(id) ON DELETE SET NULL,
-  surface INTEGER, pieces TEXT, chambres INTEGER, sdb INTEGER,
-  etage TEXT, capacite INTEGER, nb_etages INTEGER, annee INTEGER,
-  equipements_bool JSONB DEFAULT '{}'::jsonb,
-  equip_libres TEXT,
-  description TEXT,
-  atouts TEXT,
-  conditions TEXT,
-  visite_360 TEXT, video TEXT, pdf_url TEXT,
-  photos JSONB DEFAULT '[]'::jsonb,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);</div>
-    <div class="sh3">3. RLS Policies</div>
-    <div class="sql-block">ALTER TABLE biens ENABLE ROW LEVEL SECURITY;
-ALTER TABLE commerciaux ENABLE ROW LEVEL SECURITY;
-
--- Lecture publique des biens disponibles
-CREATE POLICY "biens_public_read" ON biens FOR SELECT USING (statut != 'brouillon');
-CREATE POLICY "biens_admin_all" ON biens FOR ALL USING (auth.role() = 'authenticated');
-
--- Lecture publique des commerciaux actifs
-CREATE POLICY "comm_public_read" ON commerciaux FOR SELECT USING (statut = 'actif');
-CREATE POLICY "comm_admin_all" ON commerciaux FOR ALL USING (auth.role() = 'authenticated');</div>
-    <div class="sh3">4. Storage bucket <code>biens-photos</code> (déjà créé ✅)</div>
-    <div class="sql-block">-- Policies sur le bucket biens-photos existant :
-INSERT INTO storage.policies (name, bucket_id, operation, definition) VALUES
-('biens_public_read', 'biens-photos', 'SELECT', 'true'),
-('biens_admin_write', 'biens-photos', 'INSERT', 'auth.role() = ''authenticated'''),
-('biens_admin_del', 'biens-photos', 'DELETE', 'auth.role() = ''authenticated''')
-ON CONFLICT DO NOTHING;
-
--- Alternative si la syntaxe ci-dessus ne fonctionne pas, via l'UI Storage > Policies</div>
-    <p style="color:var(--muted);font-size:12px;line-height:1.7;margin-top:10px">✦ Le bucket <strong>biens-photos</strong> est déjà créé (visible dans votre capture). ✦ Une fois le SQL exécuté, revenez sur l'onglet Biens.</p>
-  </div>
-
-</div><!-- /wrap -->
+</div>
 
 <script>
 // ══ CONFIG ════════════════════════════════════════
-const SB = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
+const SB   = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
 const ANON = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
-const BUCKET = "biens-photos";
 
 // ══ STATE ═════════════════════════════════════════
-let session = null;
 let allBiens = [];
-let allComms = [];
-let editPhotos = [];  // [{url,path,is_main,ordre,legende,tag}]
-let commPhotoFile = null;
-let dragSrc = null;
-let pendingConfirm = null;
+let filtered = [];
+let currentCat = '';
+let currentPage = 1;
+const PER_PAGE = 12;
 
-// Équipements organisés par catégorie
-const EQUIP_CATEGORIES = [
-  {
-    label: "🏠 Essentiels",
-    items: [
-      {id:"clim",label:"Climatisation"},
-      {id:"clim_toutes_pieces",label:"Clim dans toutes les pièces"},
-      {id:"ventilateurs",label:"Ventilateurs en complément"},
-      {id:"eau_chaude",label:"Eau chaude"},
-      {id:"wifi",label:"WiFi / Fibre"},
-      {id:"tv",label:"Télévision"},
-      {id:"frigo",label:"Réfrigérateur"},
-      {id:"cuisine_eq",label:"Cuisine équipée"},
-      {id:"micro_ondes",label:"Micro-ondes"},
-      {id:"four",label:"Four"},
-      {id:"lave_linge",label:"Lave-linge"},
-      {id:"seche_linge",label:"Sèche-linge"},
-      {id:"lave_vaisselle",label:"Lave-vaisselle"},
-      {id:"meuble",label:"Entièrement meublé"},
-      {id:"salle_manger",label:"Espace salle à manger"},
-      {id:"couloir",label:"Couloir / Entrée dégagée"},
-      {id:"suite_parentale",label:"Suite parentale"},
-      {id:"chambre_visiteurs",label:"Chambre visiteurs"},
-    ]
-  },
-  {
-    label: "⚡ Ultra différenciants · Dakar",
-    items: [
-      {id:"suppresseur_eau",label:"Suppresseur / pression d'eau renforcée"},
-      {id:"reservoir_eau",label:"Réservoir d'eau / autonomie coupures"},
-      {id:"groupe_elec",label:"Groupe électrogène / back-up électricité"},
-      {id:"serrure_elec",label:"Serrure électronique / accès autonome"},
-      {id:"self_checkin",label:"Arrivée autonome (self check-in)"},
-      {id:"securite_renforcee",label:"Sécurité renforcée (porte blindée, badges)"},
-    ]
-  },
-  {
-    label: "🧳 Long séjour · Diaspora · Business",
-    items: [
-      {id:"espace_travail",label:"Espace de travail (bureau + chaise)"},
-      {id:"iptv",label:"Chaînes internationales / IPTV"},
-      {id:"multiprises",label:"Multiprises / adaptateurs internationaux"},
-      {id:"rangements",label:"Rangements optimisés (placards, dressing)"},
-      {id:"netflix",label:"Netflix inclus"},
-    ]
-  },
-  {
-    label: "🧼 Confort expérience hôtel",
-    items: [
-      {id:"menage",label:"Ménage professionnel régulier"},
-      {id:"kit_accueil",label:"Kit d'accueil (eau, café, thé…)"},
-      {id:"literie_premium",label:"Literie premium"},
-      {id:"linge_maison",label:"Serviettes & draps renouvelés"},
-      {id:"produits_base",label:"Produits de base fournis (savon, papier…)"},
-    ]
-  },
-  {
-    label: "🌍 Digital & Confiance · ADN Kàddu",
-    items: [
-      {id:"visite_360_eq",label:"Visite virtuelle 360° disponible"},
-      {id:"resa_securisee",label:"Réservation sécurisée en ligne"},
-      {id:"paiement_mobile",label:"Paiement mobile local (Wave / Orange Money)"},
-      {id:"paiement_intl",label:"Paiements internationaux (PayPal, Stripe)"},
-      {id:"dossier_securise",label:"Dossier locataire sécurisé (anti-fraude)"},
-    ]
-  },
-  {
-    label: "🚗 Pratique local",
-    items: [
-      {id:"parking",label:"Parking sécurisé"},
-      {id:"proximite_commerce",label:"Proximité supermarché / VDN"},
-      {id:"acces_taxi",label:"Accès facile taxi / VTC"},
-      {id:"assistance",label:"Service assistance / maintenance rapide"},
-      {id:"gardien",label:"Gardiennage 24h"},
-      {id:"ascenseur",label:"Ascenseur"},
-      {id:"balcon",label:"Balcon / Terrasse"},
-      {id:"piscine",label:"Piscine"},
-      {id:"digicode",label:"Digicode / Interphone"},
-      {id:"videosurveillance",label:"Vidéosurveillance"},
-    ]
-  },
-  {
-    label: "🏗️ Spécifique Non Meublé",
-    items: [
-      {id:"electricite",label:"Installation électrique aux normes"},
-      {id:"plomberie",label:"Plomberie en bon état"},
-      {id:"carrelage",label:"Carrelage / Revêtement sol neuf"},
-      {id:"faux_plafond",label:"Faux plafond / Finitions soignées"},
-      {id:"peinture_recente",label:"Peinture récente"},
-      {id:"volets",label:"Volets / Rideaux inclus"},
-      {id:"placards_integres",label:"Placards intégrés"},
-      {id:"cuisine_nue",label:"Cuisine nue (emplacement prévu)"},
-      {id:"double_vitrage",label:"Double vitrage / Baies vitrées"},
-      {id:"compteur_eau",label:"Compteur eau individuel"},
-      {id:"compteur_elec",label:"Compteur électrique individuel"},
-      {id:"cave",label:"Cave / Local de rangement"},
-    ]
-  },
-];
-// Flatten pour compatibilité avec l'existant
-const EQUIPS = EQUIP_CATEGORIES.flatMap(c => c.items);
-
-    // Tags photos — avec underscores en valeur mais labels lisibles
-    const PHOTO_TAG_OPTIONS = [
-      {val:"",label:"Tag…"},
-      {val:"salon",label:"Salon"},
-      {val:"chambre",label:"Chambre"},
-      {val:"cuisine",label:"Cuisine"},
-      {val:"salle de bain",label:"Salle de bain"},
-      {val:"suite parentale",label:"Suite parentale"},
-      {val:"chambre visiteurs",label:"Chambre visiteurs"},
-      {val:"salle a manger",label:"Salle à manger"},
-      {val:"couloir",label:"Couloir / Entrée"},
-      {val:"facade",label:"Façade / Extérieur"},
-      {val:"terrasse",label:"Terrasse / Balcon"},
-      {val:"bureau",label:"Bureau"},
-      {val:"entree",label:"Entrée"},
-      {val:"autre",label:"Autre"},
-    ];
-
-// ══ HELPERS ══════════════════════════════════════
-function esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function safeJson(val,fallback){if(!val)return fallback;if(typeof val==="object")return val;try{return JSON.parse(val)}catch{return fallback}}
-function headers(extra={}){return{"apikey":ANON,"Authorization":"Bearer "+(session?.access_token||ANON),"Content-Type":"application/json",...extra}}
-function uploadHeaders(){return{"apikey":ANON,"Authorization":"Bearer "+(session?.access_token||ANON)}}
-
-// ══ TOAST ════════════════════════════════════════
-function toast(msg,type="ok"){
-  const el=document.createElement("div");
-  el.className=`toast t-${type}`;el.textContent=msg;
-  document.getElementById("toastZone").appendChild(el);
-  setTimeout(()=>el.remove(),3600);
-}
-
-// ══ CONFIRM ══════════════════════════════════════
-function confirmDlg(title,msg,cb){
-  document.getElementById("confirmTitle").textContent=title;
-  document.getElementById("confirmMsg").textContent=msg;
-  pendingConfirm=cb;
-  document.getElementById("confirmModal").classList.add("open");
-}
-document.getElementById("confirmOk").addEventListener("click",()=>{
-  document.getElementById("confirmModal").classList.remove("open");
-  if(pendingConfirm){pendingConfirm();pendingConfirm=null;}
-});
-document.getElementById("confirmCancel").addEventListener("click",()=>{
-  document.getElementById("confirmModal").classList.remove("open");pendingConfirm=null;
-});
-
-// ══ TABS ════════════════════════════════════════
-document.querySelectorAll(".tab-btn").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");
-  document.getElementById("page-"+b.dataset.tab).classList.add("active");
-}));
-
-// Drawer sub-tabs
-// Onglets drawer bien — scopés strictement au panel bien
-document.querySelectorAll("#bienDrawerPanel .dtab").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("#bienDrawerPanel .dtab").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll("#bienDrawerPanel .dpanel").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");
-  const panel=document.getElementById(b.dataset.dpanel);
-  if(panel)panel.classList.add("active");
-}));
-
-// ══ SUPABASE REST ════════════════════════════════
-async function sbGet(t,q=""){const r=await fetch(`${SB}/rest/v1/${t}?${q}`,{headers:headers()});if(!r.ok)throw new Error(await r.text());return r.json()}
-async function sbPost(t,b){const r=await fetch(`${SB}/rest/v1/${t}`,{method:"POST",headers:headers({"Prefer":"return=representation"}),body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());return r.json()}
-async function sbPatch(t,id,b){const r=await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:"PATCH",headers:headers({"Prefer":"return=representation"}),body:JSON.stringify(b)});if(!r.ok)throw new Error(await r.text());return r.json()}
-async function sbDel(t,id){const r=await fetch(`${SB}/rest/v1/${t}?id=eq.${id}`,{method:"DELETE",headers:headers()});if(!r.ok)throw new Error(await r.text())}
-
-// ══ STORAGE ══════════════════════════════════════
-async function uploadFile(file,path){
-  const r=await fetch(`${SB}/storage/v1/object/${BUCKET}/${path}`,{method:"POST",headers:{...uploadHeaders(),"Content-Type":file.type},body:file});
-  if(!r.ok){
-    const r2=await fetch(`${SB}/storage/v1/object/${BUCKET}/${path}`,{method:"PUT",headers:{...uploadHeaders(),"Content-Type":file.type,"x-upsert":"true"},body:file});
-    if(!r2.ok)throw new Error(await r2.text());
+// ══ LOAD ══════════════════════════════════════════
+async function loadBiens() {
+  try {
+    const r = await fetch(
+      `${SB}/rest/v1/biens?statut=neq.brouillon&order=coup_de_coeur.desc,created_at.desc&select=*`,
+      { headers:{ 'apikey':ANON,'Authorization':'Bearer '+ANON } }
+    );
+    if (!r.ok) throw new Error(await r.text());
+    allBiens = await r.json();
+    filtered = [...allBiens];
+    document.getElementById('filterCount').textContent = `${allBiens.length} bien${allBiens.length>1?'s':''}`;
+    render();
+  } catch(e) {
+    console.error(e);
+    document.getElementById('biensGrid').innerHTML = `<div class="empty-state"><div class="icon">🏠</div><p>Impossible de charger les biens.</p></div>`;
   }
-  return`${SB}/storage/v1/object/public/${BUCKET}/${path}`;
-}
-async function delFile(path){
-  await fetch(`${SB}/storage/v1/object/${BUCKET}/${path}`,{method:"DELETE",headers:uploadHeaders()});
 }
 
-// ══ LOAD DATA ════════════════════════════════════
-async function loadAll(){
-  try{allComms=await sbGet("commerciaux","order=nom.asc")}catch(e){allComms=[];toast("Table commerciaux introuvable — exécutez le SQL Setup.","err")}
-  try{allBiens=await sbGet("biens","order=created_at.desc&select=*,commerciaux(id,nom,photo_url)")}catch(e){allBiens=[];toast("Table biens introuvable — exécutez le SQL Setup.","err")}
-  renderBiens();renderComms();
-}
+function parsePh(p){ if(!p)return[]; if(Array.isArray(p))return p; try{return JSON.parse(p)}catch{return[]} }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
 
-// ══ RENDER BIENS ═════════════════════════════════
-function renderBiens(){
-  const q=document.getElementById("searchBiens").value.toLowerCase();
-  const cat=document.getElementById("filterCat").value;
-  const stat=document.getElementById("filterStat").value;
-  let rows=allBiens.filter(b=>{
-    if(q&&!b.titre?.toLowerCase().includes(q)&&!b.quartier?.toLowerCase().includes(q)&&!b.ref_interne?.toLowerCase().includes(q))return false;
-    if(cat&&b.categorie!==cat)return false;
-    if(stat&&b.statut!==stat)return false;
-    const fc=document.getElementById("filterComm")?.value||"";
-    if(fc==="sans"&&b.commercial_id)return false;
-    if(fc==="avec"&&!b.commercial_id)return false;
-    return true;
-  });
-  document.getElementById("stTotal").textContent=allBiens.length;
-  document.getElementById("stDispo").textContent=allBiens.filter(b=>b.statut==="disponible").length;
-  document.getElementById("stLoue").textContent=allBiens.filter(b=>b.statut==="loue").length;
-  document.getElementById("stMeuble").textContent=allBiens.filter(b=>b.categorie==="meuble").length;
-  document.getElementById("stBrouillon").textContent=allBiens.filter(b=>b.statut==="brouillon").length;
+// ══ RENDER ════════════════════════════════════════
+function render() {
+  const start = (currentPage-1)*PER_PAGE;
+  const page  = filtered.slice(start, start+PER_PAGE);
+  const grid  = document.getElementById('biensGrid');
 
-  const g=document.getElementById("biensGrid");
-  if(!rows.length){g.innerHTML=`<div class="empty"><div class="ei">🏠</div>${allBiens.length?"Aucun résultat.":"Aucun bien — cliquez sur « + Nouveau bien »."}</div>`;return}
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>Aucun bien ne correspond à ces critères.</p><button onclick="resetFilters()" style="margin-top:14px;padding:10px 20px;background:rgba(191,150,80,.12);border:1px solid var(--bds);color:var(--or);border-radius:999px;cursor:pointer;font-family:inherit">Réinitialiser les filtres</button></div>`;
+    document.getElementById('pagination').innerHTML = '';
+    return;
+  }
 
-  const SLABELS={brouillon:"Brouillon",disponible:"Disponible",reserve:"Réservé",loue:"Loué",indisponible:"Indisponible",publie:"Publié"};
-  const SCLASSES={brouillon:"s-brouillon",disponible:"s-disponible",reserve:"s-reserve",loue:"s-loue",indisponible:"s-indisponible",publie:"s-publie"};
-  const CLABELS={meuble:"Meublé",non_meuble:"Non meublé"};
+  grid.innerHTML = page.map(b => {
+    const photos = parsePh(b.photos);
+    const main   = photos.find(p=>p.is_main) || photos[0];
+    const cat    = b.categorie === 'meuble';
+    const specs  = [];
+    if (b.pieces)    specs.push(b.pieces);
+    if (b.surface)   specs.push(b.surface+'m²');
+    if (b.chambres)  specs.push(b.chambres+' ch.');
 
-  g.innerHTML=rows.map(b=>{
-    const photos=parsePhotos(b.photos);
-    const main=photos.find(p=>p.is_main)||photos[0];
-    const comm=b.commerciaux;
-    const sl=SLABELS[b.statut]||b.statut;
-    const sc=SCLASSES[b.statut]||"s-brouillon";
-    return`<article class="bien-card">
-      <div class="bcimg">
-        ${main?`<img src="${esc(main.url)}" alt="${esc(b.titre)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:""}
-        <div class="no-img" style="${main?"display:none":""}">📷 Aucune photo</div>
-        <span class="bc-sbadge ${sc}">${sl}</span>
-        <span class="bc-tbadge">${esc(CLABELS[b.categorie]||b.categorie)}</span>
-        ${b.coup_de_coeur?`<span style="position:absolute;bottom:9px;left:9px;background:rgba(191,150,80,.9);color:#111;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px">⭐ Coup de cœur</span>`:""}
-      </div>
-      <div class="bc-body">
-        <!-- Commercial assigné — visible au premier coup d'œil -->
-        ${comm
-          ? `<div class="comm-tag" style="padding:7px 10px;border:1px solid rgba(191,150,80,.18);border-radius:8px;background:rgba(191,150,80,.05);display:flex;align-items:center;gap:8px;margin-bottom:4px">
-               <div class="cavatar" style="width:28px;height:28px;font-size:11px">${comm.photo_url?`<img src="${esc(comm.photo_url)}" alt="${esc(comm.nom)}">`:(comm.nom||"?").charAt(0)}</div>
-               <div>
-                 <div style="font-size:11px;font-weight:700;color:var(--txt)">${esc(comm.nom)}</div>
-                 <div style="font-size:9px;color:var(--muted)">${esc(comm.role||"Commercial")}</div>
-               </div>
-             </div>`
-          : `<div style="padding:6px 10px;border:1px dashed rgba(255,107,107,.3);border-radius:8px;background:rgba(255,107,107,.05);font-size:10px;color:rgba(255,107,107,.7);margin-bottom:4px;display:flex;align-items:center;gap:6px">
-               ⚠️ Aucun commercial affecté
-             </div>`
-        }
-        <h3>${esc(b.titre||"—")}</h3>
-        <div class="bc-meta">${esc(b.quartier||"")}${b.immeuble?" · "+esc(b.immeuble):""}</div>
-        <div class="bc-price">${esc(b.prix||"—")}</div>
-        <div class="bc-specs">
-          ${b.surface?`<span class="spec-tag">${b.surface}m²</span>`:""}
-          ${b.chambres?`<span class="spec-tag">${b.chambres} ch.</span>`:""}
-          ${photos.length?`<span class="photo-count">📷 ${photos.length}</span>`:""}
-          ${b.ref_interne?`<span class="spec-tag">${esc(b.ref_interne)}</span>`:""}
+    return `<article class="bien-card" onclick="openModal('${esc(b.id)}')">
+      <div class="card-img">
+        ${main ? `<img src="${esc(main.url)}" alt="${esc(b.titre)}" loading="lazy" onerror="this.style.display='none'">` : ''}
+        <div class="card-overlay">
+          <button style="background:${cat?'var(--or)':'rgba(74,120,180,.88)'};color:${cat?'#0a0a0a':'#e8f0ff'};padding:10px 18px;border-radius:999px;border:none;cursor:pointer;font-weight:700;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase">
+            ${cat ? 'Voir le bien →' : 'Postuler →'}
+          </button>
         </div>
-        <div class="bc-actions">
-          <button class="btn btn-ghost btn-sm edit-btn" data-id="${b.id}">✏️ Modifier</button>
-          ${b.statut==="disponible"
-            ?`<button class="btn btn-ghost btn-sm tog-btn" data-id="${b.id}" data-s="brouillon">⏸</button>`
-            :`<button class="btn btn-green btn-sm tog-btn" data-id="${b.id}" data-s="disponible">🚀 Publier</button>`}
-          <a class="btn btn-ghost btn-sm" href="/bien/?slug=${esc(b.slug)}" target="_blank" title="Voir la page publique">👁</a>
-          <button class="btn btn-danger btn-sm del-btn" data-id="${b.id}">🗑</button>
+        <span class="card-badge ${cat?'badge-meuble':'badge-nm'}">${cat?'Meublé':'Non meublé'}</span>
+        ${b.visite_360 ? `<span class="card-360">🌀 360°</span>` : ''}
+        ${b.coup_de_coeur ? `<span style="position:absolute;bottom:10px;right:10px;z-index:2;background:rgba(191,150,80,.9);color:#0a0a0a;font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:999px">⭐ Coup de cœur</span>` : ''}
+        <span class="card-status">${b.statut==='disponible'?'Disponible':b.statut==='reserve'?'Réservé':'Disponible'}</span>
+      </div>
+      <div class="card-body">
+        <h3>${esc(b.titre||'—')}</h3>
+        <div class="card-location">${esc(b.quartier||'')}${b.immeuble?' · '+esc(b.immeuble):''}</div>
+        <div class="card-specs">${specs.map(s=>`<span class="card-spec">${esc(s)}</span>`).join('')}</div>
+        <div class="card-desc">${esc(b.accroche || b.description || '')}</div>
+        <div class="card-footer">
+          <div class="card-price">
+            ${esc(b.prix||'Sur demande')}
+            ${b.prix_sub ? `<small>${esc(b.prix_sub)}</small>` : ''}
+            ${!cat ? `<span class="bail-tag">Bail longue durée</span>` : ''}
+          </div>
         </div>
       </div>
     </article>`;
-  }).join("");
+  }).join('');
 
-  g.querySelectorAll(".edit-btn").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();openBienDrawer(b.dataset.id)}));
-  g.querySelectorAll(".tog-btn").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();toggleBienStatut(b.dataset.id,b.dataset.s)}));
-  g.querySelectorAll(".del-btn").forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();delBienConfirm(b.dataset.id)}));
+  renderPagination();
+  document.getElementById('filterCount').textContent = `${filtered.length} bien${filtered.length>1?'s':''}`;
 }
 
-function parsePhotos(p){
-  if(!p)return[];
-  if(Array.isArray(p))return p;
-  try{return JSON.parse(p)}catch{return[]}
-}
-
-async function toggleBienStatut(id,s){
-  try{await sbPatch("biens",id,{statut:s,updated_at:new Date().toISOString()});const i=allBiens.findIndex(b=>b.id===id);if(i!==-1)allBiens[i].statut=s;renderBiens();toast(s==="disponible"?"Bien publié ✓":"Bien dépublié.")}
-  catch(e){toast("Erreur : "+e.message,"err")}
-}
-
-function delBienConfirm(id){
-  const b=allBiens.find(x=>x.id===id);
-  confirmDlg("Supprimer ce bien",`Supprimer "${b?.titre}" définitivement ? Les photos seront effacées du Storage.`,async()=>{
-    try{
-      const photos=parsePhotos(b?.photos);
-      for(const p of photos)if(p.path)await delFile(p.path);
-      await sbDel("biens",id);
-      allBiens=allBiens.filter(x=>x.id!==id);renderBiens();toast("Bien supprimé.");
-    }catch(e){toast("Erreur : "+e.message,"err")}
-  });
-}
-
-// ══ BIEN DRAWER ══════════════════════════════════
-function openBienDrawer(id=null){
-  const b=id?allBiens.find(x=>x.id===id):null;
-  document.getElementById("drawerTitle").innerHTML=b?`Modifier <em>${esc(b.titre)}</em>`:`Nouveau <em>bien</em>`;
-
-  // Reset all fields
-  const ids=["bTitre","bSlug","bRef","bAccroche","bAdresse","bQuartier","bVille","bImmeuble","bLat","bLng","bZoneCarte","bDescQuartier",
-    "bPrix","bPrixSub","bCharges","bCaution","bFraisDossier","bDureeMin","bTypeBail","bPaiements","bCheckin","bCheckout",
-    "bSurface","bPieces","bChambres","bSDB","bEtage","bCapacite","bNbEtages","bAnnee",
-    "bDepotGarantie","bHonoraires","bDureeBail","bChargesMontant","bChargesLocataire","bChargesInclus","bChargesNonInclus",
-    "bEquipLibres","bDescription","bAtouts","bConditions","bVisite360","bVideo","bPdf","bId"];
-  ids.forEach(i=>{const el=document.getElementById(i);if(el)el.value=""});
-  // Reset selects
-  ["bParking","bBox","bCave","bAscenseur","bGardiennage","bColocation","bPMR","bChargesType"].forEach(id=>{
-    const el=document.getElementById(id);if(el)el.value="";
-  });
-  document.getElementById("bVille").value="Dakar";
-  document.getElementById("bTypeBien").value="appartement";
-  document.getElementById("bCategorie").value="meuble";
-  document.getElementById("bStatut").value="brouillon";
-  document.getElementById("bDispo").value="";
-  document.getElementById("bNonDisponible").checked=false;
-  document.getElementById("bCoupDeCoeur").checked=false;
-  updateCoupDeCoeurUI();
-  customEquips=[];
-  editPhotos=[];
-  document.getElementById("uploadBar").style.width="0";
-
-  // Build equip checkboxes
-  buildEquipGrid(null);
-
-  // Fill commercial select
-  const sel=document.getElementById("bCommercial");
-  sel.innerHTML=`<option value="">— Aucun —</option>`+allComms.filter(c=>c.statut==="actif").map(c=>`<option value="${c.id}">${esc(c.nom)}</option>`).join("");
-  sel.addEventListener("change",updateCommPreview);
-  document.getElementById("commPreview").style.display="none";
-
-  if(b){
-    document.getElementById("bId").value=b.id;
-    document.getElementById("bTitre").value=b.titre||"";
-    document.getElementById("bSlug").value=b.slug||"";
-    document.getElementById("bRef").value=b.ref_interne||"";
-    document.getElementById("bTypeBien").value=b.type_bien||"appartement";
-    document.getElementById("bCategorie").value=b.categorie||"meuble";
-    document.getElementById("bStatut").value=b.statut||"brouillon";
-    document.getElementById("bCoupDeCoeur").checked=b.coup_de_coeur||false;
-    updateCoupDeCoeurUI();
-    document.getElementById("bAccroche").value=b.accroche||"";
-    document.getElementById("bAdresse").value=b.adresse||"";
-    document.getElementById("bQuartier").value=b.quartier||"";
-    document.getElementById("bVille").value=b.ville||"Dakar";
-    document.getElementById("bImmeuble").value=b.immeuble||"";
-    document.getElementById("bLat").value=b.lat||"";
-    document.getElementById("bLng").value=b.lng||"";
-    document.getElementById("bZoneCarte").value=b.zone_carte||"";
-    document.getElementById("bDescQuartier").value=b.desc_quartier||"";
-    document.getElementById("bPrix").value=b.prix||"";
-    document.getElementById("bPrixSub").value=b.prix_sub||"";
-    document.getElementById("bCharges").value=b.charges||"";
-    document.getElementById("bCaution").value=b.caution||"";
-    document.getElementById("bFraisDossier").value=b.frais_dossier||"";
-    if(b.disponibilite)document.getElementById("bDispo").value=b.disponibilite.split("T")[0];
-    // Coche "non disponible" si statut indisponible et pas de date
-    document.getElementById("bNonDisponible").checked=(b.statut==="indisponible"&&!b.disponibilite);
-    document.getElementById("bDureeMin").value=b.duree_min||"";
-    document.getElementById("bTypeBail").value=b.type_bail||"";
-    document.getElementById("bPaiements").value=b.paiements||"";
-    document.getElementById("bCheckin").value=b.checkin||"";
-    document.getElementById("bCheckout").value=b.checkout||"";
-    document.getElementById("bCommercial").value=b.commercial_id||"";
-    document.getElementById("bSurface").value=b.surface||"";
-    document.getElementById("bPieces").value=b.pieces||"";
-    document.getElementById("bChambres").value=b.chambres||"";
-    document.getElementById("bSDB").value=b.sdb||"";
-    document.getElementById("bEtage").value=b.etage||"";
-    document.getElementById("bCapacite").value=b.capacite||"";
-    document.getElementById("bNbEtages").value=b.nb_etages||"";
-    document.getElementById("bAnnee").value=b.annee||"";
-    // Nouveaux champs carac
-    document.getElementById("bParking").value=b.parking||"";
-    document.getElementById("bBox").value=b.box||"";
-    document.getElementById("bCave").value=b.cave||"";
-    document.getElementById("bAscenseur").value=b.ascenseur||"";
-    document.getElementById("bGardiennage").value=b.gardiennage||"";
-    document.getElementById("bColocation").value=b.colocation||"";
-    document.getElementById("bPMR").value=b.pmr||"";
-    document.getElementById("bDureeBail").value=b.duree_bail||"";
-    document.getElementById("bDepotGarantie").value=b.depot_garantie||"";
-    document.getElementById("bHonoraires").value=b.honoraires||"";
-    document.getElementById("bChargesMontant").value=b.charges_montant||"";
-    document.getElementById("bChargesType").value=b.charges_type||"";
-    document.getElementById("bChargesLocataire").value=b.charges_locataire||"";
-    document.getElementById("bChargesInclus").value=b.charges_inclus||"";
-    document.getElementById("bChargesNonInclus").value=b.charges_non_inclus||"";
-    // Mobilier
-    const mob=safeJson(b.mobilier,{});
-    document.querySelectorAll("input[name^='mob_']").forEach(cb=>{
-      cb.checked=mob[cb.name]||false;
-      cb.parentElement.classList.toggle("checked",!!mob[cb.name]);
-    });
-    document.getElementById("bEquipLibres").value=b.equip_libres||"";
-    document.getElementById("bDescription").value=b.description||"";
-    document.getElementById("bAtouts").value=b.atouts||"";
-    document.getElementById("bConditions").value=b.conditions||"";
-    document.getElementById("bVisite360").value=b.visite_360||"";
-    document.getElementById("bVideo").value=b.video||"";
-    document.getElementById("bPdf").value=b.pdf_url||"";
-    buildEquipGrid(b.equipements_bool);
-    editPhotos=parsePhotos(b.photos).map((p,i)=>({...p,ordre:p.ordre??i}));
-    updateCommPreview();
+function renderPagination() {
+  const total = Math.ceil(filtered.length / PER_PAGE);
+  if (total <= 1) { document.getElementById('pagination').innerHTML=''; return; }
+  let html = '';
+  for(let i=1;i<=total;i++){
+    html += `<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
   }
+  if (currentPage < total) html += `<button class="page-btn" onclick="goPage(${currentPage+1})">Suivant →</button>`;
+  document.getElementById('pagination').innerHTML = html;
+}
 
-  renderPhotosGrid();
+function goPage(n){
+  currentPage = n;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-  // Auto-generate slug from titre
-  document.getElementById("bTitre").addEventListener("input",function(){
-    if(!document.getElementById("bSlug").dataset.manual){
-      document.getElementById("bSlug").value=slugify(this.value);
-    }
+// ══ FILTERS ═══════════════════════════════════════
+function applyFilters() {
+  const lieu    = document.getElementById('fLieu').value.toLowerCase().trim();
+  const pieces  = document.getElementById('fPieces').value;
+  const surface = parseInt(document.getElementById('fSurface').value)||0;
+  const statut  = document.getElementById('fStatut').value;
+
+  filtered = allBiens.filter(b => {
+    const loc = ((b.quartier||'')+(b.adresse||'')+(b.ville||'')).toLowerCase();
+    if (currentCat && b.categorie !== currentCat) return false;
+    if (lieu && !loc.includes(lieu)) return false;
+    if (pieces && b.chambres < parseInt(pieces)) return false;
+    if (surface && (b.surface||0) < surface) return false;
+    if (statut && b.statut !== statut) return false;
+    return true;
   });
-  document.getElementById("bSlug").addEventListener("input",function(){this.dataset.manual="1"});
+  currentPage = 1;
+  render();
+}
 
-  // Switch to identite tab — ciblage strict sur les onglets du drawer bien uniquement
-  document.querySelectorAll("#bienDrawerPanel .dtab").forEach(t=>{
-    t.classList.remove("active");
-    const panel=document.getElementById(t.dataset.dpanel);
-    if(panel)panel.classList.remove("active");
+function resetFilters() {
+  document.getElementById('fLieu').value = '';
+  document.getElementById('fPieces').value = '';
+  document.getElementById('fSurface').value = '';
+  document.getElementById('fStatut').value = '';
+  currentCat = '';
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.cat-chip[data-cat=""]').classList.add('active');
+  filtered = [...allBiens];
+  currentPage = 1;
+  render();
+}
+
+document.querySelectorAll('.cat-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentCat = chip.dataset.cat;
+    applyFilters();
   });
-  document.querySelector("#bienDrawerPanel .dtab[data-dpanel='dp-identite']").classList.add("active");
-  document.getElementById("dp-identite").classList.add("active");
-
-  document.getElementById("bienDrawer").classList.add("open");
-  document.getElementById("bienDrawerPanel").scrollTop=0;
-  document.getElementById("saveStatus").textContent="";
-}
-
-function slugify(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
-
-function buildEquipGrid(boolMap){
-  const map=typeof boolMap==="object"&&boolMap?boolMap:{};
-  const container=document.getElementById("equipGrid");
-
-  container.innerHTML = EQUIP_CATEGORIES.map((cat,ci)=>`
-    <div style="grid-column:1/-1;margin-top:${ci>0?'16px':'0'}">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;font-weight:700">${cat.label}</div>
-        <button type="button" onclick="toggleCategory('cat_${ci}',this)"
-          style="font-size:10px;padding:3px 10px;border:1px solid var(--bdr);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer;font-family:Arial">
-          Tout cocher
-        </button>
-      </div>
-      <div class="check-grid" id="cat_${ci}">
-        ${cat.items.map(e=>`
-          <label class="check-item ${map[e.id]?"checked":""}">
-            <input type="checkbox" name="eq_${e.id}" ${map[e.id]?"checked":""}
-              onchange="this.parentElement.classList.toggle('checked',this.checked);updateCatBtn('cat_${ci}')"/>
-            ${esc(e.label)}
-          </label>
-        `).join("")}
-      </div>
-    </div>
-  `).join("");
-
-  // Zone d'ajout d'équipements libres supplémentaires
-  const addZone = document.createElement("div");
-  addZone.style.cssText = "grid-column:1/-1;margin-top:14px";
-  addZone.innerHTML = `
-    <div style="font-size:11px;color:var(--or);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:8px">+ Ajouter un équipement personnalisé</div>
-    <div style="display:flex;gap:8px">
-      <input id="newEquipInput" placeholder="Ex: Jacuzzi, Salle de sport…"
-        style="flex:1;padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid var(--bdr);color:var(--txt);font-size:12px;border-radius:5px;font-family:Arial"
-        onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomEquip()}"/>
-      <button type="button" onclick="addCustomEquip()"
-        style="padding:8px 14px;background:rgba(191,150,80,.12);border:1px solid var(--bds);color:var(--or);border-radius:5px;cursor:pointer;font-size:12px;font-weight:700;font-family:Arial">+ Ajouter</button>
-    </div>
-    <div id="customEquipsList" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-  `;
-  container.appendChild(addZone);
-}
-
-function toggleCategory(catId, btn){
-  const grid = document.getElementById(catId);
-  if(!grid) return;
-  const checkboxes = grid.querySelectorAll('input[type=checkbox]');
-  const allChecked = [...checkboxes].every(c=>c.checked);
-  checkboxes.forEach(c=>{
-    c.checked = !allChecked;
-    c.parentElement.classList.toggle('checked', !allChecked);
-  });
-  btn.textContent = allChecked ? 'Tout cocher' : 'Tout décocher';
-}
-
-function updateCatBtn(catId){
-  const grid = document.getElementById(catId);
-  if(!grid) return;
-  const checkboxes = grid.querySelectorAll('input[type=checkbox]');
-  const btn = grid.previousElementSibling?.querySelector('button');
-  if(!btn) return;
-  const allChecked = [...checkboxes].every(c=>c.checked);
-  btn.textContent = allChecked ? 'Tout décocher' : 'Tout cocher';
-}
-
-let customEquips = [];
-function addCustomEquip(){
-  const input = document.getElementById("newEquipInput");
-  const val = input?.value.trim();
-  if(!val) return;
-  customEquips.push(val);
-  input.value = "";
-  renderCustomEquips();
-  // Ajoute aussi dans le textarea bEquipLibres
-  const ta = document.getElementById("bEquipLibres");
-  if(ta) ta.value = (ta.value ? ta.value+"\n" : "") + "✦ "+val;
-}
-function removeCustomEquip(i){
-  customEquips.splice(i,1);
-  renderCustomEquips();
-}
-function renderCustomEquips(){
-  const el = document.getElementById("customEquipsList");
-  if(!el) return;
-  el.innerHTML = customEquips.map((e,i)=>`
-    <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);border-radius:999px;font-size:11px;color:var(--txt)">
-      ${esc(e)}
-      <button type="button" onclick="removeCustomEquip(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;padding:0;line-height:1">✕</button>
-    </span>
-  `).join("");
-}
-
-function getEquipBool(){
-  const o={};
-  EQUIPS.forEach(e=>{
-    const el=document.querySelector(`input[name="eq_${e.id}"]`);
-    if(el)o[e.id]=el.checked;
-  });
-  return o;
-}
-
-function updateCommPreview(){
-  const id=document.getElementById("bCommercial").value;
-  const prev=document.getElementById("commPreview");
-  if(!id){prev.style.display="none";return}
-  const c=allComms.find(x=>x.id===id);
-  if(!c){prev.style.display="none";return}
-  prev.style.display="block";
-  document.getElementById("cpAvatar").innerHTML=c.photo_url?`<img src="${esc(c.photo_url)}" alt="${esc(c.nom)}">`:(c.nom||"?").charAt(0).toUpperCase();
-  document.getElementById("cpNom").textContent=c.nom;
-  document.getElementById("cpRole").textContent=c.role||"Commercial";
-  document.getElementById("cpContact").textContent=[c.telephone,c.email].filter(Boolean).join(" · ");
-}
-
-function closeBienDrawer(){document.getElementById("bienDrawer").classList.remove("open")}
-document.getElementById("closeDrawer").addEventListener("click",closeBienDrawer);
-document.getElementById("cancelDrawer").addEventListener("click",closeBienDrawer);
-document.getElementById("bienDrawer").addEventListener("click",e=>{if(e.target===document.getElementById("bienDrawer"))closeBienDrawer()});
-document.getElementById("newBienBtn").addEventListener("click",()=>openBienDrawer());
-["searchBiens","filterCat","filterStat"].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el){el.addEventListener("input",renderBiens);el.addEventListener("change",renderBiens)}
 });
 
-// ══ PHOTOS MANAGEMENT ════════════════════════════
-document.getElementById("photosUploadBtn").addEventListener("click",()=>document.getElementById("photosFileInput").click());
-document.getElementById("photosFileInput").addEventListener("change",async e=>{
-  const files=Array.from(e.target.files);if(!files.length)return;
-  const bar=document.getElementById("uploadBar");
-  const bId=document.getElementById("bId").value||("tmp_"+Date.now());
-  let done=0;
-  for(const file of files){
-    const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-    const path=`${bId}/${Date.now()}_${safe}`;
-    try{
-      const url=await uploadFile(file,path);
-      editPhotos.push({url,path,is_main:editPhotos.length===0,ordre:editPhotos.length,legende:"",tag:""});
-      done++;bar.style.width=Math.round(done/files.length*100)+"%";
-      renderPhotosGrid();
-    }catch(er){toast(`Upload ${file.name} : ${er.message}`,"err")}
-  }
-  setTimeout(()=>{bar.style.width="0"},1200);e.target.value="";
-});
+// ══ MODAL ═════════════════════════════════════════
+function openModal(id) {
+  const b = allBiens.find(x=>x.id===id);
+  if(!b) return;
 
-function renderPhotosGrid(){
-  const g=document.getElementById("photosGrid");
-  if(!editPhotos.length){
-    g.innerHTML=`<div style="color:var(--muted);font-size:11px;grid-column:1/-1;text-align:center;padding:14px">Aucune photo · cliquez pour en ajouter</div>`;return;
-  }
-  g.innerHTML=editPhotos.map((p,i)=>`
-    <div class="photo-item ${p.is_main?"is-main":""}" draggable="true" data-idx="${i}">
-      <img src="${esc(p.url)}" alt="photo ${i+1}" loading="lazy"/>
-      <span class="photo-num">${i+1}</span>
-      ${p.is_main?`<div class="main-ribbon">⭐ Principale</div>`:""}
-      <div class="photo-overlay">
-        <div class="photo-actions">
-          ${!p.is_main?`<button class="btn btn-ghost btn-icon set-main" data-idx="${i}" title="Photo principale">⭐</button>`:""}
-          <button class="btn btn-danger btn-icon del-photo" data-idx="${i}" title="Supprimer">🗑</button>
-        </div>
-      </div>
-    </div>
-    <div class="photo-meta">
-      <input class="photo-leg" data-idx="${i}" placeholder="Légende…" value="${esc(p.legende||"")}"/>
-      <select class="photo-tag-sel" data-idx="${i}" style="width:100%;padding:5px 8px;font-size:11px;margin-top:4px">
-        ${PHOTO_TAG_OPTIONS.map(t=>`<option value="${t.val}" ${p.tag===t.val?"selected":""}>${t.label}</option>`).join("")}
-      </select>
-    </div>
-  `).join("");
+  const cat = b.categorie==='meuble';
+  const badgeEl = document.getElementById('mBadge');
+  badgeEl.textContent = cat ? 'Meublé' : 'Non meublé';
+  badgeEl.style.background = cat ? 'rgba(191,150,80,.9)' : 'rgba(74,120,180,.88)';
+  badgeEl.style.color = cat ? '#0a0a0a' : '#e8f0ff';
 
-  // Drag & drop
-  g.querySelectorAll(".photo-item").forEach(el=>{
-    el.addEventListener("dragstart",e=>{dragSrc=+el.dataset.idx;el.classList.add("dragging")});
-    el.addEventListener("dragend",()=>{el.classList.remove("dragging");dragSrc=null});
-    el.addEventListener("dragover",e=>{e.preventDefault();el.classList.add("drag-over")});
-    el.addEventListener("dragleave",()=>el.classList.remove("drag-over"));
-    el.addEventListener("drop",e=>{
-      e.preventDefault();el.classList.remove("drag-over");
-      if(dragSrc===null||dragSrc===+el.dataset.idx)return;
-      const moved=editPhotos.splice(dragSrc,1)[0];
-      editPhotos.splice(+el.dataset.idx,0,moved);
-      editPhotos.forEach((p,i)=>p.ordre=i);renderPhotosGrid();
-    });
-  });
-
-  // Buttons
-  g.querySelectorAll(".set-main").forEach(b=>b.addEventListener("click",e=>{
-    e.stopPropagation();const idx=+b.dataset.idx;
-    editPhotos.forEach((p,i)=>p.is_main=i===idx);renderPhotosGrid();
-  }));
-  g.querySelectorAll(".del-photo").forEach(b=>b.addEventListener("click",async e=>{
-    e.stopPropagation();const idx=+b.dataset.idx;const p=editPhotos[idx];
-    if(p.path)try{await delFile(p.path)}catch(_){}
-    editPhotos.splice(idx,1);
-    if(editPhotos.length&&!editPhotos.some(x=>x.is_main))editPhotos[0].is_main=true;
-    editPhotos.forEach((p,i)=>p.ordre=i);renderPhotosGrid();
-  }));
-
-  // Légendes & tags inline
-  g.querySelectorAll(".photo-leg").forEach(inp=>inp.addEventListener("change",()=>{
-    editPhotos[+inp.dataset.idx].legende=inp.value;
-  }));
-  g.querySelectorAll(".photo-tag-sel").forEach(sel=>sel.addEventListener("change",()=>{
-    editPhotos[+sel.dataset.idx].tag=sel.value;
-  }));
-}
-
-// ══ SAVE BIEN ════════════════════════════════════
-document.getElementById("saveBienBtn").addEventListener("click",async()=>{
-  const titre=document.getElementById("bTitre").value.trim();
-  const slug=document.getElementById("bSlug").value.trim();
-  if(!titre||!slug){toast("Titre et slug obligatoires.","err");return}
-
-  const coupDeCoeur = document.getElementById("bCoupDeCoeur").checked;
-
-  const payload={
-    titre,slug,
-    ref_interne:v("bRef"),type_bien:v("bTypeBien"),categorie:v("bCategorie"),statut:v("bStatut"),accroche:v("bAccroche"),
-    coup_de_coeur: coupDeCoeur,
-    adresse:v("bAdresse"),quartier:v("bQuartier"),ville:v("bVille")||"Dakar",immeuble:v("bImmeuble"),
-    lat:vn("bLat"),lng:vn("bLng"),zone_carte:v("bZoneCarte"),desc_quartier:v("bDescQuartier"),
-    prix:v("bPrix"),prix_sub:v("bPrixSub"),charges:v("bCharges"),caution:v("bCaution"),
-    frais_dossier:v("bFraisDossier"),
-    disponibilite:document.getElementById("bDispo").value||null,
-    duree_min:v("bDureeMin"),type_bail:v("bTypeBail"),paiements:v("bPaiements"),checkin:v("bCheckin"),checkout:v("bCheckout"),
-    commercial_id:document.getElementById("bCommercial").value||null,
-    surface:vi("bSurface"),pieces:v("bPieces"),chambres:vi("bChambres"),sdb:vi("bSDB"),etage:v("bEtage"),
-    capacite:vi("bCapacite"),nb_etages:vi("bNbEtages"),annee:vi("bAnnee"),
-    parking:v("bParking"),box:v("bBox"),cave:v("bCave"),ascenseur:v("bAscenseur"),
-    gardiennage:v("bGardiennage"),colocation:v("bColocation"),pmr:v("bPMR"),
-    duree_bail:vi("bDureeBail"),depot_garantie:v("bDepotGarantie"),honoraires:v("bHonoraires"),
-    charges_montant:v("bChargesMontant"),charges_type:v("bChargesType"),
-    charges_locataire:v("bChargesLocataire"),charges_inclus:v("bChargesInclus"),charges_non_inclus:v("bChargesNonInclus"),
-    mobilier:JSON.stringify(getMobilierBool()),
-    equipements_bool:getEquipBool(),
-    equip_libres:v("bEquipLibres"),
-    description:v("bDescription"),atouts:v("bAtouts"),conditions:v("bConditions"),
-    visite_360:v("bVisite360"),video:v("bVideo"),pdf_url:v("bPdf"),
-    photos:JSON.stringify(editPhotos.map(({localFile,...p})=>p)),
-    updated_at:new Date().toISOString()
-  };
-
-  const bId=document.getElementById("bId").value;
-  const btn=document.getElementById("saveBienBtn");
-  btn.disabled=true;btn.textContent="Vérification session…";
-  document.getElementById("saveStatus").textContent="";
-
-  // Refresh token silencieux avant sauvegarde
-  await ensureFreshToken();
-  btn.textContent="Enregistrement…";
-
-  try{
-    // Si coup de cœur activé → désactiver sur tous les autres biens d'abord
-    if(coupDeCoeur){
-      const others = allBiens.filter(b=>b.coup_de_coeur && b.id!==bId);
-      for(const other of others){
-        await sbPatch("biens",other.id,{coup_de_coeur:false,updated_at:new Date().toISOString()});
-        other.coup_de_coeur=false;
-      }
-    }
-    let res;
-    if(bId){
-      res=await sbPatch("biens",bId,payload);
-      const i=allBiens.findIndex(b=>b.id===bId);
-      if(i!==-1)allBiens[i]={...allBiens[i],...payload,id:bId};
-    }else{
-      res=await sbPost("biens",{...payload,created_at:new Date().toISOString()});
-      if(Array.isArray(res)&&res[0])allBiens.unshift(res[0]);
-    }
-    closeBienDrawer();renderBiens();
-    toast(bId?"Bien mis à jour ✓"+(coupDeCoeur?" · ⭐ Coup de cœur activé":""):"Bien créé ✓");
-  }catch(e){
-    document.getElementById("saveStatus").textContent="Erreur : "+e.message;
-    toast("Erreur : "+e.message,"err");
-  }finally{btn.disabled=false;btn.textContent="💾 Enregistrer"}
-});
-
-// Toggle UI coup de cœur
-function updateCoupDeCoeurUI(){
-  const checked = document.getElementById("bCoupDeCoeur")?.checked;
-  const track   = document.getElementById("coupDeCoeurTrack");
-  const thumb   = document.getElementById("coupDeCoeurThumb");
-  const text    = document.getElementById("coupDeCoeurText");
-  const label   = document.getElementById("coupDeCoeurLabel");
-  if(!track) return;
-  if(checked){
-    track.style.background  = "rgba(191,150,80,.35)";
-    track.style.borderColor = "var(--or)";
-    thumb.style.background  = "var(--or)";
-    thumb.style.left        = "23px";
-    text.textContent        = "⭐ Coup de cœur activé — affiché en vedette sur la homepage";
-    text.style.color        = "var(--or)";
-    label.style.borderColor = "var(--bds)";
-    label.style.background  = "rgba(191,150,80,.06)";
+  // Gallery
+  const photos = parsePh(b.photos).sort((a,z)=>(a.ordre??0)-(z.ordre??0));
+  const gallery = document.getElementById('mGallery');
+  if (photos.length) {
+    gallery.innerHTML = `
+      <div id="mGTrack" style="display:flex;height:100%;transition:transform .35s ease"></div>
+      <button onclick="mGPrev()" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(8,21,37,.7);border:1px solid var(--bdr);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:5">‹</button>
+      <button onclick="mGNext()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(8,21,37,.7);border:1px solid var(--bdr);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;z-index:5">›</button>
+      <div style="position:absolute;bottom:10px;right:12px;background:rgba(0,0,0,.45);color:rgba(255,255,255,.6);font-size:.7rem;padding:3px 9px;border-radius:999px" id="mGCounter">1/${photos.length}</div>`;
+    const track = document.getElementById('mGTrack');
+    track.innerHTML = photos.map(p=>`
+      <div style="min-width:100%;height:100%;position:relative;background:#060e1a;display:flex;align-items:center;justify-content:center">
+        <img src="${esc(p.url)}" style="max-width:100%;max-height:100%;object-fit:contain;display:block" onerror="this.style.display='none'">
+        <div style="position:absolute;inset:0;background-image:url(${esc(p.url)});background-size:cover;background-position:center;filter:blur(18px) brightness(.4);z-index:-1"></div>
+      </div>`).join('');
+    window._mGIdx = 0;
+    window._mGTotal = photos.length;
   } else {
-    track.style.background  = "rgba(255,255,255,.08)";
-    track.style.borderColor = "var(--bdr)";
-    thumb.style.background  = "rgba(248,244,238,.4)";
-    thumb.style.left        = "3px";
-    text.textContent        = "Coup de cœur désactivé";
-    text.style.color        = "var(--txt)";
-    label.style.borderColor = "var(--bdr)";
-    label.style.background  = "rgba(255,255,255,.02)";
-  }
-}
-
-function v(id){return document.getElementById(id)?.value.trim()||null}
-function vn(id){const x=parseFloat(document.getElementById(id)?.value);return isNaN(x)?null:x}
-function vi(id){const x=parseInt(document.getElementById(id)?.value);return isNaN(x)?null:x}
-
-// ══ COMMERCIAUX ══════════════════════════════════
-function renderComms(){
-  const q=document.getElementById("searchComm").value.toLowerCase();
-  const s=document.getElementById("filterCommStat").value;
-  let rows=allComms.filter(c=>{
-    if(q&&!c.nom?.toLowerCase().includes(q))return false;
-    if(s&&c.statut!==s)return false;return true;
-  });
-  const g=document.getElementById("commGrid");
-  if(!rows.length){g.innerHTML=`<div class="empty"><div class="ei">👤</div>${allComms.length?"Aucun résultat.":"Aucun commercial — cliquez sur + Nouveau commercial."}</div>`;return}
-  g.innerHTML=rows.map(c=>`
-    <div class="comm-card">
-      <div class="comm-top">
-        <div class="comm-av">${c.photo_url?`<img src="${esc(c.photo_url)}" alt="${esc(c.nom)}">`:(c.nom||"?").charAt(0).toUpperCase()}</div>
-        <div class="comm-info">
-          <h3>${esc(c.nom)}</h3>
-          <div class="comm-role">${esc(c.role||"Commercial")}</div>
-          <div class="${c.statut==="actif"?"comm-stat-a":"comm-stat-i"}">${c.statut==="actif"?"● Actif":"○ Inactif"}</div>
-        </div>
-      </div>
-      <div class="comm-contacts">
-        ${c.telephone?`<div class="comm-contact">📞 ${esc(c.telephone)}</div>`:""}
-        ${c.whatsapp?`<div class="comm-contact"><a href="https://wa.me/${esc(c.whatsapp)}" target="_blank" style="color:#25D366">💬 WhatsApp</a></div>`:""}
-        ${c.email?`<div class="comm-contact">✉️ ${esc(c.email)}</div>`:""}
-      </div>
-      ${c.description?`<div class="comm-desc" style="white-space:pre-line">${esc(c.description)}</div>`:""}
-      <div class="comm-acts">
-        <button class="btn btn-ghost btn-sm ec-btn" data-id="${c.id}">✏️ Modifier</button>
-        ${c.statut==="actif"
-          ?`<button class="btn btn-ghost btn-sm tc-btn" data-id="${c.id}" data-s="inactif">⏸ Désactiver</button>`
-          :`<button class="btn btn-green btn-sm tc-btn" data-id="${c.id}" data-s="actif">✓ Réactiver</button>`}
-        <button class="btn btn-danger btn-sm dc-btn" data-id="${c.id}">🗑</button>
-      </div>
-    </div>
-  `).join("");
-  g.querySelectorAll(".ec-btn").forEach(b=>b.addEventListener("click",()=>openCommDrawer(b.dataset.id)));
-  g.querySelectorAll(".tc-btn").forEach(b=>b.addEventListener("click",()=>toggleCommStat(b.dataset.id,b.dataset.s)));
-  g.querySelectorAll(".dc-btn").forEach(b=>b.addEventListener("click",()=>delCommConfirm(b.dataset.id)));
-}
-
-async function toggleCommStat(id,s){
-  try{await sbPatch("commerciaux",id,{statut:s,updated_at:new Date().toISOString()});const i=allComms.findIndex(c=>c.id===id);if(i!==-1)allComms[i].statut=s;renderComms();toast(s==="actif"?"Commercial réactivé.":"Désactivé.")}
-  catch(e){toast("Erreur : "+e.message,"err")}
-}
-function delCommConfirm(id){
-  const c=allComms.find(x=>x.id===id);
-  confirmDlg("Supprimer","Supprimer "+c?.nom+" ?",async()=>{
-    try{if(c?.photo_path)await delFile(c.photo_path);await sbDel("commerciaux",id);allComms=allComms.filter(x=>x.id!==id);renderComms();toast("Commercial supprimé.")}
-    catch(e){toast("Erreur : "+e.message,"err")}
-  });
-}
-
-function getMobilierBool(){
-  const o={};
-  document.querySelectorAll("input[name^='mob_']").forEach(cb=>{o[cb.name]=cb.checked});
-  return o;
-}
-
-function clearDispo(){
-  const d=document.getElementById("bDispo");
-  if(d){d.value="";d.removeAttribute("value");}
-  document.getElementById("bNonDisponible").checked=false;
-}
-function toggleNonDispo(cb){
-  if(cb.checked){
-    document.getElementById("bDispo").value="";
-    // Met aussi le statut sur indisponible
-    document.getElementById("bStatut").value="indisponible";
-  }
-}
-// Auto-vide date si statut passe à "loue"
-document.getElementById("bStatut")?.addEventListener("change",function(){
-  if(this.value==="loue"){
-    document.getElementById("bDispo").value="";
-    document.getElementById("bNonDisponible").checked=false;
-    toast("Statut Loué — date de disponibilité vidée automatiquement.","inf");
-  }
-});
-
-// Formatage téléphone auto (espaces toutes les 2 chiffres après indicatif)
-function formatPhone(val){
-  // Nettoie tout sauf + et chiffres
-  let clean=val.replace(/[^\d+]/g,"");
-  // Formate : +221 77 123 45 67
-  if(clean.startsWith("+221")&&clean.length>4){
-    const rest=clean.slice(4).replace(/(\d{2})(?=\d)/g,"$1 ").trim();
-    return "+221 "+rest;
-  }
-  if(clean.startsWith("221")&&clean.length>3){
-    const rest=clean.slice(3).replace(/(\d{2})(?=\d)/g,"$1 ").trim();
-    return "+221 "+rest;
-  }
-  return val;
-}
-["cTel","cWa"].forEach(id=>{
-  document.getElementById(id)?.addEventListener("blur",function(){
-    this.value=formatPhone(this.value);
-  });
-});
-
-Merci pour votre intérêt pour {nom_appartement}.
-
-Je suis {nom_commercial}, en charge de l'accompagnement sur ce bien. Vous pouvez dès maintenant :
-✔ explorer l'appartement à distance avec la visite 360°
-✔ déposer votre dossier en quelques minutes
-✔ réserver en toute sécurité via Kàddu
-
-Je reste disponible pour répondre à vos questions et vous accompagner à chaque étape.
-
-À très vite 😊`;
-
-function insertWaVar(v){
-  const ta=document.getElementById("cWaMessage");if(!ta)return;
-  const s=ta.selectionStart,e=ta.selectionEnd;
-  ta.value=ta.value.slice(0,s)+v+ta.value.slice(e);
-  ta.selectionStart=ta.selectionEnd=s+v.length;
-  ta.focus();updateWaPreview();
-}
-function resetWaMessage(){
-  const ta=document.getElementById("cWaMessage");if(ta)ta.value=WA_DEFAULT;
-  updateWaPreview();
-}
-function updateWaPreview(){
-  const ta=document.getElementById("cWaMessage");
-  const prev=document.getElementById("waMessagePreview");
-  if(!ta||!prev)return;
-  const nom=document.getElementById("cNom")?.value?.split(" ")[0]||"Prénom commercial";
-  prev.textContent=ta.value
-    .replace(/\{prenom_client\}/g,"[Prénom client]")
-    .replace(/\{nom_appartement\}/g,"[Nom du bien]")
-    .replace(/\{nom_commercial\}/g,nom);
-}
-document.getElementById("cWaMessage")?.addEventListener("input",updateWaPreview);
-
-// ── Sous-onglets drawer commercial ────────────────────────────────────────────
-document.querySelectorAll("[data-cpanel]").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll("[data-cpanel]").forEach(b=>b.classList.remove("active"));
-    document.querySelectorAll(".comm-panel").forEach(p=>p.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.cpanel).classList.add("active");
-  });
-});
-
-let autresLangues=[];
-
-function addAutreLang(){
-  const inp=document.getElementById("cAutreLangInput");
-  const val=inp?.value.trim();if(!val)return;
-  autresLangues.push(val);inp.value="";
-  renderAutresLangues();
-}
-function removeAutreLang(i){autresLangues.splice(i,1);renderAutresLangues()}
-function renderAutresLangues(){
-  const el=document.getElementById("autresLangues");if(!el)return;
-  el.innerHTML=autresLangues.map((l,i)=>`<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);border-radius:999px;font-size:11px">${esc(l)}<button type="button" onclick="removeAutreLang(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0">✕</button></span>`).join("");
-}
-
-// Preview WA nom
-document.getElementById("cNom")?.addEventListener("input",function(){
-  const prenom=this.value.split(" ")[0]||"Prénom";
-  const el=document.getElementById("waPreviewNom");if(el)el.textContent=prenom;
-});
-
-// Preview carte commercial en temps réel
-function updateCommPreviewCard(){
-  const nom=document.getElementById("cNom")?.value||"";
-  const role=document.getElementById("cRole")?.value||"";
-  const reponse=document.getElementById("cReponse")?.value||"";
-  const badges=[...document.querySelectorAll('#badgesChips input:checked')].map(c=>c.name);
-  const preview=document.getElementById("commCardPreview");
-  if(!preview)return;
-  const photoSrc=commPhotoFile?URL.createObjectURL(commPhotoFile):(document.querySelector("#commPhotoPreviewLarge img")?.src||"");
-  preview.innerHTML=`<div style="display:flex;gap:12px;align-items:center">
-    <div style="width:48px;height:48px;border-radius:50%;border:2px solid var(--bds);overflow:hidden;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">
-      ${photoSrc?`<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover">`:(nom.charAt(0)||"?")}
-    </div>
-    <div>
-      <div style="font-weight:700;font-size:14px">${esc(nom)||"Nom prénom"}</div>
-      <div style="font-size:11px;color:var(--muted)">${esc(role)||"Rôle"}</div>
-      ${reponse?`<div style="font-size:10px;color:var(--green);margin-top:2px">⚡ ${esc(reponse)}</div>`:""}
-    </div>
-  </div>
-  ${badges.length?`<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">${badges.map(b=>{const LABELS={"badge_verifie":"🛡️ Profil vérifié","badge_super":"⭐ Super conseiller","badge_50res":"🏅 +50 réservations","badge_100pc":"✅ 100% dossiers traités","badge_reponse":"⚡ Réponse ultra-rapide","badge_diaspora":"🌍 Spécialiste diaspora"};return`<span style="font-size:10px;padding:3px 8px;border-radius:999px;background:rgba(191,150,80,.1);border:1px solid var(--bdr)">${LABELS[b]||b}</span>`}).join("")}</div>`:""}
-  <div style="margin-top:10px;font-size:11px;color:rgba(248,244,238,.4);border-top:1px solid var(--bdr);padding-top:8px">✔ Biens vérifiés · ✔ Dossiers sécurisés · ✔ Zéro mauvaise surprise</div>`;
-}
-["cNom","cRole","cReponse"].forEach(id=>document.getElementById(id)?.addEventListener("input",updateCommPreviewCard));
-document.querySelectorAll('#badgesChips input').forEach(c=>c.addEventListener("change",updateCommPreviewCard));
-
-function openCommDrawer(id=null){
-  const c=id?allComms.find(x=>x.id===id):null;
-  document.getElementById("commDrawerTitle").innerHTML=c?`Modifier <em>${esc(c.nom)}</em>`:`Nouveau <em>commercial</em>`;
-  commPhotoFile=null;
-  autresLangues=[];
-
-  // Reset champs
-  ["cNom","cRole","cTel","cWa","cEmail","cDesc","cId","cBiensGeres","cLocataires","cSatisfaction","cStatLibre"].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value=""});
-  ["cStatut","cReponse","cDispo"].forEach(fid=>{const el=document.getElementById(fid);if(el)el.value=""});
-  document.getElementById("cStatut").value="actif";
-  // Message WA par défaut
-  const waTa=document.getElementById("cWaMessage");
-  if(waTa)waTa.value=WA_DEFAULT;
-  updateWaPreview();
-
-  // Reset checkboxes
-  document.querySelectorAll("#specialiteChips input, #languesChips input, #badgesChips input").forEach(c=>{c.checked=false;c.parentElement.classList.remove("checked")});
-  renderAutresLangues();
-
-  // Reset photo
-  const photoDiv=document.getElementById("commPhotoPreviewLarge");
-  if(photoDiv)photoDiv.innerHTML="📷";
-
-  if(c){
-    document.getElementById("cId").value=c.id;
-    document.getElementById("cNom").value=c.nom||"";
-    document.getElementById("cRole").value=c.role||"";
-    document.getElementById("cTel").value=c.telephone||"";
-    document.getElementById("cWa").value=c.whatsapp||"";
-    document.getElementById("cEmail").value=c.email||"";
-    document.getElementById("cDesc").value=c.description||"";
-    document.getElementById("cStatut").value=c.statut||"actif";
-    document.getElementById("cReponse").value=c.reponse||"";
-    document.getElementById("cDispo").value=c.disponibilite||"";
-    document.getElementById("cBiensGeres").value=c.biens_geres||"";
-    document.getElementById("cLocataires").value=c.locataires||"";
-    document.getElementById("cSatisfaction").value=c.satisfaction||"";
-    document.getElementById("cStatLibre").value=c.stat_libre||"";
-    // Message WA personnalisé ou défaut
-    const waTa=document.getElementById("cWaMessage");
-    if(waTa)waTa.value=c.wa_message||WA_DEFAULT;
-    updateWaPreview();
-
-    // Spécialités — parse si string JSON
-    const sp=safeJson(c.specialites,{});
-    Object.keys(sp).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&sp[k]){el.checked=true;el.parentElement.classList.add("checked")}});
-
-    // Langues
-    const lg=safeJson(c.langues,{});
-    Object.keys(lg).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&lg[k]){el.checked=true;el.parentElement.classList.add("checked")}});
-    autresLangues=safeJson(c.autres_langues,[]);renderAutresLangues();
-
-    // Badges
-    const bg=safeJson(c.badges,{});
-    Object.keys(bg).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&bg[k]){el.checked=true;el.parentElement.classList.add("checked")}});
-
-    // Photo
-    if(c.photo_url&&photoDiv)photoDiv.innerHTML=`<img src="${esc(c.photo_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    gallery.innerHTML = `<div style="height:100%;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem">Photos disponibles prochainement</div>`;
   }
 
-  // Reset onglet
-  document.querySelectorAll("[data-cpanel]").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll(".comm-panel").forEach(p=>p.classList.remove("active"));
-  document.querySelector("[data-cpanel='cp-identite']")?.classList.add("active");
-  document.getElementById("cp-identite")?.classList.add("active");
+  document.getElementById('mTitre').innerHTML = esc(b.titre||'—').replace(/Le Petit (.+)/,'Le Petit <em>$1</em>');
+  document.getElementById('mLocation').innerHTML = `📍 ${esc([b.quartier,b.ville,b.immeuble].filter(Boolean).join(' · '))}`;
 
-  document.getElementById("commDrawer").classList.add("open");
-  document.getElementById("commDrawerPanel").scrollTop=0;
-  updateCommPreviewCard();
+  const specs = [b.pieces,b.surface?b.surface+'m²':null,b.chambres?b.chambres+' ch.':null].filter(Boolean);
+  document.getElementById('mSpecs').innerHTML = specs.map(s=>`<span style="padding:5px 12px;border-radius:999px;border:1px solid var(--bdr);font-size:.76rem;color:rgba(248,244,238,.65)">${esc(s)}</span>`).join('');
+
+  document.getElementById('mDesc').textContent = b.description || b.accroche || '';
+
+  const conds = [
+    b.duree_min   && ['Durée minimale', b.duree_min],
+    b.caution     && ['Caution', b.caution],
+    b.paiements   && ['Paiements', b.paiements],
+    b.checkin     && ['Check-in', b.checkin],
+    b.checkout    && ['Check-out', b.checkout],
+  ].filter(Boolean);
+  document.getElementById('mConditions').innerHTML = conds.length
+    ? conds.map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(191,150,80,.07);font-size:.84rem"><span style="color:var(--muted)">${esc(l)}</span><span style="font-weight:500">${esc(v)}</span></div>`).join('')
+    : `<p style="font-size:.82rem;color:var(--muted)">Conditions disponibles sur demande.</p>`;
+
+  document.getElementById('mPrix').textContent = b.prix || 'Sur demande';
+  document.getElementById('mPrixSub').textContent = b.prix_sub || '';
+
+  const btn360 = document.getElementById('m360Btn');
+  if (b.visite_360) { btn360.href=b.visite_360; btn360.style.display='inline-flex'; }
+  else btn360.style.display='none';
+
+  const waMsg = encodeURIComponent('Bonjour, je suis intéressé par '+b.titre+' sur Kaddu.net');
+  document.getElementById('mWA').href = `https://wa.me/221XXXXXXXXX?text=${waMsg}`;
+  document.getElementById('mCTA').href = `/tunnel/dossier-v2-step1.html?bien=${encodeURIComponent(b.titre||'')}&slug=${b.slug||''}`;
+
+  document.getElementById('modalBg').style.display='flex';
+  document.getElementById('modalBox').scrollTop=0;
+  document.body.style.overflow='hidden';
 }
 
-document.getElementById("commPhotoBtn").addEventListener("click",()=>document.getElementById("commPhotoInput").click());
-document.getElementById("commPhotoPreviewLarge")?.addEventListener("click",()=>document.getElementById("commPhotoInput").click());
-document.getElementById("commPhotoInput").addEventListener("change",e=>{
-  const f=e.target.files[0];if(!f)return;commPhotoFile=f;
-  const url=URL.createObjectURL(f);
-  const photoDiv=document.getElementById("commPhotoPreviewLarge");
-  if(photoDiv)photoDiv.innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-  updateCommPreviewCard();
-});
+function mGPrev(){ if(window._mGTotal<=1)return; window._mGIdx=(window._mGIdx-1+window._mGTotal)%window._mGTotal; mGUpdate(); }
+function mGNext(){ if(window._mGTotal<=1)return; window._mGIdx=(window._mGIdx+1)%window._mGTotal; mGUpdate(); }
+function mGUpdate(){ document.getElementById('mGTrack').style.transform=`translateX(-${window._mGIdx*100}%)`; document.getElementById('mGCounter').textContent=`${window._mGIdx+1}/${window._mGTotal}`; }
 
-function closeCommDrawer(){document.getElementById("commDrawer").classList.remove("open")}
-document.getElementById("closeCommDrawer").addEventListener("click",closeCommDrawer);
-document.getElementById("cancelCommDrawer").addEventListener("click",closeCommDrawer);
-document.getElementById("commDrawer").addEventListener("click",e=>{if(e.target===document.getElementById("commDrawer"))closeCommDrawer()});
-document.getElementById("newCommBtn").addEventListener("click",()=>openCommDrawer());
-["searchComm","filterCommStat"].forEach(id=>{
-  const el=document.getElementById(id);if(el){el.addEventListener("input",renderComms);el.addEventListener("change",renderComms)}
-});
-
-document.getElementById("saveCommBtn").addEventListener("click",async()=>{
-  const nom=document.getElementById("cNom").value.trim();
-  if(!nom){toast("Nom obligatoire.","err");return}
-  const btn=document.getElementById("saveCommBtn");btn.disabled=true;btn.textContent="…";
-  await ensureFreshToken();
-  try{
-    const cId=document.getElementById("cId").value;
-    const existing=cId?allComms.find(c=>c.id===cId):null;
-    let photo_url=existing?.photo_url||null,photo_path=existing?.photo_path||null;
-    if(commPhotoFile){
-      const path=`commerciaux/${cId||Date.now()}_${commPhotoFile.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
-      photo_url=await uploadFile(commPhotoFile,path);photo_path=path;
-      if(existing?.photo_path)await delFile(existing.photo_path);
-    }
-
-    // Collecte spécialités, langues, badges
-    const specialites={};document.querySelectorAll("#specialiteChips input").forEach(c=>{specialites[c.name]=c.checked});
-    const langues={};document.querySelectorAll("#languesChips input").forEach(c=>{langues[c.name]=c.checked});
-    const badges={};document.querySelectorAll("#badgesChips input").forEach(c=>{badges[c.name]=c.checked});
-
-    const payload={
-      nom,role:v("cRole"),telephone:v("cTel"),whatsapp:v("cWa"),email:v("cEmail"),
-      description:v("cDesc"),statut:document.getElementById("cStatut").value,
-      reponse:v("cReponse"),disponibilite:v("cDispo"),
-      biens_geres:vi("cBiensGeres"),locataires:vi("cLocataires"),
-      satisfaction:vi("cSatisfaction"),stat_libre:v("cStatLibre"),
-      wa_message:v("cWaMessage"),
-      specialites:JSON.stringify(specialites),
-      langues:JSON.stringify(langues),
-      autres_langues:JSON.stringify(autresLangues),
-      badges:JSON.stringify(badges),
-      photo_url,photo_path,
-      updated_at:new Date().toISOString()
-    };
-    if(cId){await sbPatch("commerciaux",cId,payload);const i=allComms.findIndex(c=>c.id===cId);if(i!==-1)allComms[i]={...allComms[i],...payload,id:cId}}
-    else{const r=await sbPost("commerciaux",{...payload,created_at:new Date().toISOString()});if(Array.isArray(r)&&r[0])allComms.unshift(r[0])}
-    closeCommDrawer();renderComms();toast(cId?"Commercial mis à jour ✓":"Commercial créé ✓");
-  }catch(e){toast("Erreur : "+e.message,"err")}
-  finally{btn.disabled=false;btn.textContent="💾 Enregistrer"}
-});
-
-// ══ AUTH ══════════════════════════════════════════
-function persistSess(s){try{localStorage.setItem("kaddu_admin_session",JSON.stringify({access_token:s.access_token,refresh_token:s.refresh_token,expires_at:Date.now()+(s.expires_in||3600)*1000}))}catch(_){}}
-function loadSess(){try{const r=localStorage.getItem("kaddu_admin_session");if(!r)return null;const s=JSON.parse(r);if(s.expires_at&&Date.now()>s.expires_at-60000)return null;return s}catch(_){return null}}
-function clearSess(){localStorage.removeItem("kaddu_admin_session");session=null}
-
-async function signIn(email,pw){const r=await fetch(`${SB}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"apikey":ANON,"Content-Type":"application/json"},body:JSON.stringify({email,password:pw})});const d=await r.json();if(!r.ok)throw new Error(d.error_description||d.msg||"Identifiants incorrects.");return d}
-
-// Refresh silencieux du token avant chaque opération critique
-async function ensureFreshToken(){
-  if(!session) return;
-  const expiresAt = session.expires_at || 0;
-  // Si le token expire dans moins de 5 min → refresh
-  if(Date.now() > expiresAt - 5*60*1000){
-    try{
-      const r=await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{
-        method:"POST",
-        headers:{"apikey":ANON,"Content-Type":"application/json"},
-        body:JSON.stringify({refresh_token:session.refresh_token})
-      });
-      if(r.ok){
-        const d=await r.json();
-        session={...d,expires_at:Date.now()+(d.expires_in||3600)*1000};
-        persistSess(session);
-      } else {
-        // Token refresh impossible → déconnexion propre
-        toast("Session expirée — veuillez vous reconnecter.","err");
-        clearSess();
-        setTimeout(()=>location.reload(),1500);
-      }
-    }catch(_){
-      toast("Erreur réseau — vérifiez votre connexion.","err");
-    }
-  }
+function closeModal(){
+  document.getElementById('modalBg').style.display='none';
+  document.body.style.overflow='';
 }
-function showApp(){document.getElementById("authOverlay").style.display="none"}
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===document.getElementById('modalBg'))closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-function initAuth(){
-  document.getElementById("logoutBtn").addEventListener("click",()=>{clearSess();location.reload()});
-  const saved=loadSess();
-  if(saved?.access_token){session=saved;showApp();loadAll();return}
-  const btn=document.getElementById("authBtn");
-  btn.addEventListener("click",async()=>{
-    const email=document.getElementById("authEmail").value.trim();
-    const pw=document.getElementById("authPassword").value;
-    const err=document.getElementById("authError");const ld=document.getElementById("authLoading");
-    if(!email||!pw){err.textContent="Email et mot de passe requis.";err.style.display="block";return}
-    btn.disabled=true;err.style.display="none";ld.style.display="block";
-    try{const s=await signIn(email,pw);session=s;persistSess(s);showApp();loadAll()}
-    catch(e){err.textContent=e.message||"Connexion impossible.";err.style.display="block"}
-    finally{btn.disabled=false;ld.style.display="none"}
-  });
-  [document.getElementById("authEmail"),document.getElementById("authPassword")]
-    .forEach(el=>el?.addEventListener("keydown",e=>{if(e.key==="Enter")btn.click()}));
-}
-
-document.addEventListener("DOMContentLoaded",initAuth);
+// ══ START ═════════════════════════════════════════
+loadBiens();
 </script>
 </body>
 </html>
