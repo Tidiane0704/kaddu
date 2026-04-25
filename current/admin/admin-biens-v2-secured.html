@@ -519,7 +519,7 @@
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_en" style="width:auto;accent-color:var(--or)"/> 🇬🇧 Anglais</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_wo" style="width:auto;accent-color:var(--or)"/> 🇸🇳 Wolof</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ar" style="width:auto;accent-color:var(--or)"/> 🇸🇦 Arabe</label>
-            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ha" style="width:auto;accent-color:var(--or)"/> 🇲🇦 Hassania</label>
+            <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ha" style="width:auto;accent-color:var(--or)"/> 🇲🇷 Hassania</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_hw" style="width:auto;accent-color:var(--or)"/> 🇳🇬 Haoussa</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_zh" style="width:auto;accent-color:var(--or)"/> 🇨🇳 Mandarin</label>
             <label class="check-item" style="border-radius:999px;padding:6px 12px"><input type="checkbox" name="lg_ru" style="width:auto;accent-color:var(--or)"/> 🇷🇺 Russe</label>
@@ -677,6 +677,11 @@ Je reste disponible pour répondre à vos questions et vous accompagner à chaqu
           <option value="loue">Loué</option>
           <option value="indisponible">Indisponible</option>
           <option value="brouillon">Brouillon</option>
+        </select>
+        <select id="filterComm" style="max-width:180px" onchange="renderBiens()">
+          <option value="">Tous (avec/sans commercial)</option>
+          <option value="sans">⚠️ Sans commercial affecté</option>
+          <option value="avec">✓ Avec commercial</option>
         </select>
       </div>
       <button class="btn btn-primary" id="newBienBtn">+ Nouveau bien</button>
@@ -883,6 +888,7 @@ const PHOTO_TAGS = ["salon","chambre","cuisine","salle_de_bain","facade","terras
 
 // ══ HELPERS ══════════════════════════════════════
 function esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function safeJson(val,fallback){if(!val)return fallback;if(typeof val==="object")return val;try{return JSON.parse(val)}catch{return fallback}}
 function headers(extra={}){return{"apikey":ANON,"Authorization":"Bearer "+(session?.access_token||ANON),"Content-Type":"application/json",...extra}}
 function uploadHeaders(){return{"apikey":ANON,"Authorization":"Bearer "+(session?.access_token||ANON)}}
 
@@ -962,6 +968,9 @@ function renderBiens(){
     if(q&&!b.titre?.toLowerCase().includes(q)&&!b.quartier?.toLowerCase().includes(q)&&!b.ref_interne?.toLowerCase().includes(q))return false;
     if(cat&&b.categorie!==cat)return false;
     if(stat&&b.statut!==stat)return false;
+    const fc=document.getElementById("filterComm")?.value||"";
+    if(fc==="sans"&&b.commercial_id)return false;
+    if(fc==="avec"&&!b.commercial_id)return false;
     return true;
   });
   document.getElementById("stTotal").textContent=allBiens.length;
@@ -992,7 +1001,19 @@ function renderBiens(){
         ${b.coup_de_coeur?`<span style="position:absolute;bottom:9px;left:9px;background:rgba(191,150,80,.9);color:#111;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px">⭐ Coup de cœur</span>`:""}
       </div>
       <div class="bc-body">
-        ${comm?`<div class="comm-tag"><div class="cavatar">${comm.photo_url?`<img src="${esc(comm.photo_url)}" alt="${esc(comm.nom)}">`:(comm.nom||"?").charAt(0)}</div><span>${esc(comm.nom)}</span></div>`:""}
+        <!-- Commercial assigné — visible au premier coup d'œil -->
+        ${comm
+          ? `<div class="comm-tag" style="padding:7px 10px;border:1px solid rgba(191,150,80,.18);border-radius:8px;background:rgba(191,150,80,.05);display:flex;align-items:center;gap:8px;margin-bottom:4px">
+               <div class="cavatar" style="width:28px;height:28px;font-size:11px">${comm.photo_url?`<img src="${esc(comm.photo_url)}" alt="${esc(comm.nom)}">`:(comm.nom||"?").charAt(0)}</div>
+               <div>
+                 <div style="font-size:11px;font-weight:700;color:var(--txt)">${esc(comm.nom)}</div>
+                 <div style="font-size:9px;color:var(--muted)">${esc(comm.role||"Commercial")}</div>
+               </div>
+             </div>`
+          : `<div style="padding:6px 10px;border:1px dashed rgba(255,107,107,.3);border-radius:8px;background:rgba(255,107,107,.05);font-size:10px;color:rgba(255,107,107,.7);margin-bottom:4px;display:flex;align-items:center;gap:6px">
+               ⚠️ Aucun commercial affecté
+             </div>`
+        }
         <h3>${esc(b.titre||"—")}</h3>
         <div class="bc-meta">${esc(b.quartier||"")}${b.immeuble?" · "+esc(b.immeuble):""}</div>
         <div class="bc-price">${esc(b.prix||"—")}</div>
@@ -1639,17 +1660,17 @@ function openCommDrawer(id=null){
     if(waTa)waTa.value=c.wa_message||WA_DEFAULT;
     updateWaPreview();
 
-    // Spécialités
-    const sp=c.specialites||{};
+    // Spécialités — parse si string JSON
+    const sp=safeJson(c.specialites,{});
     Object.keys(sp).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&sp[k]){el.checked=true;el.parentElement.classList.add("checked")}});
 
     // Langues
-    const lg=c.langues||{};
+    const lg=safeJson(c.langues,{});
     Object.keys(lg).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&lg[k]){el.checked=true;el.parentElement.classList.add("checked")}});
-    autresLangues=c.autres_langues||[];renderAutresLangues();
+    autresLangues=safeJson(c.autres_langues,[]);renderAutresLangues();
 
     // Badges
-    const bg=c.badges||{};
+    const bg=safeJson(c.badges,{});
     Object.keys(bg).forEach(k=>{const el=document.querySelector(`input[name="${k}"]`);if(el&&bg[k]){el.checked=true;el.parentElement.classList.add("checked")}});
 
     // Photo
