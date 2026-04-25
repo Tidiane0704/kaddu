@@ -365,8 +365,20 @@
         </div>
         <div class="fg3">
           <div class="field"><label>Caution</label><input id="bCaution" placeholder="1 mois de loyer"/></div>
-          <div class="field"><label>Frais de dossier</label><input id="bFraisDossier" placeholder="Gratuit via Kàddu"/></div>
-          <div class="field"><label>Date de disponibilité</label><input id="bDispo" type="date"/></div>
+          <div class="field">
+            <label>Frais de dossier</label><input id="bFraisDossier" placeholder="Gratuit via Kàddu"/>
+          </div>
+          <div class="field">
+            <label>Date de disponibilité</label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="bDispo" type="date" style="flex:1"/>
+              <button type="button" onclick="clearDispo()" title="Effacer la date" style="padding:8px 10px;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.25);color:#ffb3b3;border-radius:5px;cursor:pointer;font-size:11px;font-family:Arial;flex-shrink:0">✕</button>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;font-size:12px;color:var(--muted);text-transform:none;letter-spacing:0">
+              <input type="checkbox" id="bNonDisponible" style="width:auto;accent-color:var(--or)" onchange="toggleNonDispo(this)"/>
+              Marquer comme non disponible (vide la date)
+            </label>
+          </div>
         </div>
         <div class="fg3">
           <div class="field"><label>Durée minimum de location</label><input id="bDureeMin" placeholder="3 nuits"/></div>
@@ -884,11 +896,44 @@ const EQUIP_CATEGORIES = [
       {id:"videosurveillance",label:"Vidéosurveillance"},
     ]
   },
+  {
+    label: "🏗️ Spécifique Non Meublé",
+    items: [
+      {id:"electricite",label:"Installation électrique aux normes"},
+      {id:"plomberie",label:"Plomberie en bon état"},
+      {id:"carrelage",label:"Carrelage / Revêtement sol neuf"},
+      {id:"faux_plafond",label:"Faux plafond / Finitions soignées"},
+      {id:"peinture_recente",label:"Peinture récente"},
+      {id:"volets",label:"Volets / Rideaux inclus"},
+      {id:"placards_integres",label:"Placards intégrés"},
+      {id:"cuisine_nue",label:"Cuisine nue (emplacement prévu)"},
+      {id:"double_vitrage",label:"Double vitrage / Baies vitrées"},
+      {id:"compteur_eau",label:"Compteur eau individuel"},
+      {id:"compteur_elec",label:"Compteur électrique individuel"},
+      {id:"cave",label:"Cave / Local de rangement"},
+    ]
+  },
 ];
 // Flatten pour compatibilité avec l'existant
 const EQUIPS = EQUIP_CATEGORIES.flatMap(c => c.items);
 
-const PHOTO_TAGS = ["salon","chambre","cuisine","salle de bain","facade","terrasse","bureau","entree","suite parentale","chambre visiteurs","salle a manger","couloir","autre"];
+    // Tags photos — avec underscores en valeur mais labels lisibles
+    const PHOTO_TAG_OPTIONS = [
+      {val:"",label:"Tag…"},
+      {val:"salon",label:"Salon"},
+      {val:"chambre",label:"Chambre"},
+      {val:"cuisine",label:"Cuisine"},
+      {val:"salle de bain",label:"Salle de bain"},
+      {val:"suite parentale",label:"Suite parentale"},
+      {val:"chambre visiteurs",label:"Chambre visiteurs"},
+      {val:"salle a manger",label:"Salle à manger"},
+      {val:"couloir",label:"Couloir / Entrée"},
+      {val:"facade",label:"Façade / Extérieur"},
+      {val:"terrasse",label:"Terrasse / Balcon"},
+      {val:"bureau",label:"Bureau"},
+      {val:"entree",label:"Entrée"},
+      {val:"autre",label:"Autre"},
+    ];
 
 // ══ HELPERS ══════════════════════════════════════
 function esc(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
@@ -1083,6 +1128,7 @@ function openBienDrawer(id=null){
   document.getElementById("bCategorie").value="meuble";
   document.getElementById("bStatut").value="brouillon";
   document.getElementById("bDispo").value="";
+  document.getElementById("bNonDisponible").checked=false;
   document.getElementById("bCoupDeCoeur").checked=false;
   updateCoupDeCoeurUI();
   customEquips=[];
@@ -1123,6 +1169,8 @@ function openBienDrawer(id=null){
     document.getElementById("bCaution").value=b.caution||"";
     document.getElementById("bFraisDossier").value=b.frais_dossier||"";
     if(b.disponibilite)document.getElementById("bDispo").value=b.disponibilite.split("T")[0];
+    // Coche "non disponible" si statut indisponible et pas de date
+    document.getElementById("bNonDisponible").checked=(b.statut==="indisponible"&&!b.disponibilite);
     document.getElementById("bDureeMin").value=b.duree_min||"";
     document.getElementById("bTypeBail").value=b.type_bail||"";
     document.getElementById("bPaiements").value=b.paiements||"";
@@ -1338,8 +1386,7 @@ function renderPhotosGrid(){
     <div class="photo-meta">
       <input class="photo-leg" data-idx="${i}" placeholder="Légende…" value="${esc(p.legende||"")}"/>
       <select class="photo-tag-sel" data-idx="${i}" style="width:100%;padding:5px 8px;font-size:11px;margin-top:4px">
-        <option value="">Tag…</option>
-        ${PHOTO_TAGS.map(t=>`<option value="${t}" ${p.tag===t?"selected":""}>${t.replace("_"," ")}</option>`).join("")}
+        ${PHOTO_TAG_OPTIONS.map(t=>`<option value="${t.val}" ${p.tag===t.val?"selected":""}>${t.label}</option>`).join("")}
       </select>
     </div>
   `).join("");
@@ -1530,7 +1577,47 @@ function delCommConfirm(id){
   });
 }
 
-const WA_DEFAULT = `Bonjour {prenom_client} 👋,
+function clearDispo(){
+  const d=document.getElementById("bDispo");
+  if(d){d.value="";d.removeAttribute("value");}
+  document.getElementById("bNonDisponible").checked=false;
+}
+function toggleNonDispo(cb){
+  if(cb.checked){
+    document.getElementById("bDispo").value="";
+    // Met aussi le statut sur indisponible
+    document.getElementById("bStatut").value="indisponible";
+  }
+}
+// Auto-vide date si statut passe à "loue"
+document.getElementById("bStatut")?.addEventListener("change",function(){
+  if(this.value==="loue"){
+    document.getElementById("bDispo").value="";
+    document.getElementById("bNonDisponible").checked=false;
+    toast("Statut Loué — date de disponibilité vidée automatiquement.","inf");
+  }
+});
+
+// Formatage téléphone auto (espaces toutes les 2 chiffres après indicatif)
+function formatPhone(val){
+  // Nettoie tout sauf + et chiffres
+  let clean=val.replace(/[^\d+]/g,"");
+  // Formate : +221 77 123 45 67
+  if(clean.startsWith("+221")&&clean.length>4){
+    const rest=clean.slice(4).replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+    return "+221 "+rest;
+  }
+  if(clean.startsWith("221")&&clean.length>3){
+    const rest=clean.slice(3).replace(/(\d{2})(?=\d)/g,"$1 ").trim();
+    return "+221 "+rest;
+  }
+  return val;
+}
+["cTel","cWa"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("blur",function(){
+    this.value=formatPhone(this.value);
+  });
+});
 
 Merci pour votre intérêt pour {nom_appartement}.
 
