@@ -42,6 +42,17 @@
         linear-gradient(180deg,#070c15 0%,#0a1628 40%,#07182b 100%);
     }
     a{text-decoration:none;color:inherit}
+    /* Justification globale des blocs de texte descriptifs */
+    .hero-text,.section-head-desc,
+    .value-card p,.how-card p,.proof-card-2 p,
+    .pain-card p,.cta-box p,.foot-text,
+    .bien-desc,.listing-desc,.modal-desc,
+    .testi-quote,.critere-desc,.angle-list li,
+    .score-reason-item span,.modal-equip-item span,
+    .entry-card p,.comm-desc{
+      text-align:justify;
+      text-justify:inter-word;
+    }
     .container{max-width:1240px;margin:0 auto;padding:0 28px}
     .section{padding:96px 0}
     .eyebrow{
@@ -820,8 +831,8 @@
 
         <div class="hero-copy">
           <span class="eyebrow">1ère agence immobilière 100% digitale au Sénégal</span>
-          <h1>Appartements vérifiés à Dakar —<br><em>la seule plateforme qui sécurise</em><br><em>bien et locataire</em>.</h1>
-          <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px">
+          <h1 style="font-size:clamp(2rem,3.8vw,3.6rem);white-space:nowrap">Appartements vérifiés —<br><em>la seule plateforme qui sécurise<br>le bien et le locataire</em>.</h1>
+          <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px;text-align:justify;text-justify:inter-word">
             Visitez à distance en 360° et candidatez avec un dossier qualifié — fini les mauvaises surprises.
           </p>
           <p style="font-size:.76rem;color:rgba(248,244,238,.38);margin-bottom:20px;letter-spacing:.04em">
@@ -2579,22 +2590,41 @@
   let heroBienSlug = 'bantukay'; // fallback statique
 
   async function loadHeroBien(allRows) {
-    // Cherche d'abord un bien marqué coup_de_coeur dans les rows déjà chargés
-    let hero = allRows?.find(r => r.coup_de_coeur === true);
-    // Sinon prend le premier bien disponible meublé
+    // Requête dédiée pour récupérer le bien coup_de_coeur avec ses photos complètes
+    let hero = null;
+    try {
+      const r = await fetch(
+        `${SB_URL}/rest/v1/biens?coup_de_coeur=eq.true&statut=neq.brouillon&select=*&limit=1`,
+        { headers:{ 'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON } }
+      );
+      if (r.ok) {
+        const rows = await r.json();
+        if (rows.length) hero = rows[0];
+      }
+    } catch(_) {}
+
+    // Fallback : premier meublé disponible dans les rows déjà chargés
     if (!hero) hero = allRows?.find(r => r.categorie === 'meuble' && r.statut !== 'brouillon');
-    if (!hero) return; // garde le fallback statique
+    if (!hero) return;
 
     heroBienSlug = hero.slug;
     const photos = parsePh(hero.photos);
     const main   = photos.find(p => p.is_main) || photos[0];
 
-    // Image principale
+    // Image principale — Supabase Storage en priorité, GitHub en fallback
     const imgDiv = document.getElementById('heroPropImgInner');
-    if (imgDiv && main?.url) {
-      imgDiv.innerHTML = `<img src="${main.url}" alt="${hero.titre||''}"
-        style="width:100%;height:100%;object-fit:cover;display:block"
-        onerror="this.style.display='none'">`;
+    if (imgDiv) {
+      if (main?.url) {
+        imgDiv.innerHTML = `<img src="${main.url}" alt="${hero.titre||''}"
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block"
+          onerror="this.style.display='none'">`;
+      } else {
+        // Fallback GitHub statique si pas de photo Supabase
+        const slug = hero.slug || 'bantukay';
+        imgDiv.innerHTML = `<img src="/assets/images/biens/meubles/${slug}-01.jpeg" alt="${hero.titre||''}"
+          style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block"
+          onerror="this.style.display='none'">`;
+      }
     }
 
     // Textes
