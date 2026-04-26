@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kàddu — Louer en confiance à Dakar</title>
+  <title>Kàddu — Louer en confiance au Sénégal</title>
   <meta name="description" content="Kàddu réconcilie propriétaires exigeants et locataires sérieux grâce à une expérience immobilière digitale, premium et vérifiée à Dakar." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -245,6 +245,14 @@
     .pain-list{display:flex;flex-direction:column;gap:9px}
     .pain-list span{font-size:.83rem;color:rgba(248,244,238,.56)}
     .pain-list span::before{content:"—";color:var(--or);margin-right:8px}
+    .pain-cta-link{
+      display:inline-flex;align-items:center;gap:6px;
+      margin-top:18px;font-size:.78rem;letter-spacing:.08em;
+      color:var(--or);transition:.2s;text-decoration:none;
+    }
+    .pain-cta-link:hover{color:var(--orl);gap:10px}
+    .pain-cta-blue{color:#4A9EFF}
+    .pain-cta-blue:hover{color:#7BBFFF}
 
     /* ══ VALUE GRID ══ */
     .value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -276,14 +284,14 @@
 
     /* ══ SOCIAL PROOF ══ */
     .social-proof-section{background:rgba(7,24,43,.28);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);overflow:hidden}
-    .ticker-wrap{width:100%;overflow:hidden;padding:16px 0;mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 5%,black 95%,transparent)}
-    .ticker-track{display:flex;gap:28px;width:max-content;animation:ticker 40s linear infinite}
+    .ticker-wrap{width:100%;overflow:hidden;padding:14px 0;mask-image:linear-gradient(to right,transparent,black 3%,black 97%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 3%,black 97%,transparent)}
+    .ticker-track{display:flex;align-items:center;gap:20px;width:max-content;animation:ticker 60s linear infinite;white-space:nowrap}
     .ticker-track:hover{animation-play-state:paused}
     @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-    .proof-stat{display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0}
-    .proof-stat strong{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;color:var(--or)}
-    .proof-stat span{font-size:.76rem;color:rgba(248,244,238,.45)}
-    .proof-sep{color:rgba(191,150,80,.3);font-size:1rem;flex-shrink:0}
+    .proof-stat{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;flex-shrink:0}
+    .proof-stat strong{font-size:.88rem;color:var(--or);font-weight:400;font-family:'Playfair Display',serif}
+    .proof-stat span{font-size:.78rem;color:rgba(248,244,238,.48);white-space:nowrap}
+    .proof-sep{color:rgba(191,150,80,.3);font-size:.9rem;flex-shrink:0;line-height:1}
 
     /* ══ DIFFERENTIATOR ══ */
     .proofs-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
@@ -858,7 +866,7 @@
         </div>
       </a>
       <div class="nav-links">
-        <a href="#proprietaires">Propriétaires</a>
+        <a href="/proprietaires/">Propriétaires</a>
         <a href="#locataires">Locataires</a>
         <a href="#confiance">Pourquoi Kàddu</a>
         <a href="#biens">Biens</a>
@@ -1007,7 +1015,7 @@
                 <div class="hero-prop-img-layer"></div>
                 <div id="heroPropImgInner" style="position:absolute;inset:0;z-index:1"></div>
                 <div class="hero-prop-badge" id="heroPropBadge">Meublé · Coup de cœur</div>
-                <div class="hero-prop-avail" id="heroPropAvail">Disponible</div>
+                <div id="heroPropAvail" style="position:absolute;top:14px;right:12px;z-index:3;background:rgba(191,150,80,.92);color:#0a0a0a;font-size:.6rem;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.08em;text-transform:uppercase">⭐ Coup de cœur</div>
               </div>
               <div class="hero-prop-body">
                 <h4 id="heroPropNom">Le Petit <em>Bantukay</em></h4>
@@ -1032,7 +1040,7 @@
               <div style="width:8px;height:8px;border-radius:50%;background:var(--or)"></div>
               <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
               <div style="width:8px;height:8px;border-radius:50%;background:rgba(191,150,80,.25)"></div>
-              <span style="font-size:.7rem;color:rgba(248,244,238,.32);margin-left:4px">Sélection premium · Dakar</span>
+              <span style="font-size:.7rem;color:rgba(248,244,238,.32);margin-left:4px">⭐ Coup de cœur · Sélection premium Kàddu</span>
             </div>
           </div>
         </aside>
@@ -1043,21 +1051,23 @@
     <div class="social-proof-section" style="overflow:hidden">
       <div class="ticker-wrap">
         <div class="ticker-track" id="tickerTrack">
-          <div class="proof-stat"><strong>🛡️ Biens vérifiés</strong><span>100% contrôlés sur site</span></div>
+          <div class="proof-stat"><strong>🛡️</strong><span>Biens vérifiés · 100% contrôlés sur site</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>🌀 Visites 360°</strong><span>Explorez à distance</span></div>
+          <div class="proof-stat"><strong>🌀</strong><span>Visites 360° · Visitez à distance, pièce par pièce</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>🔐 Moteur antifraude</strong><span>7 dossiers sur 10 signalés</span></div>
+          <div class="proof-stat"><strong>🔐</strong><span>Moteur antifraude Kàddu · Détecte les profils insuffisants avant la visite</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>⚡ Réponse 48h</strong><span>Délai garanti</span></div>
+          <div class="proof-stat"><strong>⚡</strong><span>Réponse 48h · Délai garanti</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>💳 Wave · OM · Stripe</strong><span>Paiements locaux & internationaux</span></div>
+          <div class="proof-stat"><strong>💳</strong><span>Wave · OM · Stripe · PayPal · Paiements sécurisés locaux &amp; internationaux</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>🌍 Diaspora · Business · Expats</strong><span>Profils accueillis</span></div>
+          <div class="proof-stat"><strong>🌍</strong><span>Diaspora · Business · Expats · Famille · Profils accueillis</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>📱 Dossier 100% digital</strong><span>Zéro paperasse</span></div>
+          <div class="proof-stat"><strong>📱</strong><span>Dossier 100% digital · Zéro paperasse</span></div>
           <div class="proof-sep">·</div>
-          <div class="proof-stat"><strong>1ère agence digitale</strong><span>au Sénégal</span></div>
+          <div class="proof-stat"><strong>🥇</strong><span>1ère agence 100% digitale · au Sénégal</span></div>
+          <div class="proof-sep">·</div>
+          <div class="proof-stat"><strong>⭐</strong><span>Sélection Coup de cœur · Nos biens d'exception en vedette</span></div>
           <div class="proof-sep">·</div>
         </div>
       </div>
@@ -1086,6 +1096,7 @@
               <span>Communication floue ou tardive</span>
               <span>Peu de valeur ajoutée perçue</span>
             </div>
+            <a href="/proprietaires/" class="pain-cta-link">Découvrir nos offres propriétaires →</a>
           </article>
           <article class="pain-card" id="locataires">
             <div class="pain-top">
@@ -1099,6 +1110,7 @@
               <span>Dossier mal valorisé</span>
               <span>Manque de confiance dans le processus</span>
             </div>
+            <a href="/tunnel/dossier-v2-step1.html" class="pain-cta-link pain-cta-blue">Déposer mon dossier →</a>
           </article>
         </div>
       </div>
@@ -1153,7 +1165,7 @@
           <div style="font-size:2.4rem;flex-shrink:0">🔍</div>
           <div>
             <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:300;margin-bottom:4px">
-              En moyenne, <em style="color:var(--or);font-style:italic">7 dossiers sur 10</em> reçus sans Kàddu présentent des incohérences détectées par notre moteur.
+              Notre moteur antifraude analyse chaque dossier en quelques secondes. Résultat : <em style="color:var(--or);font-style:italic">7 profils insuffisants et incohérents sur 10</em> détectés avant même la visite.
             </div>
             <div style="font-size:.76rem;color:rgba(248,244,238,.38);letter-spacing:.06em">
               Identité · Revenus · Situation locative · Cohérence documentaire
@@ -1219,8 +1231,8 @@
             <div class="score-owner-note">
               <div class="son-icon">🔐</div>
               <div>
-                <strong>Visible propriétaire uniquement</strong>
-                <span>Le score 0-100 et les signaux détectés sont accessibles dans le tableau de bord admin — jamais exposés au locataire.</span>
+                <strong>Espace décision · Propriétaire uniquement</strong>
+                <span>Chaque propriétaire Kàddu dispose d'un tableau de bord dédié. Décidez en connaissance de cause. Le rapport complet — score, alertes, signaux — ne s'affiche que dans votre espace sécurisé, non accessible au candidat.</span>
               </div>
             </div>
           </div>
@@ -1306,9 +1318,9 @@
         <div class="section-head">
           <div>
             <span class="eyebrow">Comment ça marche</span>
-            <h2>Un parcours simple, pour <em>les deux parties</em>.</h2>
+            <h2>De la visite 360° à la signature : <em>tout est digitalisé</em>.</h2>
           </div>
-          <p class="section-head-desc">Kàddu simplifie ce qui est souvent mal exécuté : présentation du bien, qualification, dossier, échanges, décision.</p>
+          <p class="section-head-desc">Zéro papier. Zéro intermédiaire inutile. Ce que les agences traditionnelles font en 3 semaines, Kàddu le structure en 72h — sécurisé, tracé, des deux côtés.</p>
         </div>
         <div class="how-grid">
           <article class="how-card">
@@ -3091,22 +3103,45 @@
     const row = b._sbRow || {};
     const yn = v => v === 'oui' ? ['Oui','oui'] : v === 'non' ? ['Non','non'] : ['—',''];
 
-    // ── 1. CARACTÉRISTIQUES ──────────────────────────────────────────────────
-    const caracData = [
-      ['🅿️ Parking',        ...yn(row.parking),     '🚘 Colocation', ...yn(row.colocation)],
-      ['📦 Box / Garage',   ...yn(row.box),          '🏢 Étage',      row.etage&&row.nb_etages ? row.etage+' / '+row.nb_etages : row.etage||'—', ''],
-      ['🪣 Cave',           ...yn(row.cave),          '💂 Gardiennage',...yn(row.gardiennage)],
-      ['💰 Honoraires',     row.honoraires||'—','',  '🛗 Ascenseur',  ...yn(row.ascenseur)],
-      ['📅 Durée du bail',  row.duree_bail ? row.duree_bail+' mois' : '—','', '🏦 Dépôt garantie', row.depot_garantie||'—',''],
-      ['♿ Accessible PMR', ...yn(row.pmr),'','','',''],
+    // ── 1. CARACTÉRISTIQUES — Modèle C ───────────────────────────────────────
+    const caracRows = [
+      ['🅿️','Parking',       row.parking,   '🚘','Colocation acceptée', row.colocation],
+      ['📦','Box / Garage',  row.box,        '🏢','Étage',               row.etage && row.nb_etages ? row.etage+' / '+row.nb_etages : row.etage||null],
+      ['🪣','Cave',          row.cave,       '💂','Gardiennage',         row.gardiennage],
+      ['💰','Honoraires',    row.honoraires, '🛗','Ascenseur',           row.ascenseur],
+      ['📅','Durée du bail', row.duree_bail ? row.duree_bail+' mois' : null, '🏦','Dépôt de garantie', row.depot_garantie],
+      ['♿','Accessible PMR',row.pmr,        null, null, null],
     ];
+
+    const pillVal = (val) => {
+      if (!val || val === '') return null;
+      if (val === 'oui') return {label:'Oui', cls:'background:rgba(0,200,117,.12);color:#00C875;border:0.5px solid rgba(0,200,117,.3)'};
+      if (val === 'non') return {label:'Non', cls:'background:rgba(255,255,255,.05);color:rgba(248,244,238,.3);border:0.5px solid rgba(255,255,255,.08)'};
+      return {label:val, cls:'background:rgba(191,150,80,.1);color:rgba(248,244,238,.75);border:0.5px solid rgba(191,150,80,.2)'};
+    };
+
+    const makeCell = (icon, label, val) => {
+      if (!icon) return `<div style="padding:10px 14px"></div>`;
+      const p = pillVal(val);
+      const dimmed = val === 'non' ? 'opacity:.5' : '';
+      return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;${dimmed}">
+        <div style="width:32px;height:32px;min-width:32px;border-radius:8px;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:16px">${icon}</div>
+        <span style="font-size:.83rem;color:rgba(248,244,238,.6);flex:1">${label}</span>
+        ${p ? `<span style="font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap;${p.cls}">${p.label}</span>` : ''}
+      </div>`;
+    };
+
     const caracGrid = document.getElementById('accord-carac-grid');
     if (caracGrid) {
-      caracGrid.innerHTML = caracData.map(([l1,v1,c1,l2,v2,c2]) => {
-        const half1 = `<div class="accord-cell accord-cell-label">${l1}</div><div class="accord-cell accord-cell-val ${c1||''}">${v1}</div>`;
-        const half2 = l2 ? `<div class="accord-cell accord-cell-label">${l2}</div><div class="accord-cell accord-cell-val ${c2||''}">${v2}</div>` : `<div class="accord-cell"></div><div class="accord-cell"></div>`;
-        return `<div class="accord-row">${half1}<div class="accord-divider"></div>${half2}</div>`;
-      }).join('');
+      caracGrid.innerHTML = `<div style="display:flex;flex-direction:column;overflow:hidden;border-radius:10px;border:0.5px solid rgba(255,255,255,.07)">` +
+        caracRows.map((r,i) => {
+          const borderTop = i > 0 ? 'border-top:0.5px solid rgba(255,255,255,.06)' : '';
+          return `<div style="display:grid;grid-template-columns:1fr 1px 1fr;${borderTop}">
+            ${makeCell(r[0], r[1], r[2])}
+            <div style="background:rgba(255,255,255,.06)"></div>
+            ${makeCell(r[3], r[4], r[5])}
+          </div>`;
+        }).join('') + `</div>`;
     }
 
     // ── 2. CHARGES ───────────────────────────────────────────────────────────
@@ -3120,17 +3155,23 @@
         'Internet':'📶','Internet (Fibre)':'📶','Chauffage':'♨️','Électricité':'💡',
         'default':'✦'
       };
-      const chipHtml = arr => arr.map(item=>{
+      const chipHtml = (arr, present) => arr.map(item=>{
         const icon = CHARGE_ICONS[item]||CHARGE_ICONS.default;
-        return `<div class="charges-chip ${arr===inclus?'chip-present':'chip-absent'}"><span class="chip-icon">${icon}</span><span class="chip-label">${item}</span></div>`;
+        const style = present
+          ? `background:rgba(0,200,117,.08);border:0.5px solid rgba(0,200,117,.2);color:rgba(0,200,117,.9)`
+          : `background:rgba(255,255,255,.03);border:0.5px solid rgba(255,255,255,.07);color:rgba(248,244,238,.3);opacity:.5`;
+        return `<div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+          <div style="width:32px;height:32px;min-width:32px;border-radius:8px;${style};display:flex;align-items:center;justify-content:center;font-size:16px">${icon}</div>
+          <span style="font-size:11px;color:${present?'rgba(0,200,117,.85)':'rgba(248,244,238,.3)'};text-align:center;max-width:52px;${present?'':'text-decoration:line-through'}">${item}</span>
+        </div>`;
       }).join('');
 
       chargesEl.innerHTML = `
-        ${row.charges_montant ? `<div class="charges-montant-row"><span style="color:var(--muted)">Montant</span><strong>${row.charges_montant}</strong></div>` : ''}
-        ${row.charges_type ? `<div class="charges-montant-row"><span style="color:var(--muted)">Type de charges</span><strong>${row.charges_type}</strong></div>` : ''}
-        ${inclus.length ? `<div class="charges-chips-wrap"><div class="charges-chips-label">Inclus dans les charges</div><div class="charges-chips">${chipHtml(inclus)}</div></div>` : ''}
-        ${nonInclus.length ? `<div class="charges-chips-wrap"><div class="charges-chips-label">Non inclus dans les charges</div><div class="charges-chips">${chipHtml(nonInclus)}</div></div>` : ''}
-        ${!row.charges_montant&&!inclus.length&&!nonInclus.length ? '<p style="color:var(--muted);font-size:.84rem;padding:12px 0">Détail des charges non renseigné.</p>' : ''}
+        ${row.charges_montant ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid rgba(255,255,255,.06);font-size:.88rem"><span style="color:rgba(248,244,238,.55)">Montant</span><strong style="color:var(--blanc)">${row.charges_montant}</strong></div>` : ''}
+        ${row.charges_type ? `<div style="display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:0.5px solid rgba(255,255,255,.06);font-size:.88rem"><span style="color:rgba(248,244,238,.55)">Type de charges</span><strong style="color:var(--blanc)">${row.charges_type}</strong></div>` : ''}
+        ${inclus.length ? `<div style="padding:14px 16px;border-bottom:0.5px solid rgba(255,255,255,.06)"><div style="font-size:.72rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Inclus dans les charges</div><div style="display:flex;flex-wrap:wrap;gap:10px">${chipHtml(inclus, true)}</div></div>` : ''}
+        ${nonInclus.length ? `<div style="padding:14px 16px"><div style="font-size:.72rem;color:rgba(248,244,238,.45);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Non inclus dans les charges</div><div style="display:flex;flex-wrap:wrap;gap:10px">${chipHtml(nonInclus, false)}</div></div>` : ''}
+        ${!row.charges_montant&&!inclus.length&&!nonInclus.length ? '<p style="color:rgba(248,244,238,.35);font-size:.84rem;padding:12px 0">Détail des charges non renseigné.</p>' : ''}
       `;
     }
 
@@ -3177,21 +3218,26 @@
       // Only show section if at least one item defined
       const hasAny = MOB_CATEGORIES.some(cat => cat.items.some(it => it.key in mob));
       mobEl.innerHTML = hasAny
-        ? MOB_CATEGORIES.map(cat => `
-            <div class="mob-section">
+        ? MOB_CATEGORIES.map(cat => {
+            const items = cat.items.filter(it => it.key in mob);
+            if (!items.length) return '';
+            return `<div class="mob-section">
               <div class="mob-section-title">${cat.label}</div>
-              <div class="mob-grid">
-                ${cat.items.map(it => {
+              <div style="display:flex;flex-wrap:wrap;gap:10px">
+                ${items.map(it => {
                   const present = mob[it.key];
-                  if (!(it.key in mob) && !present) return ''; // skip unset
-                  return `<div class="mob-chip ${present ? 'mob-present' : 'mob-absent'}">
-                    <span class="mob-icon">${it.icon}</span>
-                    <span class="mob-label">${it.label}</span>
+                  const bgStyle = present
+                    ? `background:rgba(0,200,117,.08);border:0.5px solid rgba(0,200,117,.2)`
+                    : `background:rgba(255,255,255,.03);border:0.5px solid rgba(255,255,255,.07);opacity:.45`;
+                  return `<div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                    <div style="width:32px;height:32px;min-width:32px;border-radius:8px;${bgStyle};display:flex;align-items:center;justify-content:center;font-size:16px">${it.icon}</div>
+                    <span style="font-size:11px;color:${present?'rgba(248,244,238,.75)':'rgba(248,244,238,.3)'};text-align:center;max-width:52px;${present?'':'text-decoration:line-through'}">${it.label}</span>
                   </div>`;
                 }).join('')}
               </div>
-            </div>`).join('')
-        : '<p style="color:var(--muted);font-size:.84rem;padding:4px 0">Mobilier non renseigné pour ce bien.</p>';
+            </div>`;
+          }).filter(Boolean).join('')
+        : '<p style="color:rgba(248,244,238,.35);font-size:.84rem;padding:4px 0">Mobilier non renseigné pour ce bien.</p>';
     }
 
     // ── 4. LOCALISATION ──────────────────────────────────────────────────────
