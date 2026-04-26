@@ -134,6 +134,29 @@
     @media(max-width:900px){.biens-grid{grid-template-columns:1fr 1fr}.filters-bar{flex-direction:column}.filter-group{min-width:100%}}
     @media(max-width:580px){.biens-grid{grid-template-columns:1fr}.nav-inner{padding:0 16px}.container{padding:0 16px}}
   </style>
+  <script>
+    /* Kàddu — auth nav state */
+    (function(){
+      try {
+        var raw = sessionStorage.getItem('kaddu_jwt');
+        if (!raw) return;
+        var s = JSON.parse(raw);
+        if (Date.now() > s.expires) { sessionStorage.removeItem('kaddu_jwt'); return; }
+        document.addEventListener('DOMContentLoaded', function(){
+          var btn = document.getElementById('nav-login-btn');
+          if (!btn) return;
+          var meta = (s.user && s.user.user_metadata) || {};
+          var prenom = meta.prenom || (s.user && s.user.email && s.user.email.split('@')[0]) || 'Mon espace';
+          var href = s.role === 'bailleur' ? '/espace-bailleur/' : '/espace-locataire/';
+          btn.href = href;
+          btn.textContent = '👤 ' + prenom;
+          btn.style.background = 'rgba(191,150,80,.12)';
+          btn.style.borderColor = 'rgba(191,150,80,.35)';
+          btn.style.color = '#DDB96E';
+        });
+      } catch(e){}
+    })();
+  </script>
 </head>
 <body>
 
@@ -147,7 +170,10 @@
       </div>
     </a>
     <a href="/" class="nav-back">← Accueil</a>
-    <a class="btn btn-primary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a id="nav-login-btn" class="btn btn-secondary" href="/auth/" style="font-size:.76rem;padding:9px 16px">Connexion</a>
+      <a class="btn btn-primary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
+    </div>
   </div>
 </nav>
 
