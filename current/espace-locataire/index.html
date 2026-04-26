@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espace Locataire — Kàddu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root{--or:#BF9650;--orl:#DDB96E;--ord:#8B6520;--nbl:#07182B;--card:#0b2039;--blanc:#F8F4EE;--beige:#E8DCC5;--muted:rgba(248,244,238,.62);--bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);--green:#00C875;--blue:#4A9EFF;--red:#FF5454;--bg:#070f1a}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+    .sidebar{background:rgba(7,24,43,.8);border-right:1px solid var(--bdr);padding:32px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .sidebar-logo{padding:0 24px 32px;border-bottom:1px solid rgba(191,150,80,.08)}
+    .sidebar-logo .brand{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--or);letter-spacing:.04em}
+    .sidebar-logo .sub{font-size:.68rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-top:4px}
+    .nav-section{padding:24px 16px 0}
+    .nav-section-label{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,244,238,.28);padding:0 8px;margin-bottom:8px}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-size:.84rem;color:rgba(248,244,238,.52);cursor:pointer;transition:.2s;margin-bottom:2px}
+    .nav-item:hover{background:rgba(255,255,255,.04);color:var(--blanc)}
+    .nav-item.active{background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.15)}
+    .nav-item .icon{font-size:1rem;width:20px;text-align:center}
+    .sidebar-footer{margin-top:auto;padding:24px 16px;border-top:1px solid rgba(191,150,80,.08)}
+    .user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03)}
+    .user-avatar{width:34px;height:34px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--blue);flex-shrink:0}
+    .user-name{font-size:.82rem;font-weight:500;line-height:1.3}
+    .user-role{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(248,244,238,.35)}
+    .logout-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;font-size:.74rem;color:rgba(248,244,238,.38);cursor:pointer;margin-top:4px;transition:.2s;border-radius:6px}
+    .logout-btn:hover{color:var(--red);background:rgba(255,84,84,.06)}
+    .main{display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid rgba(191,150,80,.08);background:rgba(7,15,26,.6);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+    .topbar-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:300}
+    .topbar-title em{font-style:italic;color:var(--blue)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:.2s;border:none}
+    .btn-primary{background:var(--blue);color:#fff}
+    .btn-primary:hover{background:#3a8ee0}
+    .btn-ghost{background:transparent;color:rgba(248,244,238,.55);border:1px solid rgba(248,244,238,.12)}
+    .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+    .btn-sm{padding:7px 12px;font-size:.68rem;letter-spacing:.06em}
+    .content{padding:32px}
+
+    /* STATUS BANNER */
+    .status-banner{
+      padding:20px 24px;border-radius:12px;margin-bottom:28px;
+      background:linear-gradient(135deg,rgba(74,158,255,.1),rgba(74,158,255,.04));
+      border:1px solid rgba(74,158,255,.2);
+      display:flex;align-items:center;gap:16px;
+    }
+    .status-icon{font-size:2rem;flex-shrink:0}
+    .status-text h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:300;margin-bottom:4px}
+    .status-text h3 em{font-style:italic;color:var(--blue)}
+    .status-text p{font-size:.84rem;color:var(--muted);line-height:1.5}
+
+    /* PROGRESS */
+    .progress-section{margin-bottom:28px}
+    .progress-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;margin-bottom:16px}
+    .progress-title em{font-style:italic;color:var(--or)}
+    .progress-steps{display:flex;gap:0;position:relative}
+    .progress-steps::before{content:'';position:absolute;top:16px;left:16px;right:16px;height:2px;background:rgba(248,244,238,.08);z-index:0}
+    .prog-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
+    .prog-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;transition:.2s}
+    .prog-circle.done{background:var(--green);color:#fff;border:2px solid var(--green)}
+    .prog-circle.active{background:rgba(74,158,255,.15);color:var(--blue);border:2px solid var(--blue)}
+    .prog-circle.pending{background:rgba(255,255,255,.04);color:rgba(248,244,238,.25);border:2px solid rgba(248,244,238,.1)}
+    .prog-label{font-size:.66rem;text-align:center;color:rgba(248,244,238,.38);max-width:80px;line-height:1.3}
+    .prog-label.done-text{color:var(--green)}
+    .prog-label.active-text{color:var(--blue)}
+    .prog-line{flex:1;height:2px;align-self:center;margin-top:-20px;position:relative;z-index:0}
+    .prog-line.done{background:var(--green)}
+    .prog-line.pending{background:rgba(248,244,238,.08)}
+
+    /* CARDS GRID */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
+    .info-card{padding:18px 20px;border-radius:10px;background:rgba(11,32,57,.6);border:1px solid var(--bdr)}
+    .info-card-label{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.30);margin-bottom:8px}
+    .info-card-val{font-size:.96rem;color:var(--blanc);font-weight:500;line-height:1.3}
+    .info-card-sub{font-size:.74rem;color:var(--muted);margin-top:4px}
+
+    /* DOCS */
+    .docs-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+    .doc-row{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;transition:.2s}
+    .doc-row:hover{border-color:var(--bds)}
+    .doc-icon{width:36px;height:36px;border-radius:8px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .doc-info{flex:1}
+    .doc-name{font-size:.86rem;color:var(--blanc)}
+    .doc-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+    .badge{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+    .badge-green{background:rgba(0,200,117,.1);color:var(--green);border:1px solid rgba(0,200,117,.2)}
+    .badge-or{background:rgba(191,150,80,.1);color:var(--orl);border:1px solid var(--bdr)}
+    .badge-blue{background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.2)}
+    .badge-red{background:rgba(255,84,84,.1);color:var(--red);border:1px solid rgba(255,84,84,.2)}
+
+    /* BIEN CARD */
+    .bien-preview{padding:20px;border-radius:12px;background:rgba(11,32,57,.8);border:1px solid var(--bdr);margin-bottom:28px;display:flex;align-items:center;gap:16px}
+    .bien-preview-img{width:72px;height:72px;border-radius:10px;background:rgba(191,150,80,.15);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+    .bien-preview-ref{font-size:.68rem;color:rgba(248,244,238,.35);margin-bottom:4px}
+    .bien-preview-title{font-size:1rem;font-weight:500;color:var(--blanc)}
+    .bien-preview-addr{font-size:.8rem;color:var(--muted);margin-top:3px}
+    .bien-preview-price{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--or);margin-top:4px}
+
+    /* GUARD */
+    #guard{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
+    .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--blue);letter-spacing:.1em}
+    .loading-bar{width:200px;height:2px;background:rgba(74,158,255,.15);border-radius:2px;overflow:hidden}
+    .loading-bar-inner{height:100%;background:var(--blue);border-radius:2px;animation:load 1.2s ease both}
+    @keyframes load{from{width:0}to{width:100%}}
+  </style>
+</head>
+<body>
+<div id="guard">
+  <div class="loading-logo">Kàddu</div>
+  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+</div>
+
+<div class="layout" id="app" style="display:none">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">Kàddu</div>
+      <div class="sub">Espace Locataire</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Navigation</div>
+      <div class="nav-item active"><span class="icon">🏠</span> Mon dossier</div>
+      <div class="nav-item"><span class="icon">📋</span> Ma candidature</div>
+      <div class="nav-item"><span class="icon">📄</span> Mes documents</div>
+      <div class="nav-item"><span class="icon">💬</span> Messages</div>
+      <div class="nav-item" onclick="window.location.href='/biens/'"><span class="icon">🔍</span> Chercher un bien</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Compte</div>
+      <div class="nav-item"><span class="icon">⚙</span> Paramètres</div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar" id="sideAvatar">L</div>
+        <div>
+          <div class="user-name" id="sideName">—</div>
+          <div class="user-role">Locataire</div>
+        </div>
+      </div>
+      <div class="logout-btn" onclick="logout()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Se déconnecter
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">Bonjour, <em id="topName">—</em> 👋</div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="window.location.href='/biens/'">Chercher un bien</button>
+        <button class="btn btn-primary" onclick="window.location.href='/tunnel/dossier-v2-step1.html'">Déposer mon dossier</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- STATUS BANNER -->
+      <div class="status-banner" id="status-banner">
+        <div class="status-icon">📋</div>
+        <div class="status-text">
+          <h3>Statut de votre <em>candidature</em></h3>
+          <p id="status-msg">Chargement de votre dossier…</p>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="progress-section">
+        <h2 class="progress-title">Suivi de votre <em>parcours</em></h2>
+        <div class="progress-steps" id="progress-steps">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- BIEN CANDIDATURE -->
+      <div id="bien-section" style="display:none">
+        <h2 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;margin-bottom:12px">Bien <em style="font-style:italic;color:var(--or)">en candidature</em></h2>
+        <div class="bien-preview">
+          <div class="bien-preview-img">🏠</div>
+          <div>
+            <div class="bien-preview-ref" id="bien-ref">—</div>
+            <div class="bien-preview-title" id="bien-title">—</div>
+            <div class="bien-preview-addr" id="bien-addr">—</div>
+            <div class="bien-preview-price" id="bien-price">—</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="window.location.href='/biens/'">Voir l'annonce →</button>
+        </div>
+      </div>
+
+      <!-- INFO CARDS -->
+      <div class="cards-grid">
+        <div class="info-card">
+          <div class="info-card-label">Statut dossier</div>
+          <div class="info-card-val" id="card-statut">—</div>
+          <div class="info-card-sub">Dernière mise à jour</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Documents fournis</div>
+          <div class="info-card-val" id="card-docs">—</div>
+          <div class="info-card-sub">sur les documents requis</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Dossier déposé le</div>
+          <div class="info-card-val" id="card-date">—</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Loyer visé</div>
+          <div class="info-card-val" id="card-loyer">—</div>
+          <div class="info-card-sub">F CFA / mois</div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTS -->
+      <h2 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;margin-bottom:12px">Mes <em style="font-style:italic;color:var(--or)">documents</em></h2>
+      <div class="docs-list" id="docs-list">
+        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">Chargement…</div>
+      </div>
+
+      <!-- CTA if no dossier -->
+      <div id="no-dossier" style="display:none;text-align:center;padding:40px 20px;border:1px dashed var(--bdr);border-radius:12px;margin-top:8px">
+        <div style="font-size:2.5rem;margin-bottom:16px">📂</div>
+        <h3 style="font-family:'Playfair Display',serif;font-weight:300;margin-bottom:8px">Pas encore de dossier</h3>
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">Déposez votre fiche locative pour commencer votre recherche sur Kàddu.</p>
+        <button class="btn btn-primary" onclick="window.location.href='/tunnel/dossier-v2-step1.html'">Déposer mon dossier →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+
+function getSession() {
+  try {
+    const raw = sessionStorage.getItem('kaddu_jwt');
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (Date.now() > s.expires) { sessionStorage.removeItem('kaddu_jwt'); return null; }
+    return s;
+  } catch { return null; }
+}
+window.addEventListener('beforeunload', () => sessionStorage.removeItem('kaddu_jwt'));
+function logout() { sessionStorage.removeItem('kaddu_jwt'); window.location.href = '/auth/'; }
+
+const session = getSession();
+if (!session || session.role !== 'locataire') {
+  window.location.href = '/auth/?tab=login';
+} else {
+  document.getElementById('guard').style.display = 'none';
+  document.getElementById('app').style.display = 'grid';
+  init(session);
+}
+
+const STEPS = [
+  { label: 'Inscription', key: 'inscription' },
+  { label: 'Fiche locative', key: 'fiche' },
+  { label: 'Dossier complet', key: 'dossier' },
+  { label: 'Sélection', key: 'selection' },
+  { label: 'Signature bail', key: 'bail' },
+];
+
+const DOCS_REQUIS = ['Pièce d\'identité','Justificatif de revenus','Avis d\'imposition','Relevé bancaire (3 mois)','Justificatif de domicile'];
+
+async function init(session) {
+  const u = session.user;
+  const meta = u?.user_metadata || {};
+  const prenom = meta.prenom || u?.email?.split('@')[0] || 'Locataire';
+
+  document.getElementById('topName').textContent = prenom;
+  document.getElementById('sideName').textContent = (meta.prenom||'') + ' ' + (meta.nom||'');
+  document.getElementById('sideAvatar').textContent = prenom[0].toUpperCase();
+
+  renderProgress(1); // step index = inscription done
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/alertes_biens?locataire_email=eq.${u.email}&select=*&limit=1`, {
+      headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+session.access_token}
+    });
+    const dossiers = res.ok ? await res.json() : [];
+    if (dossiers.length) {
+      renderDossier(dossiers[0]);
+    } else {
+      renderNoDossier();
+    }
+  } catch {
+    renderNoDossier();
+  }
+  renderDocs([]);
+}
+
+function renderProgress(activeIdx) {
+  const container = document.getElementById('progress-steps');
+  container.innerHTML = STEPS.map((s,i) => {
+    const state = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending';
+    const label = i < activeIdx ? 'done-text' : i === activeIdx ? 'active-text' : '';
+    const num = i < activeIdx ? '✓' : i+1;
+    const parts = [`<div class="prog-step"><div class="prog-circle ${state}">${num}</div><div class="prog-label ${label}">${s.label}</div></div>`];
+    if (i < STEPS.length-1) parts.push(`<div class="prog-line ${i < activeIdx ? 'done':'pending'}"></div>`);
+    return parts.join('');
+  }).join('');
+}
+
+function renderDossier(d) {
+  const statuts = { en_attente:'En attente', accepte:'Accepté ✓', refuse:'Refusé', en_cours:'En cours' };
+  document.getElementById('status-msg').textContent = statuts[d.statut] || 'Dossier reçu — en cours d\'analyse';
+  document.getElementById('card-statut').textContent = statuts[d.statut] || '—';
+  document.getElementById('card-docs').textContent = '2 / 5';
+  document.getElementById('card-date').textContent = d.created_at ? new Date(d.created_at).toLocaleDateString('fr-FR') : '—';
+  document.getElementById('card-loyer').textContent = d.loyer_max ? d.loyer_max.toLocaleString('fr-FR') : '—';
+  renderProgress(2);
+}
+
+function renderNoDossier() {
+  document.getElementById('status-msg').textContent = 'Vous n\'avez pas encore déposé de dossier sur Kàddu.';
+  document.getElementById('no-dossier').style.display = 'block';
+  document.getElementById('card-statut').textContent = 'Aucun';
+  document.getElementById('card-docs').textContent = '0 / 5';
+  document.getElementById('card-date').textContent = '—';
+  document.getElementById('card-loyer').textContent = '—';
+}
+
+function renderDocs(provided) {
+  const el = document.getElementById('docs-list');
+  el.innerHTML = DOCS_REQUIS.map((d,i) => {
+    const ok = provided.includes(i);
+    return `<div class="doc-row">
+      <div class="doc-icon">${ok ? '📄' : '📋'}</div>
+      <div class="doc-info">
+        <div class="doc-name">${d}</div>
+        <div class="doc-meta">${ok ? 'Fourni et validé' : 'En attente'}</div>
+      </div>
+      ${ok ? '<span class="badge badge-green">Validé</span>' : '<button class="btn btn-ghost btn-sm">Ajouter</button>'}
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
