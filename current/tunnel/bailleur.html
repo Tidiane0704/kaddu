@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Déposer mon dossier — Kàddu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --or:#BF9650;--orl:#DDB96E;--ord:#8B6520;
+      --nbl:#07182B;--card:#0b2039;
+      --blanc:#F8F4EE;--muted:rgba(248,244,238,.62);
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);
+      --green:#00C875;--red:#FF5454;--blue:#4A9EFF;
+      --bg:#070f1a;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
+    a{text-decoration:none;color:inherit}
+
+    /* ── NAV ── */
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 32px;border-bottom:1px solid var(--bdr);
+      background:rgba(7,15,26,.8);backdrop-filter:blur(8px);
+      position:sticky;top:0;z-index:100;
+    }
+    .nav-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or)}
+    .nav-logo img{height:28px}
+    .nav-back{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+    .nav-back:hover{color:var(--or)}
+
+    /* ── BIEN STICKY (right panel) ── */
+    .layout{display:grid;grid-template-columns:1fr 320px;gap:40px;max-width:1100px;margin:0 auto;padding:40px 24px}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.bien-panel{display:none}}
+    .bien-panel{position:sticky;top:80px;align-self:start}
+    .bien-card{background:rgba(11,32,57,.8);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+    .bien-card-img{width:100%;height:160px;object-fit:cover;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-size:2.5rem}
+    .bien-card-body{padding:16px}
+    .bien-card-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-bottom:6px}
+    .bien-card-ville{font-size:.78rem;color:rgba(248,244,238,.4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+    .bien-card-prix{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--or);margin-bottom:2px}
+    .bien-card-charges{font-size:.74rem;color:rgba(248,244,238,.35);margin-bottom:10px}
+    .bien-card-details{font-size:.78rem;color:var(--muted)}
+    .bien-card-badge{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;padding:4px 10px;border-radius:20px;background:rgba(0,200,117,.1);color:var(--green);border:1px solid rgba(0,200,117,.2);margin-top:10px}
+
+    /* ── STEPPER ── */
+    .stepper{display:flex;align-items:flex-start;gap:0;margin-bottom:40px;position:relative}
+    .stepper::before{content:'';position:absolute;top:16px;left:16px;right:16px;height:2px;background:rgba(248,244,238,.08);z-index:0}
+    .step-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;cursor:pointer}
+    .step-circle{
+      width:32px;height:32px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.72rem;font-weight:700;transition:.3s;
+    }
+    .step-circle.done{background:var(--green);color:#fff;border:2px solid var(--green)}
+    .step-circle.active{background:rgba(191,150,80,.15);color:var(--or);border:2px solid var(--or)}
+    .step-circle.pending{background:rgba(255,255,255,.04);color:rgba(248,244,238,.25);border:2px solid rgba(248,244,238,.1)}
+    .step-label{font-size:.66rem;text-align:center;line-height:1.3;max-width:90px}
+    .step-label.active-lbl{color:var(--or)}
+    .step-label.done-lbl{color:var(--green)}
+    .step-label.pending-lbl{color:rgba(248,244,238,.3)}
+    .step-line{flex:1;height:2px;align-self:flex-start;margin-top:15px;position:relative;z-index:0}
+    .step-line.done{background:var(--green)}
+    .step-line.pending{background:rgba(248,244,238,.08)}
+
+    /* ── FORM SECTIONS ── */
+    .form-section{display:none}
+    .form-section.active{display:block}
+
+    .section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:300;margin-bottom:8px}
+    .section-title em{font-style:italic;color:var(--or)}
+    .section-sub{font-size:.88rem;color:var(--muted);margin-bottom:32px;line-height:1.6}
+
+    /* ── CHOICE CARDS ── */
+    .choice-grid{display:grid;gap:12px;margin-bottom:28px}
+    .choice-grid-2{grid-template-columns:repeat(2,1fr)}
+    .choice-grid-4{grid-template-columns:repeat(4,1fr)}
+    @media(max-width:600px){.choice-grid-4{grid-template-columns:repeat(2,1fr)}}
+    .choice-card{
+      padding:20px 14px;border-radius:10px;cursor:pointer;text-align:center;
+      border:1.5px solid rgba(248,244,238,.1);background:rgba(255,255,255,.03);
+      transition:.2s;
+    }
+    .choice-card:hover{border-color:var(--bds);background:rgba(191,150,80,.05)}
+    .choice-card.selected{border-color:var(--or);background:rgba(191,150,80,.1)}
+    .choice-icon{font-size:2rem;margin-bottom:8px;display:block}
+    .choice-label{font-size:.8rem;color:rgba(248,244,238,.7);line-height:1.3}
+    .choice-card.selected .choice-label{color:var(--or);font-weight:500}
+
+    /* Compteur +/- */
+    .counter-box{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 16px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);
+      border-radius:10px;margin-bottom:10px;
+    }
+    .counter-label{font-size:.86rem;color:var(--blanc)}
+    .counter-ctrl{display:flex;align-items:center;gap:12px}
+    .counter-btn{
+      width:32px;height:32px;border-radius:50%;border:1.5px solid var(--bds);
+      background:rgba(191,150,80,.1);color:var(--or);font-size:1.1rem;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:.2s;
+    }
+    .counter-btn:hover{background:rgba(191,150,80,.2)}
+    .counter-val{min-width:48px;text-align:center;font-size:.9rem;font-weight:500}
+
+    /* ── FORM FIELDS ── */
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    @media(max-width:600px){.form-row{grid-template-columns:1fr}}
+    .form-group{margin-bottom:16px}
+    .form-label{font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:8px;display:block}
+    .form-input,.form-select,.form-textarea{
+      width:100%;padding:13px 16px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.10);
+      border-radius:8px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.92rem;
+      transition:.2s;outline:none;
+    }
+    .form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23BF9650' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+    .form-textarea{resize:vertical;min-height:100px}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--or);background:rgba(191,150,80,.05)}
+    .form-input::placeholder,.form-textarea::placeholder{color:rgba(248,244,238,.2)}
+    .form-select option{background:#0b2039;color:var(--blanc)}
+    .form-hint{font-size:.72rem;color:rgba(248,244,238,.3);margin-top:6px}
+
+    /* ── TOGGLE ── */
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(248,244,238,.06)}
+    .toggle-label{font-size:.86rem;color:rgba(248,244,238,.65)}
+    .toggle{position:relative;width:42px;height:24px;flex-shrink:0}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:24px;cursor:pointer;transition:.3s;border:1px solid rgba(248,244,238,.12)}
+    .toggle-slider::before{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;background:rgba(248,244,238,.4);border-radius:50%;transition:.3s}
+    .toggle input:checked + .toggle-slider{background:rgba(191,150,80,.3);border-color:var(--or)}
+    .toggle input:checked + .toggle-slider::before{transform:translateX(18px);background:var(--or)}
+
+    /* ── SECTION HEADER ── */
+    .sub-section{margin:24px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+    .sub-section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or)}
+
+    /* ── LOCATAIRE / GARANT CARDS ── */
+    .person-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+    .person-card{
+      display:flex;align-items:center;gap:14px;padding:14px 16px;
+      background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;
+    }
+    .person-avatar{width:36px;height:36px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--or);flex-shrink:0}
+    .person-info{flex:1}
+    .person-name{font-size:.88rem;font-weight:500}
+    .person-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
+    .person-actions{display:flex;gap:8px}
+    .btn-icon-sm{background:none;border:none;color:rgba(248,244,238,.35);cursor:pointer;font-size:1rem;transition:.2s;padding:4px}
+    .btn-icon-sm:hover{color:var(--or)}
+
+    .add-btn{
+      display:flex;align-items:center;gap:10px;padding:12px 16px;
+      border:1.5px dashed rgba(191,150,80,.25);border-radius:10px;
+      color:rgba(248,244,238,.45);cursor:pointer;transition:.2s;
+      background:transparent;font-family:'DM Sans',sans-serif;font-size:.84rem;width:100%;
+    }
+    .add-btn:hover{border-color:var(--or);color:var(--or);background:rgba(191,150,80,.05)}
+    .add-btn .plus{width:24px;height:24px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--or);flex-shrink:0}
+
+    /* ── SUB FORM (locataire / garant inline) ── */
+    .sub-form{
+      background:rgba(11,32,57,.5);border:1px solid var(--bdr);
+      border-radius:12px;padding:20px;margin-bottom:16px;
+    }
+    .sub-form-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--or);margin-bottom:16px;font-weight:300}
+    .sub-form-title em{font-style:italic}
+
+    /* Situation pro dynamic fields */
+    .pro-fields{display:none}
+    .pro-fields.visible{display:block}
+
+    /* ── GARANT TYPE GRID ── */
+    .garant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+    @media(max-width:600px){.garant-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ── NAVIGATION BUTTONS ── */
+    .form-nav{display:flex;align-items:center;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--bdr)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.10em;text-transform:uppercase;transition:.2s;border:none}
+    .btn-primary{background:var(--or);color:#0a0a0a}
+    .btn-primary:hover:not(:disabled){background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+    .btn-ghost{background:transparent;color:rgba(248,244,238,.5);border:1px solid rgba(248,244,238,.12)}
+    .btn-ghost:hover{border-color:var(--or);color:var(--or)}
+    .btn-lg{padding:16px 32px;font-size:.82rem}
+    .spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── ALERT ── */
+    .alert{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:8px;margin-bottom:20px;font-size:.84rem;line-height:1.5}
+    .alert-warn{background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.3);color:var(--orl)}
+    .alert-error{background:rgba(255,84,84,.08);border:1px solid rgba(255,84,84,.28);color:#ff8080}
+    .alert-success{background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.28);color:var(--green)}
+    .alert-info{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.22);color:var(--blue)}
+
+    /* ── MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-overlay.open{display:flex}
+    .modal{background:#0b2039;border:1px solid var(--bdr);border-radius:16px;padding:32px;max-width:420px;width:100%}
+    .modal-title{font-size:1rem;font-weight:500;margin-bottom:12px;line-height:1.4}
+    .modal-body{font-size:.86rem;color:var(--muted);line-height:1.6;margin-bottom:24px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px}
+
+    /* ── SUCCESS PAGE ── */
+    #success-page{display:none;text-align:center;padding:60px 24px}
+    .success-icon{font-size:4rem;margin-bottom:24px}
+    .success-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:300;margin-bottom:12px}
+    .success-title em{font-style:italic;color:var(--green)}
+    .success-sub{color:var(--muted);font-size:.94rem;line-height:1.7;max-width:480px;margin:0 auto 32px}
+
+    /* ── GUARD ── */
+    #guard{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
+    .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--or)}
+    .loading-bar{width:200px;height:2px;background:rgba(191,150,80,.15);border-radius:2px;overflow:hidden}
+    .loading-bar-inner{height:100%;background:var(--or);animation:load 1s ease both}
+    @keyframes load{from{width:0}to{width:100%}}
+
+    /* BG */
+    body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(191,150,80,.06) 0%,transparent 60%)}
+  </style>
+</head>
+<body>
+
+<!-- Guard -->
+<div id="guard">
+  <div class="loading-logo">Kàddu</div>
+  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+</div>
+
+<!-- Modal "pas de garant" -->
+<div class="modal-overlay" id="modal-no-garant">
+  <div class="modal">
+    <div class="modal-title">⚠️ Les profils avec garants sont très souvent étudiés en priorité.</div>
+    <div class="modal-body">Êtes-vous sûr(e) de ne pas vouloir ajouter un garant ? Un garant renforce considérablement votre dossier auprès du bailleur.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNoGarantModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="confirmNoGarant()">Continuer sans garant</button>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-logo">
+    <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu" onerror="this.style.display='none'">
+    <span>Kàddu</span>
+  </div>
+  <a href="/biens/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Retour aux annonces
+  </a>
+</nav>
+
+<div id="main-wrap">
+  <div class="layout">
+    <!-- MAIN FORM -->
+    <div>
+      <!-- STEPPER -->
+      <div class="stepper" id="stepper">
+        <div class="step-item" onclick="goStep(1)">
+          <div class="step-circle active" id="sc1">1</div>
+          <div class="step-label active-lbl" id="sl1">Informations<br>générales</div>
+        </div>
+        <div class="step-line pending" id="line1"></div>
+        <div class="step-item" onclick="goStep(2)">
+          <div class="step-circle pending" id="sc2">2</div>
+          <div class="step-label pending-lbl" id="sl2">Informations<br>locataires</div>
+        </div>
+        <div class="step-line pending" id="line2"></div>
+        <div class="step-item" onclick="goStep(3)">
+          <div class="step-circle pending" id="sc3">3</div>
+          <div class="step-label pending-lbl" id="sl3">Informations<br>garants</div>
+        </div>
+      </div>
+
+      <div id="alert-global"></div>
+
+      <!-- ═══════════════════════════════
+           ÉTAPE 1 — INFOS GÉNÉRALES
+      ═══════════════════════════════ -->
+      <div class="form-section active" id="section-1">
+        <h1 class="section-title">Bienvenue chez <em>Kàddu</em></h1>
+        <p class="section-sub">Commençons par renseigner votre fiche d'information. Ce document vous permet de postuler rapidement aux logements qui vous intéressent.</p>
+
+        <!-- Composition -->
+        <div class="form-group">
+          <label class="form-label">Qui occupera le logement ?</label>
+          <div class="choice-grid choice-grid-4">
+            <div class="choice-card selected" onclick="selectCompo(this,'seul')"><span class="choice-icon">🧍</span><span class="choice-label">Locataire seul(e)</span></div>
+            <div class="choice-card" onclick="selectCompo(this,'couple')"><span class="choice-icon">👫</span><span class="choice-label">Couple (sans enfants)</span></div>
+            <div class="choice-card" onclick="selectCompo(this,'famille')"><span class="choice-icon">👨‍👩‍👧</span><span class="choice-label">Famille</span></div>
+            <div class="choice-card" onclick="selectCompo(this,'colocation')"><span class="choice-icon">👥</span><span class="choice-label">Colocation</span></div>
+          </div>
+          <!-- Famille -->
+          <div id="compo-famille" style="display:none">
+            <div class="counter-box"><span class="counter-label">Nombre d'adultes</span><div class="counter-ctrl"><button class="counter-btn" onclick="counter('adultes',-1)">−</button><span class="counter-val" id="val-adultes">0 adulte(s)</span><button class="counter-btn" onclick="counter('adultes',1)">+</button></div></div>
+            <div class="counter-box"><span class="counter-label">Nombre d'enfants</span><div class="counter-ctrl"><button class="counter-btn" onclick="counter('enfants',-1)">−</button><span class="counter-val" id="val-enfants">0 enfant(s)</span><button class="counter-btn" onclick="counter('enfants',1)">+</button></div></div>
+          </div>
+          <!-- Colocation -->
+          <div id="compo-colocation" style="display:none">
+            <div class="counter-box"><span class="counter-label">Nombre de colocataires</span><div class="counter-ctrl"><button class="counter-btn" onclick="counter('coloc',-1)">−</button><span class="counter-val" id="val-coloc">0 coloc.</span><button class="counter-btn" onclick="counter('coloc',1)">+</button></div></div>
+          </div>
+        </div>
+
+        <!-- Emménagement -->
+        <div class="form-group">
+          <label class="form-label">Quand souhaitez-vous emménager ?</label>
+          <p class="form-hint" style="margin-bottom:12px">Merci de prévoir une date hors week-end, afin qu'un agent Kàddu soit disponible le jour de l'emménagement.</p>
+          <div class="choice-grid choice-grid-4">
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','semaine')"><span class="choice-icon">⚡</span><span class="choice-label">Moins d'une semaine</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','deux-semaines')"><span class="choice-icon">➡️</span><span class="choice-label">Une à deux semaines</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','mois')"><span class="choice-icon">🔄</span><span class="choice-label">D'ici un mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','plus-mois')"><span class="choice-icon">📅</span><span class="choice-label">Plus d'un mois</span></div>
+          </div>
+        </div>
+
+        <!-- Durée -->
+        <div class="form-group">
+          <label class="form-label">Durée envisagée</label>
+          <p class="form-hint" style="margin-bottom:12px">Votre réponse ne constitue pas un engagement : cette estimation nous permet d'en savoir plus sur votre projet.</p>
+          <div class="choice-grid choice-grid-4">
+            <div class="choice-card" onclick="selectChoice(this,'duree','6mois')"><span class="choice-icon">🏠</span><span class="choice-label">Moins de 6 mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','6-12mois')"><span class="choice-icon">🏠</span><span class="choice-label">6 à 12 mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','12-36mois')"><span class="choice-icon">🏠</span><span class="choice-label">12 à 36 mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','3ans')"><span class="choice-icon">🏠</span><span class="choice-label">Plus de 3 ans</span></div>
+          </div>
+        </div>
+
+        <!-- Ville précédente -->
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Ville de votre précédent logement</label>
+            <input class="form-input" type="text" id="ville-precedente" placeholder="Ex : Dakar, Thiès…">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Précédent bailleur (optionnel)</label>
+            <input class="form-input" type="text" id="bailleur-precedent" placeholder="Nom ou agence">
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <span></span>
+          <button class="btn btn-primary btn-lg" onclick="nextStep(1)">Valider et aller à l'étape suivante →</button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           ÉTAPE 2 — LOCATAIRES
+      ═══════════════════════════════ -->
+      <div class="form-section" id="section-2">
+        <h1 class="section-title">Parlez-nous des <em>locataires</em></h1>
+        <p class="section-sub">Veuillez renseigner les informations concernant chacun des locataires du futur logement. Les noms renseignés seront ceux qui apparaîtront sur le bail.</p>
+
+        <div class="person-list" id="loc-list"></div>
+        <button class="add-btn" onclick="addLocataire()"><div class="plus">+</div> Ajouter un locataire</button>
+
+        <!-- Sub-form locataire -->
+        <div class="sub-form" id="loc-form" style="display:none">
+          <div class="sub-form-title" id="loc-form-title">1<sup>er</sup> locataire sur le bail</div>
+
+          <!-- Nature -->
+          <div class="form-group">
+            <label class="form-label">Quelle est la nature de ce locataire ?</label>
+            <div class="choice-grid choice-grid-2">
+              <div class="choice-card selected" onclick="selectNature(this,'physique','loc')"><span class="choice-icon">👤</span><span class="choice-label">Personne physique</span></div>
+              <div class="choice-card" onclick="selectNature(this,'societe','loc')"><span class="choice-icon">🏢</span><span class="choice-label">Société</span></div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Prénom</label><input class="form-input" id="loc-prenom" placeholder="Prénom"></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom</label><input class="form-input" id="loc-nom" placeholder="Nom"></div>
+          </div>
+          <div class="form-row" style="margin-top:16px">
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email</label><input class="form-input" id="loc-email" type="email" placeholder="email@exemple.com"></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone</label><input class="form-input" id="loc-tel" placeholder="+221 77 000 00 00"></div>
+          </div>
+
+          <!-- Situation pro -->
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Situation professionnelle</label>
+            <select class="form-select" id="loc-situation" onchange="updateProFields('loc')">
+              <option value="">Sélectionner…</option>
+              <option value="cdi">Salarié(e) en CDI</option>
+              <option value="cdd">Salarié(e) en CDD</option>
+              <option value="independant">Indépendant(e)</option>
+              <option value="etudiant">Étudiant(e) / Alternant(e)</option>
+              <option value="interimaire">Intérimaire</option>
+              <option value="retraite">Retraité(e)</option>
+              <option value="sans_emploi">Sans emploi</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+
+          <!-- Champs dynamiques CDI/CDD/Indépendant/Intérimaire/Autre -->
+          <div class="pro-fields" id="loc-fields-standard">
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Dans le poste depuis le</label><input class="form-input" id="loc-date-poste" type="date"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="loc-revenu" type="number" placeholder="0"></div>
+            </div>
+            <div class="form-row" style="margin-top:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Intitulé du poste</label><input class="form-input" id="loc-poste" placeholder="Ex : Ingénieur, Comptable…"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom de la société</label><input class="form-input" id="loc-societe" placeholder="Nom de l'entreprise"></div>
+            </div>
+          </div>
+          <!-- CDI uniquement -->
+          <div class="pro-fields" id="loc-fields-cdi">
+            <div class="toggle-row"><span class="toggle-label">En période d'essai ?</span><label class="toggle"><input type="checkbox" id="loc-essai"><span class="toggle-slider"></span></label></div>
+            <div class="toggle-row"><span class="toggle-label">Travaille dans le secteur privé ?</span><label class="toggle"><input type="checkbox" id="loc-prive"><span class="toggle-slider"></span></label></div>
+            <div class="toggle-row" style="border:none"><span class="toggle-label">Dans une entreprise de plus de 10 employés ?</span><label class="toggle"><input type="checkbox" id="loc-10emp"><span class="toggle-slider"></span></label></div>
+          </div>
+          <!-- CDD uniquement -->
+          <div class="pro-fields" id="loc-fields-cdd">
+            <div class="form-group" style="margin-top:8px"><label class="form-label">Date de fin de contrat</label><input class="form-input" id="loc-fin-cdd" type="date"></div>
+          </div>
+          <!-- Étudiant -->
+          <div class="pro-fields" id="loc-fields-etudiant">
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="loc-revenu-etu" type="number" placeholder="0"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Date estimée fin des études</label><input class="form-input" id="loc-fin-etudes" type="date"></div>
+            </div>
+          </div>
+          <!-- Retraité / Sans emploi -->
+          <div class="pro-fields" id="loc-fields-retraite">
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Dans cette situation depuis le</label><input class="form-input" id="loc-date-retraite" type="date"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="loc-revenu-retraite" type="number" placeholder="0"></div>
+            </div>
+          </div>
+
+          <!-- Infos supplémentaires -->
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Informations supplémentaires</label>
+            <textarea class="form-textarea" id="loc-infos" placeholder="Présentez-nous ce locataire et son projet de location (activité professionnelle, raisons de l'emménagement, etc.)"></textarea>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;margin-top:8px">
+            <button class="btn btn-primary" onclick="saveLoc()">Enregistrer ce locataire</button>
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button class="btn btn-ghost" onclick="prevStep(2)">← Retour</button>
+          <button class="btn btn-primary btn-lg" onclick="nextStep(2)">Valider et aller à l'étape suivante →</button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           ÉTAPE 3 — GARANTS
+      ═══════════════════════════════ -->
+      <div class="form-section" id="section-3">
+        <h1 class="section-title">Boostez votre <em>dossier</em></h1>
+        <p class="section-sub">Un dossier locatif avec un garant a davantage de chances d'être accepté par un propriétaire. Ajoutez un garant pour renforcer votre candidature.</p>
+
+        <div class="person-list" id="gar-list"></div>
+
+        <!-- Choix type garant -->
+        <div id="gar-type-wrap">
+          <div class="garant-grid">
+            <div class="choice-card" onclick="selectGarantType('physique')"><span class="choice-icon">👤</span><span class="choice-label">Personne physique</span></div>
+            <div class="choice-card" onclick="selectGarantType('societe')"><span class="choice-icon">🏢</span><span class="choice-label">Société</span></div>
+            <div class="choice-card" onclick="selectGarantType('garant_prive')"><span class="choice-icon">🛡️</span><span class="choice-label">Garant privé</span></div>
+            <div class="choice-card" onclick="openNoGarantModal()"><span class="choice-icon">🚫</span><span class="choice-label">Je n'ai pas de garant</span></div>
+          </div>
+        </div>
+
+        <!-- Sub-form garant -->
+        <div class="sub-form" id="gar-form" style="display:none">
+          <div class="sub-form-title" id="gar-form-title">1<sup>er</sup> garant</div>
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Prénom</label><input class="form-input" id="gar-prenom" placeholder="Prénom"></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom</label><input class="form-input" id="gar-nom" placeholder="Nom"></div>
+          </div>
+          <div class="form-row" style="margin-top:16px">
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email</label><input class="form-input" id="gar-email" type="email" placeholder="email@exemple.com"></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone</label><input class="form-input" id="gar-tel" placeholder="+221 77 000 00 00"></div>
+          </div>
+          <!-- Lien avec locataire -->
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Locataire(s) dont la personne se porte garante</label>
+            <div id="gar-loc-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px"></div>
+          </div>
+          <!-- Situation pro garant -->
+          <div class="form-group">
+            <label class="form-label">Situation professionnelle</label>
+            <select class="form-select" id="gar-situation" onchange="updateProFields('gar')">
+              <option value="">Sélectionner…</option>
+              <option value="cdi">Salarié(e) en CDI</option>
+              <option value="cdd">Salarié(e) en CDD</option>
+              <option value="independant">Indépendant(e)</option>
+              <option value="etudiant">Étudiant(e)</option>
+              <option value="retraite">Retraité(e)</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+          <div class="pro-fields" id="gar-fields-standard">
+            <div class="form-row">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Dans le poste depuis le</label><input class="form-input" id="gar-date-poste" type="date"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="gar-revenu" type="number" placeholder="0"></div>
+            </div>
+            <div class="form-row" style="margin-top:0">
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Intitulé du poste</label><input class="form-input" id="gar-poste" placeholder="Intitulé du poste"></div>
+              <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom de la société</label><input class="form-input" id="gar-societe" placeholder="Nom de l'entreprise"></div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:16px">
+            <button class="btn btn-primary" onclick="saveGar()">Enregistrer ce garant</button>
+          </div>
+        </div>
+
+        <button class="add-btn" id="add-gar-btn" onclick="showGarType()" style="display:none"><div class="plus">+</div> J'ai déjà un garant et souhaite l'ajouter à mon dossier</button>
+
+        <div class="form-nav">
+          <button class="btn btn-ghost" onclick="prevStep(3)">← Retour</button>
+          <button class="btn btn-primary btn-lg" onclick="submitDossier(this)">
+            <span>Postuler pour ce logement</span>
+            <div class="spinner" id="spinner-submit"></div>
+          </button>
+        </div>
+        <p style="text-align:center;font-size:.76rem;color:rgba(248,244,238,.3);margin-top:12px;cursor:pointer" onclick="submitDossier(document.querySelector('#section-3 .btn-primary'))">Je souhaite postuler à un autre logement</p>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL — Bien -->
+    <div class="bien-panel">
+      <div class="bien-card">
+        <div class="bien-card-img" id="bien-img">🏠</div>
+        <div class="bien-card-body">
+          <div class="bien-card-label">Vous postulez pour :</div>
+          <div class="bien-card-ville" id="bien-ville">—</div>
+          <div class="bien-card-prix" id="bien-prix">—</div>
+          <div class="bien-card-charges" id="bien-charges"></div>
+          <div class="bien-card-details" id="bien-details"></div>
+          <div class="bien-card-badge" id="bien-dispo">● Disponible</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS PAGE -->
+<div id="success-page">
+  <div class="success-icon">🎉</div>
+  <h1 class="success-title">Dossier <em>envoyé</em> !</h1>
+  <p class="success-sub">Votre dossier de candidature a bien été transmis. L'équipe Kàddu va l'analyser et reviendra vers vous dans les meilleurs délais.</p>
+  <a href="/espace-locataire/" class="btn btn-primary btn-lg">Suivre mon dossier →</a>
+</div>
+
+<script>
+const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+
+// ── SESSION ──────────────────────────────────────────────────
+function getSession(){
+  try{
+    const r=sessionStorage.getItem('kaddu_jwt');
+    if(!r)return null;
+    const s=JSON.parse(r);
+    if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return null;}
+    return s;
+  }catch{return null;}
+}
+window.addEventListener('beforeunload',()=>sessionStorage.removeItem('kaddu_jwt'));
+
+// ── INIT ─────────────────────────────────────────────────────
+const params = new URLSearchParams(location.search);
+const bienId = params.get('bien_id');
+const session = getSession();
+
+// Auth guard — allow non-logged in (they can still fill) but note user
+setTimeout(()=>{
+  document.getElementById('guard').style.display='none';
+  if(bienId) loadBien(bienId);
+},800);
+
+async function loadBien(id){
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/biens?id=eq.${id}&select=titre,quartier,ville,prix,charges,surface,pieces,statut,photos`,{headers:{'apikey':SB_KEY}});
+    const d=await res.json();
+    if(!d.length)return;
+    const b=d[0];
+    document.getElementById('bien-ville').textContent=(b.quartier||'')+(b.ville?', '+b.ville:'');
+    document.getElementById('bien-prix').textContent=b.prix?b.prix.toLocaleString('fr-FR')+' F / mois':'—';
+    document.getElementById('bien-charges').textContent=b.charges?'(dont '+b.charges.toLocaleString('fr-FR')+' F de charges)':'';
+    document.getElementById('bien-details').textContent=[b.pieces?b.pieces+' pièces':null,b.surface?b.surface+' m²':null].filter(Boolean).join(' · ');
+    document.getElementById('bien-dispo').textContent='● '+(b.statut==='disponible'?'Disponible immédiatement':'Disponible');
+    // Photo
+    try{const ph=JSON.parse(b.photos||'[]');if(ph[0]){document.getElementById('bien-img').innerHTML=`<img src="${ph[0]}" style="width:100%;height:160px;object-fit:cover">`; }}catch{}
+  }catch{}
+}
+
+// ── STATE ─────────────────────────────────────────────────────
+let currentStep=1;
+let compoType='seul';
+let counts={adultes:0,enfants:0,coloc:0};
+let choices={emmenagement:'',duree:''};
+let locataires=[];
+let garants=[];
+let editingLocIdx=-1;
+let editingGarIdx=-1;
+let noGarant=false;
+
+// ── STEPPER ──────────────────────────────────────────────────
+function goStep(n){
+  if(n>currentStep)return; // only go back freely
+  currentStep=n;
+  renderStepper();
+  document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderStepper(){
+  for(let i=1;i<=3;i++){
+    const c=document.getElementById('sc'+i);
+    const l=document.getElementById('sl'+i);
+    if(i<currentStep){c.className='step-circle done';c.textContent='✓';l.className='step-label done-lbl';}
+    else if(i===currentStep){c.className='step-circle active';c.textContent=i;l.className='step-label active-lbl';}
+    else{c.className='step-circle pending';c.textContent=i;l.className='step-label pending-lbl';}
+    if(i<3){const line=document.getElementById('line'+i);line.className='step-line '+(i<currentStep?'done':'pending');}
+  }
+}
+
+function nextStep(from){
+  if(from===1){
+    if(!choices.emmenagement||!choices.duree){showAlert('Veuillez sélectionner la date d\'emménagement et la durée souhaitée.','warn');return;}
+  }
+  if(from===2){
+    if(!locataires.length){showAlert('Veuillez ajouter au moins un locataire.','warn');return;}
+  }
+  currentStep=from+1;
+  renderStepper();
+  document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+currentStep).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  clearAlert();
+}
+function prevStep(from){goStep(from-1);}
+
+// ── CHOICE HELPERS ───────────────────────────────────────────
+function selectCompo(card,type){
+  card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  compoType=type;
+  document.getElementById('compo-famille').style.display=type==='famille'?'block':'none';
+  document.getElementById('compo-colocation').style.display=type==='colocation'?'block':'none';
+}
+function selectChoice(card,key,val){
+  card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  choices[key]=val;
+}
+function counter(key,delta){
+  counts[key]=Math.max(0,counts[key]+delta);
+  const labels={adultes:' adulte(s)',enfants:' enfant(s)',coloc:' coloc.'};
+  document.getElementById('val-'+key).textContent=counts[key]+labels[key];
+}
+function selectNature(card,type,prefix){
+  card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+
+// ── PRO FIELDS DYNAMIC ───────────────────────────────────────
+function updateProFields(prefix){
+  const val=document.getElementById(prefix+'-situation').value;
+  const fields=['standard','cdi','cdd','etudiant','retraite'];
+  fields.forEach(f=>{
+    const el=document.getElementById(prefix+'-fields-'+f);
+    if(el)el.classList.remove('visible');
+  });
+  if(['cdi','cdd','independant','interimaire','autre'].includes(val)){
+    const el=document.getElementById(prefix+'-fields-standard');
+    if(el)el.classList.add('visible');
+  }
+  if(val==='cdi'){const el=document.getElementById(prefix+'-fields-cdi');if(el)el.classList.add('visible');}
+  if(val==='cdd'){const el=document.getElementById(prefix+'-fields-cdd');if(el)el.classList.add('visible');}
+  if(val==='etudiant'){const el=document.getElementById(prefix+'-fields-etudiant');if(el)el.classList.add('visible');}
+  if(['retraite','sans_emploi'].includes(val)){const el=document.getElementById(prefix+'-fields-retraite');if(el)el.classList.add('visible');}
+}
+
+// ── LOCATAIRES ───────────────────────────────────────────────
+function addLocataire(){
+  editingLocIdx=-1;
+  clearLocForm();
+  document.getElementById('loc-form').style.display='block';
+  document.getElementById('loc-form-title').innerHTML=`${locataires.length+1}<sup>${locataires.length===0?'er':'ème'}</sup> locataire sur le bail`;
+  document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function clearLocForm(){
+  ['loc-prenom','loc-nom','loc-email','loc-tel','loc-poste','loc-societe','loc-infos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['loc-revenu','loc-revenu-etu','loc-revenu-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
+  document.getElementById('loc-situation').value='';
+  ['loc-fields-standard','loc-fields-cdi','loc-fields-cdd','loc-fields-etudiant','loc-fields-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
+}
+function saveLoc(){
+  const prenom=document.getElementById('loc-prenom').value.trim();
+  const nom=document.getElementById('loc-nom').value.trim();
+  if(!prenom||!nom){showAlert('Prénom et nom sont obligatoires.','warn');return;}
+  const loc={
+    prenom,nom,
+    email:document.getElementById('loc-email').value.trim(),
+    tel:document.getElementById('loc-tel').value.trim(),
+    situation:document.getElementById('loc-situation').value,
+    revenu:document.getElementById('loc-revenu').value||document.getElementById('loc-revenu-etu').value||document.getElementById('loc-revenu-retraite').value||0,
+    poste:document.getElementById('loc-poste')?.value||'',
+    societe:document.getElementById('loc-societe')?.value||'',
+    infos:document.getElementById('loc-infos').value,
+  };
+  if(editingLocIdx>=0)locataires[editingLocIdx]=loc;
+  else locataires.push(loc);
+  document.getElementById('loc-form').style.display='none';
+  renderLocList();
+  clearAlert();
+}
+function editLoc(i){
+  editingLocIdx=i;
+  const l=locataires[i];
+  document.getElementById('loc-prenom').value=l.prenom;
+  document.getElementById('loc-nom').value=l.nom;
+  document.getElementById('loc-email').value=l.email;
+  document.getElementById('loc-tel').value=l.tel;
+  document.getElementById('loc-situation').value=l.situation;
+  updateProFields('loc');
+  document.getElementById('loc-infos').value=l.infos||'';
+  document.getElementById('loc-form').style.display='block';
+  document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function deleteLoc(i){locataires.splice(i,1);renderLocList();}
+function renderLocList(){
+  const el=document.getElementById('loc-list');
+  el.innerHTML=locataires.map((l,i)=>`
+    <div class="person-card">
+      <div class="person-avatar">${l.prenom[0].toUpperCase()}</div>
+      <div class="person-info">
+        <div class="person-name">${l.prenom} ${l.nom.toUpperCase()}</div>
+        <div class="person-meta">Locataire · ${l.situation||'Situation non précisée'}</div>
+      </div>
+      <div class="person-actions">
+        <button class="btn-icon-sm" onclick="editLoc(${i})">✏️</button>
+        <button class="btn-icon-sm" onclick="deleteLoc(${i})">🗑️</button>
+      </div>
+    </div>`).join('');
+  // Update garant chips
+  updateGarChips();
+}
+
+// ── GARANTS ──────────────────────────────────────────────────
+let currentGarType='physique';
+function selectGarantType(type){
+  currentGarType=type;
+  document.getElementById('gar-type-wrap').style.display='none';
+  document.getElementById('gar-form').style.display='block';
+  document.getElementById('gar-form-title').innerHTML=`${garants.length+1}<sup>${garants.length===0?'er':'ème'}</sup> garant`;
+  updateGarChips();
+}
+function showGarType(){
+  document.getElementById('gar-type-wrap').style.display='block';
+  document.getElementById('add-gar-btn').style.display='none';
+  document.getElementById('gar-form').style.display='none';
+}
+function updateGarChips(){
+  const wrap=document.getElementById('gar-loc-chips');
+  if(!wrap)return;
+  wrap.innerHTML=locataires.map((l,i)=>`
+    <div style="padding:6px 12px;border:1.5px dashed rgba(191,150,80,.3);border-radius:6px;font-size:.76rem;cursor:pointer;color:rgba(248,244,238,.5)" onclick="this.style.borderColor='var(--or)';this.style.color='var(--orl)'">
+      ${l.prenom} ${l.nom}
+    </div>`).join('');
+}
+function saveGar(){
+  const prenom=document.getElementById('gar-prenom').value.trim();
+  const nom=document.getElementById('gar-nom').value.trim();
+  if(!prenom||!nom){showAlert('Prénom et nom du garant sont obligatoires.','warn');return;}
+  const gar={
+    type:currentGarType,prenom,nom,
+    email:document.getElementById('gar-email').value.trim(),
+    tel:document.getElementById('gar-tel').value.trim(),
+    situation:document.getElementById('gar-situation').value,
+    revenu:document.getElementById('gar-revenu')?.value||0,
+  };
+  if(editingGarIdx>=0)garants[editingGarIdx]=gar;
+  else garants.push(gar);
+  document.getElementById('gar-form').style.display='none';
+  document.getElementById('gar-type-wrap').style.display='none';
+  document.getElementById('add-gar-btn').style.display='flex';
+  renderGarList();
+  clearAlert();
+}
+function deleteGar(i){garants.splice(i,1);renderGarList();}
+function renderGarList(){
+  const el=document.getElementById('gar-list');
+  const typeLabel={physique:'Personne physique',societe:'Société',garant_prive:'Garant privé'};
+  el.innerHTML=garants.map((g,i)=>`
+    <div class="person-card">
+      <div class="person-avatar" style="background:rgba(74,158,255,.15);border-color:rgba(74,158,255,.25);color:var(--blue)">${g.prenom[0].toUpperCase()}</div>
+      <div class="person-info">
+        <div class="person-name">${g.prenom} ${g.nom.toUpperCase()}</div>
+        <div class="person-meta">Garant(e) · ${typeLabel[g.type]||g.type} · ${g.situation||'—'}</div>
+      </div>
+      <div class="person-actions">
+        <button class="btn-icon-sm" onclick="deleteGar(${i})">🗑️</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── MODAL NO GARANT ──────────────────────────────────────────
+function openNoGarantModal(){document.getElementById('modal-no-garant').classList.add('open');}
+function closeNoGarantModal(){document.getElementById('modal-no-garant').classList.remove('open');}
+function confirmNoGarant(){
+  noGarant=true;
+  closeNoGarantModal();
+  document.getElementById('gar-type-wrap').style.display='none';
+  document.getElementById('add-gar-btn').style.display='flex';
+  showAlert('Dossier sans garant. Vous pouvez quand même postuler.','info');
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────
+async function submitDossier(btn){
+  clearAlert();
+  btn.disabled=true;
+  document.getElementById('spinner-submit').style.display='block';
+
+  const dossier={
+    locataire_id: session?.user?.id || null,
+    bien_id: bienId || null,
+    statut: 'en_attente',
+    message: JSON.stringify({
+      composition: compoType,
+      counts,
+      emmenagement: choices.emmenagement,
+      duree: choices.duree,
+      ville_precedente: document.getElementById('ville-precedente').value,
+      bailleur_precedent: document.getElementById('bailleur-precedent').value,
+      locataires,
+      garants,
+      no_garant: noGarant,
+    }),
+    docs_fournis: [],
+  };
+
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/dossiers`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SB_KEY,
+        'Authorization': session?'Bearer '+session.access_token:'Bearer '+SB_KEY,
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify(dossier)
+    });
+    if(!res.ok){
+      const err=await res.json();
+      throw new Error(err.message||'Erreur lors de la soumission.');
+    }
+    document.getElementById('main-wrap').style.display='none';
+    document.getElementById('success-page').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(e){
+    showAlert(e.message,'error');
+    btn.disabled=false;
+    document.getElementById('spinner-submit').style.display='none';
+  }
+}
+
+// ── ALERTS ───────────────────────────────────────────────────
+function showAlert(msg,type){
+  document.getElementById('alert-global').innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
+  document.getElementById('alert-global').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function clearAlert(){document.getElementById('alert-global').innerHTML='';}
+</script>
+</body>
+</html>
