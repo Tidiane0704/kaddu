@@ -8,336 +8,468 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
   <style>
-    :root{--or:#BF9650;--orl:#DDB96E;--ord:#8B6520;--nbl:#07182B;--card:#0b2039;--blanc:#F8F4EE;--beige:#E8DCC5;--muted:rgba(248,244,238,.62);--bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);--green:#00C875;--blue:#4A9EFF;--red:#FF5454;--bg:#070f1a}
+    :root{--or:#BF9650;--orl:#DDB96E;--ord:#8B6520;--nbl:#07182B;--card:#0b2039;--blanc:#F8F4EE;--muted:rgba(248,244,238,.62);--bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);--green:#00C875;--blue:#4A9EFF;--red:#FF5454;--orange:#F59E0B;--bg:#070f1a}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
     a{text-decoration:none;color:inherit}
-    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-    @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
-    .sidebar{background:rgba(7,24,43,.8);border-right:1px solid var(--bdr);padding:32px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-    .sidebar-logo{padding:0 24px 32px;border-bottom:1px solid rgba(191,150,80,.08)}
-    .sidebar-logo .brand{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--or);letter-spacing:.04em}
-    .sidebar-logo .sub{font-size:.68rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-top:4px}
-    .nav-section{padding:24px 16px 0}
-    .nav-section-label{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,244,238,.28);padding:0 8px;margin-bottom:8px}
-    .nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-size:.84rem;color:rgba(248,244,238,.52);cursor:pointer;transition:.2s;margin-bottom:2px}
+    .layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none!important}}
+    .sidebar{background:rgba(7,24,43,.98);border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .sidebar-top{padding:24px 20px 20px;border-bottom:1px solid rgba(191,150,80,.08)}
+    .sidebar-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or);margin-bottom:16px}
+    .sidebar-logo img{height:26px}
+    .user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(248,244,238,.06)}
+    .user-avatar{width:36px;height:36px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.25);display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:var(--blue);flex-shrink:0}
+    .user-name{font-size:.84rem;font-weight:500}
+    .user-role{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(248,244,238,.3)}
+    .nav-section{padding:20px 12px 0}
+    .nav-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,244,238,.25);padding:0 8px;margin-bottom:8px}
+    .nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;font-size:.84rem;color:rgba(248,244,238,.5);cursor:pointer;transition:.2s;margin-bottom:2px;position:relative}
     .nav-item:hover{background:rgba(255,255,255,.04);color:var(--blanc)}
-    .nav-item.active{background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.15)}
-    .nav-item .icon{font-size:1rem;width:20px;text-align:center}
-    .sidebar-footer{margin-top:auto;padding:24px 16px;border-top:1px solid rgba(191,150,80,.08)}
-    .user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03)}
-    .user-avatar{width:34px;height:34px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--blue);flex-shrink:0}
-    .user-name{font-size:.82rem;font-weight:500;line-height:1.3}
-    .user-role{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(248,244,238,.35)}
-    .logout-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;font-size:.74rem;color:rgba(248,244,238,.38);cursor:pointer;margin-top:4px;transition:.2s;border-radius:6px}
+    .nav-item.active{background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.14)}
+    .nav-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+    .nav-badge{position:absolute;right:10px;width:8px;height:8px;border-radius:50%;background:var(--orange)}
+    .sidebar-footer{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(191,150,80,.08)}
+    .logout-btn{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:.76rem;color:rgba(248,244,238,.35);cursor:pointer;transition:.2s;border-radius:6px}
     .logout-btn:hover{color:var(--red);background:rgba(255,84,84,.06)}
-    .main{display:flex;flex-direction:column}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid rgba(191,150,80,.08);background:rgba(7,15,26,.6);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
-    .topbar-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:300}
+    .main-area{display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid rgba(191,150,80,.08);background:rgba(7,15,26,.7);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+    .topbar-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:300}
     .topbar-title em{font-style:italic;color:var(--blue)}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:.2s;border:none}
-    .btn-primary{background:var(--blue);color:#fff}
-    .btn-primary:hover{background:#3a8ee0}
-    .btn-ghost{background:transparent;color:rgba(248,244,238,.55);border:1px solid rgba(248,244,238,.12)}
-    .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
-    .btn-sm{padding:7px 12px;font-size:.68rem;letter-spacing:.06em}
-    .content{padding:32px}
-
-    /* STATUS BANNER */
-    .status-banner{
-      padding:20px 24px;border-radius:12px;margin-bottom:28px;
-      background:linear-gradient(135deg,rgba(74,158,255,.1),rgba(74,158,255,.04));
-      border:1px solid rgba(74,158,255,.2);
-      display:flex;align-items:center;gap:16px;
-    }
-    .status-icon{font-size:2rem;flex-shrink:0}
-    .status-text h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:300;margin-bottom:4px}
-    .status-text h3 em{font-style:italic;color:var(--blue)}
-    .status-text p{font-size:.84rem;color:var(--muted);line-height:1.5}
-
-    /* PROGRESS */
-    .progress-section{margin-bottom:28px}
-    .progress-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;margin-bottom:16px}
-    .progress-title em{font-style:italic;color:var(--or)}
-    .progress-steps{display:flex;gap:0;position:relative}
-    .progress-steps::before{content:'';position:absolute;top:16px;left:16px;right:16px;height:2px;background:rgba(248,244,238,.08);z-index:0}
-    .prog-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1}
-    .prog-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;transition:.2s}
-    .prog-circle.done{background:var(--green);color:#fff;border:2px solid var(--green)}
-    .prog-circle.active{background:rgba(74,158,255,.15);color:var(--blue);border:2px solid var(--blue)}
-    .prog-circle.pending{background:rgba(255,255,255,.04);color:rgba(248,244,238,.25);border:2px solid rgba(248,244,238,.1)}
-    .prog-label{font-size:.66rem;text-align:center;color:rgba(248,244,238,.38);max-width:80px;line-height:1.3}
-    .prog-label.done-text{color:var(--green)}
-    .prog-label.active-text{color:var(--blue)}
-    .prog-line{flex:1;height:2px;align-self:center;margin-top:-20px;position:relative;z-index:0}
-    .prog-line.done{background:var(--green)}
-    .prog-line.pending{background:rgba(248,244,238,.08)}
-
-    /* CARDS GRID */
-    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
-    .info-card{padding:18px 20px;border-radius:10px;background:rgba(11,32,57,.6);border:1px solid var(--bdr)}
-    .info-card-label{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.30);margin-bottom:8px}
-    .info-card-val{font-size:.96rem;color:var(--blanc);font-weight:500;line-height:1.3}
-    .info-card-sub{font-size:.74rem;color:var(--muted);margin-top:4px}
-
-    /* DOCS */
-    .docs-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
-    .doc-row{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;transition:.2s}
-    .doc-row:hover{border-color:var(--bds)}
-    .doc-icon{width:36px;height:36px;border-radius:8px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
-    .doc-info{flex:1}
-    .doc-name{font-size:.86rem;color:var(--blanc)}
-    .doc-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
-    .badge{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .btn-primary{background:var(--or);color:#0a0a0a}.btn-primary:hover{background:var(--orl)}
+    .btn-ghost{background:transparent;color:rgba(248,244,238,.5);border:1px solid rgba(248,244,238,.1)}.btn-ghost:hover{border-color:var(--or);color:var(--or)}
+    .btn-sm{padding:7px 12px;font-size:.68rem}
+    .page-content{padding:28px 32px}
+    .page-section{display:none}.page-section.active{display:block}
+    .alert-banner{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:10px;margin-bottom:24px;font-size:.85rem;line-height:1.5}
+    .alert-banner.warn{background:rgba(245,158,11,.08);border-left:3px solid var(--orange);color:var(--orange)}
+    .alert-banner.info{background:rgba(74,158,255,.08);border-left:3px solid var(--blue);color:var(--blue)}
+    .alert-banner.success{background:rgba(0,200,117,.08);border-left:3px solid var(--green);color:var(--green)}
+    .alert-banner a{color:inherit;text-decoration:underline}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .section-heading{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:300}
+    .section-heading em{font-style:italic;color:var(--or)}
+    .dossier-recap{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+    @media(max-width:700px){.dossier-recap{grid-template-columns:1fr}}
+    .recap-card{background:rgba(11,32,57,.7);border:1px solid var(--bdr);border-radius:12px;padding:20px}
+    .recap-title{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.3);margin-bottom:14px}
+    .recap-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid rgba(248,244,238,.05);font-size:.84rem}
+    .recap-row:last-child{border:none}
+    .recap-key{color:rgba(248,244,238,.38)}.recap-val{color:var(--blanc);font-weight:500;text-align:right}
+    .garant-add{display:flex;align-items:center;justify-content:center;border:1.5px dashed rgba(191,150,80,.2);border-radius:10px;padding:14px;cursor:pointer;transition:.2s;color:rgba(248,244,238,.3);font-size:.82rem;gap:8px}
+    .garant-add:hover{border-color:var(--or);color:var(--or)}
+    .steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:28px;background:rgba(11,32,57,.5);border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+    @media(max-width:700px){.steps-row{grid-template-columns:1fr 1fr}}
+    .step-block{padding:20px;border-right:1px solid var(--bdr);text-align:center}
+    .step-block:last-child{border-right:none}
+    .step-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;margin:0 auto 10px;transition:.3s}
+    .step-num.active{background:rgba(191,150,80,.15);color:var(--or);border:2px solid var(--or)}
+    .step-num.done{background:var(--green);color:#fff;border:2px solid var(--green)}
+    .step-num.pending{background:rgba(255,255,255,.04);color:rgba(248,244,238,.2);border:2px solid rgba(248,244,238,.08)}
+    .step-block-title{font-size:.78rem;font-weight:600;margin-bottom:6px;line-height:1.3}
+    .step-block-title.active-txt{color:var(--or)}.step-block-title.done-txt{color:var(--green)}.step-block-title.pending-txt{color:rgba(248,244,238,.25)}
+    .step-block-desc{font-size:.72rem;color:rgba(248,244,238,.35);line-height:1.5}
+    .docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+    .doc-card{background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:.2s}
+    .doc-card:hover{border-color:var(--bds)}.doc-icon{font-size:2rem;margin-bottom:8px}
+    .doc-name{font-size:.72rem;color:rgba(248,244,238,.6);line-height:1.3}
+    .doc-status{font-size:.6rem;margin-top:6px}.doc-status.ok{color:var(--green)}.doc-status.missing{color:var(--red)}
+    .doc-card.missing-card{border-style:dashed;border-color:rgba(255,84,84,.2)}
+    .partenaires-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .partenaire-card{background:rgba(11,32,57,.7);border:1px solid var(--bdr);border-radius:12px;padding:24px;transition:.2s}
+    .partenaire-card:hover{border-color:var(--bds)}
+    .part-logo{font-size:1.6rem;margin-bottom:10px}.part-name{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:4px}
+    .part-title{font-size:1rem;font-weight:500;color:var(--blanc);margin-bottom:8px}
+    .part-desc{font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:16px}
+    .part-link{font-size:.72rem;color:var(--green);display:flex;align-items:center;gap:4px;margin-bottom:12px}
+    .pref-section{background:rgba(11,32,57,.7);border:1px solid var(--bdr);border-radius:12px;padding:24px;margin-bottom:20px}
+    .pref-title{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:20px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:600px){.form-row{grid-template-columns:1fr}}
+    .form-group{margin-bottom:16px}.form-label{font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-bottom:8px;display:block}
+    .form-input{width:100%;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.1);border-radius:8px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:.2s}
+    .form-input:focus{border-color:var(--or);background:rgba(191,150,80,.05)}.form-input::placeholder{color:rgba(248,244,238,.2)}
+    .danger-zone{border-color:rgba(255,84,84,.2);background:rgba(255,84,84,.03)}.danger-zone .pref-title{color:var(--red)}
+    .badge{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase}
     .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+    .badge-orange{background:rgba(245,158,11,.1);color:var(--orange);border:1px solid rgba(245,158,11,.2)}
     .badge-green{background:rgba(0,200,117,.1);color:var(--green);border:1px solid rgba(0,200,117,.2)}
-    .badge-or{background:rgba(191,150,80,.1);color:var(--orl);border:1px solid var(--bdr)}
     .badge-blue{background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.2)}
-    .badge-red{background:rgba(255,84,84,.1);color:var(--red);border:1px solid rgba(255,84,84,.2)}
-
-    /* BIEN CARD */
-    .bien-preview{padding:20px;border-radius:12px;background:rgba(11,32,57,.8);border:1px solid var(--bdr);margin-bottom:28px;display:flex;align-items:center;gap:16px}
-    .bien-preview-img{width:72px;height:72px;border-radius:10px;background:rgba(191,150,80,.15);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
-    .bien-preview-ref{font-size:.68rem;color:rgba(248,244,238,.35);margin-bottom:4px}
-    .bien-preview-title{font-size:1rem;font-weight:500;color:var(--blanc)}
-    .bien-preview-addr{font-size:.8rem;color:var(--muted);margin-top:3px}
-    .bien-preview-price{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--or);margin-top:4px}
-
-    /* GUARD */
     #guard{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
-    .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--blue);letter-spacing:.1em}
+    .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--blue)}
     .loading-bar{width:200px;height:2px;background:rgba(74,158,255,.15);border-radius:2px;overflow:hidden}
-    .loading-bar-inner{height:100%;background:var(--blue);border-radius:2px;animation:load 1.2s ease both}
+    .loading-bar-inner{height:100%;background:var(--blue);animation:load 1s ease both}
     @keyframes load{from{width:0}to{width:100%}}
+    body{background-image:radial-gradient(ellipse 50% 40% at 50% 0%,rgba(74,158,255,.04) 0%,transparent 60%)}
   </style>
 </head>
 <body>
-<div id="guard">
-  <div class="loading-logo">Kàddu</div>
-  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
-</div>
+<div id="guard"><div class="loading-logo">Kàddu</div><div class="loading-bar"><div class="loading-bar-inner"></div></div></div>
 
 <div class="layout" id="app" style="display:none">
   <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="brand">Kàddu</div>
-      <div class="sub">Espace Locataire</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label">Navigation</div>
-      <div class="nav-item active"><span class="icon">🏠</span> Mon dossier</div>
-      <div class="nav-item"><span class="icon">📋</span> Ma candidature</div>
-      <div class="nav-item"><span class="icon">📄</span> Mes documents</div>
-      <div class="nav-item"><span class="icon">💬</span> Messages</div>
-      <div class="nav-item" onclick="window.location.href='/biens/'"><span class="icon">🔍</span> Chercher un bien</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-label">Compte</div>
-      <div class="nav-item"><span class="icon">⚙</span> Paramètres</div>
-    </div>
-    <div class="sidebar-footer">
+    <div class="sidebar-top">
+      <div class="sidebar-logo">
+        <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu" height="26" onerror="this.style.display='none'">
+        <span>Kàddu</span>
+      </div>
       <div class="user-chip">
         <div class="user-avatar" id="sideAvatar">L</div>
-        <div>
-          <div class="user-name" id="sideName">—</div>
-          <div class="user-role">Locataire</div>
-        </div>
+        <div><div class="user-name" id="sideName">—</div><div class="user-role">Locataire</div></div>
       </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <div class="nav-item active" onclick="showPage('accueil',this)"><span class="nav-icon">🏠</span> Accueil</div>
+      <div class="nav-item" onclick="showPage('candidatures',this)"><span class="nav-icon">🔍</span> Candidatures</div>
+      <div class="nav-item" onclick="showPage('dossier',this)"><span class="nav-icon">📋</span> Dossier locatif<span class="nav-badge" id="badge-dossier" style="display:none"></span></div>
+      <div class="nav-item" onclick="showPage('partenaires',this)"><span class="nav-icon">🤝</span> Nos partenaires</div>
+      <div class="nav-item" onclick="showPage('preferences',this)"><span class="nav-icon">⚙️</span> Préférences</div>
+      <div class="nav-item" onclick="showPage('contact',this)"><span class="nav-icon">✉️</span> Nous contacter</div>
+    </div>
+    <div class="sidebar-footer">
       <div class="logout-btn" onclick="logout()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Se déconnecter
+        Déconnexion
       </div>
     </div>
   </aside>
 
-  <main class="main">
+  <div class="main-area">
     <div class="topbar">
-      <div class="topbar-title">Bonjour, <em id="topName">—</em> 👋</div>
+      <div class="topbar-title" id="topbar-title">Bonjour, <em id="topName">—</em> 👋</div>
       <div style="display:flex;gap:10px">
-        <button class="btn btn-ghost" onclick="window.location.href='/biens/'">Chercher un bien</button>
-        <button class="btn btn-primary" onclick="window.location.href='/tunnel/dossier-v2-step1.html'">Déposer mon dossier</button>
+        <a href="/biens/" class="btn btn-ghost">Chercher un bien</a>
+        <a href="/tunnel/dossier.html" class="btn btn-primary">+ Déposer mon dossier</a>
       </div>
     </div>
 
-    <div class="content">
-      <!-- STATUS BANNER -->
-      <div class="status-banner" id="status-banner">
-        <div class="status-icon">📋</div>
-        <div class="status-text">
-          <h3>Statut de votre <em>candidature</em></h3>
-          <p id="status-msg">Chargement de votre dossier…</p>
-        </div>
-      </div>
+    <div class="page-content">
 
-      <!-- PROGRESS -->
-      <div class="progress-section">
-        <h2 class="progress-title">Suivi de votre <em>parcours</em></h2>
-        <div class="progress-steps" id="progress-steps">
-          <!-- Rendered by JS -->
+      <!-- ACCUEIL -->
+      <div class="page-section active" id="page-accueil">
+        <div id="accueil-alert"></div>
+        <div class="section-head">
+          <h2 class="section-heading">Votre dossier <em>locatif</em></h2>
+          <button class="btn btn-ghost btn-sm" onclick="showPage('dossier',document.querySelectorAll('.nav-item')[2])">Voir le détail →</button>
         </div>
-      </div>
-
-      <!-- BIEN CANDIDATURE -->
-      <div id="bien-section" style="display:none">
-        <h2 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;margin-bottom:12px">Bien <em style="font-style:italic;color:var(--or)">en candidature</em></h2>
-        <div class="bien-preview">
-          <div class="bien-preview-img">🏠</div>
-          <div>
-            <div class="bien-preview-ref" id="bien-ref">—</div>
-            <div class="bien-preview-title" id="bien-title">—</div>
-            <div class="bien-preview-addr" id="bien-addr">—</div>
-            <div class="bien-preview-price" id="bien-price">—</div>
+        <div class="dossier-recap">
+          <div class="recap-card">
+            <div class="recap-title">Informations générales</div>
+            <div class="recap-row"><span class="recap-key">Composition</span><span class="recap-val" id="rc-compo">—</span></div>
+            <div class="recap-row"><span class="recap-key">Emménagement souhaité</span><span class="recap-val" id="rc-emmenagement">—</span></div>
+            <div class="recap-row"><span class="recap-key">Durée souhaitée</span><span class="recap-val" id="rc-duree">—</span></div>
+            <div style="margin-top:12px"><a href="/tunnel/dossier.html" style="font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,244,238,.35);display:flex;align-items:center;gap:6px">✏️ Modifier</a></div>
           </div>
-          <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="window.location.href='/biens/'">Voir l'annonce →</button>
+          <div class="recap-card">
+            <div class="recap-title">Dossier Locatif</div>
+            <div id="accueil-persons"></div>
+            <div class="garant-add" onclick="window.location.href='/tunnel/dossier.html'" style="margin-top:12px">+ Ajouter un garant</div>
+          </div>
+        </div>
+        <div class="section-head"><h2 class="section-heading">Mes <em>candidatures</em></h2></div>
+        <div id="accueil-candidatures">
+          <div class="alert-banner warn">⚠️ Vous n'avez pas de candidature en cours. <a href="/biens/">Pour débuter votre recherche, cliquez ici !</a></div>
         </div>
       </div>
 
-      <!-- INFO CARDS -->
-      <div class="cards-grid">
-        <div class="info-card">
-          <div class="info-card-label">Statut dossier</div>
-          <div class="info-card-val" id="card-statut">—</div>
-          <div class="info-card-sub">Dernière mise à jour</div>
+      <!-- CANDIDATURES -->
+      <div class="page-section" id="page-candidatures">
+        <h2 class="section-heading" style="margin-bottom:24px">Mes <em>candidatures</em></h2>
+        <div class="steps-row">
+          <div class="step-block"><div class="step-num active" id="cand-step1">1</div><div class="step-block-title active-txt">Envoi de votre fiche locative</div><div class="step-block-desc">Nous traitons d'abord la fiche remplie à votre inscription.</div></div>
+          <div class="step-block"><div class="step-num pending" id="cand-step2">2</div><div class="step-block-title pending-txt">Envoi de votre dossier locatif</div><div class="step-block-desc">Une fois votre fiche validée, vous complétez un dossier avec vos justificatifs.</div></div>
+          <div class="step-block"><div class="step-num pending" id="cand-step3">3</div><div class="step-block-title pending-txt">Signature du bail</div><div class="step-block-desc">La signature anticipée du bail rend votre candidature prioritaire.</div></div>
+          <div class="step-block" style="border-right:none"><div class="step-num pending" id="cand-step4">4</div><div class="step-block-title pending-txt">Validation du propriétaire</div><div class="step-block-desc">Après accord, Kàddu vous accompagne dans votre emménagement.</div></div>
         </div>
-        <div class="info-card">
-          <div class="info-card-label">Documents fournis</div>
-          <div class="info-card-val" id="card-docs">—</div>
-          <div class="info-card-sub">sur les documents requis</div>
+        <div id="candidatures-list"><div class="alert-banner info">ℹ️ Vous n'avez pas de candidature en cours. <a href="/biens/">Pour débuter votre recherche, cliquez ici !</a></div></div>
+      </div>
+
+      <!-- DOSSIER LOCATIF -->
+      <div class="page-section" id="page-dossier">
+        <div class="section-head">
+          <h2 class="section-heading">Dossier <em>locatif</em></h2>
+          <a href="/tunnel/dossier.html" class="btn btn-primary btn-sm">Modifier</a>
         </div>
-        <div class="info-card">
-          <div class="info-card-label">Dossier déposé le</div>
-          <div class="info-card-val" id="card-date">—</div>
+        <div id="dossier-alert"></div>
+        <div class="recap-card" style="margin-bottom:20px">
+          <div class="recap-title">Mes informations générales</div>
+          <div class="recap-row"><span class="recap-key">Composition de la location</span><span class="recap-val" id="dos-compo">—</span></div>
+          <div class="recap-row"><span class="recap-key">Emménagement souhaité</span><span class="recap-val" id="dos-emmenagement">—</span></div>
+          <div class="recap-row"><span class="recap-key">Durée souhaitée</span><span class="recap-val" id="dos-duree">—</span></div>
         </div>
-        <div class="info-card">
-          <div class="info-card-label">Loyer visé</div>
-          <div class="info-card-val" id="card-loyer">—</div>
-          <div class="info-card-sub">F CFA / mois</div>
+        <div class="section-head" style="margin-bottom:14px"><h3 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28)">Personnes du dossier</h3></div>
+        <div id="dossier-persons-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px"></div>
+        <div class="section-head" style="margin-bottom:14px">
+          <h3 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28)">Documents à fournir</h3>
+          <span id="docs-progress" style="font-size:.76rem;color:var(--muted)">0/5 complétés</span>
+        </div>
+        <div class="docs-grid" id="docs-grid"></div>
+      </div>
+
+      <!-- PARTENAIRES -->
+      <div class="page-section" id="page-partenaires">
+        <h2 class="section-heading" style="margin-bottom:8px">Nos <em>partenaires</em></h2>
+        <p style="color:var(--muted);font-size:.86rem;margin-bottom:28px">Des services sélectionnés pour faciliter votre installation au Sénégal.</p>
+        <div class="partenaires-grid">
+          <div class="partenaire-card">
+            <div class="part-logo">🛡️</div><div class="part-name">Assurance</div>
+            <div class="part-title">Assurance habitation</div>
+            <div class="part-desc">Assurez votre logement facilement avec nos partenaires agréés au Sénégal. Devis en ligne, souscription immédiate.</div>
+            <div class="part-link">✓ En savoir plus</div>
+            <button class="btn btn-primary" style="width:100%">Obtenir mon assurance</button>
+          </div>
+          <div class="partenaire-card">
+            <div class="part-logo">🚛</div><div class="part-name">Déménagement</div>
+            <div class="part-title">Déménageurs agréés Dakar</div>
+            <div class="part-desc">Trouvez un déménageur professionnel à Dakar et dans les grandes villes du Sénégal. Devis gratuit en 24h.</div>
+            <div class="part-link">✓ En savoir plus</div>
+            <button class="btn btn-primary" style="width:100%">Organiser mon déménagement</button>
+          </div>
+          <div class="partenaire-card">
+            <div class="part-logo">💡</div><div class="part-name">Énergie</div>
+            <div class="part-title">SENELEC — Raccordement</div>
+            <div class="part-desc">Ouvrez votre compteur SENELEC rapidement. Accompagnement pour le raccordement électrique de votre nouveau logement.</div>
+            <div class="part-link">✓ En savoir plus</div>
+            <button class="btn btn-primary" style="width:100%">Ouvrir mon compteur</button>
+          </div>
+          <div class="partenaire-card">
+            <div class="part-logo">📶</div><div class="part-name">Internet</div>
+            <div class="part-title">Sonatel / Orange Fiber</div>
+            <div class="part-desc">Installez votre connexion internet fibre rapidement. Offres exclusives pour les locataires Kàddu.</div>
+            <div class="part-link">✓ En savoir plus</div>
+            <button class="btn btn-primary" style="width:100%">Installer mon internet</button>
+          </div>
+          <div class="partenaire-card">
+            <div class="part-logo">💧</div><div class="part-name">Eau</div>
+            <div class="part-title">SDE — Abonnement eau</div>
+            <div class="part-desc">Ouvrez votre abonnement à la Sénégalaise Des Eaux. Démarches simplifiées pour les nouveaux locataires Kàddu.</div>
+            <div class="part-link">✓ En savoir plus</div>
+            <button class="btn btn-primary" style="width:100%">Ouvrir mon abonnement</button>
+          </div>
+          <div class="partenaire-card">
+            <div class="part-logo">🏦</div><div class="part-name">Banque</div>
+            <div class="part-title">Ouvrir un compte bancaire</div>
+            <div class="part-desc">Partenariat avec les principales banques sénégalaises (CBAO, Ecobank, BHS) pour faciliter l'ouverture de compte.</div>
+            <div class="part-link">✓ En savoir plus</div>
+            <button class="btn btn-primary" style="width:100%">Ouvrir un compte</button>
+          </div>
         </div>
       </div>
 
-      <!-- DOCUMENTS -->
-      <h2 style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:300;margin-bottom:12px">Mes <em style="font-style:italic;color:var(--or)">documents</em></h2>
-      <div class="docs-list" id="docs-list">
-        <div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">Chargement…</div>
+      <!-- PRÉFÉRENCES -->
+      <div class="page-section" id="page-preferences">
+        <h2 class="section-heading" style="margin-bottom:24px">Mes <em>préférences</em></h2>
+        <div class="pref-section">
+          <div class="pref-title">Changer mes informations</div>
+          <div class="form-row"><div class="form-group"><label class="form-label">Prénom</label><input class="form-input" id="pref-prenom" placeholder="Votre prénom"></div><div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="pref-nom" placeholder="Votre nom"></div></div>
+          <div class="form-row"><div class="form-group"><label class="form-label">Adresse e-mail</label><input class="form-input" id="pref-email" type="email"></div><div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="pref-tel" placeholder="+221 77 000 00 00"></div></div>
+          <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="savePref()">Enregistrer les modifications</button></div>
+        </div>
+        <div class="pref-section">
+          <div class="pref-title">Changer mon mot de passe</div>
+          <div class="form-group" style="max-width:400px"><label class="form-label">Nouveau mot de passe</label><input class="form-input" id="pref-pwd" type="password" placeholder="Nouveau mot de passe (8 caractères min.)"></div>
+          <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" onclick="savePassword()">Mettre à jour</button></div>
+        </div>
+        <div class="pref-section danger-zone">
+          <div class="pref-title">Supprimer mon compte</div>
+          <p style="font-size:.84rem;color:var(--muted);margin-bottom:16px">Cette action est irréversible. Toutes vos données seront supprimées définitivement.</p>
+          <button class="btn btn-ghost btn-sm" style="border-color:rgba(255,84,84,.3);color:var(--red)" onclick="if(confirm('Êtes-vous sûr(e) ? Cette action est irréversible.'))logout()">Supprimer mon compte</button>
+        </div>
       </div>
 
-      <!-- CTA if no dossier -->
-      <div id="no-dossier" style="display:none;text-align:center;padding:40px 20px;border:1px dashed var(--bdr);border-radius:12px;margin-top:8px">
-        <div style="font-size:2.5rem;margin-bottom:16px">📂</div>
-        <h3 style="font-family:'Playfair Display',serif;font-weight:300;margin-bottom:8px">Pas encore de dossier</h3>
-        <p style="color:var(--muted);font-size:.88rem;margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto">Déposez votre fiche locative pour commencer votre recherche sur Kàddu.</p>
-        <button class="btn btn-primary" onclick="window.location.href='/tunnel/dossier-v2-step1.html'">Déposer mon dossier →</button>
+      <!-- CONTACT -->
+      <div class="page-section" id="page-contact">
+        <h2 class="section-heading" style="margin-bottom:8px">Nous <em>contacter</em></h2>
+        <p style="color:var(--muted);font-size:.86rem;margin-bottom:28px">L'équipe Kàddu est à votre disposition.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:32px">
+          <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📧</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">Email</div><a href="mailto:contact@kaddu.net" style="color:var(--or);font-size:.9rem">contact@kaddu.net</a></div>
+          <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📱</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">WhatsApp</div><a href="https://wa.me/221700000000" style="color:var(--or);font-size:.9rem">+221 70 000 00 00</a></div>
+          <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📍</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">Adresse</div><span style="font-size:.88rem">Plateau, Dakar, Sénégal</span></div>
+        </div>
+        <div class="pref-section">
+          <div class="pref-title">Envoyer un message</div>
+          <div class="form-group"><label class="form-label">Sujet</label><input class="form-input" placeholder="Votre sujet"></div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" rows="5" placeholder="Votre message…" style="resize:vertical"></textarea></div>
+          <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary">Envoyer</button></div>
+        </div>
       </div>
+
     </div>
-  </main>
+  </div>
 </div>
 
 <script>
-const SUPABASE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL='https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_KEY='sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 
-function getSession() {
-  try {
-    const raw = sessionStorage.getItem('kaddu_jwt');
-    if (!raw) return null;
-    const s = JSON.parse(raw);
-    if (Date.now() > s.expires) { sessionStorage.removeItem('kaddu_jwt'); return null; }
+function getSession(){
+  try{
+    const r=sessionStorage.getItem('kaddu_jwt');
+    if(!r)return null;
+    const s=JSON.parse(r);
+    if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return null;}
     return s;
-  } catch { return null; }
+  }catch{return null;}
 }
-window.addEventListener('beforeunload', () => sessionStorage.removeItem('kaddu_jwt'));
-function logout() { sessionStorage.removeItem('kaddu_jwt'); window.location.href = '/auth/'; }
+window.addEventListener('beforeunload',()=>sessionStorage.removeItem('kaddu_jwt'));
+function logout(){sessionStorage.removeItem('kaddu_jwt');window.location.href='/auth/';}
 
-const session = getSession();
-if (!session || session.role !== 'locataire') {
-  window.location.href = '/auth/?tab=login';
-} else {
-  document.getElementById('guard').style.display = 'none';
-  document.getElementById('app').style.display = 'grid';
+const session=getSession();
+if(!session||session.role!=='locataire'){
+  window.location.href='/auth/?tab=login';
+}else{
+  document.getElementById('guard').style.display='none';
+  document.getElementById('app').style.display='grid';
   init(session);
 }
 
-const STEPS = [
-  { label: 'Inscription', key: 'inscription' },
-  { label: 'Fiche locative', key: 'fiche' },
-  { label: 'Dossier complet', key: 'dossier' },
-  { label: 'Sélection', key: 'selection' },
-  { label: 'Signature bail', key: 'bail' },
-];
+const COMPO_LABELS={seul:'Locataire seul(e)',couple:'Couple (sans enfants)',famille:'Famille',colocation:'Colocation'};
+const EMMEN_LABELS={'semaine':'Moins d\'une semaine','deux-semaines':'Une à deux semaines','mois':'D\'ici un mois','plus-mois':'Plus d\'un mois'};
+const DUREE_LABELS={'6mois':'Moins de 6 mois','6-12mois':'6 à 12 mois','12-36mois':'12 à 36 mois','3ans':'Plus de 3 ans'};
+const DOCS=['Pièce d\'identité','Justificatif de revenus','Avis d\'imposition','Relevé bancaire (3 mois)','Justificatif de domicile'];
+const DOCS_ICONS=['🪪','💰','📄','🏦','🏠'];
 
-const DOCS_REQUIS = ['Pièce d\'identité','Justificatif de revenus','Avis d\'imposition','Relevé bancaire (3 mois)','Justificatif de domicile'];
+async function init(s){
+  const meta=s.user?.user_metadata||{};
+  const prenom=meta.prenom||s.user?.email?.split('@')[0]||'Locataire';
+  const nom=meta.nom||'';
+  document.getElementById('topName').textContent=prenom;
+  document.getElementById('sideName').textContent=(prenom+' '+nom).trim();
+  document.getElementById('sideAvatar').textContent=prenom[0].toUpperCase();
+  document.getElementById('pref-prenom').value=prenom;
+  document.getElementById('pref-nom').value=nom;
+  document.getElementById('pref-email').value=s.user?.email||'';
+  await loadDossier(s);
+}
 
-async function init(session) {
-  const u = session.user;
-  const meta = u?.user_metadata || {};
-  const prenom = meta.prenom || u?.email?.split('@')[0] || 'Locataire';
-
-  document.getElementById('topName').textContent = prenom;
-  document.getElementById('sideName').textContent = (meta.prenom||'') + ' ' + (meta.nom||'');
-  document.getElementById('sideAvatar').textContent = prenom[0].toUpperCase();
-
-  renderProgress(1); // step index = inscription done
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/alertes_biens?locataire_email=eq.${u.email}&select=*&limit=1`, {
-      headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+session.access_token}
+async function loadDossier(s){
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/dossiers?locataire_id=eq.${s.user.id}&select=*&order=created_at.desc&limit=1`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
     });
-    const dossiers = res.ok ? await res.json() : [];
-    if (dossiers.length) {
-      renderDossier(dossiers[0]);
-    } else {
-      renderNoDossier();
-    }
-  } catch {
-    renderNoDossier();
-  }
+    const data=res.ok?await res.json():[];
+    if(data.length){renderDossier(data[0]);renderAccueilAlert(data[0]);updateCandidatureSteps(data[0]);}
+    else renderNoDossier();
+  }catch{renderNoDossier();}
+}
+
+function parseDossierMsg(d){try{return JSON.parse(d.message||'{}');}catch{return {};}}
+
+function renderDossier(d){
+  const msg=parseDossierMsg(d);
+  const compo=COMPO_LABELS[msg.composition]||'—';
+  const emmen=EMMEN_LABELS[msg.emmenagement]||'—';
+  const duree=DUREE_LABELS[msg.duree]||'—';
+  ['rc','dos'].forEach(p=>{
+    const c=document.getElementById(p+'-compo');
+    const e=document.getElementById(p+'-emmenagement');
+    const du=document.getElementById(p+'-duree');
+    if(c)c.textContent=compo;if(e)e.textContent=emmen;if(du)du.textContent=duree;
+  });
+  const docs_fournis=Array.isArray(d.docs_fournis)?d.docs_fournis:[];
+  if(docs_fournis.length<DOCS.length)document.getElementById('badge-dossier').style.display='block';
+  const locs=msg.locataires||[];const gars=msg.garants||[];
+  document.getElementById('accueil-persons').innerHTML=[
+    ...locs.map(l=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--or)">${l.prenom[0].toUpperCase()}</div>
+      <div><div style="font-size:.82rem;font-weight:500">${l.prenom} ${l.nom}</div><div style="font-size:.68rem;color:var(--muted)">Locataire · ${l.situation||'—'}</div></div>
+      ${docs_fournis.length<3?'<span style="margin-left:auto;font-size:.6rem;color:var(--orange);font-weight:600">! '+(DOCS.length-docs_fournis.length)+' docs</span>':''}
+    </div>`),
+    ...gars.map(g=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--blue)">${g.prenom[0].toUpperCase()}</div>
+      <div><div style="font-size:.82rem;font-weight:500">${g.prenom} ${g.nom}</div><div style="font-size:.68rem;color:var(--muted)">Garant(e) · ${g.situation||'—'}</div></div>
+    </div>`)
+  ].join('');
+  const grid=document.getElementById('dossier-persons-grid');
+  if(grid)grid.innerHTML=[
+    ...locs.map(l=>`<div style="background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;padding:16px">
+      <div style="font-family:'Playfair Display',serif;font-size:.88rem;color:var(--or);margin-bottom:4px">${l.prenom} ${l.nom}</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:12px">Locataire · ${l.situation||'—'}</div>
+      <a href="/tunnel/dossier.html" class="btn btn-primary btn-sm">Compléter</a></div>`),
+    ...gars.map(g=>`<div style="background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;padding:16px">
+      <div style="font-family:'Playfair Display',serif;font-size:.88rem;color:var(--blue);margin-bottom:4px">${g.prenom} ${g.nom}</div>
+      <div style="font-size:.72rem;color:var(--muted)">Garant(e) · ${g.situation||'—'}</div></div>`)
+  ].join('');
+  renderDocs(docs_fournis);
+}
+
+function renderDocs(provided){
+  const el=document.getElementById('docs-grid');const pg=document.getElementById('docs-progress');
+  if(!el)return;
+  el.innerHTML=DOCS.map((d,i)=>{
+    const ok=provided.includes(i);
+    return `<div class="doc-card ${ok?'':'missing-card'}"><div class="doc-icon">${DOCS_ICONS[i]}</div><div class="doc-name">${d}</div><div class="doc-status ${ok?'ok':'missing'}">${ok?'✓ Fourni':'⚠ Manquant'}</div></div>`;
+  }).join('');
+  if(pg)pg.textContent=`${provided.length}/${DOCS.length} complétés`;
+}
+
+function renderAccueilAlert(d){
+  const statuts={en_attente:'Dossier reçu — en cours d\'analyse par notre équipe.',en_cours:'Votre dossier est en cours d\'étude.',accepte:'Félicitations ! Votre dossier a été accepté.',refuse:'Votre dossier n\'a pas été retenu pour ce bien.'};
+  const types={en_attente:'warn',en_cours:'info',accepte:'success',refuse:'warn'};
+  document.getElementById('accueil-alert').innerHTML=`<div class="alert-banner ${types[d.statut]||'info'}">${statuts[d.statut]||''}</div>`;
+}
+
+function renderNoDossier(){
+  document.getElementById('accueil-alert').innerHTML=`<div class="alert-banner warn">⚠️ Vous n'avez pas encore de dossier locatif. <a href="/tunnel/dossier.html">Déposer votre dossier →</a></div>`;
+  document.getElementById('accueil-persons').innerHTML=`<div style="font-size:.82rem;color:var(--muted);text-align:center;padding:12px">Aucun dossier pour l'instant.</div>`;
   renderDocs([]);
 }
 
-function renderProgress(activeIdx) {
-  const container = document.getElementById('progress-steps');
-  container.innerHTML = STEPS.map((s,i) => {
-    const state = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending';
-    const label = i < activeIdx ? 'done-text' : i === activeIdx ? 'active-text' : '';
-    const num = i < activeIdx ? '✓' : i+1;
-    const parts = [`<div class="prog-step"><div class="prog-circle ${state}">${num}</div><div class="prog-label ${label}">${s.label}</div></div>`];
-    if (i < STEPS.length-1) parts.push(`<div class="prog-line ${i < activeIdx ? 'done':'pending'}"></div>`);
-    return parts.join('');
-  }).join('');
+function updateCandidatureSteps(d){
+  const step=d.statut==='accepte'?4:d.statut==='en_cours'?2:1;
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('cand-step'+i);if(!el)continue;
+    const title=el.nextElementSibling;
+    if(i<step){el.className='step-num done';el.textContent='✓';if(title)title.className='step-block-title done-txt';}
+    else if(i===step){el.className='step-num active';el.textContent=i;if(title)title.className='step-block-title active-txt';}
+    else{el.className='step-num pending';el.textContent=i;if(title)title.className='step-block-title pending-txt';}
+  }
+  if(d.bien_id&&d.statut!=='en_attente'){
+    const html=`<div style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px">
+      <div style="font-size:1.6rem">🏠</div>
+      <div style="flex:1"><div style="font-weight:500;margin-bottom:2px">Candidature en cours</div><div style="font-size:.76rem;color:var(--muted)">Déposée le ${new Date(d.created_at).toLocaleDateString('fr-FR')}</div></div>
+      <span class="badge badge-${d.statut==='accepte'?'green':'blue'}">${d.statut.replace('_',' ')}</span></div>`;
+    document.getElementById('candidatures-list').innerHTML=html;
+    document.getElementById('accueil-candidatures').innerHTML=html;
+  }
 }
 
-function renderDossier(d) {
-  const statuts = { en_attente:'En attente', accepte:'Accepté ✓', refuse:'Refusé', en_cours:'En cours' };
-  document.getElementById('status-msg').textContent = statuts[d.statut] || 'Dossier reçu — en cours d\'analyse';
-  document.getElementById('card-statut').textContent = statuts[d.statut] || '—';
-  document.getElementById('card-docs').textContent = '2 / 5';
-  document.getElementById('card-date').textContent = d.created_at ? new Date(d.created_at).toLocaleDateString('fr-FR') : '—';
-  document.getElementById('card-loyer').textContent = d.loyer_max ? d.loyer_max.toLocaleString('fr-FR') : '—';
-  renderProgress(2);
+function showPage(name,el){
+  document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  const titles={accueil:'Tableau de bord',candidatures:'Mes candidatures',dossier:'Dossier locatif',partenaires:'Nos partenaires',preferences:'Préférences',contact:'Nous contacter'};
+  document.getElementById('topbar-title').innerHTML=`${titles[name]||''}`;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function renderNoDossier() {
-  document.getElementById('status-msg').textContent = 'Vous n\'avez pas encore déposé de dossier sur Kàddu.';
-  document.getElementById('no-dossier').style.display = 'block';
-  document.getElementById('card-statut').textContent = 'Aucun';
-  document.getElementById('card-docs').textContent = '0 / 5';
-  document.getElementById('card-date').textContent = '—';
-  document.getElementById('card-loyer').textContent = '—';
+async function savePref(){
+  const s=getSession();if(!s)return;
+  try{
+    await fetch(`${SB_URL}/rest/v1/profils?id=eq.${s.user.id}`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'},
+      body:JSON.stringify({prenom:document.getElementById('pref-prenom').value,nom:document.getElementById('pref-nom').value,email:document.getElementById('pref-email').value,telephone:document.getElementById('pref-tel').value})
+    });
+    document.getElementById('sideName').textContent=(document.getElementById('pref-prenom').value+' '+document.getElementById('pref-nom').value).trim();
+    alert('Modifications enregistrées !');
+  }catch{alert('Erreur lors de la sauvegarde.');}
 }
 
-function renderDocs(provided) {
-  const el = document.getElementById('docs-list');
-  el.innerHTML = DOCS_REQUIS.map((d,i) => {
-    const ok = provided.includes(i);
-    return `<div class="doc-row">
-      <div class="doc-icon">${ok ? '📄' : '📋'}</div>
-      <div class="doc-info">
-        <div class="doc-name">${d}</div>
-        <div class="doc-meta">${ok ? 'Fourni et validé' : 'En attente'}</div>
-      </div>
-      ${ok ? '<span class="badge badge-green">Validé</span>' : '<button class="btn btn-ghost btn-sm">Ajouter</button>'}
-    </div>`;
-  }).join('');
+async function savePassword(){
+  const s=getSession();if(!s)return;
+  const pwd=document.getElementById('pref-pwd').value;
+  if(pwd.length<8){alert('8 caractères minimum.');return;}
+  const res=await fetch(`${SB_URL}/auth/v1/user`,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token},
+    body:JSON.stringify({password:pwd})
+  });
+  if(res.ok){document.getElementById('pref-pwd').value='';alert('Mot de passe mis à jour !');}
+  else alert('Erreur lors de la mise à jour.');
 }
 </script>
 </body>
