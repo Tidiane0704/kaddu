@@ -182,7 +182,7 @@ function selectRole(card, role) {
 
 function goForgot() {
   const email = document.getElementById('l-email').value;
-  window.location.href = '/auth/confirm.html' + (email ? '?email='+encodeURIComponent(email) : '');
+  window.location.href = '/auth/forgot-password.html' + (email ? '?email='+encodeURIComponent(email) : '');
 }
 
 // ── SUPABASE API ─────────────────────────────────────────────
