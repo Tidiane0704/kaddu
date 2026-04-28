@@ -164,6 +164,48 @@
     .loading-bar-inner{height:100%;background:var(--or);border-radius:2px;animation:load 1.2s ease both}
     @keyframes load{from{width:0}to{width:100%}}
 
+    /* ── DOC FILTER BUTTONS ── */
+    .doc-filter-btn{
+      padding:7px 14px;border-radius:6px;border:1px solid var(--bdr);
+      background:rgba(11,32,57,.6);color:rgba(248,244,238,.45);
+      font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;
+      letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s;
+    }
+    .doc-filter-btn:hover{border-color:var(--bds);color:var(--blanc)}
+    .doc-filter-btn.active{background:rgba(191,150,80,.12);border-color:var(--or);color:var(--or)}
+
+    /* ── DOC ROW ── */
+    .doc-row{
+      display:flex;align-items:center;gap:14px;padding:14px 18px;
+      background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;
+      margin-bottom:8px;transition:.18s;
+    }
+    .doc-row:hover{border-color:var(--bds);background:rgba(191,150,80,.04)}
+    .doc-icon{
+      width:40px;height:40px;border-radius:8px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+      border:1px solid var(--bdr);background:rgba(191,150,80,.08);
+    }
+    .doc-info{flex:1;min-width:0}
+    .doc-name{font-size:.88rem;font-weight:500;color:var(--blanc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .doc-meta{font-size:.72rem;color:rgba(248,244,238,.38);margin-top:2px}
+    .doc-actions{display:flex;gap:8px;flex-shrink:0}
+
+    /* ── REV BIEN ROW ── */
+    .rev-bien-row{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:16px 20px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);
+      border-radius:10px;margin-bottom:8px;
+    }
+    .rev-bien-info{flex:1;min-width:0}
+    .rev-bien-titre{font-size:.9rem;font-weight:500;color:var(--blanc)}
+    .rev-bien-addr{font-size:.74rem;color:var(--muted);margin-top:2px}
+    .rev-bien-right{text-align:right;flex-shrink:0}
+    .rev-bien-prix{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:300;color:var(--or)}
+    .rev-bien-sub{font-size:.68rem;color:rgba(248,244,238,.32);margin-top:2px}
+    .rev-bien-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:10px;overflow:hidden}
+    .rev-bien-bar-fill{height:100%;background:linear-gradient(90deg,var(--or),var(--orl));border-radius:2px;transition:width 1s ease}
+
     /* ── DUOTONE ICONS ── */
     .kdi svg .gold{fill:url(#kgold)}
     .kdi svg .beige{fill:#E8DCC5;opacity:.9}
@@ -411,32 +453,76 @@
           <h2 class="section-title">Revenus <em>locatifs</em></h2>
           <span style="font-size:.76rem;color:var(--muted)">12 derniers mois</span>
         </div>
-        <div class="revenus-card">
-          <div style="display:flex;justify-content:space-between;align-items:baseline">
-            <div>
-              <div style="font-size:.7rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.32)">Total annuel estimé</div>
-              <div style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--blanc);margin-top:4px" id="rev-total">— <span style="font-size:1rem;color:var(--or)">F CFA</span></div>
-            </div>
-            <span class="badge badge-green" id="rev-occupancy">Taux: —%</span>
+
+        <!-- KPIs revenus -->
+        <div class="stats-grid" style="margin-bottom:24px">
+          <div class="stat-card">
+            <div class="stat-eyebrow">Total annuel estimé</div>
+            <div class="stat-value" id="rev-total">— <em>F</em></div>
+            <div class="stat-delta pos" id="rev-occupancy">Taux : —%</div>
           </div>
+          <div class="stat-card">
+            <div class="stat-eyebrow">Loyer mensuel</div>
+            <div class="stat-value" id="rev-mensuel">— <em>F</em></div>
+            <div class="stat-delta" id="rev-mensuel-delta">Biens loués actifs</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-eyebrow">Biens générateurs</div>
+            <div class="stat-value" id="rev-nb-loues">—</div>
+            <div class="stat-delta" id="rev-nb-total">sur — bien(s) total</div>
+          </div>
+        </div>
+
+        <!-- Chart mensuel -->
+        <div class="revenus-card" style="margin-bottom:24px">
+          <div style="font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.32);margin-bottom:4px">Projection mensuelle sur 12 mois</div>
           <div class="chart-bars" id="chart-bars"></div>
           <div style="height:28px"></div>
         </div>
-        <div style="font-size:.8rem;color:rgba(248,244,238,.3);text-align:center;margin-top:-16px">
-          Les revenus affichés sont calculés sur la base des loyers × taux d'occupation de vos biens.
+        <div style="font-size:.78rem;color:rgba(248,244,238,.28);text-align:center;margin-top:-16px;margin-bottom:28px">
+          Calculé sur la base des loyers × taux d'occupation. Les données réelles seront disponibles avec le module de paiement.
+        </div>
+
+        <!-- Détail par bien -->
+        <div class="section-head" style="margin-bottom:12px">
+          <h2 class="section-title">Détail <em>par bien</em></h2>
+        </div>
+        <div id="rev-biens-list">
+          <div style="text-align:center;color:var(--muted);padding:20px;font-size:.88rem">Chargement…</div>
         </div>
       </div>
 
       <!-- ══════════════════════
-           SECTION : DOCUMENTS (placeholder)
+           SECTION : DOCUMENTS
       ══════════════════════ -->
       <div class="page-section" id="section-documents">
-        <div class="section-head"><h2 class="section-title">Mes <em>documents</em></h2></div>
-        <div class="empty-state">
-          <div class="kdi-lg">
-            <svg viewBox="0 0 48 48"><path fill="#BF9650" d="M10 4h18l12 12v28a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path fill="#E8DCC5" opacity=".7" d="M28 4v12h12"/><path fill="none" stroke="#DDB96E" stroke-width="3" stroke-linecap="round" d="M15 28h18M15 34h12"/></svg>
+        <div class="section-head">
+          <h2 class="section-title">Mes <em>documents</em></h2>
+          <span style="font-size:.76rem;color:var(--muted)">Mandats · Quittances · Contrats</span>
+        </div>
+
+        <!-- Filtres type de document -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px" id="docs-filter-row">
+          <button class="doc-filter-btn active" data-type="" onclick="filterDocs(this)">Tous</button>
+          <button class="doc-filter-btn" data-type="mandat" onclick="filterDocs(this)">Mandats</button>
+          <button class="doc-filter-btn" data-type="contrat" onclick="filterDocs(this)">Contrats</button>
+          <button class="doc-filter-btn" data-type="quittance" onclick="filterDocs(this)">Quittances</button>
+          <button class="doc-filter-btn" data-type="autre" onclick="filterDocs(this)">Autres</button>
+        </div>
+
+        <!-- Liste des documents -->
+        <div id="docs-list">
+          <div style="text-align:center;color:var(--muted);padding:20px;font-size:.88rem">Chargement…</div>
+        </div>
+
+        <!-- Empty state si aucun document -->
+        <div id="docs-empty" style="display:none">
+          <div class="empty-state">
+            <div class="kdi-lg">
+              <svg viewBox="0 0 48 48"><path fill="#BF9650" d="M10 4h18l12 12v28a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path fill="#E8DCC5" opacity=".7" d="M28 4v12h12"/><path fill="none" stroke="#DDB96E" stroke-width="3" stroke-linecap="round" d="M15 28h18M15 34h12"/></svg>
+            </div>
+            <p>Aucun document disponible pour le moment.<br>Vos mandats et contrats apparaîtront ici.</p>
           </div>
-          <p>Vos mandats, quittances et contrats apparaîtront ici.<br>Bientôt disponible.</p>
         </div>
       </div>
 
@@ -534,6 +620,7 @@ async function init(s){
 
   await loadBiens(u.id,s.access_token);
   await loadDossiers(u.id,s.access_token);
+  await loadDocuments(u.id,s.access_token);
 }
 
 // ── BIENS ─────────────────────────────────────────────────────
@@ -560,6 +647,10 @@ async function loadBiens(userId,token){
   renderBiensTable('biens-tbody-full',allBiens,true);
   renderStats();
   renderChart();
+
+  // B4 — email si un bien vient d'être publié (< 5 min)
+  const s=getSession();
+  if(s)sendB4ForNewBiens(allBiens,s);
 }
 
 function getFirstPhoto(photos){
@@ -663,6 +754,10 @@ async function loadDossiers(userId,token){
 
   renderDossiers(allDossiers.slice(0,4),true);   // dashboard (4 derniers)
   renderDossiers(allDossiers,false);              // section dossiers (tous)
+
+  // B2 — email bailleur si dossiers en attente depuis > 48h
+  const s=getSession();
+  if(s)sendB2IfNeeded(allDossiers,s);
 }
 
 function renderDossiers(dossiers,isDash){
@@ -813,7 +908,7 @@ async function updateDossier(statut){
     const idx=allDossiers.findIndex(d=>d.id===currentDossierId);
     if(idx>=0)allDossiers[idx].statut=statut;
 
-    // ── NOTIFICATION EMAIL ──────────────────────────────
+    // ── NOTIFICATION EMAIL LOCATAIRE ───────────────────────
     const dossier = allDossiers[idx>=0?idx:0];
     const bien = allBiens.find(b=>b.id===dossier?.bien_id);
     const msg = safeJson(dossier?.message);
@@ -831,6 +926,9 @@ async function updateDossier(statut){
         agent_prenom: s.user?.user_metadata?.prenom || 'Kàddu'
       }).catch(console.error);
     }
+
+    // ── NOTIFICATION EMAIL BAILLEUR B3 ─────────────────────
+    sendB3(dossier, statut, s).catch(console.error);
 
     closeModal();
     renderDossiers(allDossiers.slice(0,4),true);
@@ -865,11 +963,215 @@ function renderStats(){
   document.getElementById('st-loues').textContent=loues.length||'0';
   document.getElementById('st-taux').textContent=taux+'% de taux d\'occupation';
   document.getElementById('st-revenus').innerHTML=(rev?rev.toLocaleString('fr-FR'):'—')+' <em>F</em>';
-  document.getElementById('rev-total').innerHTML=((rev*12)?((rev*12).toLocaleString('fr-FR')):'—')+' <span style="font-size:1rem;color:var(--or)">F CFA</span>';
-  document.getElementById('rev-occupancy').textContent=`Taux: ${taux}%`;
+
+  // Section revenus — KPIs
+  const revAnnuel=rev*12;
+  document.getElementById('rev-total').innerHTML=(revAnnuel?revAnnuel.toLocaleString('fr-FR'):'—')+' <em>F</em>';
+  document.getElementById('rev-occupancy').textContent=`Taux : ${taux}%`;
+  document.getElementById('rev-mensuel').innerHTML=(rev?rev.toLocaleString('fr-FR'):'—')+' <em>F</em>';
+  document.getElementById('rev-mensuel-delta').textContent=loues.length
+    ?`${loues.length} bien${loues.length>1?'s':''} en location active`
+    :'Aucun bien loué actuellement';
+  document.getElementById('rev-nb-loues').textContent=loues.length||'0';
+  document.getElementById('rev-nb-total').textContent=`sur ${total} bien${total>1?'s':''} total`;
+
+  // Détail par bien dans section revenus
+  renderRevBiens();
 }
 
-// ── CHART ─────────────────────────────────────────────────────
+// ── REVENUS DÉTAIL PAR BIEN ────────────────────────────────────
+function renderRevBiens(){
+  const el=document.getElementById('rev-biens-list');
+  if(!el)return;
+  if(!allBiens.length){
+    el.innerHTML=`<div style="text-align:center;color:var(--muted);padding:24px;font-size:.88rem;border:1px solid var(--bdr);border-radius:10px">Aucun bien enregistré.</div>`;
+    return;
+  }
+  const maxPrix=Math.max(...allBiens.map(b=>parseInt(b.prix)||0),1);
+  el.innerHTML=allBiens.map(b=>{
+    const prix=parseInt(b.prix)||0;
+    const loue=b.statut==='loue'||b.statut==='loué';
+    const pct=Math.round(prix/maxPrix*100);
+    const statut=loue
+      ?'<span class="badge badge-green">Loué</span>'
+      :'<span class="badge badge-or">Disponible</span>';
+    return `<div class="rev-bien-row">
+      <div class="rev-bien-info">
+        <div class="rev-bien-titre">${b.titre||b.type_bien||'Bien'}</div>
+        <div class="rev-bien-addr">${[b.quartier,b.ville||'Dakar'].filter(Boolean).join(', ')}</div>
+        <div class="rev-bien-bar" style="margin-top:8px"><div class="rev-bien-bar-fill" style="width:${loue?pct:0}%"></div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;flex-shrink:0">
+        ${statut}
+        <div class="rev-bien-right">
+          <div class="rev-bien-prix">${prix?prix.toLocaleString('fr-FR')+' F':'—'}</div>
+          <div class="rev-bien-sub">${loue?'/ mois · actif':'non loué'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  // Anime les barres après rendu
+  setTimeout(()=>document.querySelectorAll('.rev-bien-bar-fill').forEach(b=>{b.style.width=b.style.width}),50);
+}
+
+// ── DOCUMENTS ─────────────────────────────────────────────────
+let allDocs=[];
+
+async function loadDocuments(userId,token){
+  if(userId==='demo-user-id'){
+    allDocs=[
+      {id:'doc1',nom:'Mandat de gestion — Le Petit Nopalukay',type:'mandat',bien_id:'a1b2c3',created_at:new Date(Date.now()-86400000*10).toISOString(),url:'#'},
+      {id:'doc2',nom:'Contrat de bail — Moussa Diallo',type:'contrat',bien_id:'a1b2c3',created_at:new Date(Date.now()-86400000*5).toISOString(),url:'#'},
+      {id:'doc3',nom:'Quittance Janvier 2025',type:'quittance',bien_id:'a1b2c3',created_at:new Date(Date.now()-86400000*2).toISOString(),url:'#'},
+      {id:'doc4',nom:'Mandat de gestion — Le Petit Bantukay',type:'mandat',bien_id:'d4e5f6',created_at:new Date(Date.now()-86400000*20).toISOString(),url:'#'},
+    ];
+    renderDocuments(allDocs);
+    return;
+  }
+  try{
+    const bienIds=allBiens.map(b=>b.id);
+    if(!bienIds.length){renderDocuments([]);return;}
+    const filter=bienIds.map(id=>`bien_id.eq.${id}`).join(',');
+    const res=await fetch(
+      `${SB_URL}/rest/v1/documents?or=(${filter})&order=created_at.desc`,
+      {headers:{'apikey':SB_ANON,'Authorization':'Bearer '+token}}
+    );
+    allDocs=res.ok?await res.json():[];
+  }catch{allDocs=[];}
+  renderDocuments(allDocs);
+}
+
+const DOC_ICONS={mandat:'📋',contrat:'📄',quittance:'🧾',autre:'📎'};
+const DOC_LABELS={mandat:'Mandat',contrat:'Contrat',quittance:'Quittance',autre:'Autre'};
+
+function renderDocuments(docs){
+  const el=document.getElementById('docs-list');
+  const empty=document.getElementById('docs-empty');
+  if(!el)return;
+  if(!docs.length){
+    el.innerHTML='';
+    if(empty)empty.style.display='block';
+    return;
+  }
+  if(empty)empty.style.display='none';
+  el.innerHTML=docs.map(d=>{
+    const icon=DOC_ICONS[d.type]||'📎';
+    const typeLbl=DOC_LABELS[d.type]||'Document';
+    const bien=allBiens.find(b=>b.id===d.bien_id);
+    const date=d.created_at?new Date(d.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}):'—';
+    const typeBadgeCls=d.type==='mandat'?'badge-or':d.type==='contrat'?'badge-blue':d.type==='quittance'?'badge-green':'';
+    return `<div class="doc-row">
+      <div class="doc-icon">${icon}</div>
+      <div class="doc-info">
+        <div class="doc-name">${d.nom||d.name||'Document'}</div>
+        <div class="doc-meta">
+          <span class="badge ${typeBadgeCls}" style="margin-right:6px">${typeLbl}</span>
+          ${bien?`${bien.titre||'Bien'} · `:''}${date}
+        </div>
+      </div>
+      <div class="doc-actions">
+        ${d.url&&d.url!=='#'
+          ?`<a href="${d.url}" target="_blank" class="btn btn-ghost btn-sm">Télécharger ↓</a>`
+          :`<span style="font-size:.72rem;color:rgba(248,244,238,.25);padding:7px 12px">Bientôt disponible</span>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterDocs(btn){
+  document.querySelectorAll('.doc-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const type=btn.dataset.type;
+  renderDocuments(type?allDocs.filter(d=>d.type===type):allDocs);
+}
+
+// ── EMAIL BAILLEUR B2 — Relance 48h dossiers en attente ───────
+// Appelé après chargement des dossiers si des dossiers sont en attente depuis > 48h
+async function sendB2IfNeeded(dossiers, session){
+  if(!dossiers.length)return;
+  const QUARANTE_HUIT_H=48*60*60*1000;
+  const vieux=dossiers.filter(d=>{
+    if(d.statut!=='en_attente')return false;
+    return Date.now()-new Date(d.created_at).getTime()>QUARANTE_HUIT_H;
+  });
+  if(!vieux.length)return;
+
+  // Évite d'envoyer plusieurs fois par session (clé sessionStorage)
+  const key=`kaddu_b2_sent_${session.user.id}`;
+  if(sessionStorage.getItem(key))return;
+  sessionStorage.setItem(key,'1');
+
+  const u=session.user;
+  const meta=u?.user_metadata||{};
+  const email=meta.email||u?.email;
+  if(!email)return;
+
+  sendEmail('B2',{
+    to:              email,
+    prenom_bailleur: meta.prenom||'Propriétaire',
+    nb_dossiers:     String(vieux.length),
+    espace_url:      'https://kaddu.net/espace-bailleur/',
+  }).catch(console.error);
+}
+
+// ── EMAIL BAILLEUR B3 — Confirmation de décision ──────────────
+// Appelé dans updateDossier après le PATCH
+async function sendB3(dossier, statut, session){
+  const u=session.user;
+  const meta=u?.user_metadata||{};
+  const email=meta.email||u?.email;
+  if(!email)return;
+
+  const bien=allBiens.find(b=>b.id===dossier?.bien_id);
+  const msg=safeJson(dossier?.message);
+  const loc=(msg.locataires||[])[0]||{};
+  const nomLocataire=`${loc.prenom||''} ${loc.nom||''}`.trim()||'Le candidat';
+
+  sendEmail('B3',{
+    to:              email,
+    prenom_bailleur: meta.prenom||'Propriétaire',
+    decision:        statut==='accepte'?'accepte':'refuse',
+    locataire_nom:   nomLocataire,
+    bien_titre:      bien?.titre||'Votre bien',
+    bien_adresse:    [bien?.quartier,bien?.ville].filter(Boolean).join(', '),
+    espace_url:      'https://kaddu.net/espace-bailleur/',
+  }).catch(console.error);
+}
+
+// ── EMAIL BAILLEUR B4 — Bien publié en ligne ──────────────────
+// Appelé quand un bien passe de statut brouillon/en_validation → disponible
+// Dans ce dashboard on le déclenche au premier chargement si le bien vient juste d'être publié
+// (statut=disponible et created_at < 5 min)
+async function sendB4ForNewBiens(biens, session){
+  const CINQ_MIN=5*60*1000;
+  const u=session.user;
+  const meta=u?.user_metadata||{};
+  const email=meta.email||u?.email;
+  if(!email)return;
+
+  const nouveaux=biens.filter(b=>{
+    if(b.statut!=='disponible')return false;
+    const age=Date.now()-new Date(b.created_at||0).getTime();
+    return age<CINQ_MIN;
+  });
+
+  for(const b of nouveaux){
+    const key=`kaddu_b4_sent_${b.id}`;
+    if(sessionStorage.getItem(key))continue;
+    sessionStorage.setItem(key,'1');
+
+    await sendEmail('B4',{
+      to:              email,
+      prenom_bailleur: meta.prenom||'Propriétaire',
+      bien_titre:      b.titre||b.type_bien||'Votre bien',
+      bien_adresse:    [b.quartier,b.ville].filter(Boolean).join(', '),
+      bien_prix:       b.prix?String(b.prix):'',
+      bien_surface:    b.surface?String(b.surface):'',
+      bien_url:        `https://kaddu.net/biens/?id=${b.id}`,
+      espace_url:      'https://kaddu.net/espace-bailleur/',
+    }).catch(console.error);
+  }
+}
 function renderChart(){
   const mois=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
   const now=new Date().getMonth();
