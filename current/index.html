@@ -852,6 +852,29 @@
       .modal-cta-actions .btn,.btn-whatsapp{width:100%;justify-content:center}
     }
   </style>
+  <script>
+    /* Kàddu — auth nav state */
+    (function(){
+      try {
+        var raw = sessionStorage.getItem('kaddu_jwt');
+        if (!raw) return;
+        var s = JSON.parse(raw);
+        if (Date.now() > s.expires) { sessionStorage.removeItem('kaddu_jwt'); return; }
+        document.addEventListener('DOMContentLoaded', function(){
+          var btn = document.getElementById('nav-login-btn');
+          if (!btn) return;
+          var meta = (s.user && s.user.user_metadata) || {};
+          var prenom = meta.prenom || (s.user && s.user.email && s.user.email.split('@')[0]) || 'Mon espace';
+          var href = s.role === 'bailleur' ? '/espace-bailleur/' : '/espace-locataire/';
+          btn.href = href;
+          btn.textContent = '👤 ' + prenom;
+          btn.style.background = 'rgba(191,150,80,.12)';
+          btn.style.borderColor = 'rgba(191,150,80,.35)';
+          btn.style.color = '#DDB96E';
+        });
+      } catch(e){}
+    })();
+  </script>
 </head>
 <body>
 
@@ -872,7 +895,7 @@
         <a href="#biens">Biens</a>
       </div>
       <div class="nav-cta">
-        <a class="btn btn-secondary" href="/tunnel/dossier-v2-step1.html">Déposer mon dossier</a>
+        <a id="nav-login-btn" class="btn btn-secondary" href="/auth/">Connexion</a>
         <a class="btn btn-primary" href="#cta-final">Confier mon bien</a>
       </div>
     </div>
@@ -886,7 +909,7 @@
         <div class="hero-copy">
           <span class="eyebrow">1ère agence immobilière 100% digitale au Sénégal</span>
           <h1 style="font-size:clamp(1.6rem,2.8vw,2.6rem);text-align:justify;text-justify:inter-word;line-height:1.15">
-            Appartements vérifiés au Sénégal —<br>
+            Appartements vérifiés à Dakar —<br>
             <em>la seule plateforme qui sécurise<br>le bien et le locataire</em>.
           </h1>
           <p class="hero-text" style="font-size:1.05rem;color:rgba(248,244,238,.72);margin-bottom:8px;text-align:justify;text-justify:inter-word">
@@ -1624,7 +1647,7 @@
           <div class="cta-grid">
             <article class="cta-box">
               <h3>Vous êtes <em>propriétaire</em></h3>
-              <p>Vous cherchez une solution plus réactive, plus claire et plus alignée avec la qualité de votre bien au Sénégal. Zéro intermédiaire flou.</p>
+              <p>Vous cherchez une solution plus réactive, plus claire et plus alignée avec la qualité de votre bien à Dakar. Zéro intermédiaire flou.</p>
               <a class="btn btn-primary btn-lg" href="mailto:contact@kaddu.net?subject=Confier%20mon%20bien%20%C3%A0%20K%C3%A0ddu">Confier mon bien →</a>
             </article>
             <article class="cta-box">
@@ -1643,7 +1666,7 @@
       <div class="footer-grid">
         <div>
           <div class="foot-kicker">Kàddu</div>
-          <div class="foot-text">Plateforme immobilière digitale premium conçue pour réconcilier propriétaires exigeants et locataires sérieux au Sénégal.</div>
+          <div class="foot-text">Plateforme immobilière digitale premium conçue pour réconcilier propriétaires exigeants et locataires sérieux à Dakar.</div>
         </div>
         <div class="foot-col">
           <div class="foot-kicker">Parcours</div>
