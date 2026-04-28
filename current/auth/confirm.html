@@ -164,14 +164,42 @@ function getRedirectUrl(role) {
 
 let redirectTarget = '/';
 
-// ── DÉTECTION TOKEN DANS LE HASH ────────────────────────────
-// Supabase redirige vers : kaddu.net/auth/confirm#access_token=...&type=signup
-// ou                       kaddu.net/auth/confirm#access_token=...&type=recovery
+// ── DÉTECTION TOKEN ──────────────────────────────────────────
+// Cas 1 : hash Supabase  → #access_token=...&type=recovery
+// Cas 2 : query param    → ?token=...&type=recovery (template email Kaddu)
 async function handleHashToken() {
-  const hash = window.location.hash.substring(1); // retire le #
+  const qp = new URLSearchParams(window.location.search);
+
+  // Cas 2 : token OTP en query param
+  if (qp.get('token') && qp.get('type') === 'recovery') {
+    show('processing-view');
+    try {
+      const res = await fetch(SB_URL + '/auth/v1/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SB_ANON },
+        body: JSON.stringify({ token: qp.get('token'), type: 'recovery' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.msg || data.message || 'Token invalide ou expire.');
+      sessionStorage.setItem('kaddu_jwt', JSON.stringify({
+        access_token:  data.access_token,
+        refresh_token: data.refresh_token,
+        expires: Date.now() + (data.expires_in || 3600) * 1000,
+        user: data.user
+      }));
+      sessionStorage.setItem('kaddu_session_active', '1');
+      window.location.href = '/auth/reset-password.html';
+    } catch(e) {
+      showAlert('Lien invalide ou expire. Demandez un nouveau lien.', 'error');
+      show('resend-view');
+    }
+    return true;
+  }
+
+  // Cas 1 : hash standard Supabase
+  const hash = window.location.hash.substring(1);
   if (!hash || !hash.includes('access_token')) return false;
 
-  // Affiche la vue "traitement en cours"
   show('processing-view');
 
   const params = new URLSearchParams(hash);
