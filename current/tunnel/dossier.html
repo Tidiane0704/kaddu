@@ -27,8 +27,9 @@
       background:rgba(7,15,26,.8);backdrop-filter:blur(8px);
       position:sticky;top:0;z-index:100;
     }
-    .nav-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or)}
-    .nav-logo img{height:28px}
+    .nav-logo{display:flex;align-items:center;gap:10px;transition:.2s}
+    .nav-logo img{height:42px;width:auto;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(191,150,80,.28));transition:.2s}
+    .nav-logo:hover img{transform:scale(1.035);filter:drop-shadow(0 12px 34px rgba(191,150,80,.38))}
     .nav-back{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
     .nav-back:hover{color:var(--or)}
 
@@ -219,11 +220,49 @@
     .loading-bar-inner{height:100%;background:var(--or);animation:load 1s ease both}
     @keyframes load{from{width:0}to{width:100%}}
 
+
+    /* ── KÀDDU DUOTONE PREMIUM ICONS ── */
+    .kicon{width:54px;height:54px;margin:0 auto 12px;display:block;filter:drop-shadow(0 8px 18px rgba(191,150,80,.18));transition:.2s}
+    .kicon svg{width:100%;height:100%;display:block}
+    .kicon .gold{fill:url(#kgold)}.kicon .beige{fill:#E8DCC5;opacity:.92}.kicon .stroke{fill:none;stroke:#DDB96E;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .choice-card{position:relative;min-height:148px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(11,32,57,.74),rgba(7,24,43,.56))}
+    .choice-card.selected .kicon{transform:translateY(-1px) scale(1.03)}
+    .choice-card.selected::after{content:'✓';position:absolute;right:12px;top:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--orl),var(--or));color:#07182B;font-weight:800;font-size:.78rem;box-shadow:0 8px 20px rgba(191,150,80,.28)}
+    .premium-shell{background:radial-gradient(circle at 10% 0%,rgba(191,150,80,.11),transparent 30%),radial-gradient(circle at 80% 8%,rgba(74,158,255,.08),transparent 28%),rgba(7,15,26,.42);border:1px solid var(--bdr);border-radius:24px;padding:26px;box-shadow:0 28px 90px rgba(0,0,0,.28)}
+    .bien-panel-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:10px}
+    .bien-card{border-radius:24px;background:linear-gradient(180deg,rgba(11,32,57,.96),rgba(7,24,43,.92));box-shadow:0 30px 90px rgba(0,0,0,.34);border:1px solid rgba(191,150,80,.28)}
+    .bien-card-img{height:236px;position:relative;overflow:hidden;background:#07182B}
+    .bien-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+    .bien-card:hover .bien-card-img img{transform:scale(1.035)}
+    .bien-card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,15,26,.04),rgba(7,15,26,.18) 55%,rgba(7,15,26,.62));pointer-events:none}
+    .photo-badge{position:absolute;right:14px;top:14px;z-index:2;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(7,15,26,.76);border:1px solid rgba(0,200,117,.28);color:var(--green);font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(10px)}
+    .photo-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
+    .bien-card-title{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:300;line-height:1.12;margin:8px 0 10px;color:var(--blanc)}
+    .bien-card-location{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.86rem;margin-bottom:16px}
+    .bien-card-prix{font-size:1.62rem}.bien-card-features{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:18px;padding-top:18px;border-top:1px solid var(--bdr)}
+    .feature{text-align:center;border-right:1px solid var(--bdr);padding:0 8px;color:var(--blanc);font-size:.78rem}.feature:last-child{border-right:none}.feature svg{width:28px;height:28px;margin-bottom:7px;color:var(--or)}
+    .bien-cta,.carousel-cta{margin-top:20px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--or);border-radius:12px;padding:13px 16px;color:var(--orl);background:rgba(191,150,80,.06);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;transition:.2s;cursor:pointer}.bien-cta:hover,.carousel-cta:hover{background:rgba(191,150,80,.14);transform:translateY(-1px)}
+    .carousel-card{background:linear-gradient(180deg,rgba(11,32,57,.96),rgba(7,24,43,.92));border:1px solid rgba(191,150,80,.28);border-radius:24px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.34)}
+    .carousel-hero{position:relative;height:236px;overflow:hidden;background:#07182B}.carousel-hero img{width:100%;height:100%;object-fit:cover;display:block}.carousel-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,15,26,.03),rgba(7,15,26,.62))}
+    .carousel-body{padding:16px}.carousel-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300;margin-bottom:8px}.carousel-meta{color:var(--muted);font-size:.82rem;line-height:1.5}.carousel-dots{display:flex;gap:6px;margin-top:14px}.carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(248,244,238,.22)}.carousel-dot.active{background:var(--or)}
+    .generic-panel-copy{font-size:.84rem;color:var(--muted);line-height:1.55;margin-bottom:14px}
+    @media(max-width:900px){.premium-shell{padding:18px;border-radius:18px}.choice-card{min-height:128px}.kicon{width:44px;height:44px}}
+
     /* BG */
     body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(191,150,80,.06) 0%,transparent 60%)}
   </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="kgold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D083"/>
+      <stop offset="48%" stop-color="#BF9650"/>
+      <stop offset="100%" stop-color="#8B6520"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 
 <!-- Guard -->
 <div id="guard">
@@ -244,10 +283,9 @@
 </div>
 
 <nav class="nav">
-  <div class="nav-logo">
-    <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu" onerror="this.style.display='none'">
-    <span>Kàddu</span>
-  </div>
+  <a class="nav-logo" href="/" aria-label="Retour à l’accueil Kàddu">
+    <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu">
+  </a>
   <a href="/biens/" class="nav-back">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     Retour aux annonces
@@ -257,7 +295,7 @@
 <div id="main-wrap">
   <div class="layout">
     <!-- MAIN FORM -->
-    <div>
+    <div class="premium-shell">
       <!-- STEPPER -->
       <div class="stepper" id="stepper">
         <div class="step-item" onclick="goStep(1)">
@@ -282,17 +320,17 @@
            ÉTAPE 1 — INFOS GÉNÉRALES
       ═══════════════════════════════ -->
       <div class="form-section active" id="section-1">
-        <h1 class="section-title">Bienvenue chez <em>Kàddu</em></h1>
-        <p class="section-sub">Commençons par renseigner votre fiche d'information. Ce document vous permet de postuler rapidement aux logements qui vous intéressent.</p>
+        <h1 class="section-title">Déposez votre <em>dossier</em></h1>
+        <p class="section-sub">Quelques informations suffisent pour qualifier votre projet. Votre dossier sera ensuite analysé par Kàddu avant transmission au propriétaire.</p>
 
         <!-- Composition -->
         <div class="form-group">
           <label class="form-label">Qui occupera le logement ?</label>
           <div class="choice-grid choice-grid-4">
-            <div class="choice-card selected" onclick="selectCompo(this,'seul')"><span class="choice-icon">🧍</span><span class="choice-label">Locataire seul(e)</span></div>
-            <div class="choice-card" onclick="selectCompo(this,'couple')"><span class="choice-icon">👫</span><span class="choice-label">Couple (sans enfants)</span></div>
-            <div class="choice-card" onclick="selectCompo(this,'famille')"><span class="choice-icon">👨‍👩‍👧</span><span class="choice-label">Famille</span></div>
-            <div class="choice-card" onclick="selectCompo(this,'colocation')"><span class="choice-icon">👥</span><span class="choice-label">Colocation</span></div>
+            <div class="choice-card selected" onclick="selectCompo(this,'seul')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="17" r="9"/><path class="gold" d="M18 55c1-15 8-24 14-24s13 9 14 24H18z"/><path class="beige" d="M32 30c3.5 0 6.6-1.2 8.6-3.1C38.2 31.5 35.3 34 32 34s-6.2-2.5-8.6-7.1C25.4 28.8 28.5 30 32 30z"/></svg></span><span class="choice-label">Locataire seul(e)</span></div>
+            <div class="choice-card" onclick="selectCompo(this,'couple')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="24" cy="18" r="8"/><circle class="beige" cx="42" cy="21" r="7"/><path class="gold" d="M12 55c.8-14 6.5-23 12-23s11.2 9 12 23H12z"/><path class="beige" d="M32 55c.6-12 5-20 10-20s9.4 8 10 20H32z"/></svg></span><span class="choice-label">Couple (sans enfants)</span></div>
+            <div class="choice-card" onclick="selectCompo(this,'famille')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="22" cy="18" r="8"/><circle class="beige" cx="43" cy="18" r="8"/><circle class="gold" cx="32" cy="34" r="6"/><path class="gold" d="M10 55c.8-13 6-22 12-22s11.2 9 12 22H10z"/><path class="beige" d="M30 55c.8-13 6-22 13-22s11.2 9 12 22H30z"/><path class="gold" d="M24 58c.5-9 4-15 8-15s7.5 6 8 15H24z"/></svg></span><span class="choice-label">Famille</span></div>
+            <div class="choice-card" onclick="selectCompo(this,'colocation')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="18" cy="20" r="7"/><circle class="beige" cx="32" cy="17" r="8"/><circle class="gold" cx="47" cy="20" r="7"/><path class="gold" d="M8 55c.7-12 5-20 10-20s9.3 8 10 20H8z"/><path class="beige" d="M20 56c.8-14 6-23 12-23s11.2 9 12 23H20z"/><path class="gold" d="M38 55c.7-12 5-20 9-20s9.3 8 10 20H38z"/></svg></span><span class="choice-label">Colocation</span></div>
           </div>
           <!-- Famille -->
           <div id="compo-famille" style="display:none">
@@ -310,10 +348,10 @@
           <label class="form-label">Quand souhaitez-vous emménager ?</label>
           <p class="form-hint" style="margin-bottom:12px">Merci de prévoir une date hors week-end, afin qu'un agent Kàddu soit disponible le jour de l'emménagement.</p>
           <div class="choice-grid choice-grid-4">
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','semaine')"><span class="choice-icon">⚡</span><span class="choice-label">Moins d'une semaine</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','deux-semaines')"><span class="choice-icon">➡️</span><span class="choice-label">Une à deux semaines</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','mois')"><span class="choice-icon">🔄</span><span class="choice-label">D'ici un mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','plus-mois')"><span class="choice-icon">📅</span><span class="choice-label">Plus d'un mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','semaine')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="32" r="25"/><path d="M32 14v32M20 35l12 12 12-12" class="stroke" style="stroke:#07182B;stroke-width:3.6"/></svg></span><span class="choice-label">Moins d'une semaine</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','deux-semaines')"><span class="kicon"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="25" fill="none" stroke="#DDB96E" stroke-width="3"/><path d="M20 32h23M35 23l9 9-9 9" class="stroke"/></svg></span><span class="choice-label">Une à deux semaines</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path d="M48 26a18 18 0 1 0-5 17" class="stroke"/><path d="M47 43h8v-8" class="stroke"/><circle class="gold" cx="32" cy="32" r="4"/></svg></span><span class="choice-label">D'ici un mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'emmenagement','plus-mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path d="M47 26a18 18 0 1 0-5 17" class="stroke"/><path d="M47 43h8v-8M48 16v10M43 21h10" class="stroke"/><circle class="gold" cx="32" cy="32" r="4"/></svg></span><span class="choice-label">Plus d'un mois</span></div>
           </div>
         </div>
 
@@ -322,10 +360,10 @@
           <label class="form-label">Durée envisagée</label>
           <p class="form-hint" style="margin-bottom:12px">Votre réponse ne constitue pas un engagement : cette estimation nous permet d'en savoir plus sur votre projet.</p>
           <div class="choice-grid choice-grid-4">
-            <div class="choice-card" onclick="selectChoice(this,'duree','6mois')"><span class="choice-icon">🏠</span><span class="choice-label">Moins de 6 mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'duree','6-12mois')"><span class="choice-icon">🏠</span><span class="choice-label">6 à 12 mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'duree','12-36mois')"><span class="choice-icon">🏠</span><span class="choice-label">12 à 36 mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'duree','3ans')"><span class="choice-icon">🏠</span><span class="choice-label">Plus de 3 ans</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','6mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">Moins de 6 mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','6-12mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">6 à 12 mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','12-36mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">12 à 36 mois</span></div>
+            <div class="choice-card" onclick="selectChoice(this,'duree','3ans')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">Plus de 3 ans</span></div>
           </div>
         </div>
 
@@ -365,8 +403,8 @@
           <div class="form-group">
             <label class="form-label">Quelle est la nature de ce locataire ?</label>
             <div class="choice-grid choice-grid-2">
-              <div class="choice-card selected" onclick="selectNature(this,'physique','loc')"><span class="choice-icon">👤</span><span class="choice-label">Personne physique</span></div>
-              <div class="choice-card" onclick="selectNature(this,'societe','loc')"><span class="choice-icon">🏢</span><span class="choice-label">Société</span></div>
+              <div class="choice-card selected" onclick="selectNature(this,'physique','loc')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="18" r="9"/><path class="beige" d="M16 54c1-14 8-23 16-23s15 9 16 23H16z"/></svg></span><span class="choice-label">Personne physique</span></div>
+              <div class="choice-card" onclick="selectNature(this,'societe','loc')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M16 10h26v44H16z"/><path class="beige" d="M42 25h10v29H42z"/><path fill="#07182B" d="M23 18h5v5h-5zm10 0h5v5h-5zM23 29h5v5h-5zm10 0h5v5h-5zM23 40h5v5h-5zm10 0h5v5h-5z"/></svg></span><span class="choice-label">Société</span></div>
             </div>
           </div>
 
@@ -460,10 +498,10 @@
         <!-- Choix type garant -->
         <div id="gar-type-wrap">
           <div class="garant-grid">
-            <div class="choice-card" onclick="selectGarantType('physique')"><span class="choice-icon">👤</span><span class="choice-label">Personne physique</span></div>
-            <div class="choice-card" onclick="selectGarantType('societe')"><span class="choice-icon">🏢</span><span class="choice-label">Société</span></div>
-            <div class="choice-card" onclick="selectGarantType('garant_prive')"><span class="choice-icon">🛡️</span><span class="choice-label">Garant privé</span></div>
-            <div class="choice-card" onclick="openNoGarantModal()"><span class="choice-icon">🚫</span><span class="choice-label">Je n'ai pas de garant</span></div>
+            <div class="choice-card" onclick="selectGarantType('physique')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="18" r="9"/><path class="beige" d="M16 54c1-14 8-23 16-23s15 9 16 23H16z"/></svg></span><span class="choice-label">Personne physique</span></div>
+            <div class="choice-card" onclick="selectGarantType('societe')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M16 10h26v44H16z"/><path class="beige" d="M42 25h10v29H42z"/><path fill="#07182B" d="M23 18h5v5h-5zm10 0h5v5h-5zM23 29h5v5h-5zm10 0h5v5h-5zM23 40h5v5h-5zm10 0h5v5h-5z"/></svg></span><span class="choice-label">Société</span></div>
+            <div class="choice-card" onclick="selectGarantType('garant_prive')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M32 8 52 17v13c0 15-8 25-20 30C20 55 12 45 12 30V17l20-9z"/><path class="beige" d="M24 33l5 5 12-14 4 4-16 18-9-9 4-4z"/></svg></span><span class="choice-label">Garant privé</span></div>
+            <div class="choice-card" onclick="openNoGarantModal()"><span class="kicon"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="23" fill="none" stroke="#DDB96E" stroke-width="4"/><path d="M18 46 46 18" class="stroke"/><circle class="beige" cx="32" cy="28" r="7"/><path class="beige" d="M20 50c1-10 6-16 12-16s11 6 12 16H20z" opacity=".45"/></svg></span><span class="choice-label">Je n'ai pas de garant</span></div>
           </div>
         </div>
 
@@ -524,26 +562,48 @@
       </div>
     </div>
 
-    <!-- RIGHT PANEL — Bien -->
-    <div class="bien-panel">
-      <div class="bien-card">
-        <div class="bien-card-img" id="bien-img">🏠</div>
+    <!-- RIGHT PANEL — Bien / Carousel -->
+    <aside class="bien-panel" id="right-panel">
+      <div class="bien-card" id="selected-bien-card" style="display:none">
+        <div class="bien-card-img" id="bien-img">
+          <span class="photo-badge" id="bien-dispo">Disponible</span>
+        </div>
         <div class="bien-card-body">
           <div class="bien-card-label">Vous postulez pour :</div>
-          <div class="bien-card-ville" id="bien-ville">—</div>
+          <h2 class="bien-card-title" id="bien-title">—</h2>
+          <div class="bien-card-location">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BF9650" stroke-width="2"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="bien-ville">—</span>
+          </div>
           <div class="bien-card-prix" id="bien-prix">—</div>
           <div class="bien-card-charges" id="bien-charges"></div>
-          <div class="bien-card-details" id="bien-details"></div>
-          <div class="bien-card-badge" id="bien-dispo">● Disponible</div>
+          <div class="bien-card-features">
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11h18v8H3z"/><path d="M7 11V7h10v4"/></svg><div id="bien-pieces">—</div></div>
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M9 4v16M4 9h16"/></svg><div id="bien-surface">—</div></div>
+            <div class="feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16v7H4z"/><path d="M7 10V7h10v3"/></svg><div id="bien-type">—</div></div>
+          </div>
+          <button class="bien-cta" onclick="location.href='/biens/'">Voir les annonces →</button>
         </div>
       </div>
-    </div>
+
+      <div class="carousel-card" id="available-carousel-card">
+        <div class="carousel-hero" id="carousel-img"></div>
+        <div class="carousel-body">
+          <div class="bien-panel-title">Aucun bien sélectionné</div>
+          <h2 class="carousel-title">Créez votre dossier locataire</h2>
+          <p class="generic-panel-copy">Votre dossier sera prêt à être transmis dès que vous choisirez un bien. Vous pourrez ensuite postuler plus vite aux logements disponibles.</p>
+          <div class="carousel-meta" id="carousel-meta">Chargement des biens disponibles…</div>
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <button class="carousel-cta" onclick="location.href='/biens/'">Explorer les biens disponibles →</button>
+        </div>
+      </div>
+    </aside>
   </div>
 </div>
 
 <!-- SUCCESS PAGE -->
 <div id="success-page">
-  <div class="success-icon">🎉</div>
+  <div class="success-icon">✓</div>
   <h1 class="success-title">Dossier <em>envoyé</em> !</h1>
   <p class="success-sub">Votre dossier de candidature a bien été transmis. L'équipe Kàddu va l'analyser et reviendra vers vous dans les meilleurs délais.</p>
   <a href="/espace-locataire/" class="btn btn-primary btn-lg">Suivre mon dossier →</a>
@@ -552,6 +612,7 @@
 <script>
 const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
 const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
 function getSession(){
@@ -563,7 +624,6 @@ function getSession(){
     return s;
   }catch{return null;}
 }
-window.addEventListener('beforeunload',()=>sessionStorage.removeItem('kaddu_jwt'));
 
 // ── INIT ─────────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
@@ -573,23 +633,64 @@ const session = getSession();
 // Auth guard — allow non-logged in (they can still fill) but note user
 setTimeout(()=>{
   document.getElementById('guard').style.display='none';
-  if(bienId) loadBien(bienId);
+  if(bienId) loadBien(bienId); else loadAvailableBiens();
 },800);
 
+function getPhotoFromPhotos(photos){
+  let ph=[];
+  try{ph=Array.isArray(photos)?photos:JSON.parse(photos||'[]');}catch{}
+  const first=ph[0];
+  return first?.url || first?.src || first?.path || first || '';
+}
+function localFallbackBiens(){
+  return [
+    {titre:'Le petit Nopalukay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,type_bien:'meublé',statut:'disponible',photo:'/assets/biens/nopalukay-01.jpeg'},
+    {titre:'Le petit Bantukay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,type_bien:'meublé',statut:'disponible',photo:'/assets/biens/bantukay-01.jpeg'},
+    {titre:'Le petit Suxalikay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,type_bien:'meublé',statut:'disponible',photo:'/assets/biens/suxalikay-09.jpeg'}
+  ];
+}
 async function loadBien(id){
   try{
-    const res=await fetch(`${SB_URL}/rest/v1/biens?id=eq.${id}&select=titre,quartier,ville,prix,charges,surface,pieces,statut,photos`,{headers:{'apikey':SB_KEY}});
+    const res=await fetch(`${SB_URL}/rest/v1/biens?id=eq.${id}&select=titre,quartier,ville,prix,charges,surface,pieces,statut,type_bien,photos`,{headers:{'apikey':SB_KEY}});
     const d=await res.json();
-    if(!d.length)return;
+    if(!d.length){loadAvailableBiens();return;}
     const b=d[0];
-    document.getElementById('bien-ville').textContent=(b.quartier||'')+(b.ville?', '+b.ville:'');
-    document.getElementById('bien-prix').textContent=b.prix?b.prix.toLocaleString('fr-FR')+' F / mois':'—';
-    document.getElementById('bien-charges').textContent=b.charges?'(dont '+b.charges.toLocaleString('fr-FR')+' F de charges)':'';
-    document.getElementById('bien-details').textContent=[b.pieces?b.pieces+' pièces':null,b.surface?b.surface+' m²':null].filter(Boolean).join(' · ');
-    document.getElementById('bien-dispo').textContent='● '+(b.statut==='disponible'?'Disponible immédiatement':'Disponible');
-    // Photo
-    try{const ph=JSON.parse(b.photos||'[]');if(ph[0]){document.getElementById('bien-img').innerHTML=`<img src="${ph[0]}" style="width:100%;height:160px;object-fit:cover">`; }}catch{}
-  }catch{}
+    document.getElementById('available-carousel-card').style.display='none';
+    document.getElementById('selected-bien-card').style.display='block';
+    const prix=Number(b.prix||0), charges=Number(b.charges||0);
+    const ville=[b.quartier,b.ville||'Dakar'].filter(Boolean).join(', ');
+    document.getElementById('bien-title').textContent=b.titre||'Bien Kàddu';
+    document.getElementById('bien-ville').textContent=ville||'Dakar, Sénégal';
+    document.getElementById('bien-prix').textContent=prix?prix.toLocaleString('fr-FR')+' F CFA / mois':'Prix sur demande';
+    document.getElementById('bien-charges').textContent=charges?`(dont ${charges.toLocaleString('fr-FR')} F CFA de charges)`:'';
+    document.getElementById('bien-pieces').textContent=b.pieces?`${b.pieces} pièces`:'—';
+    document.getElementById('bien-surface').textContent=b.surface?`${b.surface} m²`:'—';
+    document.getElementById('bien-type').textContent=b.type_bien?String(b.type_bien).replace('_',' '):'—';
+    const statut=(b.statut==='disponible'||!b.statut)?'Disponible':b.statut;
+    const photo=getPhotoFromPhotos(b.photos);
+    document.getElementById('bien-img').innerHTML=`${photo?`<img src="${photo}" alt="${b.titre||'Bien Kàddu'}">`:''}<span class="photo-badge" id="bien-dispo">${statut}</span>`;
+  }catch(e){console.warn('Bien indisponible, affichage carousel',e);loadAvailableBiens();}
+}
+let carouselItems=[];let carouselIdx=0;let carouselTimer=null;
+async function loadAvailableBiens(){
+  document.getElementById('selected-bien-card').style.display='none';
+  document.getElementById('available-carousel-card').style.display='block';
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/biens?statut=eq.disponible&select=id,titre,quartier,ville,prix,surface,pieces,type_bien,photos&limit=5`,{headers:{'apikey':SB_KEY}});
+    const data=res.ok?await res.json():[];
+    carouselItems=(data||[]).map(b=>({...b,photo:getPhotoFromPhotos(b.photos)})).filter(b=>b.photo);
+  }catch{carouselItems=[];}
+  if(!carouselItems.length) carouselItems=localFallbackBiens();
+  renderCarousel();
+  if(carouselTimer)clearInterval(carouselTimer);
+  carouselTimer=setInterval(()=>{carouselIdx=(carouselIdx+1)%carouselItems.length;renderCarousel();},4200);
+}
+function renderCarousel(){
+  const b=carouselItems[carouselIdx]||localFallbackBiens()[0];
+  const prix=Number(b.prix||0);
+  document.getElementById('carousel-img').innerHTML=`<img src="${b.photo}" alt="${b.titre||'Bien disponible'}">`;
+  document.getElementById('carousel-meta').innerHTML=`<strong style="color:var(--blanc)">${b.titre||'Bien disponible'}</strong><br>${[b.quartier,b.ville||'Dakar'].filter(Boolean).join(', ')} · ${b.surface||'—'} m² · ${b.pieces||'—'} pièces<br>${prix?prix.toLocaleString('fr-FR')+' F CFA / mois':'Prix sur demande'}`;
+  document.getElementById('carousel-dots').innerHTML=carouselItems.map((_,i)=>`<span class="carousel-dot ${i===carouselIdx?'active':''}" onclick="carouselIdx=${i};renderCarousel()"></span>`).join('');
 }
 
 // ── STATE ─────────────────────────────────────────────────────
@@ -857,11 +958,84 @@ async function submitDossier(btn){
     document.getElementById('main-wrap').style.display='none';
     document.getElementById('success-page').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});
+
+    // ── NOTIFICATIONS EMAIL ──────────────────────────────
+    const loc0 = locataires[0] || {};
+    const bienTitre = document.getElementById('bien-titre-display')?.textContent || 'Votre logement';
+    const bienAdresse = document.getElementById('bien-adresse-display')?.textContent || '';
+
+    // L1 — Confirmation au locataire principal
+    if(loc0.email){
+      sendEmail('L1', {
+        to:          loc0.email,
+        prenom:      loc0.prenom || 'Locataire',
+        bien_titre:  bienTitre,
+        bien_adresse: bienAdresse,
+        has_docs:    'false',
+        dossier_url: 'https://kaddu.net/espace-locataire/'
+      }).catch(console.error);
+    }
+
+    // B1 — Notification au bailleur si bien connu
+    if(bienId){
+      notifyBailleur(bienId, bienTitre, bienAdresse, loc0).catch(console.error);
+    }
+
   }catch(e){
     showAlert(e.message,'error');
     btn.disabled=false;
     document.getElementById('spinner-submit').style.display='none';
   }
+}
+
+// ── EMAIL HELPERS ────────────────────────────────────────
+async function sendEmail(type, payload){
+  try{
+    const res = await fetch(EDGE_URL + '/send-email', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({type, payload})
+    });
+    const data = await res.json();
+    if(!data.success) console.warn('[send-email]', data.error);
+  }catch(e){ console.warn('[send-email] fetch error', e.message); }
+}
+
+async function notifyBailleur(bienId, bienTitre, bienAdresse, loc){
+  try{
+    // Récupérer proprietaire_id du bien
+    const res = await fetch(
+      `${SB_URL}/rest/v1/biens?id=eq.${bienId}&select=proprietaire_id,titre,quartier,ville`,
+      {headers:{'apikey':SB_KEY}}
+    );
+    if(!res.ok) return;
+    const biens = await res.json();
+    const bien = biens[0];
+    if(!bien?.proprietaire_id) return;
+
+    // Récupérer email + prenom du propriétaire
+    const res2 = await fetch(
+      `${SB_URL}/rest/v1/profils?id=eq.${bien.proprietaire_id}&select=email,prenom`,
+      {headers:{'apikey':SB_KEY, 'Authorization': session ? 'Bearer '+session.access_token : 'Bearer '+SB_KEY}}
+    );
+    if(!res2.ok) return;
+    const profils = await res2.json();
+    const profil = profils[0];
+    if(!profil?.email) return;
+
+    await sendEmail('B1', {
+      to:                  profil.email,
+      prenom_bailleur:     profil.prenom || 'Propriétaire',
+      bien_titre:          bienTitre,
+      bien_adresse:        bienAdresse,
+      locataire_nom:       (loc.prenom||'') + ' ' + (loc.nom||''),
+      locataire_situation: loc.situation || '—',
+      locataire_revenu:    String(loc.revenu || 0),
+      nb_garants:          String(garants.length),
+      composition:         compoType || '—',
+      espace_url:          'https://kaddu.net/espace-bailleur/'
+    });
+  }catch(e){ console.warn('[notifyBailleur]', e.message); }
 }
 
 // ── ALERTS ───────────────────────────────────────────────────
