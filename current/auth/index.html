@@ -3,401 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion — Kàddu</title>
+  <title>Créer son espace — Kàddu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  
   <style>
-    :root {
-      --or:#BF9650; --orl:#DDB96E; --ord:#8B6520;
-      --noir:#0F0F0F; --nbl:#07182B; --card:#0b2039;
-      --blanc:#F8F4EE; --beige:#E8DCC5; --muted:rgba(248,244,238,.62);
-      --bdr:rgba(191,150,80,.16); --bds:rgba(191,150,80,.30);
-      --green:#00C875; --blue:#4A9EFF;
-      --bg:#070f1a;
-    }
+    :root{--or:#BF9650;--orl:#DDB96E;--ord:#8B6520;--nbl:#07182B;--card:#0b2039;--blanc:#F8F4EE;--beige:#E8DCC5;--muted:rgba(248,244,238,.62);--bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);--green:#00C875;--blue:#4A9EFF;--red:#FF5454;--orange:#F59E0B;--bg:#070f1a}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
+    html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
+    body{background:radial-gradient(ellipse 58% 42% at 48% 0%,rgba(191,150,80,.07) 0%,transparent 60%),radial-gradient(circle at 88% 18%,rgba(74,158,255,.07),transparent 30%),var(--bg)}
     a{text-decoration:none;color:inherit}
-
-    /* LAYOUT */
-    .auth-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
-    @media(max-width:800px){.auth-wrap{grid-template-columns:1fr}.panel-right{display:none!important}}
-
-    /* LEFT PANEL */
-    .panel-left{
-      display:flex;flex-direction:column;justify-content:center;align-items:center;
-      padding:60px 48px;background:var(--bg);position:relative;
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--bdr);background:rgba(7,15,26,.82);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100}
+    .nav-logo-block{display:flex;flex-direction:column;gap:5px}
+    .nav-logo img{
+      height:58px;
+      width:220px;
+      object-fit:contain;
+      object-position:left center;
+      display:block;
+      filter:drop-shadow(0 8px 24px rgba(191,150,80,.32));
+      transition:.2s;
     }
-    .panel-left::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 60% 60% at 50% 0%, rgba(191,150,80,.07) 0%, transparent 70%);
-      pointer-events:none;
-    }
-    .back-link{
-      position:absolute;top:28px;left:28px;
-      display:flex;align-items:center;gap:8px;
-      font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
-      color:rgba(248,244,238,.42);transition:.2s;
-    }
-    .back-link:hover{color:var(--or)}
-    .back-link svg{width:16px;height:16px}
-
-    .auth-logo{
-      display:flex;align-items:center;gap:12px;margin-bottom:48px;
-      font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--or);
-      letter-spacing:.06em;
-    }
-    .auth-logo img{height:36px;width:auto}
-
-    .form-box{width:100%;max-width:400px}
-
-    /* TABS */
-    .tab-nav{display:flex;gap:0;margin-bottom:36px;border-bottom:1px solid var(--bdr)}
-    .tab-btn{
-      flex:1;padding:14px 0;text-align:center;
-      font-size:.82rem;letter-spacing:.10em;text-transform:uppercase;font-weight:500;
-      color:rgba(248,244,238,.38);background:transparent;border:none;cursor:pointer;
-      border-bottom:2px solid transparent;margin-bottom:-1px;transition:.2s;
-    }
-    .tab-btn.active{color:var(--or);border-bottom-color:var(--or)}
-    .tab-btn:hover:not(.active){color:rgba(248,244,238,.7)}
-
-    .tab-panel{display:none}
-    .tab-panel.active{display:block}
-
-    /* ALERT */
-    .alert{
-      display:flex;align-items:flex-start;gap:12px;
-      padding:14px 16px;border-radius:8px;margin-bottom:24px;
-      font-size:.84rem;line-height:1.5;
-    }
-    .alert-info{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.22)}
-    .alert-warn{background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.32);color:var(--orl);font-weight:500}
-    .alert-error{background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.28);color:#ff8080}
-    .alert-success{background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.28);color:var(--green)}
+    .nav-logo:hover img{transform:scale(1.035);filter:drop-shadow(0 12px 34px rgba(191,150,80,.38))}
+    .nav-tagline{margin-left:2px;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(90deg,#E8DCC5,#BF9650);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.95}
+    .nav-back{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}.nav-back:hover{color:var(--or)}
+    .auth-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;max-width:1120px;margin:0 auto;padding:40px 24px}
+    @media(max-width:920px){.auth-layout{grid-template-columns:1fr}.side-panel{display:none}}
+    .premium-shell{background:radial-gradient(circle at 10% 0%,rgba(191,150,80,.11),transparent 30%),radial-gradient(circle at 80% 8%,rgba(74,158,255,.08),transparent 28%),rgba(7,15,26,.42);border:1px solid var(--bdr);border-radius:24px;padding:30px;box-shadow:0 28px 90px rgba(0,0,0,.28)}
+    .form-head{margin-bottom:28px}.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:10px}
+    .title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:300;line-height:1.1;margin-bottom:10px}.title em{font-style:italic;color:var(--or)}
+    .subtitle{font-size:.9rem;color:var(--muted);line-height:1.65;max-width:620px}
+    .tab-nav{display:flex;gap:0;margin-bottom:28px;border-bottom:1px solid var(--bdr)}
+    .tab-btn{flex:1;padding:15px 0;text-align:center;font-size:.82rem;letter-spacing:.10em;text-transform:uppercase;font-weight:600;color:rgba(248,244,238,.38);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.2s}
+    .tab-btn.active{color:var(--or);border-bottom-color:var(--or)}.tab-btn:hover:not(.active){color:rgba(248,244,238,.7)}
+    .tab-panel{display:none}.tab-panel.active{display:block}
+    .alert{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:10px;margin-bottom:22px;font-size:.84rem;line-height:1.5}
+    .alert-info{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.22)}.alert-warn{background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.32);color:var(--orl);font-weight:500}.alert-error{background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.28);color:#ff8080}.alert-success{background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.28);color:var(--green)}
     .alert-close{margin-left:auto;cursor:pointer;opacity:.5;flex-shrink:0;background:none;border:none;color:inherit;font-size:1rem;line-height:1}
-    .alert-close:hover{opacity:1}
-
-    /* FORM */
-    .form-group{margin-bottom:16px;position:relative}
-    .form-label{font-size:.74rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.44);margin-bottom:8px;display:block}
-    .form-input{
-      width:100%;padding:14px 16px;
-      background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.10);
-      border-radius:8px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.95rem;
-      transition:.2s;outline:none;
-    }
-    .form-input:focus{border-color:var(--or);background:rgba(191,150,80,.06)}
-    .form-input::placeholder{color:rgba(248,244,238,.25)}
-    .form-input.error{border-color:rgba(255,80,80,.5)}
-
-    .form-hint{font-size:.76rem;color:rgba(248,244,238,.35);margin-top:6px}
-
-    /* ROLE SELECTOR */
-    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-    .role-card{
-      padding:16px;border-radius:8px;cursor:pointer;
-      border:1px solid rgba(248,244,238,.10);background:rgba(255,255,255,.03);
-      transition:.2s;text-align:center;
-    }
-    .role-card:hover{border-color:var(--bds)}
-    .role-card.selected{border-color:var(--or);background:rgba(191,150,80,.08)}
-    .role-card input{display:none}
-    .role-icon{font-size:1.6rem;margin-bottom:8px}
-    .role-label{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(248,244,238,.6)}
-    .role-card.selected .role-label{color:var(--or)}
-
-    /* BUTTONS */
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:14px 24px;border-radius:8px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.10em;
-      text-transform:uppercase;transition:.2s;border:none;width:100%;
-    }
-    .btn-primary{background:var(--or);color:#0a0a0a}
-    .btn-primary:hover:not(:disabled){background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}
-    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
-    .btn-outline{background:transparent;color:var(--blanc);border:1px solid rgba(248,244,238,.16)}
-    .btn-outline:hover{border-color:var(--or);color:var(--or)}
-    .btn-sso{
-      background:rgba(255,255,255,.05);border:1px solid rgba(248,244,238,.14);
-      color:var(--blanc);border-radius:8px;padding:12px;cursor:pointer;
-      font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
-      display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;
-    }
-    .btn-sso:hover{background:rgba(255,255,255,.09);border-color:var(--bds)}
-
+    .kicon{width:54px;height:54px;margin:0 auto 12px;display:block;filter:drop-shadow(0 8px 18px rgba(191,150,80,.18));transition:.2s}.kicon svg{width:100%;height:100%;display:block}.kicon .gold{fill:url(#kgold)}.kicon .beige{fill:#E8DCC5;opacity:.92}
+    .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+    .role-card{position:relative;min-height:142px;padding:20px 14px;border-radius:14px;cursor:pointer;text-align:center;border:1.5px solid rgba(248,244,238,.10);background:linear-gradient(180deg,rgba(11,32,57,.74),rgba(7,24,43,.56));transition:.2s;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .role-card:hover{border-color:var(--bds);background:rgba(191,150,80,.05)}.role-card.selected{border-color:var(--or);background:rgba(191,150,80,.10)}
+    .role-card.selected::after{content:'✓';position:absolute;right:12px;top:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--orl),var(--or));color:#07182B;font-weight:800;font-size:.78rem;box-shadow:0 8px 20px rgba(191,150,80,.28)}
+    .role-card input{display:none}.role-label{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(248,244,238,.7)}.role-card.selected .role-label{color:var(--or);font-weight:600}
+    .form-group{margin-bottom:16px;position:relative}.form-label{font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.42);margin-bottom:8px;display:block}
+    .form-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.10);border-radius:10px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.95rem;transition:.2s;outline:none}
+    .form-input:focus{border-color:var(--or);background:rgba(191,150,80,.06)}.form-input::placeholder{color:rgba(248,244,238,.25)}.form-input.error{border-color:rgba(255,80,80,.5)}
+    .form-hint{font-size:.76rem;color:rgba(248,244,238,.35);margin-top:6px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:620px){.form-row{grid-template-columns:1fr}.premium-shell{padding:22px}.title{font-size:1.7rem}.role-grid{grid-template-columns:1fr}}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.10em;text-transform:uppercase;transition:.2s;border:none;width:100%}
+    .btn-primary{background:var(--or);color:#0a0a0a}.btn-primary:hover:not(:disabled){background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-outline{background:transparent;color:var(--blanc);border:1px solid rgba(248,244,238,.16)}.btn-outline:hover{border-color:var(--or);color:var(--or)}
+    .btn-sso{background:rgba(255,255,255,.05);border:1px solid rgba(248,244,238,.14);color:var(--blanc);border-radius:10px;padding:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.btn-sso:hover{background:rgba(255,255,255,.09);border-color:var(--bds)}
     .sso-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px}
-
-    .divider{display:flex;align-items:center;gap:16px;margin:20px 0;color:rgba(248,244,238,.28);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}
-    .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(248,244,238,.10)}
-
-    .link-muted{display:block;text-align:center;font-size:.82rem;color:rgba(248,244,238,.42);cursor:pointer;transition:.2s;margin-top:16px}
-    .link-muted:hover,.link-muted span{color:var(--or)}
-    .link-muted u{text-decoration-color:rgba(191,150,80,.4)}
-
-    .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* RIGHT PANEL */
-    .panel-right{
-      position:relative;overflow:hidden;
-      background:linear-gradient(135deg, #0a1628 0%, #07182B 100%);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:60px 48px;text-align:center;
+    .divider{display:flex;align-items:center;gap:16px;margin:20px 0;color:rgba(248,244,238,.28);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(248,244,238,.10)}
+    .link-muted{display:block;text-align:center;font-size:.82rem;color:rgba(248,244,238,.42);cursor:pointer;transition:.2s;margin-top:16px}.link-muted:hover,.link-muted span{color:var(--or)}
+    .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}@keyframes spin{to{transform:rotate(360deg)}}
+    .side-panel{position:sticky;top:96px;align-self:start}
+    .carousel-card{background:linear-gradient(180deg,rgba(11,32,57,.96),rgba(7,24,43,.92));border:1px solid rgba(191,150,80,.28);border-radius:24px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.34)}
+    .carousel-hero{position:relative;height:260px;overflow:hidden;background:#07182B}.carousel-hero img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}.carousel-card:hover .carousel-hero img{transform:scale(1.035)}
+    .carousel-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,15,26,.03),rgba(7,15,26,.62))}
+    .photo-badge{position:absolute;right:14px;top:14px;z-index:2;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(7,15,26,.76);border:1px solid rgba(0,200,117,.28);color:var(--green);font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(10px)}.photo-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
+    .carousel-body{padding:18px}.panel-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:10px}
+    .carousel-title{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:300;margin-bottom:10px;line-height:1.15}.carousel-title em{font-style:italic;color:var(--or)}
+    .generic-panel-copy{font-size:.84rem;color:var(--muted);line-height:1.55;margin-bottom:16px}.carousel-meta{color:var(--muted);font-size:.82rem;line-height:1.5;padding-top:14px;border-top:1px solid var(--bdr)}
+    .carousel-dots{display:flex;gap:6px;margin-top:14px}.carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(248,244,238,.22);cursor:pointer}.carousel-dot.active{background:var(--or)}
+    .trust-list{display:grid;gap:10px;margin-top:18px}.trust-item{display:flex;gap:10px;align-items:flex-start;color:rgba(248,244,238,.68);font-size:.8rem;line-height:1.45}.trust-item svg{width:18px;height:18px;flex-shrink:0;color:var(--or);margin-top:1px}
+    .carousel-cta{margin-top:20px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--or);border-radius:12px;padding:13px 16px;color:var(--orl);background:rgba(191,150,80,.06);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;transition:.2s;cursor:pointer}.carousel-cta:hover{background:rgba(191,150,80,.14);transform:translateY(-1px)}
+  
+    @media(max-width:700px){
+      .nav{padding:14px 18px}
+      .nav-logo{width:190px;min-height:54px}
+      .nav-logo img{height:48px;width:180px}
+      .nav-tagline{font-size:.52rem;letter-spacing:.13em}
     }
-    .panel-right::before{
-      content:'';position:absolute;inset:0;
-      background:radial-gradient(ellipse 80% 60% at 60% 40%, rgba(191,150,80,.12) 0%, transparent 65%);
-      pointer-events:none;
-    }
-    /* Floating decorative shapes */
-    .deco-shapes{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-    .deco-shape{position:absolute;border-radius:50%;opacity:.06}
-    .deco-shape:nth-child(1){width:300px;height:300px;background:var(--or);top:-60px;right:-80px}
-    .deco-shape:nth-child(2){width:180px;height:180px;background:var(--orl);bottom:80px;left:-40px}
-    .deco-shape:nth-child(3){width:80px;height:80px;background:var(--or);bottom:30%;right:15%}
+</style>
 
-    .panel-right-inner{position:relative;z-index:1;width:100%;max-width:360px}
-    .panel-logo{margin-bottom:40px}
-    .panel-logo img{height:56px;width:auto}
-    .panel-logo .brand-name{
-      font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:300;
-      color:var(--blanc);margin-top:16px;letter-spacing:.04em;
-    }
-    .panel-logo .brand-name em{color:var(--or);font-style:italic}
-
-    .panel-tagline{
-      font-size:.9rem;color:rgba(248,244,238,.55);line-height:1.7;margin-bottom:40px;
-    }
-
-    .phone-mockup{
-      width:220px;margin:0 auto 32px;
-      background:rgba(255,255,255,.04);border-radius:20px;
-      border:1px solid rgba(248,244,238,.08);padding:20px;overflow:hidden;
-    }
-    .phone-screen{background:var(--card);border-radius:12px;padding:16px;text-align:left}
-    .phone-header{
-      font-family:'Playfair Display',serif;font-size:.95rem;color:var(--blanc);
-      margin-bottom:12px;font-weight:400;
-    }
-    .phone-item{
-      display:flex;align-items:center;gap:10px;padding:10px;
-      background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:8px;
-      border:1px solid var(--bdr);
-    }
-    .phone-item-img{width:36px;height:36px;border-radius:6px;background:rgba(191,150,80,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem}
-    .phone-item-info{flex:1;min-width:0}
-    .phone-item-title{font-size:.7rem;color:var(--blanc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .phone-item-sub{font-size:.62rem;color:var(--muted)}
-    .badge{display:inline-block;font-size:.56rem;padding:2px 6px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
-    .badge-green{background:rgba(0,200,117,.15);color:var(--green);border:1px solid rgba(0,200,117,.2)}
-    .badge-or{background:rgba(191,150,80,.15);color:var(--orl);border:1px solid var(--bdr)}
-
-    .app-buttons{display:flex;flex-direction:column;gap:10px}
-    .app-btn{
-      display:flex;align-items:center;gap:12px;
-      padding:12px 20px;border-radius:10px;
-      background:rgba(255,255,255,.06);border:1px solid rgba(248,244,238,.12);
-      color:var(--blanc);cursor:pointer;transition:.2s;text-decoration:none;
-    }
-    .app-btn:hover{background:rgba(191,150,80,.12);border-color:var(--bds)}
-    .app-btn-icon{font-size:1.6rem;flex-shrink:0}
-    .app-btn-text{text-align:left}
-    .app-btn-sub{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-    .app-btn-name{font-size:.88rem;font-weight:500}
-  </style>
 </head>
+
 <body>
-<div class="auth-wrap">
-
-  <!-- LEFT PANEL -->
-  <div class="panel-left">
-    <a href="/" class="back-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      Retour
-    </a>
-
-    <div class="form-box">
-      <div class="auth-logo">
-        <img src="/assets/LOGO_KADDU.png" alt="Kàddu" onerror="this.style.display='none'">
-        <span style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--or)">Kàddu</span>
-      </div>
-
-      <!-- TABS -->
-      <div class="tab-nav">
-        <button class="tab-btn active" onclick="switchTab('signup')">Créer un compte</button>
-        <button class="tab-btn" onclick="switchTab('login')">Se connecter</button>
-      </div>
-
-      <!-- GLOBAL ALERT -->
-      <div id="globalAlert" style="display:none"></div>
-
-      <!-- SIGNUP TAB -->
-      <div class="tab-panel active" id="tab-signup">
-        <!-- Role selector -->
-        <div class="form-group">
-          <label class="form-label">Je suis</label>
-          <div class="role-grid">
-            <label class="role-card selected" onclick="selectRole(this,'locataire')">
-              <input type="radio" name="role" value="locataire" checked>
-              <div class="role-icon">🏠</div>
-              <div class="role-label">Locataire</div>
-            </label>
-            <label class="role-card" onclick="selectRole(this,'bailleur')">
-              <input type="radio" name="role" value="bailleur">
-              <div class="role-icon">🏢</div>
-              <div class="role-label">Propriétaire</div>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Prénom</label>
-          <input class="form-input" type="text" id="s-prenom" placeholder="Votre prénom" autocomplete="given-name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nom</label>
-          <input class="form-input" type="text" id="s-nom" placeholder="Votre nom" autocomplete="family-name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" id="s-email" placeholder="votre@email.com" autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Mot de passe</label>
-          <input class="form-input" type="password" id="s-password" placeholder="8 caractères minimum" autocomplete="new-password">
-          <div class="form-hint">Minimum 8 caractères</div>
-        </div>
-
-        <button class="btn btn-primary" onclick="doSignup(this)" style="margin-top:8px">
-          <span>Créer mon compte</span>
-          <div class="spinner" id="spinner-signup"></div>
-        </button>
-
-        <div class="divider">ou créer avec</div>
-
-        <div class="sso-grid">
-          <a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#4285F4" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#34A853" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Google
-          </a>
-          <a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            Facebook
-          </a>
-          <a href="https://appleid.apple.com" target="_blank" class="btn-sso">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.54 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
-            Apple
-          </a>
-        </div>
-
-        <p class="link-muted" onclick="switchTab('login')">J'ai déjà un compte → <span>Se connecter</span></p>
-      </div>
-
-      <!-- LOGIN TAB -->
-      <div class="tab-panel" id="tab-login">
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input class="form-input" type="email" id="l-email" placeholder="votre@email.com" autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Mot de passe</label>
-          <input class="form-input" type="password" id="l-password" placeholder="Votre mot de passe" autocomplete="current-password">
-        </div>
-
-        <button class="btn btn-primary" onclick="doLogin(this)" style="margin-top:8px">
-          <span>Se connecter</span>
-          <div class="spinner" id="spinner-login"></div>
-        </button>
-
-        <p class="link-muted" onclick="goForgot()"><u>Mot de passe oublié ?</u></p>
-
-        <div class="divider">ou</div>
-
-        <button class="btn btn-outline" onclick="doMagicLink()" style="margin-bottom:16px">
-          Recevoir un lien de connexion par email
-        </button>
-
-        <div class="sso-grid">
-          <a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#4285F4" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#34A853" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Google
-          </a>
-          <a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            Facebook
-          </a>
-          <a href="https://appleid.apple.com" target="_blank" class="btn-sso">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.54 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
-            Apple
-          </a>
-        </div>
-
-        <p class="link-muted" onclick="switchTab('signup')">Pas encore de compte → <span>Créer un compte</span></p>
-      </div>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="kgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F2D083"/><stop offset="48%" stop-color="#BF9650"/><stop offset="100%" stop-color="#8B6520"/></linearGradient></defs></svg>
+<nav class="nav">
+  <a class="nav-logo-block" href="/" aria-label="Retour à l’accueil Kàddu"><span class="nav-logo"><img src="/assets/LOGO-KADDU.svg" alt="Kàddu"></span><span class="nav-tagline">la parole qui engage</span></a>
+  <a href="/" class="nav-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Retour</a>
+</nav>
+<div class="auth-layout">
+  <main class="premium-shell">
+    <div class="form-head"><div class="eyebrow">Espace sécurisé Kàddu</div><h1 class="title">Créer votre <em>espace</em></h1><p class="subtitle">Un seul compte pour déposer un dossier locataire, suivre vos candidatures ou confier un bien à Kàddu.</p></div>
+    <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('signup')">Créer un compte</button><button class="tab-btn" onclick="switchTab('login')">Se connecter</button></div>
+    <div id="globalAlert" style="display:none"></div>
+    <div class="tab-panel active" id="tab-signup">
+      <div class="form-group"><label class="form-label">Je suis</label><div class="role-grid">
+        <label class="role-card selected" onclick="selectRole(this,'locataire')"><input type="radio" name="role" value="locataire" checked><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="17" r="9"/><path class="gold" d="M18 55c1-15 8-24 14-24s13 9 14 24H18z"/><path class="beige" d="M32 30c3.5 0 6.6-1.2 8.6-3.1C38.2 31.5 35.3 34 32 34s-6.2-2.5-8.6-7.1C25.4 28.8 28.5 30 32 30z"/></svg></span><div class="role-label">Locataire</div></label>
+        <label class="role-card" onclick="selectRole(this,'bailleur')"><input type="radio" name="role" value="bailleur"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M16 10h26v44H16z"/><path class="beige" d="M42 25h10v29H42z"/><path fill="#07182B" d="M23 18h5v5h-5zm10 0h5v5h-5zM23 29h5v5h-5zm10 0h5v5h-5zM23 40h5v5h-5zm10 0h5v5h-5z"/></svg></span><div class="role-label">Propriétaire</div></label>
+      </div></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Prénom</label><input class="form-input" type="text" id="s-prenom" placeholder="Votre prénom" autocomplete="given-name"></div><div class="form-group"><label class="form-label">Nom</label><input class="form-input" type="text" id="s-nom" placeholder="Votre nom" autocomplete="family-name"></div></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="s-email" placeholder="votre@email.com" autocomplete="email"></div>
+      <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-input" type="password" id="s-password" placeholder="8 caractères minimum" autocomplete="new-password"><div class="form-hint">Minimum 8 caractères. Votre session reste dans cet onglet uniquement.</div></div>
+      <button class="btn btn-primary" onclick="doSignup(this)" style="margin-top:8px"><span>Créer mon espace</span><div class="spinner" id="spinner-signup"></div></button>
+      <div class="divider">ou créer avec</div><div class="sso-grid"><a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">Google</a><a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">Facebook</a><a href="https://appleid.apple.com" target="_blank" class="btn-sso">Apple</a></div>
+      <p class="link-muted" onclick="switchTab('login')">J'ai déjà un compte → <span>Se connecter</span></p>
     </div>
-  </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="panel-right">
-    <div class="deco-shapes">
-      <div class="deco-shape"></div>
-      <div class="deco-shape"></div>
-      <div class="deco-shape"></div>
+    <div class="tab-panel" id="tab-login">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="l-email" placeholder="votre@email.com" autocomplete="email"></div>
+      <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-input" type="password" id="l-password" placeholder="Votre mot de passe" autocomplete="current-password"></div>
+      <button class="btn btn-primary" onclick="doLogin(this)" style="margin-top:8px"><span>Se connecter</span><div class="spinner" id="spinner-login"></div></button>
+      <p class="link-muted" onclick="goForgot()"><u>Mot de passe oublié ?</u></p><div class="divider">ou</div>
+      <button class="btn btn-outline" onclick="doMagicLink()" style="margin-bottom:16px">Recevoir un lien de connexion par email</button>
+      <div class="sso-grid"><a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">Google</a><a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">Facebook</a><a href="https://appleid.apple.com" target="_blank" class="btn-sso">Apple</a></div>
+      <p class="link-muted" onclick="switchTab('signup')">Pas encore de compte → <span>Créer un compte</span></p>
     </div>
-    <div class="panel-right-inner">
-      <div class="panel-logo">
-        <img src="/assets/LOGO_KADDU.png" alt="Kàddu" onerror="this.style.display='none'">
-        <div class="brand-name">K<em>à</em>ddu</div>
-      </div>
-
-      <p class="panel-tagline">
-        Retrouvez toutes les fonctionnalités de votre espace sur notre <strong style="color:var(--orl)">application mobile</strong>
-      </p>
-
-      <div class="phone-mockup">
-        <div class="phone-screen">
-          <div class="phone-header">Mes biens</div>
-          <div class="phone-item">
-            <div class="phone-item-img">🏠</div>
-            <div class="phone-item-info">
-              <div class="phone-item-title">Appartement T3 — Plateau</div>
-              <div class="phone-item-sub">Dakar · 450 000 F/mois</div>
-            </div>
-            <span class="badge badge-green">Loué</span>
-          </div>
-          <div class="phone-item">
-            <div class="phone-item-img">🏢</div>
-            <div class="phone-item-info">
-              <div class="phone-item-title">Villa F5 — Almadies</div>
-              <div class="phone-item-sub">Dakar · 850 000 F/mois</div>
-            </div>
-            <span class="badge badge-or">Disponible</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="app-buttons">
-        <a href="/app/" class="app-btn">
-          <span class="app-btn-icon">🍎</span>
-          <div class="app-btn-text">
-            <div class="app-btn-sub">Télécharger sur</div>
-            <div class="app-btn-name">App Store</div>
-          </div>
-        </a>
-        <a href="/app/" class="app-btn">
-          <span class="app-btn-icon">🤖</span>
-          <div class="app-btn-text">
-            <div class="app-btn-sub">Disponible sur</div>
-            <div class="app-btn-name">Google Play</div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
+  </main>
+  <aside class="side-panel"><div class="carousel-card"><div class="carousel-hero" id="carousel-img"><img src="/assets/biens/nopalukay-01.jpeg" alt="Bien disponible"><span class="photo-badge">Biens vérifiés</span></div><div class="carousel-body">
+    <div class="panel-label">Créer son espace</div><h2 class="carousel-title">Un dossier prêt pour <em>postuler vite</em></h2><p class="generic-panel-copy">Créez votre espace, complétez votre dossier, puis postulez aux logements disponibles en quelques clics.</p><div class="carousel-meta" id="carousel-meta">Chargement des biens disponibles…</div><div class="carousel-dots" id="carousel-dots"></div>
+    <div class="trust-list"><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Dossier centralisé et réutilisable.</div><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>Profil analysé avant transmission.</div><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>Espace bailleur ou locataire selon votre rôle.</div></div>
+    <button class="carousel-cta" onclick="location.href='/biens/'">Voir les biens disponibles →</button>
+  </div></div></aside>
 </div>
 
 <script>
@@ -419,8 +141,6 @@ function getSession() {
     return s;
   } catch { return null; }
 }
-// Auto-purge on tab close
-window.addEventListener('beforeunload', clearSession);
 
 // ── UI HELPERS ───────────────────────────────────────────────
 function switchTab(name) {
@@ -456,6 +176,8 @@ function setLoading(btn, spinnerId, loading) {
 function selectRole(card, role) {
   document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
+  const input = card.querySelector('input');
+  if (input) input.checked = true;
 }
 
 function goForgot() {
@@ -559,7 +281,43 @@ if (getSession()) {
   const s = getSession();
   window.location.href = s.role === 'bailleur' ? '/espace-bailleur/' : '/espace-locataire/';
 }
+
+function getPhotoFromPhotos(photos){
+  let ph=[]; try{ph=Array.isArray(photos)?photos:JSON.parse(photos||'[]');}catch{}
+  const first=ph[0]; return first?.url || first?.src || first?.path || first || '';
+}
+function localFallbackBiens(){
+  return [
+    {titre:'Le petit Nopalukay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photo:'/assets/biens/nopalukay-01.jpeg'},
+    {titre:'Le petit Bantukay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photo:'/assets/biens/bantukay-01.jpeg'},
+    {titre:'Le petit Suxalikay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photo:'/assets/biens/suxalikay-09.jpeg'}
+  ];
+}
+let carouselItems=[], carouselIdx=0, carouselTimer=null;
+async function loadAvailableBiens(){
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/biens?statut=eq.disponible&select=id,titre,quartier,ville,prix,surface,pieces,photos&limit=5`,{headers:{'apikey':SUPABASE_ANON}});
+    const data=res.ok?await res.json():[];
+    carouselItems=(data||[]).map(b=>({...b,photo:getPhotoFromPhotos(b.photos)})).filter(b=>b.photo);
+  }catch{ carouselItems=[]; }
+  if(!carouselItems.length) carouselItems=localFallbackBiens();
+  renderCarousel();
+  if(carouselTimer) clearInterval(carouselTimer);
+  carouselTimer=setInterval(()=>{carouselIdx=(carouselIdx+1)%carouselItems.length;renderCarousel();},4200);
+}
+function renderCarousel(){
+  const b=carouselItems[carouselIdx] || localFallbackBiens()[0];
+  const prix=Number(b.prix||0);
+  const img=document.getElementById('carousel-img');
+  if(img) img.innerHTML=`<img src="${b.photo}" alt="${b.titre||'Bien disponible'}"><span class="photo-badge">Biens vérifiés</span>`;
+  const meta=document.getElementById('carousel-meta');
+  if(meta) meta.innerHTML=`<strong style="color:var(--blanc)">${b.titre||'Bien disponible'}</strong><br>${[b.quartier,b.ville||'Dakar'].filter(Boolean).join(', ')} · ${b.surface||'—'} m² · ${b.pieces||'—'} pièces<br>${prix?prix.toLocaleString('fr-FR')+' F CFA / mois':'Prix sur demande'}`;
+  const dots=document.getElementById('carousel-dots');
+  if(dots) dots.innerHTML=carouselItems.map((_,i)=>`<span class="carousel-dot ${i===carouselIdx?'active':''}" onclick="carouselIdx=${i};renderCarousel()"></span>`).join('');
+}
+document.addEventListener('DOMContentLoaded', loadAvailableBiens);
+</script>
+
 </script>
 </body>
 </html>
-
