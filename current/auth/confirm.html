@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Renvoyer la confirmation — Kàddu</title>
+  <title>Confirmation — Kàddu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
@@ -41,6 +41,16 @@
     .link-muted:hover{color:var(--or)}
     .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── ÉTAT : traitement token en cours ── */
+    #processing-view{display:none;text-align:center}
+    .processing-ring{width:64px;height:64px;border:3px solid rgba(191,150,80,.2);border-top-color:var(--or);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 24px}
+
+    /* ── ÉTAT : succès ── */
+    #success-view{display:none;text-align:center}
+    .success-check{width:64px;height:64px;border-radius:50%;background:rgba(0,200,117,.12);border:2px solid rgba(0,200,117,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:1.8rem}
+    .countdown{font-size:.82rem;color:rgba(248,244,238,.35);margin-top:12px}
+
     /* RIGHT */
     .panel-right{position:relative;overflow:hidden;background:linear-gradient(135deg,#0a1628 0%,#07182B 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 48px;text-align:center}
     .panel-right::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(191,150,80,.12) 0%,transparent 65%);pointer-events:none}
@@ -60,35 +70,58 @@
   </style>
 </head>
 <body>
+
 <div class="auth-wrap">
   <div class="panel-left">
     <a href="/auth/" class="back-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
       Retour
     </a>
+
     <div class="form-box">
       <div class="auth-logo">
         <img src="/assets/LOGO_KADDU.png" alt="Kàddu" height="36" onerror="this.style.display='none'">
         <span style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--or)">Kàddu</span>
       </div>
 
-      <span class="confirm-icon">📬</span>
-      <h1>Renvoyer les instructions de <em>confirmation</em></h1>
-      <p class="subtitle">Saisissez l'adresse email utilisée lors de votre inscription. Vous recevrez un nouveau lien de confirmation.</p>
-
-      <div id="alertBox" style="display:none"></div>
-
-      <div class="form-group">
-        <label class="form-label">Adresse email</label>
-        <input class="form-input" type="email" id="email-input" placeholder="votre@email.com">
+      <!-- ══ VUE : traitement token en cours ══ -->
+      <div id="processing-view">
+        <div class="processing-ring"></div>
+        <h1>Connexion en <em>cours</em>…</h1>
+        <p class="subtitle">Vérification de votre lien, patientez un instant.</p>
       </div>
 
-      <button class="btn btn-primary" onclick="resendConfirm(this)">
-        <span>Me renvoyer les instructions</span>
-        <div class="spinner" id="spinner"></div>
-      </button>
+      <!-- ══ VUE : succès connexion ══ -->
+      <div id="success-view">
+        <div class="success-check">✓</div>
+        <h1>Compte <em>confirmé</em> !</h1>
+        <p class="subtitle" id="success-msg">Votre email a bien été vérifié. Vous allez être redirigé vers votre espace.</p>
+        <div class="countdown" id="countdown"></div>
+        <button class="btn btn-primary" style="margin-top:20px" onclick="redirectNow()">
+          Accéder à mon espace →
+        </button>
+      </div>
 
-      <a href="/auth/" class="link-muted">← Retour à la connexion</a>
+      <!-- ══ VUE : renvoi email (défaut) ══ -->
+      <div id="resend-view">
+        <span class="confirm-icon">📬</span>
+        <h1>Renvoyer les instructions de <em>confirmation</em></h1>
+        <p class="subtitle">Saisissez l'adresse email utilisée lors de votre inscription. Vous recevrez un nouveau lien de confirmation.</p>
+
+        <div id="alertBox" style="display:none"></div>
+
+        <div class="form-group">
+          <label class="form-label">Adresse email</label>
+          <input class="form-input" type="email" id="email-input" placeholder="votre@email.com">
+        </div>
+
+        <button class="btn btn-primary" onclick="resendConfirm(this)">
+          <span>Me renvoyer les instructions</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+
+        <a href="/auth/" class="link-muted">← Retour à la connexion</a>
+      </div>
     </div>
   </div>
 
@@ -119,35 +152,123 @@
 </div>
 
 <script>
-const SUPABASE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL  = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 
-// Pre-fill from query param
-const params = new URLSearchParams(location.search);
-if (params.get('email')) document.getElementById('email-input').value = params.get('email');
-
-function showAlert(msg, type) {
-  const el = document.getElementById('alertBox');
-  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  el.style.display = 'block';
+// ── DESTINATION après connexion selon le rôle ────────────────
+function getRedirectUrl(role) {
+  if (role === 'bailleur')   return '/espace-bailleur/';
+  if (role === 'locataire')  return '/espace-locataire/';
+  return '/';
 }
 
+let redirectTarget = '/';
+
+// ── DÉTECTION TOKEN DANS LE HASH ────────────────────────────
+// Supabase redirige vers : kaddu.net/auth/confirm#access_token=...&type=signup
+// ou                       kaddu.net/auth/confirm#access_token=...&type=recovery
+async function handleHashToken() {
+  const hash = window.location.hash.substring(1); // retire le #
+  if (!hash || !hash.includes('access_token')) return false;
+
+  // Affiche la vue "traitement en cours"
+  show('processing-view');
+
+  const params = new URLSearchParams(hash);
+  const access_token  = params.get('access_token');
+  const refresh_token = params.get('refresh_token');
+  const type          = params.get('type'); // signup | recovery | magiclink
+
+  if (!access_token) {
+    showAlert('Lien invalide ou expiré. Demandez un nouveau lien.', 'error');
+    show('resend-view');
+    return true;
+  }
+
+  try {
+    // Stocke la session dans sessionStorage (convention Kàddu)
+    const expiresIn = parseInt(params.get('expires_in') || '3600');
+    const session = {
+      access_token,
+      refresh_token,
+      expires: Date.now() + expiresIn * 1000,
+      user: null
+    };
+
+    // Récupère les infos user avec le token
+    const res = await fetch(`${SB_URL}/auth/v1/user`, {
+      headers: {
+        'apikey': SB_ANON,
+        'Authorization': 'Bearer ' + access_token
+      }
+    });
+
+    if (!res.ok) throw new Error('Token invalide ou expiré.');
+    const user = await res.json();
+    session.user = user;
+
+    // Sauvegarde session
+    sessionStorage.setItem('kaddu_jwt', JSON.stringify(session));
+    sessionStorage.setItem('kaddu_session_active', '1');
+
+    // Détermine la destination selon le rôle
+    const role = user?.user_metadata?.role || '';
+    redirectTarget = getRedirectUrl(role);
+
+    // Type recovery = reset password → redirige vers page dédiée
+    if (type === 'recovery') {
+      redirectTarget = '/auth/reset-password.html?token=' + access_token;
+    }
+
+    // Affiche succès + countdown
+    show('success-view');
+    const msg = type === 'recovery'
+      ? 'Identité vérifiée. Vous allez être redirigé pour choisir un nouveau mot de passe.'
+      : `Bienvenue${user?.user_metadata?.prenom ? ', ' + user.user_metadata.prenom : ''} ! Redirection vers votre espace…`;
+    document.getElementById('success-msg').textContent = msg;
+
+    // Countdown 3s
+    let n = 3;
+    document.getElementById('countdown').textContent = `Redirection dans ${n}s…`;
+    const timer = setInterval(() => {
+      n--;
+      if (n <= 0) {
+        clearInterval(timer);
+        redirectNow();
+      } else {
+        document.getElementById('countdown').textContent = `Redirection dans ${n}s…`;
+      }
+    }, 1000);
+
+    return true;
+
+  } catch(e) {
+    showAlert('⚠️ ' + (e.message || 'Lien invalide ou expiré.'), 'error');
+    show('resend-view');
+    return true;
+  }
+}
+
+function redirectNow() {
+  window.location.href = redirectTarget;
+}
+
+// ── RENVOI EMAIL ─────────────────────────────────────────────
 async function resendConfirm(btn) {
   const email = document.getElementById('email-input').value.trim();
-  if (!email) return showAlert('Merci de saisir votre adresse email.','warn');
+  if (!email) return showAlert('Merci de saisir votre adresse email.', 'warn');
 
   btn.disabled = true;
   document.getElementById('spinner').style.display = 'block';
 
   try {
-    const res = await fetch(SUPABASE_URL + '/auth/v1/resend', {
+    const res = await fetch(SB_URL + '/auth/v1/resend', {
       method: 'POST',
-      headers: { 'Content-Type':'application/json', 'apikey': SUPABASE_ANON },
+      headers: { 'Content-Type': 'application/json', 'apikey': SB_ANON },
       body: JSON.stringify({ type: 'signup', email })
     });
     if (res.ok || res.status === 422) {
-      // 422 = already confirmed (treat as success for security)
-      showAlert('✓ Email envoyé ! Vérifiez votre boîte de réception.','success');
+      showAlert('✓ Email envoyé ! Vérifiez votre boîte de réception.', 'success');
     } else {
       const d = await res.json();
       throw new Error(d.msg || 'Impossible d\'envoyer l\'email.');
@@ -159,6 +280,32 @@ async function resendConfirm(btn) {
     document.getElementById('spinner').style.display = 'none';
   }
 }
+
+// ── HELPERS ──────────────────────────────────────────────────
+function show(id) {
+  ['processing-view', 'success-view', 'resend-view'].forEach(v => {
+    document.getElementById(v).style.display = v === id ? 'block' : 'none';
+  });
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('alertBox');
+  if (!el) return;
+  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  el.style.display = 'block';
+}
+
+// ── PRÉ-REMPLISSAGE EMAIL depuis query param ─────────────────
+const qParams = new URLSearchParams(location.search);
+if (qParams.get('email')) {
+  document.getElementById('email-input').value = qParams.get('email');
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+// Si hash avec token → traiter. Sinon → afficher le formulaire renvoi.
+handleHashToken().then(handled => {
+  if (!handled) show('resend-view');
+});
 </script>
 </body>
 </html>
