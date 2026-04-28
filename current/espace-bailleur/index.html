@@ -12,157 +12,266 @@
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
     a{text-decoration:none;color:inherit}
+    body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(191,150,80,.05) 0%,transparent 60%)}
 
-    /* LAYOUT */
+    /* ── LAYOUT ── */
     .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
     @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
 
-    /* SIDEBAR */
+    /* ── SIDEBAR ── */
     .sidebar{
-      background:rgba(7,24,43,.8);border-right:1px solid var(--bdr);
-      padding:32px 0;display:flex;flex-direction:column;
+      background:rgba(7,24,43,.9);border-right:1px solid var(--bdr);
+      padding:0;display:flex;flex-direction:column;
       position:sticky;top:0;height:100vh;overflow-y:auto;
     }
-    .sidebar-logo{padding:0 24px 32px;border-bottom:1px solid rgba(191,150,80,.08)}
-    .sidebar-logo .brand{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--or);letter-spacing:.04em}
-    .sidebar-logo .sub{font-size:.68rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-top:4px}
-    .nav-section{padding:24px 16px 0}
-    .nav-section-label{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,244,238,.28);padding:0 8px;margin-bottom:8px}
+    .sidebar-logo{padding:24px 24px 22px;border-bottom:1px solid rgba(191,150,80,.08);display:flex;align-items:center;gap:12px}
+    .sidebar-logo img{height:36px;width:auto;filter:drop-shadow(0 4px 12px rgba(191,150,80,.22))}
+    .sidebar-logo .sub{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.32);margin-top:2px}
+    .nav-section{padding:20px 14px 0}
+    .nav-section-label{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,244,238,.25);padding:0 8px;margin-bottom:8px}
     .nav-item{
-      display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;
-      font-size:.84rem;color:rgba(248,244,238,.52);cursor:pointer;transition:.2s;margin-bottom:2px;
+      display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:8px;
+      font-size:.83rem;color:rgba(248,244,238,.48);cursor:pointer;transition:.2s;margin-bottom:2px;
+      border:1px solid transparent;
     }
     .nav-item:hover{background:rgba(255,255,255,.04);color:var(--blanc)}
-    .nav-item.active{background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.15)}
-    .nav-item .icon{font-size:1rem;width:20px;text-align:center}
-    .sidebar-footer{margin-top:auto;padding:24px 16px;border-top:1px solid rgba(191,150,80,.08)}
-    .user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03)}
+    .nav-item.active{background:rgba(191,150,80,.1);color:var(--or);border-color:rgba(191,150,80,.15)}
+    .nav-item .kdi{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .nav-item .kdi svg{width:18px;height:18px}
+    .sidebar-footer{margin-top:auto;padding:20px 14px;border-top:1px solid rgba(191,150,80,.08)}
+    .user-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(191,150,80,.08)}
     .user-avatar{width:34px;height:34px;border-radius:50%;background:rgba(191,150,80,.2);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--or);flex-shrink:0}
     .user-name{font-size:.82rem;font-weight:500;line-height:1.3}
-    .user-role{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(248,244,238,.35)}
-    .logout-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;font-size:.74rem;color:rgba(248,244,238,.38);cursor:pointer;margin-top:4px;transition:.2s;border-radius:6px}
+    .user-role{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(248,244,238,.32)}
+    .logout-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;font-size:.74rem;color:rgba(248,244,238,.36);cursor:pointer;margin-top:6px;transition:.2s;border-radius:6px}
     .logout-btn:hover{color:var(--red);background:rgba(255,84,84,.06)}
 
-    /* MAIN */
-    .main{display:flex;flex-direction:column;padding:0}
+    /* ── MAIN ── */
+    .main{display:flex;flex-direction:column;padding:0;min-width:0}
     .topbar{
       display:flex;align-items:center;justify-content:space-between;
-      padding:20px 32px;border-bottom:1px solid rgba(191,150,80,.08);
-      background:rgba(7,15,26,.6);backdrop-filter:blur(8px);
+      padding:18px 32px;border-bottom:1px solid rgba(191,150,80,.08);
+      background:rgba(7,15,26,.7);backdrop-filter:blur(8px);
       position:sticky;top:0;z-index:10;
     }
-    .topbar-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:300}
+    .topbar-left{display:flex;align-items:center;gap:14px}
+    .topbar-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:300}
     .topbar-title em{font-style:italic;color:var(--or)}
-    .topbar-actions{display:flex;align-items:center;gap:12px}
+    .topbar-wave{width:28px;height:28px;flex-shrink:0}
+    .topbar-actions{display:flex;align-items:center;gap:10px}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:.2s;border:none}
     .btn-primary{background:var(--or);color:#0a0a0a}
-    .btn-primary:hover{background:var(--orl)}
-    .btn-ghost{background:transparent;color:rgba(248,244,238,.55);border:1px solid rgba(248,244,238,.12)}
+    .btn-primary:hover{background:var(--orl);transform:translateY(-1px);box-shadow:0 6px 20px rgba(191,150,80,.22)}
+    .btn-ghost{background:transparent;color:rgba(248,244,238,.52);border:1px solid rgba(248,244,238,.12)}
     .btn-ghost:hover{border-color:var(--or);color:var(--or)}
+    .btn-sm{padding:7px 12px;font-size:.68rem;letter-spacing:.06em}
     .notif-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
 
-    .content{padding:32px}
+    /* ── CONTENT / SECTIONS ── */
+    .content{padding:28px 32px;flex:1}
+    .page-section{display:none}
+    .page-section.active{display:block}
 
-    /* STATS GRID */
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:32px}
+    /* ── STATS ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
     .stat-card{
       padding:20px 22px;border-radius:12px;
       background:rgba(11,32,57,.8);border:1px solid var(--bdr);
       position:relative;overflow:hidden;
     }
     .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--or),var(--orl))}
-    .stat-eyebrow{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:10px}
+    .stat-eyebrow{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.36);margin-bottom:10px}
     .stat-value{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:300;color:var(--blanc);line-height:1}
-    .stat-value em{font-style:normal;color:var(--or);font-size:1.1rem;margin-left:4px}
+    .stat-value em{font-style:normal;color:var(--or);font-size:1rem;margin-left:4px}
     .stat-delta{font-size:.72rem;color:var(--muted);margin-top:6px}
     .stat-delta.pos{color:var(--green)}
     .stat-delta.neg{color:var(--red)}
 
-    /* SECTION */
+    /* ── SECTION HEADER ── */
     .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
     .section-title{font-family:'Playfair Display',serif;font-weight:300;font-size:1.1rem}
     .section-title em{font-style:italic;color:var(--or)}
 
-    /* BIENS TABLE */
-    .biens-table{width:100%;border-collapse:separate;border-spacing:0 6px;margin-bottom:32px}
-    .biens-table th{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28);padding:0 16px 8px;font-weight:500}
-    .biens-table td{padding:14px 16px;background:rgba(11,32,57,.6);border:1px solid rgba(191,150,80,.07);font-size:.85rem;vertical-align:middle}
+    /* ── BIENS TABLE ── */
+    .biens-table{width:100%;border-collapse:separate;border-spacing:0 6px;margin-bottom:28px}
+    .biens-table th{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.26);padding:0 16px 8px;font-weight:500}
+    .biens-table td{padding:14px 16px;background:rgba(11,32,57,.6);border:1px solid rgba(191,150,80,.07);font-size:.84rem;vertical-align:middle}
     .biens-table td:first-child{border-radius:10px 0 0 10px}
     .biens-table td:last-child{border-radius:0 10px 10px 0;border-left:none}
     .biens-table td:not(:first-child):not(:last-child){border-left:none;border-right:none}
     .biens-table tr:hover td{background:rgba(191,150,80,.06);border-color:rgba(191,150,80,.14)}
-    .bien-img{width:44px;height:44px;border-radius:6px;background:rgba(191,150,80,.15);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-    .bien-ref{font-size:.68rem;color:rgba(248,244,238,.35);font-family:'DM Sans',sans-serif;font-weight:400}
+    .bien-thumb{width:44px;height:44px;border-radius:7px;background:rgba(191,150,80,.12);border:1px solid var(--bdr);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+    .bien-thumb img{width:100%;height:100%;object-fit:cover}
+    .bien-ref{font-size:.67rem;color:rgba(248,244,238,.32)}
     .bien-title{font-weight:500;color:var(--blanc)}
-    .bien-addr{font-size:.76rem;color:var(--muted);margin-top:2px}
-    .badge{display:inline-flex;align-items:center;gap:5px;font-size:.64rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .bien-addr{font-size:.75rem;color:var(--muted);margin-top:2px}
+    .badge{display:inline-flex;align-items:center;gap:5px;font-size:.63rem;padding:3px 8px;border-radius:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+    .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
     .badge-green{background:rgba(0,200,117,.1);color:var(--green);border:1px solid rgba(0,200,117,.2)}
     .badge-or{background:rgba(191,150,80,.1);color:var(--orl);border:1px solid var(--bdr)}
     .badge-blue{background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.2)}
     .badge-red{background:rgba(255,84,84,.1);color:var(--red);border:1px solid rgba(255,84,84,.2)}
-    .badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
 
-    /* DOSSIERS */
-    .dossiers-list{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+    /* ── DOSSIERS ── */
+    .dossiers-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
     .dossier-card{
       display:flex;align-items:center;gap:16px;padding:16px 20px;
       background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;
       transition:.2s;cursor:pointer;
     }
     .dossier-card:hover{border-color:var(--bds);background:rgba(191,150,80,.05)}
-    .dossier-avatar{width:40px;height:40px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--or);flex-shrink:0}
+    .dossier-avatar{width:40px;height:40px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.88rem;font-weight:700;color:var(--or);flex-shrink:0}
     .dossier-info{flex:1;min-width:0}
     .dossier-name{font-weight:500;color:var(--blanc);font-size:.9rem}
     .dossier-bien{font-size:.76rem;color:var(--muted);margin-top:2px}
     .dossier-meta{font-size:.7rem;color:rgba(248,244,238,.28);margin-top:3px}
     .dossier-actions{display:flex;gap:8px;flex-shrink:0}
-    .btn-sm{padding:7px 12px;font-size:.68rem;letter-spacing:.06em}
 
-    /* REVENUS CHART placeholder */
-    .revenus-card{padding:24px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:12px;margin-bottom:32px}
-    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:16px}
-    .chart-bar{flex:1;border-radius:4px 4px 0 0;background:rgba(191,150,80,.15);border:1px solid var(--bdr);position:relative;cursor:pointer;transition:.2s}
-    .chart-bar:hover{background:rgba(191,150,80,.3)}
-    .chart-bar.active{background:linear-gradient(180deg,var(--orl),var(--ord))}
-    .chart-bar-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.58rem;color:rgba(248,244,238,.35);white-space:nowrap}
-    .chart-bar-val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:.6rem;color:var(--orl);white-space:nowrap;opacity:0;transition:.2s}
+    /* ── REVENUS CHART ── */
+    .revenus-card{padding:24px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:12px;margin-bottom:28px}
+    .chart-bars{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:20px}
+    .chart-bar{flex:1;border-radius:4px 4px 0 0;background:rgba(191,150,80,.12);border:1px solid var(--bdr);position:relative;cursor:pointer;transition:.2s;min-height:8px}
+    .chart-bar:hover{background:rgba(191,150,80,.28)}
+    .chart-bar.active{background:linear-gradient(180deg,var(--orl),var(--ord));border-color:var(--or)}
+    .chart-bar-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:.56rem;color:rgba(248,244,238,.3);white-space:nowrap}
+    .chart-bar-val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:.58rem;color:var(--orl);white-space:nowrap;opacity:0;transition:.2s}
     .chart-bar:hover .chart-bar-val{opacity:1}
 
-    /* LOADING / GUARD */
+    /* ── EMPTY STATE ── */
+    .empty-state{text-align:center;padding:40px 24px;border:1px solid var(--bdr);border-radius:12px;background:rgba(11,32,57,.4)}
+    .empty-state .kdi-lg{width:52px;height:52px;margin:0 auto 16px;opacity:.45}
+    .empty-state p{font-size:.88rem;color:var(--muted);line-height:1.6}
+    .empty-state a{color:var(--or)}
+
+    /* ── DOSSIER DETAIL MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+    .modal-overlay.open{display:flex}
+    .modal{background:#0b2039;border:1px solid var(--bdr);border-radius:16px;padding:28px;max-width:560px;width:100%;max-height:80vh;overflow-y:auto}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .modal-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300}
+    .modal-close{background:none;border:none;color:rgba(248,244,238,.4);cursor:pointer;font-size:1.4rem;line-height:1;transition:.2s}
+    .modal-close:hover{color:var(--blanc)}
+    .modal-field{margin-bottom:12px}
+    .modal-field-label{font-size:.65rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.32);margin-bottom:4px}
+    .modal-field-val{font-size:.88rem;color:var(--blanc)}
+    .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--bdr)}
+
+    /* ── GUARD ── */
     #guard{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
     .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--or);letter-spacing:.1em}
     .loading-bar{width:200px;height:2px;background:rgba(191,150,80,.15);border-radius:2px;overflow:hidden}
     .loading-bar-inner{height:100%;background:var(--or);border-radius:2px;animation:load 1.2s ease both}
     @keyframes load{from{width:0}to{width:100%}}
+
+    /* ── DUOTONE ICONS ── */
+    .kdi svg .gold{fill:url(#kgold)}
+    .kdi svg .beige{fill:#E8DCC5;opacity:.9}
+    .kdi svg .stroke{fill:none;stroke:#DDB96E;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .kdi svg .dark{fill:#07182B}
+    .kdi-lg svg{width:100%;height:100%}
   </style>
 </head>
 <body>
-<!-- Auth guard overlay -->
+
+<!-- Gradient defs for duotone icons -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="kgold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D083"/>
+      <stop offset="48%" stop-color="#BF9650"/>
+      <stop offset="100%" stop-color="#8B6520"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- Auth guard -->
 <div id="guard">
   <div class="loading-logo">Kàddu</div>
   <div class="loading-bar"><div class="loading-bar-inner"></div></div>
 </div>
 
+<!-- Dossier detail modal -->
+<div class="modal-overlay" id="modal-dossier">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Dossier de candidature</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"><!-- filled by JS --></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Fermer</button>
+      <button class="btn btn-ghost btn-sm" id="modal-btn-refuse" onclick="updateDossier('refuse')">Refuser</button>
+      <button class="btn btn-primary" id="modal-btn-accept" onclick="updateDossier('accepte')">Accepter ce dossier</button>
+    </div>
+  </div>
+</div>
+
 <div class="layout" id="app" style="display:none">
-  <!-- SIDEBAR -->
+  <!-- ── SIDEBAR ── -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="brand">Kàddu</div>
+      <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu">
       <div class="sub">Espace Bailleur</div>
     </div>
+
     <div class="nav-section">
       <div class="nav-section-label">Navigation</div>
-      <div class="nav-item active"><span class="icon">🏠</span> Tableau de bord</div>
-      <div class="nav-item" onclick="showSection('biens')"><span class="icon">🏢</span> Mes biens</div>
-      <div class="nav-item" onclick="showSection('dossiers')"><span class="icon">📋</span> Dossiers reçus</div>
-      <div class="nav-item" onclick="showSection('revenus')"><span class="icon">💰</span> Revenus</div>
-      <div class="nav-item"><span class="icon">📄</span> Documents</div>
-      <div class="nav-item"><span class="icon">💬</span> Messages</div>
+
+      <div class="nav-item active" onclick="showSection('dashboard',this)">
+        <span class="kdi"><!-- Dashboard icon -->
+          <svg viewBox="0 0 24 24"><rect class="gold" x="3" y="3" width="8" height="8" rx="1.5"/><rect class="beige" x="13" y="3" width="8" height="8" rx="1.5" opacity=".7"/><rect class="beige" x="3" y="13" width="8" height="8" rx="1.5" opacity=".7"/><rect class="gold" x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+        </span>
+        Tableau de bord
+      </div>
+
+      <div class="nav-item" onclick="showSection('biens',this)">
+        <span class="kdi"><!-- Building icon -->
+          <svg viewBox="0 0 24 24"><path class="gold" d="M3 21V8l9-5 9 5v13H3z"/><path class="beige" d="M15 12h4v9h-4z" opacity=".8"/><path class="dark" d="M9 13h2v3H9zm4 0h2v3h-2zM9 9h2v2H9zm4 0h2v2h-2z"/><path class="stroke" d="M3 21h18"/></svg>
+        </span>
+        Mes biens
+      </div>
+
+      <div class="nav-item" onclick="showSection('dossiers',this)" id="nav-dossiers">
+        <span class="kdi"><!-- Folder icon -->
+          <svg viewBox="0 0 24 24"><path class="gold" d="M2 7a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7z"/><path class="beige" d="M6 14h12v1H6zm0-3h8v1H6z" opacity=".8"/></svg>
+        </span>
+        Dossiers reçus
+        <span class="badge badge-blue" id="nav-dossiers-count" style="margin-left:auto;display:none">0</span>
+      </div>
+
+      <div class="nav-item" onclick="showSection('revenus',this)">
+        <span class="kdi"><!-- Chart icon -->
+          <svg viewBox="0 0 24 24"><path class="gold" d="M3 20h18v1H3z"/><rect class="beige" x="4" y="12" width="3" height="8" rx="1" opacity=".7"/><rect class="gold" x="9" y="8" width="3" height="12" rx="1"/><rect class="beige" x="14" y="5" width="3" height="15" rx="1" opacity=".7"/><rect class="gold" x="19" y="10" width="3" height="10" rx="1"/></svg>
+        </span>
+        Revenus
+      </div>
+
+      <div class="nav-item" onclick="showSection('documents',this)">
+        <span class="kdi"><!-- Document icon -->
+          <svg viewBox="0 0 24 24"><path class="gold" d="M6 2h8l6 6v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path class="beige" d="M14 2v6h6" opacity=".7"/><path class="stroke" d="M8 13h8M8 17h5" stroke-width="1.6"/></svg>
+        </span>
+        Documents
+      </div>
+
+      <div class="nav-item" onclick="showSection('messages',this)">
+        <span class="kdi"><!-- Message icon -->
+          <svg viewBox="0 0 24 24"><path class="gold" d="M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7l-5 4V5z"/><path class="beige" d="M7 8h10v1H7zm0 3h7v1H7z" opacity=".8"/></svg>
+        </span>
+        Messages
+      </div>
     </div>
+
     <div class="nav-section">
       <div class="nav-section-label">Compte</div>
-      <div class="nav-item"><span class="icon">⚙</span> Paramètres</div>
+      <div class="nav-item" onclick="showSection('parametres',this)">
+        <span class="kdi"><!-- Settings icon -->
+          <svg viewBox="0 0 24 24"><circle class="gold" cx="12" cy="12" r="3"/><path class="beige" d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="#DDB96E" fill="none" stroke-width="2" stroke-linecap="round" opacity=".8"/></svg>
+        </span>
+        Paramètres
+      </div>
     </div>
+
     <div class="sidebar-footer">
       <div class="user-chip">
         <div class="user-avatar" id="sideAvatar">B</div>
@@ -178,251 +287,611 @@
     </div>
   </aside>
 
-  <!-- MAIN -->
+  <!-- ── MAIN ── -->
   <main class="main">
     <div class="topbar">
-      <div class="topbar-title">Bonjour, <em id="topName">—</em> 👋</div>
+      <div class="topbar-left">
+        <!-- Wave hand duotone -->
+        <svg class="topbar-wave" viewBox="0 0 32 32">
+          <path fill="#BF9650" d="M10 6c0-1.1.9-2 2-2s2 .9 2 2v8l1-1V5c0-1.1.9-2 2-2s2 .9 2 2v9l1-1V8c0-1.1.9-2 2-2s2 .9 2 2v8c0 .6-.1 1.2-.2 1.7l-1 3.8A7 7 0 0 1 17 26h-1a7 7 0 0 1-7-7V9c0-1.1.9-2 2-2s2 .9 2 2v5"/>
+          <path fill="#E8DCC5" opacity=".7" d="M7 14v5a10 10 0 0 0 9 9.95V26a7 7 0 0 1-6-6.93V14z"/>
+        </svg>
+        <div class="topbar-title">Bonjour, <em id="topName">—</em></div>
+      </div>
       <div class="topbar-actions">
         <button class="btn btn-ghost" onclick="window.location.href='/biens/'">Voir les annonces</button>
-        <button class="btn btn-primary" onclick="window.location.href='/'">+ Confier un bien</button>
+        <button class="btn btn-primary" onclick="window.location.href='/'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Confier un bien
+        </button>
       </div>
     </div>
 
     <div class="content">
-      <!-- STATS -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-eyebrow">Biens gérés</div>
-          <div class="stat-value" id="st-biens">—</div>
-          <div class="stat-delta">Chargement…</div>
+
+      <!-- ══════════════════════
+           SECTION : DASHBOARD
+      ══════════════════════ -->
+      <div class="page-section active" id="section-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-eyebrow">Biens gérés</div>
+            <div class="stat-value" id="st-biens">—</div>
+            <div class="stat-delta" id="st-biens-delta">Chargement…</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-eyebrow">Biens loués</div>
+            <div class="stat-value" id="st-loues">—</div>
+            <div class="stat-delta pos" id="st-taux">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-eyebrow">Revenus du mois</div>
+            <div class="stat-value" id="st-revenus">— <em>F</em></div>
+            <div class="stat-delta" id="st-mois">Biens loués × loyer</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-eyebrow">Dossiers reçus</div>
+            <div class="stat-value" id="st-dossiers">—</div>
+            <div class="stat-delta">En attente de traitement</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-eyebrow">Biens loués</div>
-          <div class="stat-value" id="st-loues">—</div>
-          <div class="stat-delta pos" id="st-taux">—</div>
+
+        <!-- Biens récents -->
+        <div class="section-head">
+          <h2 class="section-title">Mes <em>biens</em></h2>
+          <button class="btn btn-ghost btn-sm" onclick="showSection('biens',document.querySelector('[onclick*=biens]'))">Voir tout →</button>
         </div>
-        <div class="stat-card">
-          <div class="stat-eyebrow">Revenus du mois</div>
-          <div class="stat-value" id="st-revenus">— <em>F</em></div>
-          <div class="stat-delta" id="st-mois">—</div>
+        <div id="biens-wrap-dash">
+          <table class="biens-table">
+            <thead><tr>
+              <th style="text-align:left">Bien</th><th>Statut</th><th>Loyer</th><th>Dossiers</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="biens-tbody-dash">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:28px;font-size:.88rem">Chargement…</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="stat-card">
-          <div class="stat-eyebrow">Dossiers reçus</div>
-          <div class="stat-value" id="st-dossiers">—</div>
-          <div class="stat-delta">En attente de traitement</div>
+
+        <!-- Dossiers récents -->
+        <div class="section-head">
+          <h2 class="section-title">Dossiers <em>récents</em></h2>
+          <span class="badge badge-blue" id="dossiers-count-dash">0</span>
+        </div>
+        <div class="dossiers-list" id="dossiers-list-dash">
+          <div style="text-align:center;color:var(--muted);padding:20px;font-size:.88rem">Chargement…</div>
         </div>
       </div>
 
-      <!-- BIENS -->
-      <div class="section-head">
-        <h2 class="section-title">Mes <em>biens</em></h2>
-        <button class="btn btn-ghost btn-sm">Voir tout →</button>
-      </div>
-      <div id="biens-wrap">
+      <!-- ══════════════════════
+           SECTION : BIENS
+      ══════════════════════ -->
+      <div class="page-section" id="section-biens">
+        <div class="section-head">
+          <h2 class="section-title">Tous mes <em>biens</em></h2>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='/'">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Ajouter un bien
+          </button>
+        </div>
         <table class="biens-table">
           <thead><tr>
-            <th style="text-align:left">Bien</th>
-            <th>Statut</th>
-            <th>Loyer</th>
-            <th>Locataire</th>
-            <th>Actions</th>
+            <th style="text-align:left">Bien</th><th>Statut</th><th>Loyer</th><th>Surface</th><th>Dossiers</th><th>Actions</th>
           </tr></thead>
-          <tbody id="biens-tbody">
-            <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">Chargement des biens…</td></tr>
+          <tbody id="biens-tbody-full">
+            <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:28px">Chargement…</td></tr>
           </tbody>
         </table>
       </div>
 
-      <!-- DOSSIERS -->
-      <div class="section-head">
-        <h2 class="section-title">Dossiers <em>reçus</em></h2>
-        <span class="badge badge-blue" id="dossiers-count">0 nouveaux</span>
-      </div>
-      <div class="dossiers-list" id="dossiers-list">
-        <div style="text-align:center;color:var(--muted);padding:24px;font-size:.88rem">Chargement des dossiers…</div>
+      <!-- ══════════════════════
+           SECTION : DOSSIERS
+      ══════════════════════ -->
+      <div class="page-section" id="section-dossiers">
+        <div class="section-head">
+          <h2 class="section-title">Dossiers <em>reçus</em></h2>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="filtre-statut" onchange="filterDossiers()" style="background:rgba(11,32,57,.8);border:1px solid var(--bdr);color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.76rem;padding:7px 12px;border-radius:6px;cursor:pointer">
+              <option value="">Tous les statuts</option>
+              <option value="en_attente">En attente</option>
+              <option value="accepte">Acceptés</option>
+              <option value="refuse">Refusés</option>
+            </select>
+          </div>
+        </div>
+        <div class="dossiers-list" id="dossiers-list-full">
+          <div style="text-align:center;color:var(--muted);padding:20px;font-size:.88rem">Chargement…</div>
+        </div>
       </div>
 
-      <!-- REVENUS -->
-      <div class="section-head" style="margin-top:8px">
-        <h2 class="section-title">Revenus <em>locatifs</em></h2>
-        <span style="font-size:.76rem;color:var(--muted)">12 derniers mois</span>
-      </div>
-      <div class="revenus-card">
-        <div style="display:flex;justify-content:space-between;align-items:baseline">
-          <div>
-            <div style="font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.35)">Total annuel estimé</div>
-            <div style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--blanc);margin-top:4px" id="rev-total">— <span style="font-size:1rem;color:var(--or)">F CFA</span></div>
+      <!-- ══════════════════════
+           SECTION : REVENUS
+      ══════════════════════ -->
+      <div class="page-section" id="section-revenus">
+        <div class="section-head">
+          <h2 class="section-title">Revenus <em>locatifs</em></h2>
+          <span style="font-size:.76rem;color:var(--muted)">12 derniers mois</span>
+        </div>
+        <div class="revenus-card">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div>
+              <div style="font-size:.7rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.32)">Total annuel estimé</div>
+              <div style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--blanc);margin-top:4px" id="rev-total">— <span style="font-size:1rem;color:var(--or)">F CFA</span></div>
+            </div>
+            <span class="badge badge-green" id="rev-occupancy">Taux: —%</span>
           </div>
-          <span class="badge badge-green" id="rev-occupancy">Taux: —%</span>
+          <div class="chart-bars" id="chart-bars"></div>
+          <div style="height:28px"></div>
         </div>
-        <div class="chart-bars" id="chart-bars">
-          <!-- Rendered by JS -->
+        <div style="font-size:.8rem;color:rgba(248,244,238,.3);text-align:center;margin-top:-16px">
+          Les revenus affichés sont calculés sur la base des loyers × taux d'occupation de vos biens.
         </div>
-        <div style="height:28px"></div>
       </div>
-    </div>
+
+      <!-- ══════════════════════
+           SECTION : DOCUMENTS (placeholder)
+      ══════════════════════ -->
+      <div class="page-section" id="section-documents">
+        <div class="section-head"><h2 class="section-title">Mes <em>documents</em></h2></div>
+        <div class="empty-state">
+          <div class="kdi-lg">
+            <svg viewBox="0 0 48 48"><path fill="#BF9650" d="M10 4h18l12 12v28a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><path fill="#E8DCC5" opacity=".7" d="M28 4v12h12"/><path fill="none" stroke="#DDB96E" stroke-width="3" stroke-linecap="round" d="M15 28h18M15 34h12"/></svg>
+          </div>
+          <p>Vos mandats, quittances et contrats apparaîtront ici.<br>Bientôt disponible.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════
+           SECTION : MESSAGES (placeholder)
+      ══════════════════════ -->
+      <div class="page-section" id="section-messages">
+        <div class="section-head"><h2 class="section-title">Mes <em>messages</em></h2></div>
+        <div class="empty-state">
+          <div class="kdi-lg">
+            <svg viewBox="0 0 48 48"><path fill="#BF9650" d="M4 10a4 4 0 0 1 4-4h32a4 4 0 0 1 4 4v22a4 4 0 0 1-4 4H13L4 44V10z"/><path fill="#E8DCC5" opacity=".8" d="M12 19h24v2H12zm0 6h16v2H12z"/></svg>
+          </div>
+          <p>La messagerie avec vos locataires et Kàddu sera disponible prochainement.</p>
+        </div>
+      </div>
+
+      <!-- ══════════════════════
+           SECTION : PARAMÈTRES (placeholder)
+      ══════════════════════ -->
+      <div class="page-section" id="section-parametres">
+        <div class="section-head"><h2 class="section-title">Mes <em>paramètres</em></h2></div>
+        <div class="empty-state">
+          <div class="kdi-lg">
+            <svg viewBox="0 0 48 48"><circle fill="#BF9650" cx="24" cy="24" r="6"/><path fill="#E8DCC5" opacity=".7" d="M24 4v4M24 40v4M4 24h4M40 24h4M8.34 8.34l2.83 2.83M36.83 36.83l2.83 2.83M8.34 39.66l2.83-2.83M36.83 11.17l2.83-2.83" stroke="#DDB96E" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <p>Gestion du profil et des préférences bientôt disponible.</p>
+        </div>
+      </div>
+
+    </div><!-- /content -->
   </main>
 </div>
 
 <script>
-const SUPABASE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
-function getSession() {
-  try {
-    const raw = sessionStorage.getItem('kaddu_jwt');
-    if (!raw) return null;
-    const s = JSON.parse(raw);
-    if (Date.now() > s.expires) { sessionStorage.removeItem('kaddu_jwt'); return null; }
+function getSession(){
+  try{
+    const r=sessionStorage.getItem('kaddu_jwt');
+    if(!r)return null;
+    const s=JSON.parse(r);
+    if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return null;}
     return s;
-  } catch { return null; }
+  }catch{return null;}
 }
-window.addEventListener('beforeunload', () => sessionStorage.removeItem('kaddu_jwt'));
+window.addEventListener('beforeunload',()=>sessionStorage.removeItem('kaddu_jwt'));
+function logout(){sessionStorage.removeItem('kaddu_jwt');window.location.href='/auth/?tab=login';}
 
-function logout() {
-  sessionStorage.removeItem('kaddu_jwt');
-  window.location.href = '/auth/';
-}
-
-// ── AUTH GUARD ───────────────────────────────────────────────
+// ── AUTH GUARD ────────────────────────────────────────────────
+// En local (file://) ou sans session → mode démo avec données fictives
+const IS_LOCAL = location.protocol === 'file:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 const session = getSession();
-if (!session || session.role !== 'bailleur') {
-  window.location.href = '/auth/?tab=login';
+
+if(!session || session.role !== 'bailleur'){
+  if(IS_LOCAL){
+    const demoSession = {
+      access_token: 'demo',
+      role: 'bailleur',
+      expires: Date.now() + 3600000,
+      user: {
+        id: 'demo-user-id',
+        email: 'demo@kaddu.net',
+        user_metadata: { prenom: 'Tidiane', nom: 'Aïdara' }
+      }
+    };
+    document.getElementById('guard').style.display = 'none';
+    document.getElementById('app').style.display = 'grid';
+    init(demoSession);
+  } else {
+    window.location.href = '/auth/?tab=login';
+  }
 } else {
   document.getElementById('guard').style.display = 'none';
   document.getElementById('app').style.display = 'grid';
   init(session);
 }
 
-// ── INIT ─────────────────────────────────────────────────────
-async function init(session) {
-  const u = session.user;
-  const meta = u?.user_metadata || {};
-  const prenom = meta.prenom || u?.email?.split('@')[0] || 'Bailleur';
-  const initiale = prenom[0].toUpperCase();
+// ── GLOBAL STATE ──────────────────────────────────────────────
+let allBiens=[];
+let allDossiers=[];
+let currentDossierId=null;
 
-  document.getElementById('topName').textContent = prenom;
-  document.getElementById('sideName').textContent = (meta.prenom||'') + ' ' + (meta.nom||'');
-  document.getElementById('sideAvatar').textContent = initiale;
+// ── INIT ──────────────────────────────────────────────────────
+async function init(s){
+  const u=s.user;
+  const meta=u?.user_metadata||{};
+  const prenom=meta.prenom||u?.email?.split('@')[0]||'Bailleur';
 
-  await loadBiens(u.id, session.access_token);
-  await loadDossiers(u.id, session.access_token);
+  document.getElementById('topName').textContent=prenom;
+  document.getElementById('sideName').textContent=[(meta.prenom||''),(meta.nom||'')].filter(Boolean).join(' ')||'—';
+  document.getElementById('sideAvatar').textContent=prenom[0].toUpperCase();
+
+  await loadBiens(u.id,s.access_token);
+  await loadDossiers(u.id,s.access_token);
 }
 
-async function loadBiens(userId, token) {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/biens?proprietaire_id=eq.${userId}&select=*&limit=10`, {
-      headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+token}
-    });
-    const biens = res.ok ? await res.json() : [];
-    renderBiens(biens);
-    renderStats(biens);
-    renderChart(biens);
-  } catch {
-    renderBiensFallback();
+// ── BIENS ─────────────────────────────────────────────────────
+async function loadBiens(userId,token){
+  if(userId === 'demo-user-id'){
+    allBiens = [
+      {id:'a1b2c3',titre:'Le Petit Nopalukay',type_bien:'meublé',statut:'loué',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photos:[]},
+      {id:'d4e5f6',titre:'Le Petit Bantukay',type_bien:'meublé',statut:'disponible',quartier:'Almadies',ville:'Dakar',prix:720000,surface:78,pieces:2,photos:[]},
+      {id:'g7h8i9',titre:'Studio Plateau',type_bien:'nu',statut:'disponible',quartier:'Plateau',ville:'Dakar',prix:380000,surface:40,pieces:1,photos:[]},
+    ];
+    renderBiensTable('biens-tbody-dash',allBiens.slice(0,5),false);
+    renderBiensTable('biens-tbody-full',allBiens,true);
+    renderStats();renderChart();
+    return;
   }
+  try{
+    const res=await fetch(
+      `${SB_URL}/rest/v1/biens?proprietaire_id=eq.${userId}&select=id,titre,type_bien,statut,adresse,quartier,ville,prix,charges,surface,pieces,photos&order=created_at.desc`,
+      {headers:{'apikey':SB_ANON,'Authorization':'Bearer '+token}}
+    );
+    allBiens=res.ok?await res.json():[];
+  }catch{allBiens=[];}
+  renderBiensTable('biens-tbody-dash',allBiens.slice(0,5),false);
+  renderBiensTable('biens-tbody-full',allBiens,true);
+  renderStats();
+  renderChart();
 }
 
-function renderStats(biens) {
-  const loues = biens.filter(b => b.statut === 'loue' || b.statut === 'loué');
-  const total = biens.length;
-  const taux = total ? Math.round(loues.length/total*100) : 0;
-  const revenus = loues.reduce((s,b) => s + (parseInt(b.loyer)||0), 0);
-
-  document.getElementById('st-biens').textContent = total || '—';
-  document.getElementById('st-loues').textContent = loues.length || '—';
-  document.getElementById('st-taux').textContent = taux+'% de taux d\'occupation';
-  document.getElementById('st-revenus').innerHTML = (revenus ? revenus.toLocaleString('fr-FR') : '—') + ' <em>F</em>';
-  document.getElementById('st-dossiers').textContent = '0';
-  document.getElementById('rev-total').innerHTML = (revenus * 12 ? (revenus*12).toLocaleString('fr-FR') : '—') + ' <span style="font-size:1rem;color:var(--or)">F CFA</span>';
-  document.getElementById('rev-occupancy').textContent = `Taux: ${taux}%`;
+function getFirstPhoto(photos){
+  let ph=[];
+  try{ph=Array.isArray(photos)?photos:JSON.parse(photos||'[]');}catch{}
+  const f=ph[0];
+  return f?.url||f?.src||f?.path||f||'';
 }
 
-function renderBiens(biens) {
-  if (!biens.length) { renderBiensFallback(); return; }
-  const tbody = document.getElementById('biens-tbody');
-  tbody.innerHTML = biens.map(b => {
-    const statut = b.statut === 'loue' || b.statut === 'loué' ? '<span class="badge badge-green">Loué</span>'
-                 : b.statut === 'disponible' ? '<span class="badge badge-or">Disponible</span>'
-                 : `<span class="badge badge-blue">${b.statut||'—'}</span>`;
+function renderBiensTable(tbodyId,biens,full){
+  const tbody=document.getElementById(tbodyId);
+  if(!biens.length){
+    tbody.innerHTML=`<tr><td colspan="${full?6:5}" style="text-align:center;padding:32px">
+      <div style="color:var(--muted);font-size:.88rem">Aucun bien enregistré.<br>
+      <a href="/" style="color:var(--or)">Confier votre premier bien →</a></div>
+    </td></tr>`;
+    return;
+  }
+
+  const countByBien=id=>allDossiers.filter(d=>d.bien_id===id).length;
+
+  tbody.innerHTML=biens.map(b=>{
+    const statut=b.statut==='loue'||b.statut==='loué'
+      ?'<span class="badge badge-green">Loué</span>'
+      :b.statut==='disponible'
+      ?'<span class="badge badge-or">Disponible</span>'
+      :`<span class="badge badge-blue">${b.statut||'—'}</span>`;
+
+    const photo=getFirstPhoto(b.photos);
+    const thumb=photo
+      ?`<img src="${photo}" alt="${b.titre||''}">`
+      :`<svg viewBox="0 0 24 24" width="22" height="22"><path fill="#BF9650" d="M3 21V8l9-5 9 5v13H3z"/><path fill="#E8DCC5" opacity=".7" d="M15 12h4v9h-4z"/><path fill="#07182B" d="M9 13h2v3H9zm4 0h2v3h-2z"/></svg>`;
+
+    const prix=b.prix?b.prix.toLocaleString('fr-FR')+' F':'—';
+    const dos=countByBien(b.id);
+
+    const extraCols=full?`<td style="color:var(--muted);font-size:.8rem">${b.surface?b.surface+' m²':'—'}</td>`:'';
+
     return `<tr>
       <td><div style="display:flex;align-items:center;gap:12px">
-        <div class="bien-img">🏠</div>
-        <div><div class="bien-ref">#${String(b.id||'').slice(0,6)}</div>
-        <div class="bien-title">${b.titre||b.type_bien||'Bien'}</div>
-        <div class="bien-addr">${b.adresse||b.quartier||'Dakar'}</div></div>
+        <div class="bien-thumb">${thumb}</div>
+        <div>
+          <div class="bien-ref">#${String(b.id||'').slice(0,6).toUpperCase()}</div>
+          <div class="bien-title">${b.titre||b.type_bien||'Bien'}</div>
+          <div class="bien-addr">${[b.quartier,b.ville||'Dakar'].filter(Boolean).join(', ')}</div>
+        </div>
       </div></td>
       <td>${statut}</td>
-      <td style="font-weight:500">${b.loyer ? b.loyer.toLocaleString('fr-FR')+' F' : '—'}</td>
-      <td style="color:var(--muted);font-size:.8rem">${b.locataire_nom||'—'}</td>
-      <td><button class="btn btn-ghost btn-sm" onclick="">Voir →</button></td>
+      <td style="font-weight:500;font-size:.84rem">${prix}</td>
+      ${extraCols}
+      <td>${dos?`<span class="badge badge-blue">${dos} dossier${dos>1?'s':''}</span>`:`<span style="color:rgba(248,244,238,.28);font-size:.78rem">—</span>`}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="window.location.href='/biens/?id=${b.id}'">Voir →</button></td>
     </tr>`;
   }).join('');
 }
 
-function renderBiensFallback() {
-  document.getElementById('biens-tbody').innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px;font-size:.88rem">Aucun bien enregistré.<br><a href="/" style="color:var(--or)">Confier votre premier bien →</a></td></tr>`;
-  document.getElementById('st-biens').textContent = '0';
-  document.getElementById('st-loues').textContent = '0';
-  document.getElementById('st-taux').textContent = '—';
-  document.getElementById('st-revenus').textContent = '—';
-  document.getElementById('st-dossiers').textContent = '0';
-}
-
-async function loadDossiers(userId, token) {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/alertes_biens?bailleur_id=eq.${userId}&select=*&limit=5`, {
-      headers:{'apikey':SUPABASE_ANON,'Authorization':'Bearer '+token}
-    });
-    const dossiers = res.ok ? await res.json() : [];
-    renderDossiers(dossiers);
-    document.getElementById('st-dossiers').textContent = dossiers.length || '0';
-    document.getElementById('dossiers-count').textContent = dossiers.length + ' dossier(s)';
-  } catch {
-    renderDossiers([]);
-  }
-}
-
-function renderDossiers(dossiers) {
-  const el = document.getElementById('dossiers-list');
-  if (!dossiers.length) {
-    el.innerHTML = `<div style="text-align:center;color:var(--muted);padding:24px;font-size:.88rem;border:1px solid var(--bdr);border-radius:10px;">Aucun dossier reçu pour le moment.</div>`;
+// ── DOSSIERS ──────────────────────────────────────────────────
+async function loadDossiers(userId,token){
+  if(userId === 'demo-user-id'){
+    allDossiers = [
+      {id:'dos1',bien_id:'a1b2c3',statut:'en_attente',created_at:new Date().toISOString(),
+        message:JSON.stringify({composition:'couple',emmenagement:'mois',duree:'12-36mois',ville_precedente:'Thiès',
+          locataires:[{prenom:'Moussa',nom:'Diallo',situation:'cdi',revenu:650000,societe:'Orange SN'}],
+          garants:[{prenom:'Fatou',nom:'Diallo',situation:'retraite'}]})},
+      {id:'dos2',bien_id:'d4e5f6',statut:'en_attente',created_at:new Date(Date.now()-86400000).toISOString(),
+        message:JSON.stringify({composition:'seul',emmenagement:'deux-semaines',duree:'6-12mois',ville_precedente:'Dakar',
+          locataires:[{prenom:'Aïssatou',nom:'Ndiaye',situation:'independant',revenu:420000}],garants:[]})},
+      {id:'dos3',bien_id:'a1b2c3',statut:'accepte',created_at:new Date(Date.now()-172800000).toISOString(),
+        message:JSON.stringify({composition:'famille',emmenagement:'semaine',duree:'3ans',ville_precedente:'Ziguinchor',
+          locataires:[{prenom:'Ibrahima',nom:'Sow',situation:'cdi',revenu:900000,societe:'BHS'}],
+          garants:[{prenom:'Mariama',nom:'Sow',situation:'cdi'}]})},
+    ];
+    const enAttente=allDossiers.filter(d=>d.statut==='en_attente');
+    document.getElementById('st-dossiers').textContent=allDossiers.length;
+    document.getElementById('dossiers-count-dash').textContent=enAttente.length+' en attente';
+    const navCount=document.getElementById('nav-dossiers-count');
+    if(enAttente.length){navCount.textContent=enAttente.length;navCount.style.display='inline-flex';}
+    renderDossiers(allDossiers.slice(0,4),true);
+    renderDossiers(allDossiers,false);
     return;
   }
-  el.innerHTML = dossiers.map(d => `
-    <div class="dossier-card">
-      <div class="dossier-avatar">${(d.prenom||'?')[0].toUpperCase()}</div>
-      <div class="dossier-info">
-        <div class="dossier-name">${d.prenom||''} ${d.nom||''}</div>
-        <div class="dossier-bien">${d.bien_titre||'Bien non précisé'}</div>
-        <div class="dossier-meta">Reçu le ${d.created_at ? new Date(d.created_at).toLocaleDateString('fr-FR') : '—'}</div>
-      </div>
-      <div class="dossier-actions">
-        <button class="btn btn-ghost btn-sm">Consulter</button>
-        <button class="btn btn-primary btn-sm">Accepter</button>
-      </div>
-    </div>`).join('');
+  try{
+    // Récupère les dossiers liés aux biens du propriétaire
+    const bienIds=allBiens.map(b=>b.id);
+    if(!bienIds.length){renderDossiers([],true);renderDossiers([],false);return;}
+
+    const filter=bienIds.map(id=>`bien_id.eq.${id}`).join(',');
+    const res=await fetch(
+      `${SB_URL}/rest/v1/dossiers?or=(${filter})&select=*&order=created_at.desc`,
+      {headers:{'apikey':SB_ANON,'Authorization':'Bearer '+token}}
+    );
+    allDossiers=res.ok?await res.json():[];
+  }catch{allDossiers=[];}
+
+  const enAttente=allDossiers.filter(d=>d.statut==='en_attente');
+  document.getElementById('st-dossiers').textContent=allDossiers.length||'0';
+  document.getElementById('dossiers-count-dash').textContent=enAttente.length+' en attente';
+
+  const navCount=document.getElementById('nav-dossiers-count');
+  if(enAttente.length){navCount.textContent=enAttente.length;navCount.style.display='inline-flex';}
+
+  renderDossiers(allDossiers.slice(0,4),true);   // dashboard (4 derniers)
+  renderDossiers(allDossiers,false);              // section dossiers (tous)
 }
 
-function renderChart(biens) {
-  const mois = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-  const now = new Date().getMonth();
-  const revMensuel = biens.filter(b=>b.statut==='loue'||b.statut==='loué').reduce((s,b)=>s+(parseInt(b.loyer)||0),0);
-  const container = document.getElementById('chart-bars');
-  container.innerHTML = mois.map((m,i) => {
-    const val = revMensuel * (0.7 + Math.random()*0.3);
-    const pct = revMensuel ? Math.round(val/revMensuel*70) : Math.round(30+Math.random()*60);
-    return `<div class="chart-bar ${i===now?'active':''}" style="height:${pct}%" title="${m}">
-      <span class="chart-bar-val">${revMensuel ? Math.round(val/1000)+'k' : '—'}</span>
+function renderDossiers(dossiers,isDash){
+  const el=document.getElementById(isDash?'dossiers-list-dash':'dossiers-list-full');
+  if(!dossiers.length){
+    el.innerHTML=`<div style="text-align:center;color:var(--muted);padding:24px;font-size:.88rem;border:1px solid var(--bdr);border-radius:10px">Aucun dossier reçu pour le moment.</div>`;
+    return;
+  }
+
+  el.innerHTML=dossiers.map(d=>{
+    const msg=safeJson(d.message);
+    const locs=(msg.locataires||[]);
+    const principal=locs[0]||{};
+    const nom=`${principal.prenom||''} ${principal.nom||''}`.trim()||'Candidat';
+    const initiale=nom[0].toUpperCase();
+    const bien=allBiens.find(b=>b.id===d.bien_id);
+    const bienTitre=bien?.titre||bien?.type_bien||'Bien non précisé';
+
+    const statutBadge=d.statut==='accepte'
+      ?'<span class="badge badge-green">Accepté</span>'
+      :d.statut==='refuse'
+      ?'<span class="badge badge-red">Refusé</span>'
+      :'<span class="badge badge-or">En attente</span>';
+
+    const date=d.created_at?new Date(d.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'—';
+
+    return `<div class="dossier-card" onclick="openDossier('${d.id}')">
+      <div class="dossier-avatar">${initiale}</div>
+      <div class="dossier-info">
+        <div class="dossier-name">${nom} ${locs.length>1?`<span style="color:var(--muted);font-size:.76rem">+${locs.length-1} autre${locs.length>2?'s':''}</span>`:''}</div>
+        <div class="dossier-bien">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#BF9650" stroke-width="2" style="vertical-align:middle;margin-right:3px"><path d="M3 21V8l9-5 9 5v13H3z"/></svg>
+          ${bienTitre}
+        </div>
+        <div class="dossier-meta">Reçu le ${date} · ${msg.composition||'—'} · ${msg.emmenagement||'—'}</div>
+      </div>
+      <div class="dossier-actions">
+        ${statutBadge}
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openDossier('${d.id}')">Consulter →</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterDossiers(){
+  const val=document.getElementById('filtre-statut').value;
+  const filtered=val?allDossiers.filter(d=>d.statut===val):allDossiers;
+  renderDossiers(filtered,false);
+}
+
+function safeJson(v,fb={}){try{return typeof v==='string'?JSON.parse(v):v||fb;}catch{return fb;}}
+
+// ── MODAL DOSSIER ─────────────────────────────────────────────
+function openDossier(id){
+  const d=allDossiers.find(x=>x.id===id);
+  if(!d)return;
+  currentDossierId=id;
+
+  const msg=safeJson(d.message);
+  const locs=msg.locataires||[];
+  const gars=msg.garants||[];
+  const bien=allBiens.find(b=>b.id===d.bien_id);
+
+  const locsHtml=locs.map(l=>`
+    <div style="padding:10px 12px;background:rgba(191,150,80,.06);border:1px solid var(--bdr);border-radius:8px;margin-bottom:8px">
+      <div style="font-weight:500;font-size:.88rem">${l.prenom||''} ${l.nom||''}</div>
+      <div style="font-size:.76rem;color:var(--muted);margin-top:3px">
+        ${l.situation||'—'} · Revenu : ${l.revenu?Number(l.revenu).toLocaleString('fr-FR')+' F CFA':'—'}
+        ${l.societe?` · ${l.societe}`:''}
+      </div>
+    </div>`).join('')||'<div style="color:var(--muted);font-size:.84rem">Aucun locataire renseigné</div>';
+
+  const garsHtml=gars.length?gars.map(g=>`
+    <div style="padding:8px 12px;background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.15);border-radius:8px;margin-bottom:6px;font-size:.82rem">
+      ${g.prenom||''} ${g.nom||''} · <span style="color:var(--muted)">${g.situation||'—'}</span>
+    </div>`).join('')
+    :`<div style="color:var(--muted);font-size:.82rem">${msg.no_garant?'Sans garant (confirmé)':'Aucun garant renseigné'}</div>`;
+
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-grid" style="margin-bottom:16px">
+      <div class="modal-field">
+        <div class="modal-field-label">Bien concerné</div>
+        <div class="modal-field-val">${bien?.titre||'—'}</div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Statut</div>
+        <div class="modal-field-val">${d.statut==='accepte'?'<span class="badge badge-green">Accepté</span>':d.statut==='refuse'?'<span class="badge badge-red">Refusé</span>':'<span class="badge badge-or">En attente</span>'}</div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Composition</div>
+        <div class="modal-field-val">${msg.composition||'—'}</div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Emménagement</div>
+        <div class="modal-field-val">${msg.emmenagement||'—'}</div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Durée souhaitée</div>
+        <div class="modal-field-val">${msg.duree||'—'}</div>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-label">Ville précédente</div>
+        <div class="modal-field-val">${msg.ville_precedente||'—'}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:12px">
+      <div class="modal-field-label" style="margin-bottom:8px">Locataire(s)</div>
+      ${locsHtml}
+    </div>
+    <div>
+      <div class="modal-field-label" style="margin-bottom:8px">Garant(s)</div>
+      ${garsHtml}
+    </div>
+    ${d.docs_fournis?.length?`
+    <div style="margin-top:12px">
+      <div class="modal-field-label" style="margin-bottom:8px">Documents fournis</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${(d.docs_fournis||[]).map(doc=>`
+          <span style="font-size:.72rem;padding:4px 10px;border-radius:6px;background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.2);color:var(--green)">✓ ${doc.name||doc.id||'—'}</span>
+        `).join('')}
+      </div>
+    </div>`:''}
+  `;
+
+  // Masquer les boutons si déjà traité
+  const isDone=d.statut==='accepte'||d.statut==='refuse';
+  document.getElementById('modal-btn-accept').style.display=isDone?'none':'inline-flex';
+  document.getElementById('modal-btn-refuse').style.display=isDone?'none':'inline-flex';
+
+  document.getElementById('modal-dossier').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modal-dossier').classList.remove('open');
+  currentDossierId=null;
+}
+
+async function updateDossier(statut){
+  if(!currentDossierId)return;
+  const s=getSession();
+  try{
+    await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${currentDossierId}`,{
+      method:'PATCH',
+      headers:{'apikey':SB_ANON,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({statut})
+    });
+    // Mettre à jour localement
+    const idx=allDossiers.findIndex(d=>d.id===currentDossierId);
+    if(idx>=0)allDossiers[idx].statut=statut;
+
+    // ── NOTIFICATION EMAIL ──────────────────────────────
+    const dossier = allDossiers[idx>=0?idx:0];
+    const bien = allBiens.find(b=>b.id===dossier?.bien_id);
+    const msg = safeJson(dossier?.message);
+    const loc = (msg.locataires||[])[0] || {};
+    const type = statut==='accepte' ? 'L5' : 'L4';
+
+    if(loc.email){
+      sendEmail(type, {
+        to:           loc.email,
+        prenom:       loc.prenom || 'Locataire',
+        bien_titre:   bien?.titre || 'Votre logement',
+        bien_adresse: [bien?.quartier, bien?.ville].filter(Boolean).join(', '),
+        espace_url:   'https://kaddu.net/espace-locataire/',
+        biens_url:    'https://kaddu.net/biens/',
+        agent_prenom: s.user?.user_metadata?.prenom || 'Kàddu'
+      }).catch(console.error);
+    }
+
+    closeModal();
+    renderDossiers(allDossiers.slice(0,4),true);
+    renderDossiers(allDossiers,false);
+    // Recalc stat
+    document.getElementById('st-dossiers').textContent=allDossiers.length;
+  }catch(e){alert('Erreur lors de la mise à jour : '+e.message);}
+}
+
+// ── EMAIL HELPER ─────────────────────────────────────────
+async function sendEmail(type, payload){
+  try{
+    const res = await fetch(EDGE_URL + '/send-email', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({type, payload})
+    });
+    const data = await res.json();
+    if(!data.success) console.warn('[send-email]', data.error);
+  }catch(e){ console.warn('[send-email] fetch error', e.message); }
+}
+
+// ── STATS ─────────────────────────────────────────────────────
+function renderStats(){
+  const loues=allBiens.filter(b=>b.statut==='loue'||b.statut==='loué');
+  const total=allBiens.length;
+  const taux=total?Math.round(loues.length/total*100):0;
+  const rev=loues.reduce((s,b)=>s+(parseInt(b.prix)||0),0);
+
+  document.getElementById('st-biens').textContent=total||'0';
+  document.getElementById('st-biens-delta').textContent=total?`${total} bien${total>1?'s':''} enregistré${total>1?'s':''}`:' Aucun bien';
+  document.getElementById('st-loues').textContent=loues.length||'0';
+  document.getElementById('st-taux').textContent=taux+'% de taux d\'occupation';
+  document.getElementById('st-revenus').innerHTML=(rev?rev.toLocaleString('fr-FR'):'—')+' <em>F</em>';
+  document.getElementById('rev-total').innerHTML=((rev*12)?((rev*12).toLocaleString('fr-FR')):'—')+' <span style="font-size:1rem;color:var(--or)">F CFA</span>';
+  document.getElementById('rev-occupancy').textContent=`Taux: ${taux}%`;
+}
+
+// ── CHART ─────────────────────────────────────────────────────
+function renderChart(){
+  const mois=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const now=new Date().getMonth();
+  const rev=allBiens.filter(b=>b.statut==='loue'||b.statut==='loué').reduce((s,b)=>s+(parseInt(b.prix)||0),0);
+  const container=document.getElementById('chart-bars');
+  container.innerHTML=mois.map((m,i)=>{
+    const variation=0.72+Math.random()*0.28;
+    const val=rev*variation;
+    const pct=rev?Math.round(val/rev*72):Math.round(30+Math.random()*55);
+    return `<div class="chart-bar${i===now?' active':''}" style="height:${Math.max(pct,8)}%">
+      <span class="chart-bar-val">${rev?Math.round(val/1000)+'k F':'—'}</span>
       <span class="chart-bar-label">${m}</span>
     </div>`;
   }).join('');
 }
 
-function showSection(name) {
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+// ── NAVIGATION ────────────────────────────────────────────────
+function showSection(name,el){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
 }
 </script>
 </body>
