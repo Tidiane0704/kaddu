@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confier mon bien — Kàddu</title>
+  <meta name="description" content="Tunnel bailleur Kàddu — Confiez votre bien à une agence immobilière digitale qui vérifie, valorise et sécurise la mise en location." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --or:#BF9650;
+      --or2:#E3C27A;
+      --nuit:#07182B;
+      --nuit2:#0B223A;
+      --cream:#F8F4EE;
+      --paper:#FFF9EF;
+      --muted:rgba(248,244,238,.68);
+      --darkmuted:rgba(7,24,43,.64);
+      --line:rgba(191,150,80,.24);
+      --white:rgba(255,255,255,.94);
+      --green:#00C875;
+      --red:#FF6B6B;
+      --orange:#F5A623;
+      --shadow:0 24px 70px rgba(0,0,0,.22);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:"DM Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--cream);
+      background:
+        radial-gradient(circle at top left, rgba(227,194,122,.20), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(191,150,80,.14), transparent 38%),
+        linear-gradient(145deg, #061221 0%, #07182B 44%, #0B223A 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+
+    .page{
+      width:min(1180px, calc(100% - 32px));
+      margin:0 auto;
+      padding:26px 0 52px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:18px;
+      padding:14px 0 30px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:58px;
+      height:58px;
+      border-radius:20px;
+      display:grid;
+      place-items:center;
+      background:rgba(248,244,238,.08);
+      border:1px solid var(--line);
+      overflow:hidden;
+      box-shadow:0 12px 30px rgba(0,0,0,.18);
+    }
+
+    .brand-mark img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      padding:8px;
+      display:block;
+    }
+
+    .brand-fallback{
+      width:100%;
+      height:100%;
+      display:grid;
+      place-items:center;
+      font-family:"Playfair Display",serif;
+      font-size:25px;
+      color:var(--or2);
+      letter-spacing:-1px;
+    }
+
+    .brand-text strong{
+      display:block;
+      font-family:"Playfair Display",serif;
+      font-size:26px;
+      letter-spacing:.2px;
+      color:var(--cream);
+      line-height:1;
+    }
+
+    .brand-text span{
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      border:1px solid var(--line);
+      color:var(--cream);
+      background:rgba(255,255,255,.06);
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      font-weight:700;
+      backdrop-filter:blur(10px);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.03fr .97fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .hero-card,.form-card,.side-card{
+      border:1px solid var(--line);
+      background:linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.045));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+    }
+
+    .hero-card{
+      padding:36px;
+      min-height:430px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card:after{
+      content:"";
+      position:absolute;
+      width:260px;
+      height:260px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(227,194,122,.22), transparent 64%);
+      bottom:-80px;
+      right:-70px;
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--or2);
+      border:1px solid rgba(227,194,122,.28);
+      background:rgba(227,194,122,.08);
+      padding:9px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    h1{
+      margin:22px 0 14px;
+      font-family:"Playfair Display",serif;
+      font-weight:500;
+      line-height:.98;
+      letter-spacing:-.04em;
+      font-size:clamp(44px, 6vw, 76px);
+      color:var(--cream);
+    }
+
+    .lead{
+      margin:0;
+      color:rgba(248,244,238,.78);
+      font-size:18px;
+      line-height:1.65;
+      max-width:620px;
+    }
+
+    .trust-row{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:28px;
+      position:relative;
+      z-index:1;
+    }
+
+    .trust{
+      padding:16px;
+      border-radius:20px;
+      background:rgba(7,24,43,.44);
+      border:1px solid rgba(248,244,238,.10);
+    }
+
+    .trust b{
+      display:block;
+      font-size:22px;
+      color:var(--or2);
+      line-height:1;
+      margin-bottom:7px;
+    }
+
+    .trust span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
+    }
+
+    .form-card{
+      padding:24px;
+      overflow:hidden;
+    }
+
+    .progress-wrap{
+      padding:18px;
+      border:1px solid rgba(248,244,238,.10);
+      background:rgba(7,24,43,.42);
+      border-radius:22px;
+      margin-bottom:18px;
+    }
+
+    .progress-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .progress-top b{font-size:14px}
+    .progress-top span{color:var(--muted);font-size:13px}
+
+    .progress{
+      width:100%;
+      height:9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+
+    .bar{
+      height:100%;
+      width:16.66%;
+      background:linear-gradient(90deg,var(--or),var(--or2));
+      border-radius:inherit;
+      transition:.35s ease;
+    }
+
+    .steps-dots{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .dot{
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.13);
+    }
+    .dot.active{background:var(--or2)}
+
+    .step{display:none; animation:fade .26s ease}
+    .step.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    h2{
+      margin:0 0 8px;
+      font-family:"Playfair Display",serif;
+      font-size:31px;
+      font-weight:500;
+      letter-spacing:-.02em;
+    }
+
+    .hint{
+      margin:0 0 20px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .field{margin-bottom:14px}
+    label{
+      display:block;
+      margin:0 0 7px;
+      font-size:13px;
+      color:rgba(248,244,238,.82);
+      font-weight:800;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid rgba(248,244,238,.15);
+      background:rgba(255,255,255,.08);
+      color:var(--cream);
+      border-radius:17px;
+      padding:14px 14px;
+      outline:none;
+      transition:.2s ease;
+    }
+
+    select option{color:#07182B}
+    textarea{min-height:118px;resize:vertical}
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(227,194,122,.72);
+      box-shadow:0 0 0 4px rgba(227,194,122,.10);
+    }
+
+    .choice-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .choice{
+      position:relative;
+      border:1px solid rgba(248,244,238,.13);
+      background:rgba(255,255,255,.07);
+      border-radius:22px;
+      padding:16px;
+      min-height:104px;
+      transition:.18s ease;
+    }
+
+    .choice input{position:absolute;opacity:0;pointer-events:none}
+    .choice strong{display:block;color:var(--cream);font-size:16px;margin-bottom:6px}
+    .choice span{display:block;color:var(--muted);font-size:13px;line-height:1.4}
+    .choice:has(input:checked){
+      border-color:rgba(227,194,122,.82);
+      background:rgba(227,194,122,.12);
+      transform:translateY(-1px);
+    }
+
+    .offer-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    .offer{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:14px;
+      align-items:center;
+      border:1px solid rgba(248,244,238,.13);
+      background:rgba(255,255,255,.07);
+      border-radius:22px;
+      padding:16px;
+      transition:.18s ease;
+    }
+
+    .offer:has(input:checked){
+      border-color:rgba(227,194,122,.82);
+      background:rgba(227,194,122,.12);
+    }
+
+    .offer input{width:18px;height:18px}
+    .offer h3{margin:0 0 5px;font-size:17px}
+    .offer p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .offer .rate{
+      color:var(--or2);
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .simulation{
+      border:1px solid rgba(227,194,122,.22);
+      background:linear-gradient(160deg, rgba(227,194,122,.13), rgba(255,255,255,.05));
+      border-radius:24px;
+      padding:18px;
+      margin:14px 0 18px;
+    }
+
+    .sim-row{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:10px 0;
+      border-bottom:1px solid rgba(248,244,238,.10);
+      color:rgba(248,244,238,.82);
+    }
+
+    .sim-row:last-child{border-bottom:0}
+    .sim-row strong{color:var(--cream)}
+    .sim-row .gold{color:var(--or2);font-weight:900}
+
+    .upload-box{
+      border:1px dashed rgba(227,194,122,.45);
+      background:rgba(227,194,122,.08);
+      border-radius:22px;
+      padding:18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      margin-bottom:14px;
+    }
+
+    .actions{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:999px;
+      padding:14px 20px;
+      font-weight:900;
+      min-height:48px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .btn-primary{
+      color:#07182B;
+      background:linear-gradient(135deg,var(--or2),var(--or));
+      box-shadow:0 14px 30px rgba(191,150,80,.25);
+    }
+
+    .btn-secondary{
+      color:var(--cream);
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(248,244,238,.14);
+    }
+
+    .btn:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+    }
+
+    .below{
+      display:grid;
+      grid-template-columns:1fr .82fr;
+      gap:22px;
+      margin-top:22px;
+    }
+
+    .side-card{
+      padding:24px;
+    }
+
+    .side-card h3{
+      margin:0 0 12px;
+      font-family:"Playfair Display",serif;
+      font-size:26px;
+      font-weight:500;
+    }
+
+    .list{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .list-item{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:14px;
+      border:1px solid rgba(248,244,238,.10);
+      background:rgba(255,255,255,.06);
+      border-radius:18px;
+    }
+
+    .check{
+      width:24px;height:24px;border-radius:999px;
+      display:grid;place-items:center;
+      color:#07182B;
+      background:var(--or2);
+      font-weight:900;
+      flex:0 0 auto;
+      font-size:13px;
+    }
+
+    .list-item b{display:block;margin-bottom:4px}
+    .list-item span{display:block;color:var(--muted);font-size:13px;line-height:1.45}
+
+    .summary-card{
+      background:var(--paper);
+      color:var(--nuit);
+      border-radius:var(--radius);
+      padding:24px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(191,150,80,.28);
+      position:sticky;
+      top:18px;
+    }
+
+    .summary-card h3{
+      margin:0 0 10px;
+      font-family:"Playfair Display",serif;
+      font-size:28px;
+      font-weight:500;
+    }
+
+    .summary-card p{
+      margin:0 0 16px;
+      color:var(--darkmuted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .summary-line{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      border-bottom:1px solid rgba(7,24,43,.10);
+      padding:11px 0;
+      font-size:14px;
+    }
+
+    .summary-line span:first-child{color:var(--darkmuted)}
+    .summary-line strong{text-align:right}
+
+    .mini-note{
+      margin-top:18px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(191,150,80,.12);
+      color:rgba(7,24,43,.78);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .success{
+      text-align:center;
+      padding:18px 4px 6px;
+    }
+
+    .success-icon{
+      width:70px;height:70px;
+      margin:0 auto 18px;
+      display:grid;place-items:center;
+      border-radius:25px;
+      color:#07182B;
+      background:linear-gradient(135deg,var(--or2),var(--or));
+      font-size:34px;
+      font-weight:900;
+    }
+
+    .hidden{display:none!important}
+
+    @media(max-width:960px){
+      .hero,.below{grid-template-columns:1fr}
+      .summary-card{position:relative;top:auto}
+      .hero-card{min-height:auto}
+    }
+
+    @media(max-width:680px){
+      .page{width:min(100% - 22px, 1180px);padding-top:12px}
+      .topbar{align-items:flex-start;flex-direction:column;padding-bottom:18px}
+      .hero-card,.form-card,.side-card,.summary-card{border-radius:24px;padding:20px}
+      .grid,.choice-grid,.trust-row{grid-template-columns:1fr}
+      .offer{grid-template-columns:auto 1fr}
+      .offer .rate{grid-column:2}
+      .actions{flex-direction:column-reverse}
+      .btn{width:100%}
+      h1{font-size:44px}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <div class="brand-mark">
+          <img src="assets/kaddu-logo.svg" alt="Logo Kàddu" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+          <div class="brand-fallback" style="display:none;">K</div>
+        </div>
+        <div class="brand-text">
+          <strong>Kàddu</strong>
+          <span>la parole qui engage</span>
+        </div>
+      </a>
+
+      <div class="top-actions">
+        <span class="pill">Bailleurs · Dakar</span>
+        <span class="pill">Visites 360° · Dossiers vérifiés</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <span class="eyebrow">Espace propriétaire</span>
+        <h1>Confiez votre bien à Kàddu.</h1>
+        <p class="lead">
+          Déposez les informations de votre appartement, choisissez votre niveau d’accompagnement
+          et obtenez une première estimation claire avant validation par notre équipe.
+        </p>
+
+        <div class="trust-row">
+          <div class="trust">
+            <b>360°</b>
+            <span>Valorisation digitale du bien et visites immersives.</span>
+          </div>
+          <div class="trust">
+            <b>Anti-fraude</b>
+            <span>Dossiers locataires analysés avant présentation.</span>
+          </div>
+          <div class="trust">
+            <b>Premium</b>
+            <span>Positionnement sérieux pour bailleurs exigeants.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card" id="tunnel">
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <b id="stepTitle">Étape 1 sur 6</b>
+            <span id="stepSmall">Qualification du bien</span>
+          </div>
+          <div class="progress"><div class="bar" id="bar"></div></div>
+          <div class="steps-dots">
+            <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+
+        <form id="ownerForm">
+          <!-- STEP 1 -->
+          <section class="step active" data-label="Qualification du bien">
+            <h2>Quel bien souhaitez-vous confier ?</h2>
+            <p class="hint">Ces premières informations nous permettent de vous orienter vers la bonne offre.</p>
+
+            <div class="choice-grid">
+              <label class="choice">
+                <input type="radio" name="property_kind" value="Appartement" checked>
+                <strong>Appartement</strong>
+                <span>Idéal pour location meublée ou non meublée.</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="property_kind" value="Maison">
+                <strong>Maison</strong>
+                <span>Villa, maison familiale ou résidence indépendante.</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="property_kind" value="Immeuble">
+                <strong>Immeuble</strong>
+                <span>Plusieurs lots à commercialiser ou administrer.</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="property_kind" value="Autre">
+                <strong>Autre bien</strong>
+                <span>Studio, bureau, local ou autre format.</span>
+              </label>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label for="rental_mode">Mode de location</label>
+                <select id="rental_mode" name="rental_mode">
+                  <option value="Non meublé">Non meublé</option>
+                  <option value="Meublé">Meublé</option>
+                  <option value="Les deux possibles">Les deux possibles</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="availability">Disponibilité</label>
+                <select id="availability" name="availability">
+                  <option value="Disponible maintenant">Disponible maintenant</option>
+                  <option value="Dans moins de 30 jours">Dans moins de 30 jours</option>
+                  <option value="Dans 1 à 3 mois">Dans 1 à 3 mois</option>
+                  <option value="Pas encore défini">Pas encore défini</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 2 -->
+          <section class="step" data-label="Localisation & valeur">
+            <h2>Où se situe le bien ?</h2>
+            <p class="hint">La localisation et le loyer visé permettent d’afficher une première projection transparente.</p>
+
+            <div class="grid">
+              <div class="field">
+                <label for="city">Ville</label>
+                <input id="city" name="city" value="Dakar" placeholder="Ex : Dakar">
+              </div>
+              <div class="field">
+                <label for="district">Quartier</label>
+                <input id="district" name="district" placeholder="Ex : Sipres VDN, Almadies, Mermoz">
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label for="rent">Loyer souhaité / mois (FCFA)</label>
+                <input id="rent" name="rent" type="number" min="0" step="5000" placeholder="Ex : 450000">
+              </div>
+              <div class="field">
+                <label for="surface">Surface approximative</label>
+                <input id="surface" name="surface" placeholder="Ex : 95 m²">
+              </div>
+            </div>
+
+            <div class="simulation">
+              <div class="sim-row">
+                <span>Commission Kaddu estimée</span>
+                <strong id="simCommission">—</strong>
+              </div>
+              <div class="sim-row">
+                <span>Revenu propriétaire estimé</span>
+                <strong class="gold" id="simOwner">—</strong>
+              </div>
+              <div class="sim-row">
+                <span>Offre simulée</span>
+                <strong id="simOffer">Sérénité</strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 3 -->
+          <section class="step" data-label="Choix de l’offre">
+            <h2>Choisissez votre niveau d’accompagnement.</h2>
+            <p class="hint">Ces offres sont indicatives et pourront être ajustées après échange avec l’équipe Kàddu.</p>
+
+            <div class="offer-grid">
+              <label class="offer">
+                <input type="radio" name="offer" value="Essentiel" data-rate="5">
+                <div>
+                  <h3>Essentiel</h3>
+                  <p>Mise en ligne, valorisation de l’annonce, premiers contacts qualifiés.</p>
+                </div>
+                <span class="rate">5%</span>
+              </label>
+
+              <label class="offer">
+                <input type="radio" name="offer" value="Sérénité" data-rate="8" checked>
+                <div>
+                  <h3>Sérénité · recommandé</h3>
+                  <p>Dossiers analysés, coordination visites, aide à la sélection du locataire.</p>
+                </div>
+                <span class="rate">8%</span>
+              </label>
+
+              <label class="offer">
+                <input type="radio" name="offer" value="Premium" data-rate="12">
+                <div>
+                  <h3>Premium</h3>
+                  <p>Accompagnement renforcé, reporting, suivi locatif et expérience haut standing.</p>
+                </div>
+                <span class="rate">12%</span>
+              </label>
+            </div>
+          </section>
+
+          <!-- STEP 4 -->
+          <section class="step" data-label="Description du bien">
+            <h2>Décrivez votre bien.</h2>
+            <p class="hint">Une description précise aide Kàddu à valoriser le bien et à éviter les demandes inutiles.</p>
+
+            <div class="field">
+              <label for="property_title">Titre souhaité</label>
+              <input id="property_title" name="property_title" placeholder="Ex : F3 lumineux à Sipres VDN">
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label for="rooms">Nombre de pièces</label>
+                <input id="rooms" name="rooms" placeholder="Ex : F3 / 3 pièces">
+              </div>
+              <div class="field">
+                <label for="floor">Étage</label>
+                <input id="floor" name="floor" placeholder="Ex : 2e étage">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="description">Description libre</label>
+              <textarea id="description" name="description" placeholder="Ex : appartement lumineux, immeuble sécurisé, proche VDN, commerces, transports..."></textarea>
+            </div>
+          </section>
+
+          <!-- STEP 5 -->
+          <section class="step" data-label="Photos & équipements">
+            <h2>Ajoutez les éléments de valorisation.</h2>
+            <p class="hint">Les photos pourront ensuite être triées et retravaillées depuis l’espace admin.</p>
+
+            <div class="upload-box">
+              <strong>Photos du bien</strong><br>
+              Version prête pour intégration : ajoutez ici votre futur composant d’upload Supabase Storage.
+              Pour l’instant, ce champ conserve la logique UX sans casser le tunnel.
+            </div>
+
+            <div class="field">
+              <label for="photo_note">Notes sur les photos disponibles</label>
+              <textarea id="photo_note" name="photo_note" placeholder="Ex : salon, chambres, cuisine, salle d’eau, balcon, façade, parties communes..."></textarea>
+            </div>
+
+            <div class="field">
+              <label for="features">Équipements / atouts</label>
+              <textarea id="features" name="features" placeholder="Ex : gardiennage, caméras, fibre, balcon, parking, groupe électrogène, suppresseur, climatisation..."></textarea>
+            </div>
+          </section>
+
+          <!-- STEP 6 -->
+          <section class="step" data-label="Coordonnées & confirmation">
+            <div class="success">
+              <div class="success-icon">✓</div>
+              <h2>Dernière étape : vos coordonnées.</h2>
+              <p class="hint">Un conseiller Kàddu vous recontacte pour confirmer les informations, valider l’offre et organiser la mise en ligne.</p>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label for="firstname">Prénom</label>
+                <input id="firstname" name="firstname" placeholder="Votre prénom">
+              </div>
+              <div class="field">
+                <label for="lastname">Nom</label>
+                <input id="lastname" name="lastname" placeholder="Votre nom">
+              </div>
+            </div>
+
+            <div class="grid">
+              <div class="field">
+                <label for="phone">Téléphone WhatsApp</label>
+                <input id="phone" name="phone" placeholder="+221...">
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="vous@email.com">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="owner_note">Message complémentaire</label>
+              <textarea id="owner_note" name="owner_note" placeholder="Ex : je souhaite louer rapidement, je veux d’abord une estimation, le bien est encore occupé..."></textarea>
+            </div>
+          </section>
+
+          <div class="actions">
+            <button type="button" class="btn btn-secondary" id="prevBtn" disabled>← Retour</button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Continuer →</button>
+            <button type="submit" class="btn btn-primary hidden" id="submitBtn">Envoyer à Kàddu</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="below">
+      <div class="side-card">
+        <h3>Ce que Kàddu apporte au bailleur</h3>
+        <p class="hint">Le tunnel doit rassurer le propriétaire tout en préparant le travail de qualification côté admin.</p>
+
+        <div class="list">
+          <div class="list-item">
+            <span class="check">✓</span>
+            <div>
+              <b>Des locataires mieux qualifiés</b>
+              <span>Dossier structuré, cohérences vérifiées et profil analysé avant transmission.</span>
+            </div>
+          </div>
+          <div class="list-item">
+            <span class="check">✓</span>
+            <div>
+              <b>Une annonce mieux valorisée</b>
+              <span>Photos, visite 360°, atouts du bien et positionnement premium.</span>
+            </div>
+          </div>
+          <div class="list-item">
+            <span class="check">✓</span>
+            <div>
+              <b>Une expérience plus transparente</b>
+              <span>Simulation claire, offre visible et étapes de validation compréhensibles.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="summary-card">
+        <h3>Résumé de votre dépôt</h3>
+        <p>Ce bloc se met à jour au fil du tunnel. Il peut ensuite être envoyé vers Supabase.</p>
+
+        <div class="summary-line">
+          <span>Type de bien</span>
+          <strong id="sumKind">Appartement</strong>
+        </div>
+        <div class="summary-line">
+          <span>Location</span>
+          <strong id="sumMode">Non meublé</strong>
+        </div>
+        <div class="summary-line">
+          <span>Quartier</span>
+          <strong id="sumDistrict">—</strong>
+        </div>
+        <div class="summary-line">
+          <span>Loyer souhaité</span>
+          <strong id="sumRent">—</strong>
+        </div>
+        <div class="summary-line">
+          <span>Offre</span>
+          <strong id="sumOffer">Sérénité · 8%</strong>
+        </div>
+
+        <div class="mini-note">
+          <strong>Conseil Kaddu :</strong> pour convertir les bailleurs, garde ce tunnel court.
+          Le détail complet du bien peut être enrichi ensuite dans l’espace admin.
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const steps = Array.from(document.querySelectorAll(".step"));
+    const dots = Array.from(document.querySelectorAll(".dot"));
+    const bar = document.getElementById("bar");
+    const stepTitle = document.getElementById("stepTitle");
+    const stepSmall = document.getElementById("stepSmall");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const form = document.getElementById("ownerForm");
+
+    let current = 0;
+
+    const formatCfa = (value) => {
+      const num = Number(value || 0);
+      if (!num) return "—";
+      return new Intl.NumberFormat("fr-FR").format(num) + " FCFA";
+    };
+
+    const selectedOffer = () => {
+      const checked = document.querySelector("input[name='offer']:checked");
+      return {
+        name: checked ? checked.value : "Sérénité",
+        rate: checked ? Number(checked.dataset.rate) : 8
+      };
+    };
+
+    function updateSimulation(){
+      const rent = Number(document.getElementById("rent").value || 0);
+      const offer = selectedOffer();
+      const commission = rent * offer.rate / 100;
+      const owner = rent - commission;
+
+      document.getElementById("simCommission").textContent = rent ? formatCfa(commission) + " / mois" : "—";
+      document.getElementById("simOwner").textContent = rent ? formatCfa(owner) + " / mois" : "—";
+      document.getElementById("simOffer").textContent = offer.name;
+
+      document.getElementById("sumOffer").textContent = offer.name + " · " + offer.rate + "%";
+      document.getElementById("sumRent").textContent = formatCfa(rent);
+    }
+
+    function updateSummary(){
+      const kind = document.querySelector("input[name='property_kind']:checked")?.value || "Appartement";
+      const mode = document.getElementById("rental_mode").value || "—";
+      const district = document.getElementById("district").value || "—";
+
+      document.getElementById("sumKind").textContent = kind;
+      document.getElementById("sumMode").textContent = mode;
+      document.getElementById("sumDistrict").textContent = district;
+      updateSimulation();
+    }
+
+    function render(){
+      steps.forEach((step, index) => step.classList.toggle("active", index === current));
+      dots.forEach((dot, index) => dot.classList.toggle("active", index <= current));
+
+      const pct = ((current + 1) / steps.length) * 100;
+      bar.style.width = pct + "%";
+      stepTitle.textContent = "Étape " + (current + 1) + " sur " + steps.length;
+      stepSmall.textContent = steps[current].dataset.label;
+
+      prevBtn.disabled = current === 0;
+      nextBtn.classList.toggle("hidden", current === steps.length - 1);
+      submitBtn.classList.toggle("hidden", current !== steps.length - 1);
+
+      updateSummary();
+      document.getElementById("tunnel").scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if(current < steps.length - 1){
+        current += 1;
+        render();
+      }
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if(current > 0){
+        current -= 1;
+        render();
+      }
+    });
+
+    form.addEventListener("input", updateSummary);
+    form.addEventListener("change", updateSummary);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const data = new FormData(form);
+      const payload = Object.fromEntries(data.entries());
+      payload.offer_rate = selectedOffer().rate;
+      payload.created_at = new Date().toISOString();
+
+      console.log("Payload bailleur prêt pour Supabase:", payload);
+
+      form.innerHTML = `
+        <section class="success">
+          <div class="success-icon">✓</div>
+          <h2>Votre demande a bien été préparée.</h2>
+          <p class="hint">
+            La version actuelle affiche la confirmation côté interface.
+            Prochaine étape : brancher ce payload à Supabase pour créer une ligne dans la table bailleurs / biens.
+          </p>
+          <div class="simulation">
+            <div class="sim-row"><span>Bien</span><strong>${payload.property_kind || "—"}</strong></div>
+            <div class="sim-row"><span>Quartier</span><strong>${payload.district || "—"}</strong></div>
+            <div class="sim-row"><span>Offre</span><strong class="gold">${payload.offer || "—"}</strong></div>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="location.reload()">Déposer un autre bien</button>
+        </section>
+      `;
+
+      stepTitle.textContent = "Demande préparée";
+      stepSmall.textContent = "Confirmation";
+      bar.style.width = "100%";
+      dots.forEach(dot => dot.classList.add("active"));
+    });
+
+    render();
+  </script>
+</body>
+</html>
