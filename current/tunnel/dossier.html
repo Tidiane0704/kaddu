@@ -266,6 +266,7 @@
 
 <!-- Guard -->
 <div id="guard">
+  <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu" style="height:64px;width:auto;object-fit:contain;filter:drop-shadow(0 10px 28px rgba(191,150,80,.32));">
   <div class="loading-logo">Kàddu</div>
   <div class="loading-bar"><div class="loading-bar-inner"></div></div>
 </div>
@@ -922,8 +923,25 @@ async function submitDossier(btn){
   btn.disabled=true;
   document.getElementById('spinner-submit').style.display='block';
 
+  // ── Résolution du locataire_id ───────────────────────────
+  // Priorité 1 : session active (utilisateur connecté)
+  // Priorité 2 : lookup par email du locataire saisi dans le formulaire
+  let locataireId = session?.user?.id || null;
+  if(!locataireId && locataires[0]?.email){
+    try{
+      const r = await fetch(
+        `${SB_URL}/rest/v1/profils?email=eq.${encodeURIComponent(locataires[0].email)}&select=id&limit=1`,
+        {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}}
+      );
+      if(r.ok){
+        const rows = await r.json();
+        if(rows[0]?.id) locataireId = rows[0].id;
+      }
+    }catch(_){}
+  }
+
   const dossier={
-    locataire_id: session?.user?.id || null,
+    locataire_id: locataireId,
     bien_id: bienId || null,
     statut: 'en_attente',
     message: JSON.stringify({
