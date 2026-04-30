@@ -16,15 +16,7 @@
     a{text-decoration:none;color:inherit}
     .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--bdr);background:rgba(7,15,26,.82);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100}
     .nav-logo-block{display:flex;flex-direction:column;gap:5px}
-    .nav-logo img{
-      height:58px;
-      width:220px;
-      object-fit:contain;
-      object-position:left center;
-      display:block;
-      filter:drop-shadow(0 8px 24px rgba(191,150,80,.32));
-      transition:.2s;
-    }
+    .nav-logo img{height:58px;width:220px;object-fit:contain;object-position:left center;display:block;filter:drop-shadow(0 8px 24px rgba(191,150,80,.32));transition:.2s}
     .nav-logo:hover img{transform:scale(1.035);filter:drop-shadow(0 12px 34px rgba(191,150,80,.38))}
     .nav-tagline{margin-left:2px;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(90deg,#E8DCC5,#BF9650);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.95}
     .nav-back{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}.nav-back:hover{color:var(--or)}
@@ -71,21 +63,13 @@
     .carousel-dots{display:flex;gap:6px;margin-top:14px}.carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(248,244,238,.22);cursor:pointer}.carousel-dot.active{background:var(--or)}
     .trust-list{display:grid;gap:10px;margin-top:18px}.trust-item{display:flex;gap:10px;align-items:flex-start;color:rgba(248,244,238,.68);font-size:.8rem;line-height:1.45}.trust-item svg{width:18px;height:18px;flex-shrink:0;color:var(--or);margin-top:1px}
     .carousel-cta{margin-top:20px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--or);border-radius:12px;padding:13px 16px;color:var(--orl);background:rgba(191,150,80,.06);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;transition:.2s;cursor:pointer}.carousel-cta:hover{background:rgba(191,150,80,.14);transform:translateY(-1px)}
-  
-    @media(max-width:700px){
-      .nav{padding:14px 18px}
-      .nav-logo{width:190px;min-height:54px}
-      .nav-logo img{height:48px;width:180px}
-      .nav-tagline{font-size:.52rem;letter-spacing:.13em}
-    }
-</style>
-
+    @media(max-width:700px){.nav{padding:14px 18px}.nav-logo{width:190px;min-height:54px}.nav-logo img{height:48px;width:180px}.nav-tagline{font-size:.52rem;letter-spacing:.13em}}
+  </style>
 </head>
-
 <body>
 <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="kgold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F2D083"/><stop offset="48%" stop-color="#BF9650"/><stop offset="100%" stop-color="#8B6520"/></linearGradient></defs></svg>
 <nav class="nav">
-  <a class="nav-logo-block" href="/" aria-label="Retour à l’accueil Kàddu"><span class="nav-logo"><img src="/assets/LOGO-KADDU.svg" alt="Kàddu"></span><span class="nav-tagline">la parole qui engage</span></a>
+  <a class="nav-logo-block" href="/" aria-label="Retour à l'accueil Kàddu"><span class="nav-logo"><img src="/assets/LOGO-KADDU.svg" alt="Kàddu"></span><span class="nav-tagline">la parole qui engage</span></a>
   <a href="/" class="nav-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Retour</a>
 </nav>
 <div class="auth-layout">
@@ -93,33 +77,96 @@
     <div class="form-head"><div class="eyebrow">Espace sécurisé Kàddu</div><h1 class="title">Créer votre <em>espace</em></h1><p class="subtitle">Un seul compte pour déposer un dossier locataire, suivre vos candidatures ou confier un bien à Kàddu.</p></div>
     <div class="tab-nav"><button class="tab-btn active" onclick="switchTab('signup')">Créer un compte</button><button class="tab-btn" onclick="switchTab('login')">Se connecter</button></div>
     <div id="globalAlert" style="display:none"></div>
+
+    <!-- ══ ONGLET SIGNUP ══ -->
     <div class="tab-panel active" id="tab-signup">
       <div class="form-group"><label class="form-label">Je suis</label><div class="role-grid">
         <label class="role-card selected" onclick="selectRole(this,'locataire')"><input type="radio" name="role" value="locataire" checked><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="17" r="9"/><path class="gold" d="M18 55c1-15 8-24 14-24s13 9 14 24H18z"/><path class="beige" d="M32 30c3.5 0 6.6-1.2 8.6-3.1C38.2 31.5 35.3 34 32 34s-6.2-2.5-8.6-7.1C25.4 28.8 28.5 30 32 30z"/></svg></span><div class="role-label">Locataire</div></label>
         <label class="role-card" onclick="selectRole(this,'bailleur')"><input type="radio" name="role" value="bailleur"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M16 10h26v44H16z"/><path class="beige" d="M42 25h10v29H42z"/><path fill="#07182B" d="M23 18h5v5h-5zm10 0h5v5h-5zM23 29h5v5h-5zm10 0h5v5h-5zM23 40h5v5h-5zm10 0h5v5h-5z"/></svg></span><div class="role-label">Propriétaire</div></label>
       </div></div>
-      <div class="form-row"><div class="form-group"><label class="form-label">Prénom</label><input class="form-input" type="text" id="s-prenom" placeholder="Votre prénom" autocomplete="given-name"></div><div class="form-group"><label class="form-label">Nom</label><input class="form-input" type="text" id="s-nom" placeholder="Votre nom" autocomplete="family-name"></div></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" type="text" id="s-prenom" placeholder="Votre prénom" autocomplete="given-name"></div>
+        <div class="form-group"><label class="form-label">Nom</label><input class="form-input" type="text" id="s-nom" placeholder="Votre nom" autocomplete="family-name"></div>
+      </div>
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="s-email" placeholder="votre@email.com" autocomplete="email"></div>
-      <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-input" type="password" id="s-password" placeholder="8 caractères minimum" autocomplete="new-password"><div class="form-hint">Minimum 8 caractères. Votre session reste dans cet onglet uniquement.</div></div>
+
+      <!-- ── MOT DE PASSE SIGNUP avec force + œil + sauvegarde ── -->
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <div style="position:relative">
+          <input class="form-input" type="password" id="s-password"
+            placeholder="8 caractères minimum"
+            autocomplete="new-password"
+            oninput="checkSignupStrength()"
+            style="padding-right:46px">
+          <button type="button" onclick="togglePwd('s-password','s-eye')" tabindex="-1" id="s-eye"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(248,244,238,.3);cursor:pointer;font-size:1rem;padding:4px;line-height:1">👁</button>
+        </div>
+        <!-- Barre de force 4 segments -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px">
+          <div id="s-seg1" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
+          <div id="s-seg2" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
+          <div id="s-seg3" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
+          <div id="s-seg4" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
+        </div>
+        <div id="s-strength-label" style="font-size:.72rem;min-height:16px;text-align:right;margin-top:4px;transition:color .3s"></div>
+        <!-- Règles live -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+          <span id="r-len"   style="font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:rgba(248,244,238,.3);transition:.3s">8 car. min</span>
+          <span id="r-upper" style="font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:rgba(248,244,238,.3);transition:.3s">Majuscule</span>
+          <span id="r-num"   style="font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:rgba(248,244,238,.3);transition:.3s">Chiffre</span>
+          <span id="r-spec"  style="font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:rgba(248,244,238,.3);transition:.3s">Spécial (!@#…)</span>
+        </div>
+      </div>
+
       <button class="btn btn-primary" onclick="doSignup(this)" style="margin-top:8px"><span>Créer mon espace</span><div class="spinner" id="spinner-signup"></div></button>
-      <div class="divider">ou créer avec</div><div class="sso-grid"><a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">Google</a><a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">Facebook</a><a href="https://appleid.apple.com" target="_blank" class="btn-sso">Apple</a></div>
+      <div class="divider">ou créer avec</div>
+      <div class="sso-grid"><a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">Google</a><a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">Facebook</a><a href="https://appleid.apple.com" target="_blank" class="btn-sso">Apple</a></div>
       <p class="link-muted" onclick="switchTab('login')">J'ai déjà un compte → <span>Se connecter</span></p>
     </div>
+
+    <!-- ══ ONGLET LOGIN ══ -->
     <div class="tab-panel" id="tab-login">
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="l-email" placeholder="votre@email.com" autocomplete="email"></div>
-      <div class="form-group"><label class="form-label">Mot de passe</label><input class="form-input" type="password" id="l-password" placeholder="Votre mot de passe" autocomplete="current-password"></div>
+      <!-- Mot de passe login avec œil -->
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <div style="position:relative">
+          <input class="form-input" type="password" id="l-password"
+            placeholder="Votre mot de passe"
+            autocomplete="current-password"
+            style="padding-right:46px">
+          <button type="button" onclick="togglePwd('l-password','l-eye')" tabindex="-1" id="l-eye"
+            style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(248,244,238,.3);cursor:pointer;font-size:1rem;padding:4px;line-height:1">👁</button>
+        </div>
+      </div>
       <button class="btn btn-primary" onclick="doLogin(this)" style="margin-top:8px"><span>Se connecter</span><div class="spinner" id="spinner-login"></div></button>
-      <p class="link-muted" onclick="goForgot()"><u>Mot de passe oublié ?</u></p><div class="divider">ou</div>
+      <p class="link-muted" onclick="goForgot()"><u>Mot de passe oublié ?</u></p>
+      <div class="divider">ou</div>
       <button class="btn btn-outline" onclick="doMagicLink()" style="margin-bottom:16px">Recevoir un lien de connexion par email</button>
       <div class="sso-grid"><a href="https://accounts.google.com/signup" target="_blank" class="btn-sso">Google</a><a href="https://www.facebook.com/r.php" target="_blank" class="btn-sso">Facebook</a><a href="https://appleid.apple.com" target="_blank" class="btn-sso">Apple</a></div>
       <p class="link-muted" onclick="switchTab('signup')">Pas encore de compte → <span>Créer un compte</span></p>
     </div>
   </main>
-  <aside class="side-panel"><div class="carousel-card"><div class="carousel-hero" id="carousel-img"><img src="/assets/biens/nopalukay-01.jpeg" alt="Bien disponible"><span class="photo-badge">Biens vérifiés</span></div><div class="carousel-body">
-    <div class="panel-label">Créer son espace</div><h2 class="carousel-title">Un dossier prêt pour <em>postuler vite</em></h2><p class="generic-panel-copy">Créez votre espace, complétez votre dossier, puis postulez aux logements disponibles en quelques clics.</p><div class="carousel-meta" id="carousel-meta">Chargement des biens disponibles…</div><div class="carousel-dots" id="carousel-dots"></div>
-    <div class="trust-list"><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Dossier centralisé et réutilisable.</div><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>Profil analysé avant transmission.</div><div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>Espace bailleur ou locataire selon votre rôle.</div></div>
-    <button class="carousel-cta" onclick="location.href='/biens/'">Voir les biens disponibles →</button>
-  </div></div></aside>
+
+  <aside class="side-panel">
+    <div class="carousel-card">
+      <div class="carousel-hero" id="carousel-img"><img src="/assets/biens/nopalukay-01.jpeg" alt="Bien disponible"><span class="photo-badge">Biens vérifiés</span></div>
+      <div class="carousel-body">
+        <div class="panel-label">Créer son espace</div>
+        <h2 class="carousel-title">Un dossier prêt pour <em>postuler vite</em></h2>
+        <p class="generic-panel-copy">Créez votre espace, complétez votre dossier, puis postulez aux logements disponibles en quelques clics.</p>
+        <div class="carousel-meta" id="carousel-meta">Chargement des biens disponibles…</div>
+        <div class="carousel-dots" id="carousel-dots"></div>
+        <div class="trust-list">
+          <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Dossier centralisé et réutilisable.</div>
+          <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>Profil analysé avant transmission.</div>
+          <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>Espace bailleur ou locataire selon votre rôle.</div>
+        </div>
+        <button class="carousel-cta" onclick="location.href='/biens/'">Voir les biens disponibles →</button>
+      </div>
+    </div>
+  </aside>
 </div>
 
 <script>
@@ -128,7 +175,7 @@ const SUPABASE_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 
 // ── JWT SESSION ──────────────────────────────────────────────
 function storeSession(data) {
-  const expires = Date.now() + 30 * 60 * 1000; // 30 min
+  const expires = Date.now() + 30 * 60 * 1000;
   sessionStorage.setItem('kaddu_jwt', JSON.stringify({ ...data, expires }));
 }
 function clearSession() { sessionStorage.removeItem('kaddu_jwt'); }
@@ -151,14 +198,9 @@ function switchTab(name) {
   document.getElementById('tab-'+name).classList.add('active');
   hideAlert();
 }
-
 function showAlert(msg, type='info') {
   const el = document.getElementById('globalAlert');
-  el.innerHTML = `<div class="alert alert-${type}">
-    <span>ℹ</span>
-    <span>${msg}</span>
-    <button class="alert-close" onclick="hideAlert()">×</button>
-  </div>`;
+  el.innerHTML = `<div class="alert alert-${type}"><span>ℹ</span><span>${msg}</span><button class="alert-close" onclick="hideAlert()">×</button></div>`;
   el.style.display = 'block';
 }
 function hideAlert() {
@@ -166,31 +208,68 @@ function hideAlert() {
   el.style.display = 'none';
   el.innerHTML = '';
 }
-
 function setLoading(btn, spinnerId, loading) {
   btn.disabled = loading;
   const sp = document.getElementById(spinnerId);
   if (sp) sp.style.display = loading ? 'block' : 'none';
 }
-
 function selectRole(card, role) {
   document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
   card.classList.add('selected');
   const input = card.querySelector('input');
   if (input) input.checked = true;
 }
-
 function goForgot() {
   const email = document.getElementById('l-email').value;
   window.location.href = '/auth/forgot-password.html' + (email ? '?email='+encodeURIComponent(email) : '');
 }
 
+// ── TOGGLE ŒIL ───────────────────────────────────────────────
+function togglePwd(inputId, btnId) {
+  const inp = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+// ── FORCE MOT DE PASSE ───────────────────────────────────────
+const STRENGTH_COLORS = ['','#FF5454','#F59E0B','#DDB96E','#00C875'];
+const STRENGTH_LABELS = ['','Trop faible','Faible','Bon','Fort ✓'];
+
+function getPwdScore(pwd) {
+  let s = 0;
+  if (pwd.length >= 8)           s++;
+  if (/[A-Z]/.test(pwd))         s++;
+  if (/[0-9]/.test(pwd))         s++;
+  if (/[^A-Za-z0-9]/.test(pwd))  s++;
+  return s;
+}
+function checkSignupStrength() {
+  const pwd = document.getElementById('s-password').value;
+  const score = getPwdScore(pwd);
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('s-seg'+i).style.background =
+      i <= score ? STRENGTH_COLORS[score] : 'rgba(255,255,255,.08)';
+  }
+  const lbl = document.getElementById('s-strength-label');
+  lbl.textContent = pwd ? STRENGTH_LABELS[score] : '';
+  lbl.style.color  = pwd ? STRENGTH_COLORS[score] : 'rgba(248,244,238,.35)';
+  setRule('r-len',   pwd.length >= 8);
+  setRule('r-upper', /[A-Z]/.test(pwd));
+  setRule('r-num',   /[0-9]/.test(pwd));
+  setRule('r-spec',  /[^A-Za-z0-9]/.test(pwd));
+}
+function setRule(id, ok) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.background  = ok ? 'rgba(0,200,117,.12)' : 'transparent';
+  el.style.borderColor = ok ? 'rgba(0,200,117,.35)'  : 'rgba(255,255,255,.08)';
+  el.style.color       = ok ? '#77ffbe'               : 'rgba(248,244,238,.3)';
+}
+
 // ── SUPABASE API ─────────────────────────────────────────────
 async function sbFetch(path, body, token) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'apikey': SUPABASE_ANON,
-  };
+  const headers = { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON };
   if (token) headers['Authorization'] = 'Bearer ' + token;
   const res = await fetch(SUPABASE_URL + path, { method:'POST', headers, body: JSON.stringify(body) });
   return { ok: res.ok, status: res.status, data: await res.json() };
@@ -206,14 +285,13 @@ async function doSignup(btn) {
 
   if (!prenom||!nom||!email||!pass) return showAlert('Merci de remplir tous les champs.','warn');
   if (pass.length < 8) return showAlert('Le mot de passe doit contenir au moins 8 caractères.','warn');
+  if (getPwdScore(pass) < 2) return showAlert('Votre mot de passe est trop faible. Ajoutez une majuscule, un chiffre ou un caractère spécial.','warn');
 
   setLoading(btn,'spinner-signup',true);
   try {
     const { ok, data } = await sbFetch('/auth/v1/signup', { email, password: pass, options:{ data:{ prenom, nom, role } } });
-    if (!ok) throw new Error(data.error_description || data.msg || 'Erreur lors de l\'inscription.');
-    // Store session
+    if (!ok) throw new Error(data.error_description || data.msg || 'Erreur lors de l'inscription.');
     storeSession({ access_token: data.access_token, user: data.user, role });
-    // Insert into profils table
     if (data.user?.id) {
       await fetch(SUPABASE_URL+'/rest/v1/profils', {
         method:'POST',
@@ -237,18 +315,16 @@ async function doLogin(btn) {
   const email = document.getElementById('l-email').value.trim();
   const pass  = document.getElementById('l-password').value;
   if (!email||!pass) return showAlert('Veuillez saisir votre email et mot de passe.','warn');
-
   setLoading(btn,'spinner-login',true);
   try {
     const { ok, data } = await sbFetch('/auth/v1/token?grant_type=password', { email, password: pass });
     if (!ok) {
       if (data.error === 'email_not_confirmed') {
-        showAlert('Vous n\'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(email)+'" style="color:var(--orl);text-decoration:underline">Renvoyer l\'email de confirmation →</a>','warn');
+        showAlert('Vous n'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(email)+'" style="color:var(--orl);text-decoration:underline">Renvoyer l'email de confirmation →</a>','warn');
         return;
       }
       throw new Error(data.error_description || 'Email ou mot de passe incorrect.');
     }
-    // Get role from metadata
     const role = data.user?.user_metadata?.role || 'locataire';
     storeSession({ access_token: data.access_token, user: data.user, role });
     window.location.href = role === 'bailleur' ? '/espace-bailleur/' : '/espace-locataire/';
@@ -261,10 +337,10 @@ async function doLogin(btn) {
 
 async function doMagicLink() {
   const email = document.getElementById('l-email').value.trim();
-  if (!email) return showAlert('Saisissez d\'abord votre email ci-dessus.','warn');
+  if (!email) return showAlert('Saisissez d'abord votre email ci-dessus.','warn');
   const { ok } = await sbFetch('/auth/v1/magiclink', { email });
   if (ok) showAlert('Lien envoyé ! Vérifiez votre boîte email.','success');
-  else showAlert('Impossible d\'envoyer le lien. Vérifiez l\'adresse email.','error');
+  else showAlert('Impossible d'envoyer le lien. Vérifiez l'adresse email.','error');
 }
 
 // Pre-fill from query param
@@ -273,7 +349,7 @@ if (params.get('tab') === 'login') switchTab('login');
 if (params.get('email')) {
   switchTab('login');
   document.getElementById('l-email').value = params.get('email');
-  showAlert('Vous n\'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(params.get('email'))+'" style="color:var(--orl);text-decoration:underline">Renvoyer l\'email de confirmation →</a>','warn');
+  showAlert('Vous n'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(params.get('email'))+'" style="color:var(--orl);text-decoration:underline">Renvoyer l'email de confirmation →</a>','warn');
 }
 
 // Redirect if already logged in
@@ -316,8 +392,6 @@ function renderCarousel(){
   if(dots) dots.innerHTML=carouselItems.map((_,i)=>`<span class="carousel-dot ${i===carouselIdx?'active':''}" onclick="carouselIdx=${i};renderCarousel()"></span>`).join('');
 }
 document.addEventListener('DOMContentLoaded', loadAvailableBiens);
-</script>
-
 </script>
 </body>
 </html>
