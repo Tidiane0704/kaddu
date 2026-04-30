@@ -33,12 +33,35 @@
     .alert{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:10px;margin-bottom:22px;font-size:.84rem;line-height:1.5}
     .alert-info{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.22)}.alert-warn{background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.32);color:var(--orl);font-weight:500}.alert-error{background:rgba(255,80,80,.08);border:1px solid rgba(255,80,80,.28);color:#ff8080}.alert-success{background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.28);color:var(--green)}
     .alert-close{margin-left:auto;cursor:pointer;opacity:.5;flex-shrink:0;background:none;border:none;color:inherit;font-size:1rem;line-height:1}
-    .kicon{width:54px;height:54px;margin:0 auto 12px;display:block;filter:drop-shadow(0 8px 18px rgba(191,150,80,.18));transition:.2s}.kicon svg{width:100%;height:100%;display:block}.kicon .gold{fill:url(#kgold)}.kicon .beige{fill:#E8DCC5;opacity:.92}
+    .kicon{width:54px;height:54px;margin:0 auto 12px;display:block;filter:drop-shadow(0 8px 18px rgba(191,150,80,.18));transition:.2s;pointer-events:none}.kicon svg{width:100%;height:100%;display:block}.kicon .gold{fill:url(#kgold)}.kicon .beige{fill:#E8DCC5;opacity:.92}
+
+    /* ── ROLE CARDS — FIX CLIQUABILITÉ ── */
     .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
-    .role-card{position:relative;min-height:142px;padding:20px 14px;border-radius:14px;cursor:pointer;text-align:center;border:1.5px solid rgba(248,244,238,.10);background:linear-gradient(180deg,rgba(11,32,57,.74),rgba(7,24,43,.56));transition:.2s;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    .role-card:hover{border-color:var(--bds);background:rgba(191,150,80,.05)}.role-card.selected{border-color:var(--or);background:rgba(191,150,80,.10)}
-    .role-card.selected::after{content:'✓';position:absolute;right:12px;top:12px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--orl),var(--or));color:#07182B;font-weight:800;font-size:.78rem;box-shadow:0 8px 20px rgba(191,150,80,.28)}
-    .role-card input{display:none}.role-label{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(248,244,238,.7)}.role-card.selected .role-label{color:var(--or);font-weight:600}
+    .role-card{
+      position:relative;min-height:142px;padding:20px 14px;border-radius:14px;
+      cursor:pointer;text-align:center;
+      border:1.5px solid rgba(248,244,238,.10);
+      background:linear-gradient(180deg,rgba(11,32,57,.74),rgba(7,24,43,.56));
+      transition:.2s;display:flex;flex-direction:column;align-items:center;
+      justify-content:center;user-select:none;
+    }
+    .role-card:hover{border-color:var(--bds);background:rgba(191,150,80,.05)}
+    .role-card.selected{border-color:var(--or);background:rgba(191,150,80,.10)}
+    .role-card.selected::after{
+      content:'✓';position:absolute;right:12px;top:12px;
+      width:24px;height:24px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--orl),var(--or));
+      color:#07182B;font-weight:800;font-size:.78rem;
+      box-shadow:0 8px 20px rgba(191,150,80,.28)
+    }
+    /* l'input radio est caché mais ne bloque plus les clics */
+    .role-card input[type="radio"]{
+      position:absolute;opacity:0;width:0;height:0;pointer-events:none
+    }
+    .role-label{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(248,244,238,.7);pointer-events:none}
+    .role-card.selected .role-label{color:var(--or);font-weight:600}
+
     .form-group{margin-bottom:16px;position:relative}.form-label{font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.42);margin-bottom:8px;display:block}
     .form-input{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.10);border-radius:10px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.95rem;transition:.2s;outline:none}
     .form-input:focus{border-color:var(--or);background:rgba(191,150,80,.06)}.form-input::placeholder{color:rgba(248,244,238,.25)}.form-input.error{border-color:rgba(255,80,80,.5)}
@@ -52,17 +75,49 @@
     .divider{display:flex;align-items:center;gap:16px;margin:20px 0;color:rgba(248,244,238,.28);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase}.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(248,244,238,.10)}
     .link-muted{display:block;text-align:center;font-size:.82rem;color:rgba(248,244,238,.42);cursor:pointer;transition:.2s;margin-top:16px}.link-muted:hover,.link-muted span{color:var(--or)}
     .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}@keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── SIDE PANEL PROFILS ── */
     .side-panel{position:sticky;top:96px;align-self:start}
-    .carousel-card{background:linear-gradient(180deg,rgba(11,32,57,.96),rgba(7,24,43,.92));border:1px solid rgba(191,150,80,.28);border-radius:24px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.34)}
-    .carousel-hero{position:relative;height:260px;overflow:hidden;background:#07182B}.carousel-hero img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}.carousel-card:hover .carousel-hero img{transform:scale(1.035)}
-    .carousel-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,15,26,.03),rgba(7,15,26,.62))}
-    .photo-badge{position:absolute;right:14px;top:14px;z-index:2;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(7,15,26,.76);border:1px solid rgba(0,200,117,.28);color:var(--green);font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(10px)}.photo-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green)}
-    .carousel-body{padding:18px}.panel-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:10px}
-    .carousel-title{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:300;margin-bottom:10px;line-height:1.15}.carousel-title em{font-style:italic;color:var(--or)}
-    .generic-panel-copy{font-size:.84rem;color:var(--muted);line-height:1.55;margin-bottom:16px}.carousel-meta{color:var(--muted);font-size:.82rem;line-height:1.5;padding-top:14px;border-top:1px solid var(--bdr)}
-    .carousel-dots{display:flex;gap:6px;margin-top:14px}.carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(248,244,238,.22);cursor:pointer}.carousel-dot.active{background:var(--or)}
-    .trust-list{display:grid;gap:10px;margin-top:18px}.trust-item{display:flex;gap:10px;align-items:flex-start;color:rgba(248,244,238,.68);font-size:.8rem;line-height:1.45}.trust-item svg{width:18px;height:18px;flex-shrink:0;color:var(--or);margin-top:1px}
-    .carousel-cta{margin-top:20px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid var(--or);border-radius:12px;padding:13px 16px;color:var(--orl);background:rgba(191,150,80,.06);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;transition:.2s;cursor:pointer}.carousel-cta:hover{background:rgba(191,150,80,.14);transform:translateY(-1px)}
+    .profiles-card{
+      background:linear-gradient(180deg,rgba(11,32,57,.96),rgba(7,24,43,.92));
+      border:1px solid rgba(191,150,80,.28);border-radius:24px;overflow:hidden;
+      box-shadow:0 30px 90px rgba(0,0,0,.34);padding:28px 24px
+    }
+    .profiles-head{margin-bottom:22px}
+    .profiles-eyebrow{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+    .profiles-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:300;line-height:1.2}
+    .profiles-title em{font-style:italic;color:var(--or)}
+    .profiles-subtitle{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:8px}
+
+    .profile-list{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
+    .profile-item{
+      display:flex;align-items:flex-start;gap:14px;
+      padding:16px;border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(248,244,238,.07);
+      transition:.2s
+    }
+    .profile-item:hover{border-color:var(--bdr);background:rgba(191,150,80,.04)}
+    .profile-avatar{
+      width:44px;height:44px;border-radius:50%;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      border:1.5px solid var(--bdr);
+      background:linear-gradient(135deg,rgba(191,150,80,.18),rgba(11,32,57,.8))
+    }
+    .profile-avatar svg{width:22px;height:22px}
+    .profile-info{flex:1;min-width:0}
+    .profile-name{font-size:.88rem;font-weight:600;color:var(--blanc);margin-bottom:2px}
+    .profile-role{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
+    .profile-quote{font-size:.78rem;color:var(--muted);line-height:1.45;font-style:italic}
+    .profile-stars{color:var(--or);font-size:.72rem;letter-spacing:1px;margin-top:5px}
+
+    .trust-strip{
+      display:flex;flex-direction:column;gap:9px;
+      padding-top:18px;border-top:1px solid var(--bdr)
+    }
+    .trust-row{display:flex;gap:10px;align-items:center;font-size:.78rem;color:rgba(248,244,238,.65);line-height:1.4}
+    .trust-row svg{width:16px;height:16px;flex-shrink:0;color:var(--or)}
+
     @media(max-width:700px){.nav{padding:14px 18px}.nav-logo{width:190px;min-height:54px}.nav-logo img{height:48px;width:180px}.nav-tagline{font-size:.52rem;letter-spacing:.13em}}
   </style>
 </head>
@@ -80,17 +135,29 @@
 
     <!-- ══ ONGLET SIGNUP ══ -->
     <div class="tab-panel active" id="tab-signup">
-      <div class="form-group"><label class="form-label">Je suis</label><div class="role-grid">
-        <label class="role-card selected" onclick="selectRole(this,'locataire')"><input type="radio" name="role" value="locataire" checked><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="17" r="9"/><path class="gold" d="M18 55c1-15 8-24 14-24s13 9 14 24H18z"/><path class="beige" d="M32 30c3.5 0 6.6-1.2 8.6-3.1C38.2 31.5 35.3 34 32 34s-6.2-2.5-8.6-7.1C25.4 28.8 28.5 30 32 30z"/></svg></span><div class="role-label">Locataire</div></label>
-        <label class="role-card" onclick="selectRole(this,'bailleur')"><input type="radio" name="role" value="bailleur"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M16 10h26v44H16z"/><path class="beige" d="M42 25h10v29H42z"/><path fill="#07182B" d="M23 18h5v5h-5zm10 0h5v5h-5zM23 29h5v5h-5zm10 0h5v5h-5zM23 40h5v5h-5zm10 0h5v5h-5z"/></svg></span><div class="role-label">Propriétaire</div></label>
-      </div></div>
+      <div class="form-group">
+        <label class="form-label">Je suis</label>
+        <div class="role-grid">
+          <!-- PATCH : onclick sur div, input caché avec pointer-events:none -->
+          <div class="role-card selected" id="card-locataire" onclick="selectRole('locataire')">
+            <input type="radio" name="role" value="locataire" id="r-locataire" checked>
+            <span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="17" r="9"/><path class="gold" d="M18 55c1-15 8-24 14-24s13 9 14 24H18z"/><path class="beige" d="M32 30c3.5 0 6.6-1.2 8.6-3.1C38.2 31.5 35.3 34 32 34s-6.2-2.5-8.6-7.1C25.4 28.8 28.5 30 32 30z"/></svg></span>
+            <div class="role-label">Locataire</div>
+          </div>
+          <div class="role-card" id="card-bailleur" onclick="selectRole('bailleur')">
+            <input type="radio" name="role" value="bailleur" id="r-bailleur">
+            <span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M16 10h26v44H16z"/><path class="beige" d="M42 25h10v29H42z"/><path fill="#07182B" d="M23 18h5v5h-5zm10 0h5v5h-5zM23 29h5v5h-5zm10 0h5v5h-5zM23 40h5v5h-5zm10 0h5v5h-5z"/></svg></span>
+            <div class="role-label">Propriétaire</div>
+          </div>
+        </div>
+      </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" type="text" id="s-prenom" placeholder="Votre prénom" autocomplete="given-name"></div>
         <div class="form-group"><label class="form-label">Nom</label><input class="form-input" type="text" id="s-nom" placeholder="Votre nom" autocomplete="family-name"></div>
       </div>
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="s-email" placeholder="votre@email.com" autocomplete="email"></div>
 
-      <!-- ── MOT DE PASSE SIGNUP avec force + œil + sauvegarde ── -->
+      <!-- ── MOT DE PASSE SIGNUP avec force + œil ── -->
       <div class="form-group">
         <label class="form-label">Mot de passe</label>
         <div style="position:relative">
@@ -102,7 +169,6 @@
           <button type="button" onclick="togglePwd('s-password','s-eye')" tabindex="-1" id="s-eye"
             style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(248,244,238,.3);cursor:pointer;font-size:1rem;padding:4px;line-height:1">👁</button>
         </div>
-        <!-- Barre de force 4 segments -->
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px">
           <div id="s-seg1" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
           <div id="s-seg2" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
@@ -110,7 +176,6 @@
           <div id="s-seg4" style="height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s"></div>
         </div>
         <div id="s-strength-label" style="font-size:.72rem;min-height:16px;text-align:right;margin-top:4px;transition:color .3s"></div>
-        <!-- Règles live -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
           <span id="r-len"   style="font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:rgba(248,244,238,.3);transition:.3s">8 car. min</span>
           <span id="r-upper" style="font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:rgba(248,244,238,.3);transition:.3s">Majuscule</span>
@@ -128,7 +193,6 @@
     <!-- ══ ONGLET LOGIN ══ -->
     <div class="tab-panel" id="tab-login">
       <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="l-email" placeholder="votre@email.com" autocomplete="email"></div>
-      <!-- Mot de passe login avec œil -->
       <div class="form-group">
         <label class="form-label">Mot de passe</label>
         <div style="position:relative">
@@ -149,21 +213,83 @@
     </div>
   </main>
 
+  <!-- ══ SIDE PANEL — PROFILS CLIENTS ══ -->
   <aside class="side-panel">
-    <div class="carousel-card">
-      <div class="carousel-hero" id="carousel-img"><img src="/assets/biens/nopalukay-01.jpeg" alt="Bien disponible"><span class="photo-badge">Biens vérifiés</span></div>
-      <div class="carousel-body">
-        <div class="panel-label">Créer son espace</div>
-        <h2 class="carousel-title">Un dossier prêt pour <em>postuler vite</em></h2>
-        <p class="generic-panel-copy">Créez votre espace, complétez votre dossier, puis postulez aux logements disponibles en quelques clics.</p>
-        <div class="carousel-meta" id="carousel-meta">Chargement des biens disponibles…</div>
-        <div class="carousel-dots" id="carousel-dots"></div>
-        <div class="trust-list">
-          <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Dossier centralisé et réutilisable.</div>
-          <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>Profil analysé avant transmission.</div>
-          <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/></svg>Espace bailleur ou locataire selon votre rôle.</div>
+    <div class="profiles-card">
+      <div class="profiles-head">
+        <div class="profiles-eyebrow">Ils nous font confiance</div>
+        <h2 class="profiles-title">L'espace qui vous <em>ressemble</em></h2>
+        <p class="profiles-subtitle">Locataire, propriétaire ou en transition — Kàddu s'adapte à votre situation.</p>
+      </div>
+
+      <div class="profile-list">
+
+        <!-- Profil 1 — Locataire cadre -->
+        <div class="profile-item">
+          <div class="profile-avatar">
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle fill="url(#kgold)" cx="32" cy="20" r="10"/>
+              <path fill="url(#kgold)" d="M16 58c1-17 9-27 16-27s15 10 16 27H16z"/>
+              <path fill="#E8DCC5" opacity=".85" d="M32 34c4 0 7.5-1.4 9.8-3.5C39 35.5 35.7 38 32 38s-7-2.5-9.8-8.5C24.5 32.6 28 34 32 34z"/>
+            </svg>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name">Aminata S.</div>
+            <div class="profile-role">Locataire · Dakar Plateau</div>
+            <div class="profile-quote">« Mon dossier était prêt en 20 min. J'ai obtenu mon appartement sans stress. »</div>
+            <div class="profile-stars">★★★★★</div>
+          </div>
         </div>
-        <button class="carousel-cta" onclick="location.href='/biens/'">Voir les biens disponibles →</button>
+
+        <!-- Profil 2 — Propriétaire bailleur -->
+        <div class="profile-item">
+          <div class="profile-avatar">
+            <svg viewBox="0 0 64 64" fill="none">
+              <path fill="url(#kgold)" d="M18 12h28v48H18z"/>
+              <path fill="#E8DCC5" opacity=".85" d="M46 28h12v32H46z"/>
+              <path fill="#07182B" d="M25 20h6v6h-6zm12 0h6v6h-6zM25 33h6v6h-6zm12 0h6v6h-6zM25 46h6v6h-6zm12 0h6v6h-6z"/>
+            </svg>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name">Ibrahima D.</div>
+            <div class="profile-role">Propriétaire · 3 biens gérés</div>
+            <div class="profile-quote">« Je reçois les dossiers triés, vérifiés. Je valide en un clic depuis mon téléphone. »</div>
+            <div class="profile-stars">★★★★★</div>
+          </div>
+        </div>
+
+        <!-- Profil 3 — Garant familial -->
+        <div class="profile-item">
+          <div class="profile-avatar">
+            <svg viewBox="0 0 64 64" fill="none">
+              <path fill="url(#kgold)" d="M32 6 8 22v36h48V22L32 6z"/>
+              <path fill="#E8DCC5" opacity=".7" d="M22 58V40h20v18H22z"/>
+              <circle fill="#07182B" cx="32" cy="30" r="5"/>
+            </svg>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name">Fatou N.</div>
+            <div class="profile-role">Garant · Famille accompagnée</div>
+            <div class="profile-quote">« J'ai pu soutenir ma fille à distance. Le process était clair du début à la fin. »</div>
+            <div class="profile-stars">★★★★☆</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="trust-strip">
+        <div class="trust-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+          Dossier centralisé et réutilisable
+        </div>
+        <div class="trust-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+          Profil analysé avant transmission
+        </div>
+        <div class="trust-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Réponse bailleur sous 48h garantie
+        </div>
       </div>
     </div>
   </aside>
@@ -213,12 +339,16 @@ function setLoading(btn, spinnerId, loading) {
   const sp = document.getElementById(spinnerId);
   if (sp) sp.style.display = loading ? 'block' : 'none';
 }
-function selectRole(card, role) {
-  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
-  card.classList.add('selected');
-  const input = card.querySelector('input');
+
+// PATCH — selectRole sur div (plus de label wrapper)
+function selectRole(role) {
+  ['locataire','bailleur'].forEach(r => {
+    document.getElementById('card-'+r).classList.toggle('selected', r === role);
+  });
+  const input = document.getElementById('r-'+role);
   if (input) input.checked = true;
 }
+
 function goForgot() {
   const email = document.getElementById('l-email').value;
   window.location.href = '/auth/forgot-password.html' + (email ? '?email='+encodeURIComponent(email) : '');
@@ -290,7 +420,7 @@ async function doSignup(btn) {
   setLoading(btn,'spinner-signup',true);
   try {
     const { ok, data } = await sbFetch('/auth/v1/signup', { email, password: pass, options:{ data:{ prenom, nom, role } } });
-    if (!ok) throw new Error(data.error_description || data.msg || 'Erreur lors de l'inscription.');
+    if (!ok) throw new Error(data.error_description || data.msg || 'Erreur lors de l\'inscription.');
     storeSession({ access_token: data.access_token, user: data.user, role });
     if (data.user?.id) {
       await fetch(SUPABASE_URL+'/rest/v1/profils', {
@@ -320,7 +450,7 @@ async function doLogin(btn) {
     const { ok, data } = await sbFetch('/auth/v1/token?grant_type=password', { email, password: pass });
     if (!ok) {
       if (data.error === 'email_not_confirmed') {
-        showAlert('Vous n'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(email)+'" style="color:var(--orl);text-decoration:underline">Renvoyer l'email de confirmation →</a>','warn');
+        showAlert('Vous n\'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(email)+'" style="color:var(--orl);text-decoration:underline">Renvoyer l\'email de confirmation →</a>','warn');
         return;
       }
       throw new Error(data.error_description || 'Email ou mot de passe incorrect.');
@@ -337,10 +467,10 @@ async function doLogin(btn) {
 
 async function doMagicLink() {
   const email = document.getElementById('l-email').value.trim();
-  if (!email) return showAlert('Saisissez d'abord votre email ci-dessus.','warn');
+  if (!email) return showAlert('Saisissez d\'abord votre email ci-dessus.','warn');
   const { ok } = await sbFetch('/auth/v1/magiclink', { email });
   if (ok) showAlert('Lien envoyé ! Vérifiez votre boîte email.','success');
-  else showAlert('Impossible d'envoyer le lien. Vérifiez l'adresse email.','error');
+  else showAlert('Impossible d\'envoyer le lien. Vérifiez l\'adresse email.','error');
 }
 
 // Pre-fill from query param
@@ -349,7 +479,7 @@ if (params.get('tab') === 'login') switchTab('login');
 if (params.get('email')) {
   switchTab('login');
   document.getElementById('l-email').value = params.get('email');
-  showAlert('Vous n'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(params.get('email'))+'" style="color:var(--orl);text-decoration:underline">Renvoyer l'email de confirmation →</a>','warn');
+  showAlert('Vous n\'avez pas validé votre compte. <a href="/auth/confirm.html?email='+encodeURIComponent(params.get('email'))+'" style="color:var(--orl);text-decoration:underline">Renvoyer l\'email de confirmation →</a>','warn');
 }
 
 // Redirect if already logged in
@@ -357,41 +487,6 @@ if (getSession()) {
   const s = getSession();
   window.location.href = s.role === 'bailleur' ? '/espace-bailleur/' : '/espace-locataire/';
 }
-
-function getPhotoFromPhotos(photos){
-  let ph=[]; try{ph=Array.isArray(photos)?photos:JSON.parse(photos||'[]');}catch{}
-  const first=ph[0]; return first?.url || first?.src || first?.path || first || '';
-}
-function localFallbackBiens(){
-  return [
-    {titre:'Le petit Nopalukay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photo:'/assets/biens/nopalukay-01.jpeg'},
-    {titre:'Le petit Bantukay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photo:'/assets/biens/bantukay-01.jpeg'},
-    {titre:'Le petit Suxalikay',quartier:'Sipres VDN',ville:'Dakar',prix:850000,surface:95,pieces:3,photo:'/assets/biens/suxalikay-09.jpeg'}
-  ];
-}
-let carouselItems=[], carouselIdx=0, carouselTimer=null;
-async function loadAvailableBiens(){
-  try{
-    const res=await fetch(`${SUPABASE_URL}/rest/v1/biens?statut=eq.disponible&select=id,titre,quartier,ville,prix,surface,pieces,photos&limit=5`,{headers:{'apikey':SUPABASE_ANON}});
-    const data=res.ok?await res.json():[];
-    carouselItems=(data||[]).map(b=>({...b,photo:getPhotoFromPhotos(b.photos)})).filter(b=>b.photo);
-  }catch{ carouselItems=[]; }
-  if(!carouselItems.length) carouselItems=localFallbackBiens();
-  renderCarousel();
-  if(carouselTimer) clearInterval(carouselTimer);
-  carouselTimer=setInterval(()=>{carouselIdx=(carouselIdx+1)%carouselItems.length;renderCarousel();},4200);
-}
-function renderCarousel(){
-  const b=carouselItems[carouselIdx] || localFallbackBiens()[0];
-  const prix=Number(b.prix||0);
-  const img=document.getElementById('carousel-img');
-  if(img) img.innerHTML=`<img src="${b.photo}" alt="${b.titre||'Bien disponible'}"><span class="photo-badge">Biens vérifiés</span>`;
-  const meta=document.getElementById('carousel-meta');
-  if(meta) meta.innerHTML=`<strong style="color:var(--blanc)">${b.titre||'Bien disponible'}</strong><br>${[b.quartier,b.ville||'Dakar'].filter(Boolean).join(', ')} · ${b.surface||'—'} m² · ${b.pieces||'—'} pièces<br>${prix?prix.toLocaleString('fr-FR')+' F CFA / mois':'Prix sur demande'}`;
-  const dots=document.getElementById('carousel-dots');
-  if(dots) dots.innerHTML=carouselItems.map((_,i)=>`<span class="carousel-dot ${i===carouselIdx?'active':''}" onclick="carouselIdx=${i};renderCarousel()"></span>`).join('');
-}
-document.addEventListener('DOMContentLoaded', loadAvailableBiens);
 </script>
 </body>
 </html>
