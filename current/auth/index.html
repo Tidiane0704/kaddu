@@ -76,26 +76,26 @@
     .link-muted{display:block;text-align:center;font-size:.82rem;color:rgba(248,244,238,.42);cursor:pointer;transition:.2s;margin-top:16px}.link-muted:hover,.link-muted span{color:var(--or)}
     .spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}@keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ── SIDE PANEL PROFILS ── */
+    /* ── SIDE PANEL DYNAMIQUE ── */
     .side-panel{position:sticky;top:96px;align-self:start}
-    .profiles-card{
+    .side-card{
       background:linear-gradient(180deg,rgba(11,32,57,.96),rgba(7,24,43,.92));
       border:1px solid rgba(191,150,80,.28);border-radius:24px;overflow:hidden;
-      box-shadow:0 30px 90px rgba(0,0,0,.34);padding:28px 24px
+      box-shadow:0 30px 90px rgba(0,0,0,.34);
+      transition:opacity .3s
     }
+    /* ─ VUE BAILLEUR — profils ─ */
+    .panel-bailleur{display:none;padding:28px 24px}
+    .panel-bailleur.active{display:block}
     .profiles-head{margin-bottom:22px}
     .profiles-eyebrow{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
     .profiles-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:300;line-height:1.2}
     .profiles-title em{font-style:italic;color:var(--or)}
     .profiles-subtitle{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:8px}
-
     .profile-list{display:flex;flex-direction:column;gap:14px;margin-bottom:22px}
     .profile-item{
-      display:flex;align-items:flex-start;gap:14px;
-      padding:16px;border-radius:14px;
-      background:rgba(255,255,255,.03);
-      border:1px solid rgba(248,244,238,.07);
-      transition:.2s
+      display:flex;align-items:flex-start;gap:14px;padding:16px;border-radius:14px;
+      background:rgba(255,255,255,.03);border:1px solid rgba(248,244,238,.07);transition:.2s
     }
     .profile-item:hover{border-color:var(--bdr);background:rgba(191,150,80,.04)}
     .profile-avatar{
@@ -110,6 +110,65 @@
     .profile-role{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
     .profile-quote{font-size:.78rem;color:var(--muted);line-height:1.45;font-style:italic}
     .profile-stars{color:var(--or);font-size:.72rem;letter-spacing:1px;margin-top:5px}
+
+    /* ─ VUE LOCATAIRE — carrousel biens ─ */
+    .panel-locataire{display:none}
+    .panel-locataire.active{display:block}
+    .carousel-hero{
+      position:relative;height:220px;overflow:hidden;background:var(--nbl)
+    }
+    .carousel-hero img{
+      width:100%;height:100%;object-fit:cover;display:block;
+      transition:transform .6s ease
+    }
+    .carousel-hero:hover img{transform:scale(1.04)}
+    .carousel-hero::after{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 40%,rgba(7,15,26,.75))
+    }
+    .carousel-badge{
+      position:absolute;top:14px;right:14px;z-index:2;
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 12px;border-radius:999px;
+      background:rgba(7,15,26,.76);border:1px solid rgba(0,200,117,.3);
+      color:var(--green);font-size:.65rem;font-weight:700;
+      letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(8px)
+    }
+    .carousel-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .carousel-body{padding:20px 22px 22px}
+    .carousel-panel-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:8px}
+    .carousel-bien-title{
+      font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300;
+      line-height:1.2;margin-bottom:6px
+    }
+    .carousel-bien-title em{font-style:italic;color:var(--or)}
+    .carousel-meta-row{
+      display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;
+      font-size:.76rem;color:var(--muted)
+    }
+    .carousel-tag{
+      padding:3px 10px;border-radius:999px;
+      background:rgba(191,150,80,.08);border:1px solid var(--bdr);
+      color:var(--orl);font-size:.7rem
+    }
+    .carousel-review{
+      padding:14px;border-radius:12px;
+      background:rgba(255,255,255,.03);border:1px solid rgba(248,244,238,.07);
+      margin-bottom:16px
+    }
+    .carousel-review-text{font-size:.78rem;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:6px}
+    .carousel-review-author{font-size:.7rem;color:var(--or);font-weight:600}
+    .carousel-dots{display:flex;gap:6px;margin-bottom:16px}
+    .carousel-dot{width:7px;height:7px;border-radius:50%;background:rgba(248,244,238,.2);cursor:pointer;transition:.2s}
+    .carousel-dot.active{background:var(--or)}
+    .carousel-cta{
+      width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+      border:1px solid var(--or);border-radius:12px;padding:12px 16px;
+      color:var(--orl);background:rgba(191,150,80,.06);
+      font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;
+      transition:.2s;cursor:pointer
+    }
+    .carousel-cta:hover{background:rgba(191,150,80,.14);transform:translateY(-1px)}
 
     .trust-strip{
       display:flex;flex-direction:column;gap:9px;
@@ -213,84 +272,107 @@
     </div>
   </main>
 
-  <!-- ══ SIDE PANEL — PROFILS CLIENTS ══ -->
+  <!-- ══ SIDE PANEL — DYNAMIQUE ══ -->
   <aside class="side-panel">
-    <div class="profiles-card">
-      <div class="profiles-head">
-        <div class="profiles-eyebrow">Ils nous font confiance</div>
-        <h2 class="profiles-title">L'espace qui vous <em>ressemble</em></h2>
-        <p class="profiles-subtitle">Locataire, propriétaire ou en transition — Kàddu s'adapte à votre situation.</p>
-      </div>
+    <div class="side-card">
 
-      <div class="profile-list">
-
-        <!-- Profil 1 — Locataire cadre -->
-        <div class="profile-item">
-          <div class="profile-avatar">
-            <svg viewBox="0 0 64 64" fill="none">
-              <circle fill="url(#kgold)" cx="32" cy="20" r="10"/>
-              <path fill="url(#kgold)" d="M16 58c1-17 9-27 16-27s15 10 16 27H16z"/>
-              <path fill="#E8DCC5" opacity=".85" d="M32 34c4 0 7.5-1.4 9.8-3.5C39 35.5 35.7 38 32 38s-7-2.5-9.8-8.5C24.5 32.6 28 34 32 34z"/>
-            </svg>
-          </div>
-          <div class="profile-info">
-            <div class="profile-name">Aminata S.</div>
-            <div class="profile-role">Locataire · Dakar Plateau</div>
-            <div class="profile-quote">« Mon dossier était prêt en 20 min. J'ai obtenu mon appartement sans stress. »</div>
-            <div class="profile-stars">★★★★★</div>
-          </div>
+      <!-- ── VUE LOCATAIRE : carrousel biens ── -->
+      <div class="panel-locataire active" id="panel-locataire">
+        <div class="carousel-hero" id="carousel-hero">
+          <img id="carousel-img" src="/assets/images/biens/nopalukay-01.jpeg" alt="Bien disponible">
+          <span class="carousel-badge">Biens vérifiés</span>
         </div>
-
-        <!-- Profil 2 — Propriétaire bailleur -->
-        <div class="profile-item">
-          <div class="profile-avatar">
-            <svg viewBox="0 0 64 64" fill="none">
-              <path fill="url(#kgold)" d="M18 12h28v48H18z"/>
-              <path fill="#E8DCC5" opacity=".85" d="M46 28h12v32H46z"/>
-              <path fill="#07182B" d="M25 20h6v6h-6zm12 0h6v6h-6zM25 33h6v6h-6zm12 0h6v6h-6zM25 46h6v6h-6zm12 0h6v6h-6z"/>
-            </svg>
+        <div class="carousel-body">
+          <div class="carousel-panel-label">Biens disponibles</div>
+          <h2 class="carousel-bien-title" id="carousel-titre">Un logement prêt pour <em>vous</em></h2>
+          <div class="carousel-meta-row" id="carousel-meta">
+            <span class="carousel-tag" id="carousel-loc">Dakar</span>
+            <span class="carousel-tag" id="carousel-surf">— m²</span>
+            <span class="carousel-tag" id="carousel-prix">Prix sur demande</span>
           </div>
-          <div class="profile-info">
-            <div class="profile-name">Ibrahima D.</div>
-            <div class="profile-role">Propriétaire · 3 biens gérés</div>
-            <div class="profile-quote">« Je reçois les dossiers triés, vérifiés. Je valide en un clic depuis mon téléphone. »</div>
-            <div class="profile-stars">★★★★★</div>
+          <div class="carousel-review" id="carousel-review">
+            <div class="carousel-review-text">« J'ai déposé mon dossier en 15 minutes et obtenu une réponse en 48h. Processus impeccable. »</div>
+            <div class="carousel-review-author">Aminata S. — Locataire · ★★★★★</div>
           </div>
-        </div>
-
-        <!-- Profil 3 — Garant familial -->
-        <div class="profile-item">
-          <div class="profile-avatar">
-            <svg viewBox="0 0 64 64" fill="none">
-              <path fill="url(#kgold)" d="M32 6 8 22v36h48V22L32 6z"/>
-              <path fill="#E8DCC5" opacity=".7" d="M22 58V40h20v18H22z"/>
-              <circle fill="#07182B" cx="32" cy="30" r="5"/>
-            </svg>
-          </div>
-          <div class="profile-info">
-            <div class="profile-name">Fatou N.</div>
-            <div class="profile-role">Garant · Famille accompagnée</div>
-            <div class="profile-quote">« J'ai pu soutenir ma fille à distance. Le process était clair du début à la fin. »</div>
-            <div class="profile-stars">★★★★☆</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="trust-strip">
-        <div class="trust-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
-          Dossier centralisé et réutilisable
-        </div>
-        <div class="trust-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
-          Profil analysé avant transmission
-        </div>
-        <div class="trust-row">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          Réponse bailleur sous 48h garantie
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <button class="carousel-cta" onclick="location.href='/biens/'">Voir tous les biens disponibles →</button>
         </div>
       </div>
+
+      <!-- ── VUE BAILLEUR : témoignages propriétaires ── -->
+      <div class="panel-bailleur" id="panel-bailleur">
+        <div class="profiles-head">
+          <div class="profiles-eyebrow">Ils nous confient leurs biens</div>
+          <h2 class="profiles-title">Des propriétaires qui nous font <em>confiance</em></h2>
+          <p class="profiles-subtitle">Ils gèrent leur patrimoine sereinement grâce à Kàddu.</p>
+        </div>
+        <div class="profile-list">
+
+          <div class="profile-item">
+            <div class="profile-avatar">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path fill="url(#kgold)" d="M18 12h28v48H18z"/>
+                <path fill="#E8DCC5" opacity=".85" d="M46 28h12v32H46z"/>
+                <path fill="#07182B" d="M25 20h6v6h-6zm12 0h6v6h-6zM25 33h6v6h-6zm12 0h6v6h-6zM25 46h6v6h-6zm12 0h6v6h-6z"/>
+              </svg>
+            </div>
+            <div class="profile-info">
+              <div class="profile-name">Ibrahima D.</div>
+              <div class="profile-role">Propriétaire · 3 biens gérés</div>
+              <div class="profile-quote">« Je reçois les dossiers triés, vérifiés. Je valide en un clic depuis mon téléphone. »</div>
+              <div class="profile-stars">★★★★★</div>
+            </div>
+          </div>
+
+          <div class="profile-item">
+            <div class="profile-avatar">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path fill="url(#kgold)" d="M32 6 8 22v36h48V22L32 6z"/>
+                <path fill="#E8DCC5" opacity=".7" d="M22 58V40h20v18H22z"/>
+                <circle fill="#07182B" cx="32" cy="30" r="5"/>
+              </svg>
+            </div>
+            <div class="profile-info">
+              <div class="profile-name">Mariama C.</div>
+              <div class="profile-role">Propriétaire · Mermoz, Dakar</div>
+              <div class="profile-quote">« Kàddu s'occupe de tout. Mes locataires sont sélectionnés sérieusement, je n'ai plus de mauvaises surprises. »</div>
+              <div class="profile-stars">★★★★★</div>
+            </div>
+          </div>
+
+          <div class="profile-item">
+            <div class="profile-avatar">
+              <svg viewBox="0 0 64 64" fill="none">
+                <circle fill="url(#kgold)" cx="32" cy="20" r="10"/>
+                <path fill="url(#kgold)" d="M16 58c1-17 9-27 16-27s15 10 16 27H16z"/>
+                <path fill="#E8DCC5" opacity=".85" d="M32 34c4 0 7.5-1.4 9.8-3.5C39 35.5 35.7 38 32 38s-7-2.5-9.8-8.5C24.5 32.6 28 34 32 34z"/>
+              </svg>
+            </div>
+            <div class="profile-info">
+              <div class="profile-name">Ousmane B.</div>
+              <div class="profile-role">Propriétaire · 2 appartements</div>
+              <div class="profile-quote">« La transparence sur les dossiers locataires est excellente. Je recommande sans hésiter. »</div>
+              <div class="profile-stars">★★★★☆</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="trust-strip" style="padding:0 0 4px">
+          <div class="trust-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+            Dossiers locataires vérifiés par Kàddu
+          </div>
+          <div class="trust-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+            Gestion simplifiée depuis votre espace
+          </div>
+          <div class="trust-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            Décision en 48h garantie
+          </div>
+        </div>
+      </div>
+
     </div>
   </aside>
 </div>
@@ -340,14 +422,139 @@ function setLoading(btn, spinnerId, loading) {
   if (sp) sp.style.display = loading ? 'block' : 'none';
 }
 
-// PATCH — selectRole sur div (plus de label wrapper)
+// PATCH — selectRole : switch carte + side panel dynamique
 function selectRole(role) {
   ['locataire','bailleur'].forEach(r => {
     document.getElementById('card-'+r).classList.toggle('selected', r === role);
   });
   const input = document.getElementById('r-'+role);
   if (input) input.checked = true;
+  // Switch side panel
+  document.getElementById('panel-locataire').classList.toggle('active', role === 'locataire');
+  document.getElementById('panel-bailleur').classList.toggle('active', role === 'bailleur');
 }
+
+// ── CARROUSEL BIENS (vue locataire) ─────────────────────────
+// Use cases par slide — meublé vs non meublé
+const SLIDE_USECASES = [
+  {
+    label: 'Appartement meublé',
+    badge: '✦ Meublé · Disponible',
+    review: '« Dossier déposé en 15 min, réponse en 48h. Clés remises la semaine suivante. »',
+    author: 'Aminata S., cadre · ★★★★★'
+  },
+  {
+    label: 'Appartement meublé',
+    badge: '✦ Meublé · Disponible',
+    review: '« Tout était clair, le bailleur a accepté rapidement. Processus impeccable. »',
+    author: 'Moussa K., étudiant · ★★★★★'
+  },
+  {
+    label: 'Appartement non meublé',
+    badge: '◈ Non meublé · Disponible',
+    review: '« J\'ai trouvé exactement ce que je cherchais pour m\'installer durablement. Un vrai chez-moi. »',
+    author: 'Fatou N., jeune couple · ★★★★☆'
+  },
+];
+let carouselItems = [], carouselIdx = 0, carouselTimer = null;
+
+function getPhotoFromPhotos(photos) {
+  let ph = [];
+  try { ph = Array.isArray(photos) ? photos : JSON.parse(photos || '[]'); } catch {}
+  const first = ph[0];
+  return first?.url || first?.src || first?.path || first || '';
+}
+
+function localFallbackBiens() {
+  return [
+    {
+      titre: 'Le petit Nopalukay', quartier: 'Sipres VDN', ville: 'Dakar',
+      prix: 850000, surface: 95, pieces: 3,
+      photo: '/assets/images/biens/nopalukay-01.jpeg',
+      _uc: SLIDE_USECASES[0]
+    },
+    {
+      titre: 'Le petit Bantukay', quartier: 'Sipres VDN', ville: 'Dakar',
+      prix: 850000, surface: 95, pieces: 3,
+      photo: '/assets/images/biens/bantukay-01.jpeg',
+      _uc: SLIDE_USECASES[1]
+    },
+    {
+      titre: 'Dalal — Étage 1A', quartier: 'Résidence Dalal', ville: 'Dakar',
+      prix: 650000, surface: 110, pieces: 4,
+      photo: '/assets/images/biens/nonmeubles/Dalal_etage1A_NonMeuble-01.jpeg',
+      _uc: SLIDE_USECASES[2]
+    },
+  ];
+}
+
+async function loadAvailableBiens() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/biens?statut=eq.disponible&select=id,titre,quartier,ville,prix,surface,pieces,photos,type_bien&limit=5`, {
+      headers: { 'apikey': SUPABASE_ANON }
+    });
+    const data = res.ok ? await res.json() : [];
+    carouselItems = (data || []).map((b, i) => ({
+      ...b,
+      photo: getPhotoFromPhotos(b.photos),
+      _uc: SLIDE_USECASES[i % SLIDE_USECASES.length]
+    })).filter(b => b.photo);
+  } catch { carouselItems = []; }
+  if (!carouselItems.length) {
+    carouselItems = localFallbackBiens();
+  } else {
+    // Toujours injecter le slide non meublé s il nest pas dans les résultats Supabase
+    const nonMeuble = localFallbackBiens()[2];
+    const dejaPresent = carouselItems.some(b => b.photo && b.photo.includes("NonMeuble"));
+    if (!dejaPresent) carouselItems.push(nonMeuble);
+  }
+  renderCarousel();
+  if (carouselTimer) clearInterval(carouselTimer);
+  carouselTimer = setInterval(() => { carouselIdx = (carouselIdx + 1) % carouselItems.length; renderCarousel(); }, 4500);
+}
+
+function renderCarousel() {
+  const b = carouselItems[carouselIdx] || localFallbackBiens()[0];
+  const uc = b._uc || SLIDE_USECASES[0];
+  const prix = Number(b.prix || 0);
+
+  // Photo
+  const img = document.getElementById('carousel-img');
+  if (img) { img.src = b.photo; img.alt = b.titre || 'Bien disponible'; }
+
+  // Badge type meublé / non meublé
+  const badgeEl = document.querySelector('#panel-locataire .carousel-badge');
+  if (badgeEl) badgeEl.textContent = uc.badge;
+
+  // Titre
+  const titreEl = document.getElementById('carousel-titre');
+  if (titreEl) {
+    const t = b.titre || 'Bien disponible';
+    titreEl.innerHTML = t.replace(/^(Le |La |Les |Un |Une )(.+)/, '$1<em>$2</em>') || `<em>${t}</em>`;
+  }
+
+  // Tags
+  const locEl  = document.getElementById('carousel-loc');
+  const surfEl = document.getElementById('carousel-surf');
+  const prixEl = document.getElementById('carousel-prix');
+  if (locEl)  locEl.textContent  = [b.quartier, b.ville || 'Dakar'].filter(Boolean).join(', ');
+  if (surfEl) surfEl.textContent = b.surface ? b.surface + ' m²' : '— m²';
+  if (prixEl) prixEl.textContent = prix ? prix.toLocaleString('fr-FR') + ' F / mois' : 'Prix sur demande';
+
+  // Use case + avis
+  const revEl = document.getElementById('carousel-review');
+  if (revEl) revEl.innerHTML = `
+    <div class="carousel-review-text">${uc.review}</div>
+    <div class="carousel-review-author">${uc.author}</div>`;
+
+  // Dots
+  const dotsEl = document.getElementById('carousel-dots');
+  if (dotsEl) dotsEl.innerHTML = carouselItems.map((_, i) =>
+    `<span class="carousel-dot ${i === carouselIdx ? 'active' : ''}" onclick="carouselIdx=${i};renderCarousel()"></span>`
+  ).join('');
+}
+
+document.addEventListener('DOMContentLoaded', loadAvailableBiens);
 
 function goForgot() {
   const email = document.getElementById('l-email').value;
