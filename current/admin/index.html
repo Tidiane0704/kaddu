@@ -425,6 +425,31 @@
         </div>
       </a>
 
+
+
+      <!-- MODULE 4 : MARCHÉ LOCATIF -->
+      <a class="module-card" href="admin-marche-locatif.html">
+        <div class="module-top">
+          <div class="module-icon">📍</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+            <span class="mbadge mbadge-new">Nouveau</span>
+          </div>
+        </div>
+        <div class="module-name">Marché <em>locatif</em></div>
+        <div class="module-desc">Pilotez le référentiel des loyers Kàddu par ville, quartier, type de bien et meublé/non meublé. Importez un CSV et ajustez les fourchettes à la main.</div>
+        <div class="module-features">
+          <span class="mfeat">Filtres ville · quartier · type · meublé</span>
+          <span class="mfeat">Modification min · médiane · max</span>
+          <span class="mfeat">Import CSV avec contrôle des doublons</span>
+          <span class="mfeat">Base utilisée par la projection bailleur</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Ouvrir le module →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">M</span></span>
+        </div>
+      </a>
+
       <!-- MODULE 4 : RÉSERVATIONS (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
@@ -531,6 +556,7 @@
             <div class="shortcut-pill"><span class="key">G</span><span class="key">B</span> Biens</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">D</span> Dossiers</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">K</span> KPIs</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">M</span> Marché</div>
             <div class="shortcut-pill"><span class="key">?</span> Aide</div>
           </div>
         </div>
@@ -683,6 +709,7 @@ document.addEventListener("keydown", e => {
     if(e.key==="b"||e.key==="B") location.href="admin-biens-v2-secured.html";
     if(e.key==="d"||e.key==="D") location.href="admin-dossiers-v3-secured.html";
     if(e.key==="k"||e.key==="K") location.href="dashboard-kaddu-kpi-secured.html";
+    if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
   }
 });
 
