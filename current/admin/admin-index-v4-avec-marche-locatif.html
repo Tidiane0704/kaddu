@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu · Admin Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --or:#BF9650;--orl:#DDB96E;--nbl:#07182B;--card:#0b2039;
+      --txt:#F8F4EE;--muted:rgba(248,244,238,.52);
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.32);
+      --green:#00C875;--red:#ff6b6b;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:#060d18;
+      color:var(--txt);
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";position:fixed;inset:0;z-index:-1;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 0%, rgba(191,150,80,.09) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 90% 80%, rgba(191,150,80,.05) 0%, transparent 50%),
+        linear-gradient(180deg,#060d18 0%,#08152a 100%);
+    }
+    a{text-decoration:none;color:inherit}
+
+    /* ── AUTH ── */
+    #authScreen{
+      position:fixed;inset:0;z-index:999;
+      background:#060d18;
+      display:flex;align-items:center;justify-content:center;
+      padding:24px;
+    }
+    .auth-wrap{width:100%;max-width:400px}
+    .auth-brand{
+      display:flex;align-items:center;gap:14px;margin-bottom:36px;justify-content:center
+    }
+    .auth-mark{
+      width:48px;height:48px;border-radius:14px;
+      background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(191,150,80,.06));
+      border:1px solid var(--bds);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--or);
+    }
+    .auth-brand-text h1{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:300;line-height:1}
+    .auth-brand-text h1 em{font-style:italic;color:var(--or)}
+    .auth-brand-text span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+    .auth-box{
+      border:1px solid var(--bdr);border-radius:20px;
+      background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      padding:28px 26px;
+    }
+    .auth-box h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:300;margin-bottom:6px}
+    .auth-box h2 em{font-style:italic;color:var(--or)}
+    .auth-box p{font-size:.84rem;color:var(--muted);margin-bottom:22px;line-height:1.6}
+    .auth-field{margin-bottom:14px}
+    .auth-field label{display:block;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:7px}
+    .auth-field input{
+      width:100%;padding:12px 14px;
+      background:rgba(255,255,255,.04);border:1px solid var(--bdr);
+      color:var(--txt);font-size:.9rem;font-family:'DM Sans',sans-serif;
+      border-radius:10px;transition:.2s
+    }
+    .auth-field input:focus{outline:none;border-color:var(--or)}
+    .auth-btn{
+      width:100%;margin-top:6px;padding:14px;
+      background:var(--or);color:#0a0a0a;border:none;
+      font-family:'DM Sans',sans-serif;font-weight:700;font-size:.88rem;
+      letter-spacing:.08em;cursor:pointer;border-radius:10px;transition:.2s
+    }
+    .auth-btn:hover{background:var(--orl)}
+    .auth-btn:disabled{opacity:.5;cursor:not-allowed}
+    .auth-err{
+      margin-top:12px;padding:10px 13px;border-radius:8px;
+      border:1px solid rgba(255,107,107,.28);background:rgba(255,107,107,.07);
+      color:#ffb3b3;font-size:.8rem;display:none
+    }
+    .auth-loading{margin-top:10px;text-align:center;font-size:.78rem;color:var(--muted);display:none}
+
+    /* ── APP SHELL ── */
+    #appShell{display:none}
+
+    /* ── TOPBAR ── */
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(6,13,24,.92);backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--bdr);
+      height:64px;padding:0 32px;
+      display:flex;align-items:center;justify-content:space-between;gap:20px
+    }
+    .top-brand{display:flex;align-items:center;gap:12px}
+    .top-mark{
+      width:36px;height:36px;border-radius:10px;
+      background:linear-gradient(145deg,rgba(191,150,80,.2),rgba(191,150,80,.05));
+      border:1px solid var(--bds);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:1rem;color:var(--or)
+    }
+    .top-name{font-size:.88rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+    .top-badge{
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:3px 8px;border-radius:999px;
+      background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or)
+    }
+    .top-right{display:flex;align-items:center;gap:10px}
+    .top-user{font-size:.78rem;color:var(--muted)}
+    .top-logout{
+      padding:7px 14px;border:1px solid var(--bdr);border-radius:999px;
+      background:transparent;color:rgba(248,244,238,.5);
+      font-size:.72rem;letter-spacing:.08em;cursor:pointer;
+      font-family:'DM Sans',sans-serif;transition:.2s
+    }
+    .top-logout:hover{border-color:var(--red);color:var(--red)}
+
+    /* ── MAIN ── */
+    .main{max-width:1280px;margin:0 auto;padding:40px 32px 60px}
+
+    /* ── HERO ── */
+    .hub-hero{margin-bottom:44px}
+    .hub-hello{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:10px}
+    .hub-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;margin-bottom:10px}
+    .hub-title em{font-style:italic;color:var(--or)}
+    .hub-sub{font-size:.94rem;color:var(--muted);max-width:520px;line-height:1.7}
+
+    /* ── STATS STRIP ── */
+    .stats-strip{
+      display:flex;gap:1px;border:1px solid var(--bdr);border-radius:16px;
+      overflow:hidden;margin-bottom:44px;background:var(--bdr);
+    }
+    .stat-item{
+      flex:1;padding:16px 20px;background:rgba(7,24,43,.55);
+      display:flex;flex-direction:column;gap:4px
+    }
+    .stat-k{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or)}
+    .stat-v{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:300}
+    .stat-meta{font-size:.7rem;color:rgba(248,244,238,.35)}
+
+    /* ── MODULES ── */
+    .modules-label{
+      font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(248,244,238,.3);margin-bottom:18px;
+      display:flex;align-items:center;gap:12px
+    }
+    .modules-label::after{content:"";flex:1;height:1px;background:rgba(191,150,80,.1)}
+    .modules-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:16px;
+      margin-bottom:44px;
+    }
+    .module-card{
+      border:1px solid var(--bdr);border-radius:20px;
+      background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      padding:24px;
+      display:flex;flex-direction:column;gap:14px;
+      transition:.22s;cursor:pointer;
+      position:relative;overflow:hidden;
+    }
+    .module-card::before{
+      content:"";position:absolute;inset:0;opacity:0;transition:.22s;
+      background:linear-gradient(135deg,rgba(191,150,80,.06),transparent);
+    }
+    .module-card:hover{border-color:var(--bds);transform:translateY(-2px);box-shadow:0 12px 36px rgba(0,0,0,.2)}
+    .module-card:hover::before{opacity:1}
+    .module-card.soon{opacity:.5;cursor:default;pointer-events:none}
+    .module-card.soon:hover{transform:none;box-shadow:none}
+    .module-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .module-icon{
+      width:52px;height:52px;border-radius:16px;flex-shrink:0;
+      border:1px solid var(--bds);
+      display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+      background:rgba(191,150,80,.08);
+    }
+    .module-badges{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+    .mbadge{
+      font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+      padding:3px 8px;border-radius:999px;font-weight:700
+    }
+    .mbadge-active{background:rgba(0,200,117,.12);color:#77ffbe;border:1px solid rgba(0,200,117,.28)}
+    .mbadge-soon{background:rgba(140,140,140,.12);color:#aaa;border:1px solid rgba(140,140,140,.2)}
+    .mbadge-new{background:rgba(191,150,80,.14);color:var(--or);border:1px solid rgba(191,150,80,.3)}
+    .module-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300}
+    .module-name em{font-style:italic;color:var(--or)}
+    .module-desc{font-size:.82rem;color:var(--muted);line-height:1.6}
+    .module-features{display:flex;flex-direction:column;gap:5px}
+    .mfeat{font-size:.76rem;color:rgba(248,244,238,.45);display:flex;align-items:center;gap:7px}
+    .mfeat::before{content:"·";color:var(--or);font-size:.9rem}
+    .module-foot{
+      display:flex;align-items:center;justify-content:space-between;
+      padding-top:12px;border-top:1px solid rgba(191,150,80,.08);margin-top:auto
+    }
+    .module-link{
+      font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--or);display:flex;align-items:center;gap:5px;transition:.18s
+    }
+    .module-card:hover .module-link{gap:9px}
+    .module-shortcut{font-size:.68rem;color:rgba(248,244,238,.22)}
+
+    /* ── RECENT ACTIVITY ── */
+    .activity-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .activity-card{
+      border:1px solid var(--bdr);border-radius:16px;
+      background:rgba(7,24,43,.35);padding:20px;
+    }
+    .activity-card h3{
+      font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300;
+      margin-bottom:14px;color:rgba(248,244,238,.8)
+    }
+    .activity-list{display:flex;flex-direction:column;gap:0}
+    .activity-item{
+      display:flex;align-items:center;gap:12px;
+      padding:10px 0;border-bottom:1px solid rgba(191,150,80,.07);
+      font-size:.82rem;
+    }
+    .activity-item:last-child{border-bottom:none}
+    .activity-dot{
+      width:8px;height:8px;border-radius:50%;flex-shrink:0
+    }
+    .dot-ok{background:var(--green)}
+    .dot-warn{background:var(--or)}
+    .dot-info{background:#53b7ff}
+    .activity-text{flex:1;color:rgba(248,244,238,.62)}
+    .activity-time{font-size:.7rem;color:rgba(248,244,238,.28);white-space:nowrap}
+    .activity-empty{font-size:.82rem;color:rgba(248,244,238,.28);padding:14px 0;text-align:center}
+
+    /* ── KEYBOARD SHORTCUTS ── */
+    .shortcuts-row{
+      display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;
+    }
+    .shortcut-pill{
+      display:flex;align-items:center;gap:6px;
+      padding:5px 10px;border:1px solid var(--bdr);border-radius:8px;
+      font-size:.72rem;color:rgba(248,244,238,.38);background:rgba(255,255,255,.02)
+    }
+    .key{
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+      border-radius:4px;padding:1px 6px;font-size:.68rem;color:rgba(248,244,238,.5);
+      font-family:monospace
+    }
+
+    /* ── FOOTER ── */
+    .hub-footer{
+      max-width:1280px;margin:0 auto;padding:0 32px 28px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      border-top:1px solid rgba(191,150,80,.07);padding-top:20px;
+      font-size:.72rem;color:rgba(248,244,238,.22)
+    }
+
+    /* ── TRANSITIONS ── */
+    .fade-up{opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease}
+    .fade-up.visible{opacity:1;transform:translateY(0)}
+
+    @media(max-width:900px){
+      .main{padding:24px 18px 40px}
+      .topbar{padding:0 18px}
+      .stats-strip{flex-wrap:wrap}
+      .stat-item{min-width:140px}
+      .activity-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:640px){
+      .modules-grid{grid-template-columns:1fr}
+      .top-user{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ AUTH ══ -->
+<div id="authScreen">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="auth-mark">K</div>
+      <div class="auth-brand-text">
+        <h1>Kàddu <em>Admin</em></h1>
+        <span>Plateforme de gestion</span>
+      </div>
+    </div>
+    <div class="auth-box">
+      <h2>Accès <em>sécurisé</em></h2>
+      <p>Réservé aux administrateurs Kàddu. Entrez vos identifiants pour accéder au hub de gestion.</p>
+      <div class="auth-field">
+        <label for="authEmail">Email</label>
+        <input id="authEmail" type="email" placeholder="contact@kaddu.net" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label for="authPw">Mot de passe</label>
+        <input id="authPw" type="password" autocomplete="current-password"/>
+      </div>
+      <button class="auth-btn" id="authBtn">Connexion →</button>
+      <div class="auth-err" id="authErr"></div>
+      <div class="auth-loading" id="authLoading">Authentification en cours…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="appShell">
+
+  <header class="topbar">
+    <div class="top-brand">
+      <div class="top-mark">K</div>
+      <div class="top-name">Kàddu</div>
+      <div class="top-badge">Admin Hub</div>
+    </div>
+    <div class="top-right">
+      <span class="top-user" id="topUser"></span>
+      <button class="top-logout" id="logoutBtn">Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- HERO -->
+    <div class="hub-hero fade-up">
+      <div class="hub-hello" id="hubHello">Bonjour</div>
+      <h2 class="hub-title">Bienvenue sur le <em>hub</em> Kàddu.</h2>
+      <p class="hub-sub">Gérez vos biens, vos dossiers locataires et vos KPIs depuis un seul endroit. Chaque module s'ouvre dans son interface dédiée.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-strip fade-up" id="statsStrip">
+      <div class="stat-item">
+        <div class="stat-k">Biens actifs</div>
+        <div class="stat-v" id="statBiens">—</div>
+        <div class="stat-meta">publiés sur le site</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-k">Dossiers reçus</div>
+        <div class="stat-v" id="statDossiers">—</div>
+        <div class="stat-meta">toutes périodes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-k">En attente</div>
+        <div class="stat-v" id="statAttente">—</div>
+        <div class="stat-meta">à traiter</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-k">Commerciaux</div>
+        <div class="stat-v" id="statComm">—</div>
+        <div class="stat-meta">actifs</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-k">Score moyen</div>
+        <div class="stat-v" id="statScore">—</div>
+        <div class="stat-meta">des candidatures</div>
+      </div>
+    </div>
+
+    <!-- MODULES -->
+    <div class="modules-label fade-up">Modules disponibles</div>
+    <div class="modules-grid fade-up" id="modulesGrid">
+
+      <!-- MODULE 1 : BIENS -->
+      <a class="module-card" href="admin-biens-v2-secured.html">
+        <div class="module-top">
+          <div class="module-icon">🏠</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+          </div>
+        </div>
+        <div class="module-name">Biens <em>& Médias</em></div>
+        <div class="module-desc">Créez, modifiez et publiez vos biens immobiliers. Gérez les photos, les commerciaux affectés et tous les champs descriptifs.</div>
+        <div class="module-features">
+          <span class="mfeat">CRUD biens meublés / non meublés</span>
+          <span class="mfeat">Upload photos · drag & drop · tags</span>
+          <span class="mfeat">Gestion commerciaux</span>
+          <span class="mfeat">Publication / dépublication en 1 clic</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Ouvrir le module →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">B</span></span>
+        </div>
+      </a>
+
+      <!-- MODULE 2 : DOSSIERS -->
+      <a class="module-card" href="admin-dossiers-v3-secured.html">
+        <div class="module-top">
+          <div class="module-icon">📋</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+          </div>
+        </div>
+        <div class="module-name">Dossiers <em>locataires</em></div>
+        <div class="module-desc">Consultez et traitez toutes les candidatures reçues. Visualisez le score de confiance, les documents et l'historique de chaque prospect.</div>
+        <div class="module-features">
+          <span class="mfeat">Score 0-100 par candidature</span>
+          <span class="mfeat">Filtres : statut, bien, score, date</span>
+          <span class="mfeat">WhatsApp direct depuis la fiche</span>
+          <span class="mfeat">Changement de statut en 1 clic</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Ouvrir le module →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">D</span></span>
+        </div>
+      </a>
+
+      <!-- MODULE 3 : KPIs -->
+      <a class="module-card" href="dashboard-kaddu-kpi-secured.html">
+        <div class="module-top">
+          <div class="module-icon">📊</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+          </div>
+        </div>
+        <div class="module-name">KPIs <em>& Analytique</em></div>
+        <div class="module-desc">Suivez les indicateurs clés de votre activité locative : funnel de candidatures, distribution des scores, taux de conversion.</div>
+        <div class="module-features">
+          <span class="mfeat">Funnel candidatures complet</span>
+          <span class="mfeat">Distribution des scores</span>
+          <span class="mfeat">Évolution temporelle</span>
+          <span class="mfeat">Export et lecture synthétique</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Ouvrir le module →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">K</span></span>
+        </div>
+      </a>
+
+
+
+      <!-- MODULE 4 : MARCHÉ LOCATIF -->
+      <a class="module-card" href="admin-marche-locatif.html">
+        <div class="module-top">
+          <div class="module-icon">📍</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+            <span class="mbadge mbadge-new">Nouveau</span>
+          </div>
+        </div>
+        <div class="module-name">Marché <em>locatif</em></div>
+        <div class="module-desc">Pilotez le référentiel des loyers Kàddu par ville, quartier, type de bien et meublé/non meublé. Importez un CSV et ajustez les fourchettes à la main.</div>
+        <div class="module-features">
+          <span class="mfeat">Filtres ville · quartier · type · meublé</span>
+          <span class="mfeat">Modification min · médiane · max</span>
+          <span class="mfeat">Import CSV avec contrôle des doublons</span>
+          <span class="mfeat">Base utilisée par la projection bailleur</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Ouvrir le module →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">M</span></span>
+        </div>
+      </a>
+
+      <!-- MODULE 4 : RÉSERVATIONS (à venir) -->
+      <div class="module-card soon">
+        <div class="module-top">
+          <div class="module-icon" style="opacity:.5">📅</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-soon">Bientôt</span>
+          </div>
+        </div>
+        <div class="module-name" style="opacity:.5">Réservations <em>& Calendrier</em></div>
+        <div class="module-desc" style="opacity:.6">Gérez les disponibilités de chaque bien, les réservations confirmées et les périodes bloquées.</div>
+        <div class="module-features">
+          <span class="mfeat" style="opacity:.5">Calendrier de disponibilité</span>
+          <span class="mfeat" style="opacity:.5">Check-in / check-out</span>
+          <span class="mfeat" style="opacity:.5">Synchronisation iCal</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link" style="opacity:.3">En développement</span>
+        </div>
+      </div>
+
+      <!-- MODULE 5 : PAIEMENTS (à venir) -->
+      <div class="module-card soon">
+        <div class="module-top">
+          <div class="module-icon" style="opacity:.5">💳</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-soon">Bientôt</span>
+          </div>
+        </div>
+        <div class="module-name" style="opacity:.5">Paiements <em>& Quittances</em></div>
+        <div class="module-desc" style="opacity:.6">Suivi des paiements Wave, Orange Money et Stripe. Génération automatique de quittances de loyer.</div>
+        <div class="module-features">
+          <span class="mfeat" style="opacity:.5">Historique des paiements</span>
+          <span class="mfeat" style="opacity:.5">Génération de quittances PDF</span>
+          <span class="mfeat" style="opacity:.5">Alertes de retard</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link" style="opacity:.3">En développement</span>
+        </div>
+      </div>
+
+      <!-- MODULE 6 : CONTENU (à venir) -->
+      <div class="module-card soon">
+        <div class="module-top">
+          <div class="module-icon" style="opacity:.5">✍️</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-soon">Bientôt</span>
+          </div>
+        </div>
+        <div class="module-name" style="opacity:.5">Contenu <em>& Pages</em></div>
+        <div class="module-desc" style="opacity:.6">Éditez les textes du site, les témoignages, les pages statiques et les blocs de contenu sans toucher au code.</div>
+        <div class="module-features">
+          <span class="mfeat" style="opacity:.5">Éditeur de contenu inline</span>
+          <span class="mfeat" style="opacity:.5">Gestion des témoignages</span>
+          <span class="mfeat" style="opacity:.5">SEO par page</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link" style="opacity:.3">En développement</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ACTIVITÉ RÉCENTE -->
+    <div class="modules-label fade-up">Activité récente</div>
+    <div class="activity-grid fade-up">
+      <div class="activity-card">
+        <h3>Derniers dossiers reçus</h3>
+        <div class="activity-list" id="recentDossiers">
+          <div class="activity-empty">Chargement…</div>
+        </div>
+      </div>
+      <div class="activity-card">
+        <h3>Accès rapides</h3>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot dot-ok"></div>
+            <div class="activity-text">
+              <a href="admin-biens-v2-secured.html" style="color:var(--or)">Ajouter un nouveau bien</a>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-info"></div>
+            <div class="activity-text">
+              <a href="admin-dossiers-v3-secured.html" style="color:#53b7ff">Voir les dossiers en attente</a>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-warn"></div>
+            <div class="activity-text">
+              <a href="dashboard-kaddu-kpi-secured.html" style="color:var(--or)">Tableau de bord KPIs</a>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot dot-ok"></div>
+            <div class="activity-text">
+              <a href="/" target="_blank" style="color:rgba(248,244,238,.6)">Voir le site public →</a>
+            </div>
+          </div>
+        </div>
+        <!-- Raccourcis clavier -->
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(191,150,80,.08)">
+          <div style="font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28);margin-bottom:8px">Raccourcis clavier</div>
+          <div class="shortcuts-row">
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">B</span> Biens</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">D</span> Dossiers</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">K</span> KPIs</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">M</span> Marché</div>
+            <div class="shortcut-pill"><span class="key">?</span> Aide</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <div class="hub-footer">
+    <span>Kàddu Admin Hub · <span id="footerVersion">v3.0</span></span>
+    <span id="footerDate"></span>
+  </div>
+
+</div><!-- /appShell -->
+
+<script>
+// ══ CONFIG ════════════════════════════════════════
+const SB   = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
+const ANON = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+
+let session = null;
+
+// ══ HELPERS ══════════════════════════════════════
+function h(extra={}){ return {"apikey":ANON,"Authorization":"Bearer "+(session?.access_token||ANON),"Content-Type":"application/json",...extra} }
+async function sbGet(q){ const r=await fetch(`${SB}/rest/v1/${q}`,{headers:h()}); if(!r.ok) throw new Error(); return r.json(); }
+
+function persistSess(s){ try{ localStorage.setItem("kaddu_admin_session",JSON.stringify({access_token:s.access_token,refresh_token:s.refresh_token,expires_at:Date.now()+(s.expires_in||3600)*1000})); }catch(_){} }
+function loadSess(){ try{ const r=localStorage.getItem("kaddu_admin_session"); if(!r) return null; const s=JSON.parse(r); if(s.expires_at&&Date.now()>s.expires_at-60000) return null; return s; }catch(_){ return null; } }
+function clearSess(){ localStorage.removeItem("kaddu_admin_session"); session=null; }
+
+// ══ AUTH ══════════════════════════════════════════
+async function signIn(email,pw){
+  const r = await fetch(`${SB}/auth/v1/token?grant_type=password`,{
+    method:"POST",
+    headers:{"apikey":ANON,"Content-Type":"application/json"},
+    body:JSON.stringify({email,password:pw})
+  });
+  const d = await r.json();
+  if(!r.ok) throw new Error(d.error_description||d.msg||"Identifiants incorrects.");
+  return d;
+}
+
+document.getElementById("authBtn").addEventListener("click", async () => {
+  const email = document.getElementById("authEmail").value.trim();
+  const pw    = document.getElementById("authPw").value;
+  const err   = document.getElementById("authErr");
+  const ld    = document.getElementById("authLoading");
+  const btn   = document.getElementById("authBtn");
+  if(!email||!pw){ err.textContent="Email et mot de passe requis."; err.style.display="block"; return; }
+  btn.disabled=true; err.style.display="none"; ld.style.display="block";
+  try{
+    const s = await signIn(email,pw);
+    session = s;
+    persistSess(s);
+    showApp(email);
+  }catch(e){
+    err.textContent = e.message||"Connexion impossible.";
+    err.style.display="block";
+  }finally{
+    btn.disabled=false; ld.style.display="none";
+  }
+});
+
+[document.getElementById("authEmail"),document.getElementById("authPw")]
+  .forEach(el => el.addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("authBtn").click(); }));
+
+document.getElementById("logoutBtn").addEventListener("click", () => { clearSess(); location.reload(); });
+
+// ══ SHOW APP ══════════════════════════════════════
+function showApp(email="") {
+  document.getElementById("authScreen").style.display = "none";
+  document.getElementById("appShell").style.display   = "block";
+
+  // Greet
+  const name = email.split("@")[0] || "Admin";
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Bonjour" : hour < 18 ? "Bon après-midi" : "Bonsoir";
+  document.getElementById("hubHello").textContent = `${greeting}, ${name}`;
+  document.getElementById("topUser").textContent = email;
+
+  // Footer date
+  document.getElementById("footerDate").textContent = new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+  // Staggered fade-in
+  document.querySelectorAll(".fade-up").forEach((el,i) => {
+    setTimeout(() => el.classList.add("visible"), 80 + i*80);
+  });
+
+  loadStats();
+  loadRecentDossiers();
+}
+
+// ══ STATS ════════════════════════════════════════
+async function loadStats() {
+  try {
+    const [biens, dossiers, comms] = await Promise.allSettled([
+      sbGet("biens?select=id,statut&statut=neq.brouillon"),
+      sbGet("rental_dossiers?select=id,status,scoring_total"),
+      sbGet("commerciaux?select=id,statut&statut=eq.actif"),
+    ]);
+
+    if(biens.status==="fulfilled"){
+      document.getElementById("statBiens").textContent = biens.value.filter(b=>b.statut!=="brouillon").length;
+    }
+    if(dossiers.status==="fulfilled"){
+      const d = dossiers.value;
+      document.getElementById("statDossiers").textContent = d.length;
+      document.getElementById("statAttente").textContent = d.filter(x=>x.status==="nouveau"||x.status==="en_attente"||!x.status).length;
+      const scores = d.map(x=>x.scoring_total).filter(s=>s!=null&&s>0);
+      document.getElementById("statScore").textContent = scores.length
+        ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+"/100" : "—";
+    }
+    if(comms.status==="fulfilled"){
+      document.getElementById("statComm").textContent = comms.value.length;
+    }
+  } catch(_) {}
+}
+
+// ══ RECENT DOSSIERS ══════════════════════════════
+async function loadRecentDossiers() {
+  const el = document.getElementById("recentDossiers");
+  try {
+    const rows = await sbGet("rental_dossiers?select=prenom,nom,bien_vise,scoring_total,status,created_at&order=created_at.desc&limit=6");
+    if(!rows.length){ el.innerHTML=`<div class="activity-empty">Aucun dossier reçu.</div>`; return; }
+
+    const STATUS_COLOR = { nouveau:"dot-ok", en_attente:"dot-warn", valide:"dot-ok", refuse:"dot-info" };
+    el.innerHTML = rows.map(r => {
+      const name = [r.prenom,r.nom].filter(Boolean).join(" ") || "Candidat";
+      const bien = r.bien_vise ? ` · ${r.bien_vise}` : "";
+      const score = r.scoring_total ? ` · ${r.scoring_total}/100` : "";
+      const dotCls = STATUS_COLOR[r.status] || "dot-info";
+      const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"short"}) : "";
+      return `<div class="activity-item">
+        <div class="activity-dot ${dotCls}"></div>
+        <div class="activity-text">${name}<span style="color:var(--muted)">${bien}${score}</span></div>
+        <div class="activity-time">${dateStr}</div>
+      </div>`;
+    }).join("");
+  } catch(_) {
+    el.innerHTML = `<div class="activity-empty">Table dossiers non disponible.</div>`;
+  }
+}
+
+// ══ KEYBOARD SHORTCUTS ═══════════════════════════
+let gPressed = false;
+document.addEventListener("keydown", e => {
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
+  if(e.key==="g"||e.key==="G"){ gPressed=true; setTimeout(()=>gPressed=false,1200); return; }
+  if(gPressed){
+    if(e.key==="b"||e.key==="B") location.href="admin-biens-v2-secured.html";
+    if(e.key==="d"||e.key==="D") location.href="admin-dossiers-v3-secured.html";
+    if(e.key==="k"||e.key==="K") location.href="dashboard-kaddu-kpi-secured.html";
+    if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
+  }
+});
+
+// ══ INIT ══════════════════════════════════════════
+const saved = loadSess();
+if(saved?.access_token){
+  session = saved;
+  const savedEmail = (() => { try{ return JSON.parse(atob(saved.access_token.split(".")[1])).email||""; }catch(_){ return ""; } })();
+  showApp(savedEmail);
+} else {
+  // Auth screen already visible
+}
+</script>
+</body>
+</html>
