@@ -376,6 +376,228 @@
     .alert-s{background:rgba(76,175,125,.07);border:1px solid rgba(76,175,125,.2);color:var(--green)}
 
     #success{display:none;flex:1;align-items:center;justify-content:center;text-align:center;padding:56px 22px}
+  
+    /* ══ KÀDDU V2 CONVERSION — Paywall intelligent + offres dynamiques ══ */
+    .kaddu-lock-card{
+      margin:22px 0;
+      border:1px solid rgba(191,150,80,.28);
+      background:linear-gradient(160deg,rgba(191,150,80,.10),rgba(7,24,43,.72));
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 18px 46px rgba(0,0,0,.22);
+    }
+    .kaddu-lock-eyebrow{
+      font-size:.66rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--orl);
+      margin-bottom:8px;
+    }
+    .kaddu-lock-title{
+      font-family:'Playfair Display',serif;
+      font-size:1.35rem;
+      font-weight:300;
+      margin-bottom:8px;
+    }
+    .kaddu-lock-title em{color:var(--or);font-style:italic}
+    .kaddu-lock-text{
+      color:rgba(248,244,238,.62);
+      font-size:.86rem;
+      line-height:1.65;
+      margin-bottom:14px;
+      text-align:justify;
+    }
+    .kaddu-lock-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:8px;
+      margin-bottom:16px;
+    }
+    @media(max-width:620px){.kaddu-lock-grid{grid-template-columns:1fr}}
+    .kaddu-lock-item{
+      border:1px solid rgba(191,150,80,.13);
+      background:rgba(255,255,255,.035);
+      border-radius:10px;
+      padding:10px 12px;
+      font-size:.78rem;
+      color:rgba(248,244,238,.62);
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      line-height:1.45;
+    }
+    .kaddu-lock-item span:first-child{color:var(--or);flex-shrink:0}
+    .kaddu-offer-sim{
+      margin-top:22px;
+      border:1px solid var(--bdr);
+      background:rgba(11,32,57,.50);
+      border-radius:16px;
+      padding:18px;
+    }
+    .offer-sim-head{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:flex-start;
+      margin-bottom:14px;
+    }
+    @media(max-width:680px){.offer-sim-head{flex-direction:column}}
+    .offer-sim-title{
+      font-family:'Playfair Display',serif;
+      font-size:1.25rem;
+      font-weight:300;
+    }
+    .offer-sim-title em{color:var(--or);font-style:italic}
+    .offer-sim-sub{
+      color:rgba(248,244,238,.48);
+      font-size:.78rem;
+      line-height:1.55;
+      margin-top:5px;
+      max-width:560px;
+    }
+    .recommended-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(76,175,125,.12);
+      border:1px solid rgba(76,175,125,.25);
+      color:var(--greenl);
+      font-size:.68rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .offer-tabs{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-bottom:16px;
+    }
+    @media(max-width:760px){.offer-tabs{grid-template-columns:1fr}}
+    .offer-tab{
+      border:1.5px solid rgba(248,244,238,.10);
+      background:rgba(255,255,255,.03);
+      border-radius:12px;
+      padding:14px 13px;
+      cursor:pointer;
+      transition:.22s;
+      position:relative;
+      min-height:118px;
+    }
+    .offer-tab:hover{border-color:rgba(191,150,80,.35);transform:translateY(-1px)}
+    .offer-tab.on{
+      border-color:var(--green);
+      background:linear-gradient(160deg,rgba(76,175,125,.12),rgba(191,150,80,.05));
+      box-shadow:0 0 0 1px rgba(76,175,125,.10) inset;
+    }
+    .offer-tab .ot-k{
+      font-size:.62rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--or);
+      margin-bottom:6px;
+    }
+    .offer-tab .ot-name{
+      font-family:'Playfair Display',serif;
+      font-size:1.08rem;
+      font-weight:300;
+      margin-bottom:5px;
+    }
+    .offer-tab .ot-desc{
+      color:rgba(248,244,238,.50);
+      font-size:.74rem;
+      line-height:1.45;
+      margin-bottom:8px;
+    }
+    .offer-tab .ot-fee{
+      color:var(--orl);
+      font-size:.72rem;
+      font-weight:700;
+    }
+    .offer-tab .ot-star{
+      position:absolute;
+      right:10px;
+      top:10px;
+      font-size:.58rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      padding:3px 7px;
+      border-radius:999px;
+      background:rgba(191,150,80,.18);
+      color:var(--orl);
+      border:1px solid rgba(191,150,80,.22);
+    }
+    .projection-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:14px;
+    }
+    @media(max-width:900px){.projection-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:520px){.projection-grid{grid-template-columns:1fr}}
+    .projection-tile{
+      border:1px solid rgba(191,150,80,.12);
+      background:rgba(255,255,255,.028);
+      border-radius:12px;
+      padding:13px;
+    }
+    .projection-tile .pt-label{
+      font-size:.62rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(248,244,238,.36);
+      margin-bottom:6px;
+    }
+    .projection-tile .pt-val{
+      font-family:'Playfair Display',serif;
+      font-size:1.28rem;
+      font-weight:300;
+      color:var(--blanc);
+      line-height:1.1;
+    }
+    .projection-tile.gold .pt-val{color:var(--or)}
+    .projection-tile.green .pt-val{color:var(--greenl)}
+    .projection-note{
+      color:rgba(248,244,238,.42);
+      font-size:.72rem;
+      line-height:1.55;
+      margin-top:10px;
+    }
+    .locked-blur{
+      filter:blur(4px);
+      user-select:none;
+      pointer-events:none;
+      opacity:.65;
+    }
+    .reveal-panel{
+      display:none;
+      animation:fadeUp .26s ease;
+    }
+    .reveal-panel.show{display:block}
+    .account-mini-form{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:14px 0 12px;
+    }
+    @media(max-width:640px){.account-mini-form{grid-template-columns:1fr}}
+    .trust-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+    .trust-mini{
+      font-size:.68rem;
+      color:rgba(248,244,238,.46);
+      border:1px solid rgba(191,150,80,.10);
+      background:rgba(255,255,255,.025);
+      padding:6px 9px;
+      border-radius:999px;
+    }
+
   </style>
 </head>
 <body>
@@ -781,8 +1003,118 @@
               </div>
             </div>
           </div>
-          <div style="text-align:center;margin-bottom:14px">
-            <button class="btn btn-p" style="padding:14px 36px;font-size:.84rem" onclick="goMandat()">Obtenir mon devis personnalisé →</button>
+          
+          <!-- ══ KÀDDU V2 — Simulation offres dynamique + révélation progressive ══ -->
+          <div class="kaddu-offer-sim" id="kadduOfferSim">
+            <div class="offer-sim-head">
+              <div>
+                <div class="offer-sim-title">Votre projection <em>Kàddu</em></div>
+                <div class="offer-sim-sub">
+                  Comparez l’impact de chaque niveau d’accompagnement sur vos revenus. L’offre recommandée est sélectionnée par défaut pour équilibrer rendement, sécurité et délai de mise en location.
+                </div>
+              </div>
+              <div class="recommended-badge">⭐ Offre recommandée</div>
+            </div>
+
+            <div class="offer-tabs">
+              <div class="offer-tab" data-offer="essentiel" onclick="selectKadduOffer('essentiel')">
+                <div class="ot-k">Option 1</div>
+                <div class="ot-name">Essentiel</div>
+                <div class="ot-desc">Vous gardez la main, Kàddu vous aide à trouver un locataire sérieux.</div>
+                <div class="ot-fee">Recherche locataire · 80% d’un mois</div>
+              </div>
+              <div class="offer-tab on" data-offer="serenite" onclick="selectKadduOffer('serenite')">
+                <div class="ot-star">Conseillée</div>
+                <div class="ot-k">Option 2</div>
+                <div class="ot-name">Sérénité</div>
+                <div class="ot-desc">Recherche + gestion locative. Le bon équilibre entre rendement et tranquillité.</div>
+                <div class="ot-fee">Gestion 4,9% / mois</div>
+              </div>
+              <div class="offer-tab" data-offer="premium" onclick="selectKadduOffer('premium')">
+                <div class="ot-k">Option 3</div>
+                <div class="ot-name">Premium</div>
+                <div class="ot-desc">Accompagnement renforcé, priorité de diffusion, sécurité maximale.</div>
+                <div class="ot-fee">Gestion 6,9% / mois + priorité</div>
+              </div>
+            </div>
+
+            <div class="projection-grid">
+              <div class="projection-tile gold">
+                <div class="pt-label">Loyer conseillé</div>
+                <div class="pt-val" id="simLoyerMensuel">—</div>
+              </div>
+              <div class="projection-tile">
+                <div class="pt-label">Revenu brut annuel</div>
+                <div class="pt-val" id="simBrutAnnuel">—</div>
+              </div>
+              <div class="projection-tile green">
+                <div class="pt-label">Net estimé Kàddu</div>
+                <div class="pt-val" id="simNetAnnuel">—</div>
+              </div>
+              <div class="projection-tile">
+                <div class="pt-label">Délai estimé</div>
+                <div class="pt-val" id="simDelai">—</div>
+              </div>
+            </div>
+
+            <div class="projection-note" id="simRecoText">
+              Simulation indicative basée sur votre loyer renseigné, l’offre sélectionnée et les hypothèses de mise en location Kàddu.
+            </div>
+
+            <div class="kaddu-lock-card" id="kadduLeadLock">
+              <div class="kaddu-lock-eyebrow">Analyse complète prête</div>
+              <div class="kaddu-lock-title">Débloquez votre <em>analyse propriétaire complète</em></div>
+              <div class="kaddu-lock-text">
+                Votre première projection est disponible. Pour accéder au revenu net détaillé, au score d’attractivité complet, aux profils locataires compatibles et à la recommandation de prix optimisé, créez votre espace bailleur sécurisé.
+              </div>
+              <div class="kaddu-lock-grid">
+                <div class="kaddu-lock-item"><span>✓</span><span>Projection annuelle détaillée selon l’offre sélectionnée</span></div>
+                <div class="kaddu-lock-item"><span>✓</span><span>Score d’attractivité du bien et leviers d’amélioration</span></div>
+                <div class="kaddu-lock-item"><span>✓</span><span>Profils locataires compatibles dans votre secteur</span></div>
+                <div class="kaddu-lock-item"><span>✓</span><span>Recommandation Kàddu pour louer plus vite et mieux</span></div>
+              </div>
+
+              <div class="account-mini-form">
+                <input class="inp" id="lead-prenom" placeholder="Prénom">
+                <input class="inp" id="lead-email" type="email" placeholder="Email">
+                <input class="inp" id="lead-tel" type="tel" placeholder="Téléphone WhatsApp">
+                <button class="btn btn-p" type="button" onclick="unlockKadduAnalysis()">Accéder à mon analyse complète</button>
+              </div>
+              <div class="trust-row">
+                <span class="trust-mini">🔒 Espace bailleur sécurisé</span>
+                <span class="trust-mini">💡 Estimation indicative, affinée par un conseiller</span>
+                <span class="trust-mini">📍 Données marché par quartier</span>
+              </div>
+            </div>
+
+            <div class="reveal-panel" id="kadduRevealPanel">
+              <div class="alert alert-s">Analyse complète débloquée. Vous pouvez comparer les offres et poursuivre vers votre mandat.</div>
+              <div class="projection-grid">
+                <div class="projection-tile green">
+                  <div class="pt-label">Score attractivité</div>
+                  <div class="pt-val" id="simScore">—</div>
+                </div>
+                <div class="projection-tile">
+                  <div class="pt-label">Vacance estimée</div>
+                  <div class="pt-val" id="simVacance">—</div>
+                </div>
+                <div class="projection-tile gold">
+                  <div class="pt-label">Recommandation</div>
+                  <div class="pt-val" id="simRecoOffer">—</div>
+                </div>
+                <div class="projection-tile">
+                  <div class="pt-label">Net mensuel moyen</div>
+                  <div class="pt-val" id="simNetMensuel">—</div>
+                </div>
+              </div>
+              <div class="projection-note" id="simFullAdvice">
+                Kàddu recommande l’offre la plus adaptée selon la zone, le type de bien et le niveau de sécurité recherché.
+              </div>
+            </div>
+          </div>
+
+<div style="text-align:center;margin-bottom:14px">
+            <button class="btn btn-p" style="padding:14px 36px;font-size:.84rem" onclick="goMandat()">Créer mon espace et recevoir l’analyse complète →</button>
           </div>
         </div>
 
@@ -1343,7 +1675,21 @@ function updateProgress(){
 }
 
 // MANDAT
-function goMandat(){showStep(6);document.getElementById('sig-p').value=D.prenom||document.getElementById('c-prenom').value||'';document.getElementById('sig-n').value=D.nom||document.getElementById('c-nom').value||'';document.getElementById('sig-e').value=D.email||document.getElementById('c-email').value||'';document.getElementById('sig-a').value=D.adresse||'';}
+function goMandat(){
+  if(!KADDU_ANALYSIS_UNLOCKED){
+    const lock = document.getElementById('kadduLeadLock');
+    if(lock){
+      lock.scrollIntoView({behavior:'smooth',block:'center'});
+      showAlert('Créez votre espace bailleur pour recevoir l’analyse complète avant de continuer vers le mandat.','w');
+      return;
+    }
+  }
+  showStep(6);
+  document.getElementById('sig-p').value=D.prenom||document.getElementById('c-prenom').value||'';
+  document.getElementById('sig-n').value=D.nom||document.getElementById('c-nom').value||'';
+  document.getElementById('sig-e').value=D.email||document.getElementById('c-email').value||'';
+  document.getElementById('sig-a').value=D.adresse||'';
+}
 function showMTab(t){
   ['etapes','signature'].forEach(tab=>{document.getElementById('mt-'+tab).classList.toggle('active',tab===t);document.getElementById('mp-'+tab).classList.toggle('active',tab===t);const s=document.getElementById('ssub'+(tab==='etapes'?1:2));if(s)s.classList.toggle('active',tab===t);});
 }
@@ -1380,8 +1726,172 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target===docu
 function showAlert(msg,t){document.getElementById('gAlert').innerHTML=`<div class="alert alert-${t==='w'?'w':'s'}">${msg}</div>`;}
 function clearAlert(){document.getElementById('gAlert').innerHTML='';}
 
+
+// ══ KÀDDU V2 CONVERSION — Offres dynamiques + révélation complète ═══════════
+let KADDU_SELECTED_OFFER = 'serenite';
+let KADDU_ANALYSIS_UNLOCKED = false;
+
+const KADDU_OFFERS = {
+  essentiel: {
+    name: 'Essentiel',
+    searchFeeRate: 0.80,
+    monthlyFeeRate: 0,
+    minMonthlyFee: 0,
+    vacancyMonths: 1.2,
+    delai: '21–30 j',
+    security: 'standard',
+    boost: 0,
+    reco: 'Bon choix si vous souhaitez garder la main sur la gestion après location.'
+  },
+  serenite: {
+    name: 'Sérénité',
+    searchFeeRate: 0.80,
+    monthlyFeeRate: 0.049,
+    minMonthlyFee: 15000,
+    vacancyMonths: 0.7,
+    delai: '10–18 j',
+    security: 'élevée',
+    boost: 8,
+    reco: 'Recommandée : bon équilibre entre rendement, sécurité et tranquillité.'
+  },
+  premium: {
+    name: 'Premium',
+    searchFeeRate: 1.00,
+    monthlyFeeRate: 0.069,
+    minMonthlyFee: 20000,
+    vacancyMonths: 0.4,
+    delai: '7–14 j',
+    security: 'maximale',
+    boost: 13,
+    reco: 'Idéale pour maximiser la vitesse de location et déléguer totalement.'
+  }
+};
+
+function kadduFcfa(n){
+  n = Math.round(Number(n || 0));
+  return n.toLocaleString('fr-FR') + ' F';
+}
+
+function selectKadduOffer(name){
+  if(!KADDU_OFFERS[name]) name = 'serenite';
+  KADDU_SELECTED_OFFER = name;
+
+  document.querySelectorAll('.offer-tab').forEach(t => {
+    t.classList.toggle('on', t.dataset.offer === name);
+  });
+
+  // Synchronise aussi les anciennes cartes d'offres si présentes
+  if(name === 'essentiel'){
+    D.oa = 'std'; D.ob = 'non'; D.oc = 'non';
+  } else if(name === 'serenite'){
+    D.oa = 'std'; D.ob = 'std'; D.oc = 'std';
+  } else {
+    D.oa = 'prem'; D.ob = 'prem'; D.oc = 'std';
+  }
+
+  updateCalcs();
+  renderFlux();
+  updateKadduOfferSimulation();
+}
+
+function computeAttractivenessScore(){
+  let score = 62;
+  const addr = (D.adresse || '').toLowerCase();
+
+  if(addr.includes('almadies') || addr.includes('plateau') || addr.includes('point e') || addr.includes('sipres') || addr.includes('vdn')) score += 10;
+  if(D.meuble === 'meuble') score += 8;
+  if(['2','3','4','F2','F3','F4'].includes(String(D.pieces))) score += 6;
+  if(D.loyer && D.loyer > 0) score += 4;
+  score += KADDU_OFFERS[KADDU_SELECTED_OFFER]?.boost || 0;
+
+  return Math.max(35, Math.min(96, Math.round(score)));
+}
+
+function updateKadduOfferSimulation(){
+  const offer = KADDU_OFFERS[KADDU_SELECTED_OFFER] || KADDU_OFFERS.serenite;
+  const loyer = Number(D.loyer || 150000);
+
+  const brutAnnuel = loyer * 12;
+  const searchFee = loyer * offer.searchFeeRate;
+  const monthlyFee = offer.monthlyFeeRate ? Math.max(offer.minMonthlyFee, loyer * offer.monthlyFeeRate) : 0;
+  const annualFee = monthlyFee * 12;
+  const vacancyCost = (loyer * offer.vacancyMonths);
+  const netAnnuel = Math.max(0, brutAnnuel - searchFee - annualFee - vacancyCost);
+  const netMensuel = netAnnuel / 12;
+  const score = computeAttractivenessScore();
+
+  const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  set('simLoyerMensuel', kadduFcfa(loyer));
+  set('simBrutAnnuel', kadduFcfa(brutAnnuel));
+  set('simNetAnnuel', kadduFcfa(netAnnuel));
+  set('simDelai', offer.delai);
+  set('simScore', score + '/100');
+  set('simVacance', offer.vacancyMonths.toString().replace('.', ',') + ' mois');
+  set('simRecoOffer', offer.name);
+  set('simNetMensuel', kadduFcfa(netMensuel));
+
+  const recoText = document.getElementById('simRecoText');
+  if(recoText){
+    recoText.innerHTML = `<strong>${offer.name}</strong> : ${offer.reco} Simulation indicative : frais de recherche, frais mensuels et vacance estimée intégrés.`;
+  }
+
+  const fullAdvice = document.getElementById('simFullAdvice');
+  if(fullAdvice){
+    fullAdvice.innerHTML = `Avec l’offre <strong>${offer.name}</strong>, votre revenu net indicatif est de <strong>${kadduFcfa(netAnnuel)} / an</strong>. Le score d’attractivité tient compte de la zone, du type de bien, du statut meublé/non-meublé et du niveau d’accompagnement choisi.`;
+  }
+}
+
+function unlockKadduAnalysis(){
+  const prenom = document.getElementById('lead-prenom')?.value?.trim() || '';
+  const email = document.getElementById('lead-email')?.value?.trim() || '';
+  const tel = document.getElementById('lead-tel')?.value?.trim() || '';
+
+  if(!prenom || !email || !email.includes('@') || !tel){
+    showAlert('Merci de renseigner un prénom, un email valide et un téléphone pour créer votre espace bailleur.', 'w');
+    return;
+  }
+
+  D.prenom = D.prenom || prenom;
+  D.email = D.email || email;
+  D.tel = D.tel || tel;
+  KADDU_ANALYSIS_UNLOCKED = true;
+
+  const lock = document.getElementById('kadduLeadLock');
+  const reveal = document.getElementById('kadduRevealPanel');
+  if(lock) lock.style.display = 'none';
+  if(reveal) reveal.classList.add('show');
+
+  updateKadduOfferSimulation();
+  showAlert('Votre espace bailleur est pré-créé. Vous pouvez maintenant consulter l’analyse complète et poursuivre.', 's');
+}
+
+const _kadduOrigAdjLoyer = typeof adjLoyer === 'function' ? adjLoyer : null;
+if(_kadduOrigAdjLoyer){
+  adjLoyer = function(d){
+    _kadduOrigAdjLoyer(d);
+    updateKadduOfferSimulation();
+  }
+}
+
+const _kadduOrigRenderFlux = typeof renderFlux === 'function' ? renderFlux : null;
+if(_kadduOrigRenderFlux){
+  renderFlux = function(){
+    _kadduOrigRenderFlux();
+    setTimeout(updateKadduOfferSimulation, 0);
+  }
+}
+
+const _kadduOrigUpdateFourchette = typeof updateFourchette === 'function' ? updateFourchette : null;
+if(_kadduOrigUpdateFourchette){
+  updateFourchette = async function(a){
+    const result = await _kadduOrigUpdateFourchette(a);
+    updateKadduOfferSimulation();
+    return result;
+  }
+}
+
 // INIT
-updateProgress();updateCalcs();renderFlux();
+updateProgress();updateCalcs();renderFlux();selectKadduOffer('serenite');updateKadduOfferSimulation();
 document.getElementById('xtra-simple').classList.add('show');
 </script>
 </body>
