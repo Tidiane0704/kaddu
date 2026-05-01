@@ -640,7 +640,319 @@
       padding:4px 0 2px;
     }
 
+  
+    /* ══ KÀDDU V4 — icônes plus visibles et bloc locataires fiable ══ */
+    .kduo{
+      width:42px!important;
+      height:42px!important;
+      border-radius:14px!important;
+      background:linear-gradient(145deg,rgba(191,150,80,.28),rgba(191,150,80,.07))!important;
+      border:1px solid rgba(191,150,80,.34)!important;
+      color:#DDB96E!important;
+      box-shadow:0 8px 22px rgba(191,150,80,.10)!important;
+    }
+    .kduo svg{width:25px!important;height:25px!important}
+    .kduo-blue{
+      background:linear-gradient(145deg,rgba(83,183,255,.24),rgba(83,183,255,.06))!important;
+      border-color:rgba(83,183,255,.32)!important;
+      color:#74C7FF!important;
+    }
+    .kduo-green{
+      background:linear-gradient(145deg,rgba(76,175,125,.24),rgba(76,175,125,.06))!important;
+      border-color:rgba(76,175,125,.32)!important;
+      color:#75E2AA!important;
+    }
+    .kduo-pink{
+      background:linear-gradient(145deg,rgba(255,83,145,.22),rgba(255,83,145,.06))!important;
+      border-color:rgba(255,83,145,.30)!important;
+      color:#FF6EA8!important;
+    }
+    .tenant-dynamic-wrap{margin-top:8px}
+    .tenant-card{
+      display:flex!important;
+      gap:10px!important;
+      align-items:flex-start!important;
+      padding:12px 14px!important;
+      border:1px solid rgba(191,150,80,.14)!important;
+      border-radius:12px!important;
+      background:rgba(7,24,43,.72)!important;
+      margin-bottom:10px!important;
+    }
+    .tenant-avatar{
+      width:36px!important;height:36px!important;
+      border-radius:50%!important;
+      background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(83,183,255,.10))!important;
+      border:1px solid rgba(191,150,80,.25)!important;
+      display:flex!important;align-items:center!important;justify-content:center!important;
+      color:#DDB96E!important;font-size:.72rem!important;font-weight:800!important;flex-shrink:0!important;
+    }
+    .tenant-name{font-size:.82rem!important;font-weight:800!important;color:#F8F4EE!important;line-height:1.2!important}
+    .tenant-search{font-size:.70rem!important;color:#DDB96E!important;line-height:1.38!important;margin-top:2px!important}
+    .tenant-meta{font-size:.65rem!important;color:rgba(248,244,238,.34)!important;margin-top:4px!important}
+    .tenant-compatible{text-align:center!important;font-size:.70rem!important;color:rgba(248,244,238,.40)!important;padding:4px 0 2px!important}
+
+  
+    .tenant-dynamic-wrap{display:block!important;margin-top:8px!important}
+    .tenant-dynamic-wrap + .tenant-dynamic-wrap{display:none!important}
+
+  
+    /* V7 — corrections locataires + icônes visibles */
+    .persona-card{display:flex;gap:10px;align-items:flex-start}
+    .persona-av{
+      min-width:34px!important;
+      width:34px!important;
+      height:34px!important;
+      border-radius:50%!important;
+      display:flex!important;
+      align-items:center!important;
+      justify-content:center!important;
+      background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(83,183,255,.10))!important;
+      border:1px solid rgba(191,150,80,.28)!important;
+      font-size:.72rem!important;
+      color:#DDB96E!important;
+    }
+    .bcard .emoji,
+    .bcard > div:first-child,
+    .choice .emoji,
+    .option .emoji{
+      font-size:1.75rem!important;
+      line-height:1!important;
+      filter:saturate(1.25);
+    }
+    .bcard:nth-child(1) .emoji,
+    .bcard:nth-child(1) > div:first-child{color:#75E2AA}
+    .bcard:nth-child(2) .emoji,
+    .bcard:nth-child(2) > div:first-child{color:#74C7FF}
+    .bcard:nth-child(3) .emoji,
+    .bcard:nth-child(3) > div:first-child{color:#FF6EA8}
+
+  
+    /* ══ KÀDDU V9 — Contact premium réel ══ */
+    .iti{width:100%}
+    .iti input.inp{padding-left:92px!important}
+    .iti__selected-flag{
+      background:rgba(191,150,80,.08)!important;
+      border-right:1px solid rgba(191,150,80,.16)!important;
+      border-radius:12px 0 0 12px!important;
+      padding:0 12px!important;
+    }
+    .iti__country-list{
+      background:#111820!important;
+      color:#F8F4EE!important;
+      border:1px solid rgba(191,150,80,.22)!important;
+      border-radius:12px!important;
+      box-shadow:0 22px 60px rgba(0,0,0,.48)!important;
+      max-width:380px!important;
+      z-index:9999!important;
+    }
+    .iti__search-input{
+      background:#1b222b!important;
+      color:#F8F4EE!important;
+      border:1px solid rgba(191,150,80,.18)!important;
+      padding:10px 12px!important;
+      outline:none!important;
+      border-radius:8px!important;
+      margin:8px!important;
+      width:calc(100% - 16px)!important;
+    }
+    .iti__country.iti__highlight{background:rgba(191,150,80,.16)!important}
+    .field-error{
+      border-color:#ff6b6b!important;
+      box-shadow:0 0 0 1px rgba(255,107,107,.15)!important;
+    }
+    .field-msg{
+      display:none;
+      color:#ff9c9c;
+      font-size:.72rem;
+      margin-top:6px;
+    }
+    .factor-grid-v9{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+    @media(max-width:760px){.factor-grid-v9{grid-template-columns:1fr}}
+    .factor-card-v9{
+      position:relative;
+      border:1.5px solid rgba(248,244,238,.10);
+      background:rgba(255,255,255,.03);
+      border-radius:14px;
+      padding:15px 14px;
+      min-height:88px;
+      cursor:pointer;
+      transition:.22s;
+    }
+    .factor-card-v9:hover{border-color:rgba(191,150,80,.32);transform:translateY(-1px)}
+    .factor-card-v9.primary{
+      border-color:#55C48B;
+      background:linear-gradient(160deg,rgba(85,196,139,.13),rgba(191,150,80,.04));
+    }
+    .factor-card-v9.secondary{
+      border-color:rgba(191,150,80,.44);
+      background:linear-gradient(160deg,rgba(191,150,80,.12),rgba(255,255,255,.025));
+    }
+    .factor-card-v9 .factor-tag{
+      position:absolute;top:9px;right:10px;
+      display:none;
+      font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+      border-radius:999px;padding:3px 7px;
+    }
+    .factor-card-v9.primary .factor-tag{
+      display:inline-flex;background:rgba(85,196,139,.16);color:#75E2AA;border:1px solid rgba(85,196,139,.25);
+    }
+    .factor-card-v9.secondary .factor-tag{
+      display:inline-flex;background:rgba(191,150,80,.14);color:#DDB96E;border:1px solid rgba(191,150,80,.25);
+    }
+    .factor-title{font-weight:800;color:#F8F4EE;font-size:.88rem;margin-bottom:5px}
+    .factor-desc{color:rgba(248,244,238,.50);font-size:.74rem;line-height:1.45;max-width:92%}
+    .promo-box-v9{
+      border:1px solid rgba(191,150,80,.16);
+      background:rgba(7,24,43,.40);
+      border-radius:14px;
+      padding:15px;
+    }
+    .promo-row-v9{
+      display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;
+    }
+    @media(max-width:620px){.promo-row-v9{grid-template-columns:1fr}}
+    .promo-status-v9{
+      font-size:.74rem;color:rgba(248,244,238,.45);margin-top:9px;
+    }
+    .promo-status-v9.ok{color:#75E2AA}
+    .promo-status-v9.ko{color:#ff9c9c}
+
+  
+    /* ══ KÀDDU V10 — champs obligatoires / validation tunnel ══ */
+    .req-star{color:#ff8f8f;margin-left:4px;font-weight:700}
+    .field-error,.inp.field-error,.sel.field-error,.textarea.field-error{
+      border-color:#ff6b6b!important;
+      box-shadow:0 0 0 1px rgba(255,107,107,.16)!important;
+    }
+    .field-msg{
+      display:none;
+      color:#ff9c9c;
+      font-size:.72rem;
+      margin-top:6px;
+      line-height:1.4;
+    }
+
+  
+    /* ══ KÀDDU V11 — Scoring bailleur intelligent V1 ══ */
+    .owner-score-card{
+      margin:20px 0;
+      border:1px solid rgba(191,150,80,.22);
+      background:linear-gradient(160deg,rgba(191,150,80,.08),rgba(7,24,43,.68));
+      border-radius:16px;
+      padding:18px;
+    }
+    .owner-score-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .owner-score-title{
+      font-family:'Playfair Display',serif;
+      font-size:1.25rem;
+      font-weight:300;
+    }
+    .owner-score-title em{color:var(--or);font-style:italic}
+    .owner-score-sub{
+      color:rgba(248,244,238,.50);
+      font-size:.78rem;
+      line-height:1.55;
+      margin-top:5px;
+      max-width:620px;
+    }
+    .owner-score-pill{
+      min-width:104px;
+      text-align:center;
+      border-radius:14px;
+      padding:10px 12px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(191,150,80,.16);
+    }
+    .owner-score-num{
+      font-family:'Playfair Display',serif;
+      font-size:1.9rem;
+      color:var(--or);
+      line-height:1;
+      font-weight:300;
+    }
+    .owner-score-label{
+      margin-top:4px;
+      font-size:.62rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(248,244,238,.38);
+    }
+    .score-breakdown{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+    @media(max-width:760px){.score-breakdown{grid-template-columns:1fr}}
+    .score-line{
+      border:1px solid rgba(191,150,80,.10);
+      background:rgba(255,255,255,.025);
+      border-radius:12px;
+      padding:11px 12px;
+    }
+    .score-line-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:.78rem;
+      color:rgba(248,244,238,.72);
+      margin-bottom:7px;
+    }
+    .score-line-top strong{color:var(--blanc)}
+    .score-bar{
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.07);
+      overflow:hidden;
+    }
+    .score-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--or),#75E2AA);
+      transition:width .35s ease;
+    }
+    .score-recos{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+    .score-reco{
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+      font-size:.76rem;
+      color:rgba(248,244,238,.58);
+      line-height:1.45;
+      border:1px solid rgba(191,150,80,.08);
+      background:rgba(255,255,255,.02);
+      border-radius:10px;
+      padding:9px 10px;
+    }
+    .score-reco span:first-child{color:var(--or);flex-shrink:0}
+    .internal-score-note{
+      margin-top:10px;
+      color:rgba(248,244,238,.34);
+      font-size:.68rem;
+      line-height:1.45;
+    }
+
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
 </head>
 <body>
 
@@ -788,17 +1100,34 @@
           <div class="step-hd">
             <span class="step-icon">📋</span>
             <h1 class="step-title">Vos <em>coordonnées</em></h1>
-            <p class="step-sub">Un conseiller Kàddu vous accompagnera dans votre projet.</p>
+            <p class="step-sub">Chez Kàddu, nous ne fixons pas un prix au hasard : nous optimisons votre rendement locatif à partir des données marché et de notre expérience terrain.</p>
           </div>
-          <div class="frow"><div class="fg"><label class="flbl">Prénom</label><input class="inp" id="c-prenom" placeholder="Votre prénom" autocomplete="given-name"></div><div class="fg"><label class="flbl">Nom</label><input class="inp" id="c-nom" placeholder="Votre nom" autocomplete="family-name"></div></div>
-          <div class="fg">
-            <label class="flbl">Téléphone</label>
-            <div style="display:flex;gap:9px">
-              <select class="sel" style="width:115px;flex-shrink:0" id="c-ind"><option value="+221">🇸🇳 +221</option><option value="+33">🇫🇷 +33</option><option value="+225">🇨🇮 +225</option><option value="+212">🇲🇦 +212</option></select>
-              <input class="inp" id="c-tel" type="tel" placeholder="78 187 58 58" style="flex:1">
+
+          <div class="frow">
+            <div class="fg">
+              <label class="flbl">Prénom <span class="req-star">*</span></label>
+              <input class="inp" id="c-prenom" placeholder="Votre prénom" autocomplete="given-name">
+              <div class="field-msg" id="err-prenom"></div>
+            </div>
+            <div class="fg">
+              <label class="flbl">Nom <span class="req-star">*</span></label>
+              <input class="inp" id="c-nom" placeholder="Votre nom" autocomplete="family-name">
+              <div class="field-msg" id="err-nom"></div>
             </div>
           </div>
-          <div class="fg"><label class="flbl">Email</label><input class="inp" id="c-email" type="email" placeholder="votre@email.com" autocomplete="email"></div>
+
+          <div class="fg">
+            <label class="flbl">Téléphone <span class="req-star">*</span></label>
+            <input class="inp" id="c-tel" type="tel" placeholder="" autocomplete="tel" inputmode="tel">
+            <div class="field-msg" id="err-tel">Veuillez saisir un numéro de téléphone valide.</div>
+          </div>
+
+          <div class="fg">
+            <label class="flbl">Email <span class="req-star">*</span></label>
+            <input class="inp" id="c-email" type="email" placeholder="votre@email.com" autocomplete="email">
+            <div class="field-msg" id="err-email">Veuillez saisir une adresse email valide.</div>
+          </div>
+
           <label class="chk"><input type="checkbox" id="c-news"><div class="chk-box"></div>Je souhaite recevoir les actualités immobilières de Kàddu</label>
           <label class="chk"><input type="checkbox" id="c-cgu"><div class="chk-box"></div>J'accepte les <a href="/conditions-utilisation" target="_blank">conditions d'utilisation</a> de Kàddu</label>
         </div>
@@ -808,8 +1137,9 @@
           <div class="step-hd">
             <span class="step-icon">🎯</span>
             <h1 class="step-title">Votre projet <em>locatif</em></h1>
-            <p class="step-sub">Ces informations permettront à votre conseiller de mieux vous accompagner.</p>
+            <p class="step-sub">Ces informations permettent à Kàddu d’adapter l’offre, le niveau de service et la stratégie de mise en location.</p>
           </div>
+
           <div class="q">
             <div class="q-lbl">À partir de quand votre logement est-il disponible ?</div>
             <div>
@@ -820,6 +1150,7 @@
               </div>
             </div>
           </div>
+
           <div class="q">
             <div class="q-lbl">Avez-vous des besoins particuliers ?</div>
             <div>
@@ -836,32 +1167,41 @@
               <div class="ctx" id="ctx-multi"><strong>Kàddu s'adapte :</strong><div class="ctx-item">Tableau de bord unifié pour tous vos biens</div><div class="ctx-item">Tarifs dégressifs selon le nombre de logements</div></div>
             </div>
           </div>
+
           <div class="q">
-            <div class="q-lbl">Quel facteur est déterminant pour vous ?</div>
-            <div>
-              <div class="radio-list" id="facteur-list">
-                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La rapidité (trouver un locataire vite)</span></label>
-                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">Le prix (tarifs attractifs)</span></label>
-                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La sécurité (solvabilité, garantie loyers impayés)</span></label>
-                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">Le conseil / l'expertise (loyer de marché, accompagnement)</span></label>
-                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La tranquillité (déléguer 100%)</span></label>
-                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La réactivité (résolution rapide des incidents)</span></label>
-              </div>
+            <div class="q-lbl">Quel facteur est <strong>le plus</strong> déterminant pour vous ?</div>
+            <div style="font-size:.78rem;color:rgba(248,244,238,.50);line-height:1.55;margin-bottom:10px">
+              Sélectionnez une priorité principale. Vous pouvez aussi choisir une priorité secondaire.
+            </div>
+            <div class="factor-grid-v9" id="factor-grid-v9">
+              <div class="factor-card-v9" data-factor="rapidite" onclick="selectFactorV9('rapidite')"><span class="factor-tag">Principal</span><div class="factor-title">Louer rapidement</div><div class="factor-desc">Réduire la vacance locative et lancer vite la mise en location.</div></div>
+              <div class="factor-card-v9" data-factor="revenu" onclick="selectFactorV9('revenu')"><span class="factor-tag">Principal</span><div class="factor-title">Maximiser le revenu</div><div class="factor-desc">Positionner le bien au meilleur prix sans le surestimer.</div></div>
+              <div class="factor-card-v9" data-factor="securite" onclick="selectFactorV9('securite')"><span class="factor-tag">Principal</span><div class="factor-title">Sécuriser le locataire</div><div class="factor-desc">Prioriser un dossier sérieux, cohérent et vérifié.</div></div>
+              <div class="factor-card-v9" data-factor="delegation" onclick="selectFactorV9('delegation')"><span class="factor-tag">Principal</span><div class="factor-title">Déléguer la gestion</div><div class="factor-desc">Confier le suivi opérationnel à Kàddu avec reporting clair.</div></div>
             </div>
           </div>
-          <div class="q"><div class="q-lbl">Informations supplémentaires</div><div><textarea class="textarea" id="proj-infos" placeholder="Ex : logement en rénovation, disponible à partir du 1er septembre…"></textarea></div></div>
-          <div class="q"><div class="q-lbl">Comment avez-vous connu Kàddu ?</div><div><select class="sel" id="proj-src"><option value="">Choisir…</option><option>Recommandation</option><option>Réseaux sociaux</option><option>Recherche Google</option><option>Affichage / publicité</option><option>Partenaire professionnel</option><option>Autre</option></select></div></div>
+
           <div class="q">
-            <div class="q-lbl">Code promotionnel ?</div>
-            <div>
-              <div class="tog-row"><span class="tog-lbl">Activer un code promo</span><label class="tog"><input type="checkbox" id="promo-tog" onchange="togglePromo(this)"><span class="tog-sl"></span></label></div>
-              <div class="xtra" id="xtra-promo">
-                <div style="display:flex;gap:9px;margin-top:3px">
-                  <input class="inp" id="promo-code" placeholder="Code d'avantage" style="flex:1">
-                  <button class="btn btn-p" style="padding:11px 16px;font-size:.72rem" onclick="validatePromo()">Valider</button>
+            <div class="q-lbl">Informations supplémentaires</div>
+            <div><textarea class="textarea" id="proj-infos" placeholder="Ex : logement en rénovation, disponible à partir du 1er septembre…"></textarea></div>
+          </div>
+
+          <div class="q">
+            <div class="q-lbl">Comment avez-vous connu Kàddu ?</div>
+            <div><select class="sel" id="proj-src"><option value="">Choisir…</option><option>Recommandation</option><option>Réseaux sociaux</option><option>Recherche Google</option><option>Affichage / publicité</option><option>Partenaire professionnel</option><option>Autre</option></select></div>
+          </div>
+
+          <div class="q">
+            <div class="q-lbl">Code promotionnel</div>
+            <div class="promo-box-v9">
+              <div class="promo-row-v9">
+                <div>
+                  <label class="flbl">Code</label>
+                  <input class="inp" id="promo-code" placeholder="Ex : LANCEMENT-VDN">
                 </div>
-                <div style="font-size:.7rem;color:rgba(248,244,238,.28);margin-top:5px">La réduction sera visible sur vos prochaines factures.</div>
+                <button class="btn btn-p" style="padding:12px 18px;font-size:.74rem" onclick="validatePromoV9()" type="button">Vérifier le code</button>
               </div>
+              <div class="promo-status-v9" id="promo-status">Les codes valides sont appliqués automatiquement à votre projection.</div>
             </div>
           </div>
         </div>
@@ -1047,6 +1387,47 @@
           </div>
           
           <!-- ══ KÀDDU V2 — Simulation offres dynamique + révélation progressive ══ -->
+          
+          <!-- ══ KÀDDU — Scoring bailleur intelligent V1 ══ -->
+          <div class="owner-score-card" id="ownerScoreCard">
+            <div class="owner-score-head">
+              <div>
+                <div class="owner-score-title">Score de potentiel <em>Kàddu</em></div>
+                <div class="owner-score-sub">
+                  Ce score mesure le potentiel de mise en location du bien : localisation, cohérence du prix, typologie, disponibilité et complétude des informations.
+                </div>
+              </div>
+              <div class="owner-score-pill">
+                <div class="owner-score-num" id="ownerScoreNum">—</div>
+                <div class="owner-score-label" id="ownerScoreLabel">Analyse</div>
+              </div>
+            </div>
+
+            <div class="score-breakdown">
+              <div class="score-line">
+                <div class="score-line-top"><strong>Localisation</strong><span id="scoreLocTxt">—</span></div>
+                <div class="score-bar"><div class="score-fill" id="scoreLocFill"></div></div>
+              </div>
+              <div class="score-line">
+                <div class="score-line-top"><strong>Prix</strong><span id="scorePriceTxt">—</span></div>
+                <div class="score-bar"><div class="score-fill" id="scorePriceFill"></div></div>
+              </div>
+              <div class="score-line">
+                <div class="score-line-top"><strong>Typologie</strong><span id="scoreTypeTxt">—</span></div>
+                <div class="score-bar"><div class="score-fill" id="scoreTypeFill"></div></div>
+              </div>
+              <div class="score-line">
+                <div class="score-line-top"><strong>Projet</strong><span id="scoreProjectTxt">—</span></div>
+                <div class="score-bar"><div class="score-fill" id="scoreProjectFill"></div></div>
+              </div>
+            </div>
+
+            <div class="score-recos" id="ownerScoreRecos"></div>
+            <div class="internal-score-note">
+              Note : ce score n’est pas une sanction. Il sert à orienter la stratégie de mise en location et à prioriser les actions Kàddu.
+            </div>
+          </div>
+
           <div class="kaddu-offer-sim" id="kadduOfferSim">
             <div class="offer-sim-head">
               <div>
@@ -1203,8 +1584,8 @@
             </div>
             <div class="sig-card">
               <div class="sig-num">Signataire N°1</div>
-              <div class="frow"><div class="fg"><label class="flbl">Prénom</label><input class="inp" id="sig-p" placeholder="Votre prénom"></div><div class="fg"><label class="flbl">Nom</label><input class="inp" id="sig-n" placeholder="Votre nom"></div></div>
-              <div class="fg"><label class="flbl">Email</label><input class="inp" id="sig-e" type="email" placeholder="votre@email.com"><div style="font-size:.68rem;color:rgba(248,244,238,.28);margin-top:4px">Doit être identique à l'email saisi à l'étape Contact.</div></div>
+              <div class="frow"><div class="fg"><label class="flbl">Prénom <span class="req-star">*</span></label><input class="inp" id="sig-p" placeholder="Votre prénom"></div><div class="fg"><label class="flbl">Nom <span class="req-star">*</span></label><input class="inp" id="sig-n" placeholder="Votre nom"></div></div>
+              <div class="fg"><label class="flbl">Email <span class="req-star">*</span></label><input class="inp" id="sig-e" type="email" placeholder="votre@email.com"><div style="font-size:.68rem;color:rgba(248,244,238,.28);margin-top:4px">Doit être identique à l'email saisi à l'étape Contact.</div></div>
               <div class="fg"><label class="flbl">Adresse postale</label><input class="inp" id="sig-a" placeholder="Votre adresse complète"></div>
               <button class="btn btn-p" style="margin-top:3px" onclick="enregSignataire()">Enregistrer le signataire</button>
             </div>
@@ -1554,6 +1935,7 @@ async function updateFourchette(adresse){
     updateCalcs();
     renderFlux();
     updateFinancialProjection();
+    renderPersonas(D.adresse);
   }catch(e){
     console.warn('[Kàddu Marché locatif]',e);
     showEstimationMessage(
@@ -1564,12 +1946,60 @@ async function updateFourchette(adresse){
 }
 
 function renderPersonas(addr){
-  const k=Object.keys(PS).find(k=>addr.toLowerCase().includes(k))||'default';
-  const ps=PS[k];
-  document.getElementById('personas-list').innerHTML=ps.map(p=>`<div class="persona-card"><div class="persona-av">${p.a}</div><div><div class="persona-name">${p.n}</div><div class="persona-budget">Recherche ${typeBienLabel(D.pieces)} · ${meubleLabel(D.meuble)} · ${p.b} / mois</div><div class="persona-since">${p.s}</div></div></div>`).join('');
-  const tot=k!=='default'?Math.floor(Math.random()*4000+400):Math.floor(Math.random()*1500+150);
-  document.getElementById('persona-more').textContent='+ '+tot.toLocaleString('fr-FR')+' autres locataires potentiels';
-  document.getElementById('personas-wrap').style.display='block';
+  const wrap = document.getElementById('personas-wrap');
+  const list = document.getElementById('personas-list');
+  const more = document.getElementById('persona-more');
+  if(!wrap || !list || !more) return;
+
+  const loyer = Number(D.loyer || 0);
+  if(!loyer){
+    wrap.style.display = 'none';
+    return;
+  }
+
+  const type = typeBienLabel(D.pieces);
+  const statut = meubleLabel(D.meuble);
+
+  // Budgets dynamiques alignés sur le loyer médian estimé.
+  // Profil 1 : -15% à +7%
+  // Profil 2 : -10% à +18%
+  const round10k = n => Math.round(Number(n || 0) / 10000) * 10000;
+  const b1min = round10k(loyer * 0.85);
+  const b1max = round10k(loyer * 1.07);
+  const b2min = round10k(loyer * 0.90);
+  const b2max = round10k(loyer * 1.18);
+
+  // Nombre de profils compatible : crédible, basé sur attractivité / quartier / meublé.
+  let score = 62;
+  const a = String(addr || '').toLowerCase();
+  if(/sipres|vdn|almadies|ngor|mermoz|plateau|point/.test(a)) score += 12;
+  if(D.meuble === 'meuble') score += 4;
+  if(['2','3','4'].includes(String(D.pieces))) score += 5;
+  if(Number(D.surface || 0) >= 80) score += 4;
+
+  const profils = Math.max(6, Math.min(36, Math.round(8 + (score - 55) * 0.65)));
+
+  list.innerHTML = `
+    <div class="persona-card">
+      <div class="persona-av" style="font-weight:800;color:#DDB96E">FB</div>
+      <div>
+        <div class="persona-name">Fatou B.</div>
+        <div class="persona-budget">Recherche ${type} · ${statut} · ${b1min.toLocaleString('fr-FR')}–${b1max.toLocaleString('fr-FR')} F / mois</div>
+        <div class="persona-since">Profil actif depuis 1 mois</div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-av" style="font-weight:800;color:#DDB96E">AD</div>
+      <div>
+        <div class="persona-name">Amadou D.</div>
+        <div class="persona-budget">Recherche ${type} · ${statut} · ${b2min.toLocaleString('fr-FR')}–${b2max.toLocaleString('fr-FR')} F / mois</div>
+        <div class="persona-since">Profil actif depuis 2 semaines</div>
+      </div>
+    </div>
+  `;
+
+  more.textContent = '+ ' + profils.toLocaleString('fr-FR') + ' profils compatibles dans cette zone';
+  wrap.style.display = 'block';
 }
 
 const ADDR_SUGG=["Plateau, Dakar", "Médina, Dakar", "Fann · Point E · Amitié, Dakar", "Gueule Tapée · Fass · Colobane, Dakar", "Almadies, Dakar", "Mermoz · Sacré-Cœur, Dakar", "Ngor, Dakar", "Ouakam, Dakar", "Yoff, Dakar", "Sipres VDN, Dakar", "Sipres VDN 2, Dakar", "Les Mamelles, Dakar", "Grand Dakar, Dakar", "HLM, Dakar", "Sicap Liberté, Dakar", "Dieuppeul · Derklé, Dakar", "Biscuiterie, Dakar", "Hann Bel Air, Dakar", "Parcelles Assainies, Dakar", "Grand Yoff, Dakar", "Cambérène, Dakar", "Patte d'Oie, Dakar", "Liberté, Dakar", "Pikine, Dakar", "Guédiawaye, Dakar", "Thiaroye, Dakar", "Yeumbeul, Dakar", "Keur Massar, Dakar", "Rufisque, Dakar", "Bargny, Dakar", "Diamniadio, Dakar", "Lac Rose, Dakar", "Centre-ville Thiès, Thiès", "Thiès Nord, Thiès", "Thiès Sud, Thiès", "Mbour Route, Thiès", "Tassette, Thiès", "Keur Moussa, Thiès", "Île de Saint-Louis, Saint-Louis", "Sor, Saint-Louis", "Guet Ndar, Saint-Louis", "Langue de Barbarie, Saint-Louis", "Bango, Saint-Louis", "Thiaka Ndiaye, Saint-Louis", "Centre Ziguinchor, Ziguinchor", "Boucotte, Ziguinchor", "Kandialang, Ziguinchor", "Lyndiane, Ziguinchor", "Tilène Ziguinchor, Ziguinchor", "Centre Kaolack, Kaolack", "Médina Baye, Kaolack", "Léona, Kaolack", "Sam-Sam, Kaolack", "Ndangane, Kaolack", "Centre Mbour, Mbour", "Saly Portudal, Mbour", "Nianing, Mbour", "Pointe Sarène, Mbour", "Warang, Mbour", "Centre Touba, Touba", "Darou Khoudoss, Touba", "Guédé Bousso, Touba", "Ndamatou, Touba", "Centre Rufisque, Rufisque", "Colobane Rufisque, Rufisque", "Mbao, Rufisque", "Bargny, Rufisque", "Sébikotane, Rufisque", "Saly Portudal, Saly", "Saly Nord, Saly", "Saly Sud, Saly", "Nguérigne, Saly", "Somone, Saly"];
@@ -1636,7 +2066,52 @@ function updateCtx(){
   D.besoin=v;
 }
 function togglePromo(t){document.getElementById('xtra-promo').classList.toggle('show',t.checked);}
-function validatePromo(){const c=document.getElementById('promo-code').value.trim();if(c)alert('Code "'+c+'" appliqué !');}
+function validatePromo(){ validatePromoV9(); }
+
+async function validatePromoV9(){
+  const input=document.getElementById('promo-code');
+  const status=document.getElementById('promo-status');
+  const code=(input?.value||'').trim().toUpperCase();
+
+  if(!code){
+    status.textContent='Saisissez un code promotionnel à vérifier.';
+    status.className='promo-status-v9 ko';
+    return;
+  }
+
+  try{
+    const now=new Date().toISOString();
+    const key=(typeof SB_KEY!=='undefined' ? SB_KEY : (typeof SB_ANON!=='undefined' ? SB_ANON : ''));
+    const url=`${SB_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(code)}&active=eq.true&select=*`;
+    const res=await fetch(url,{headers:{apikey:key,Authorization:'Bearer '+key}});
+    const rows=res.ok?await res.json():[];
+
+    const promo=Array.isArray(rows)?rows.find(p=>{
+      const startsOk=!p.starts_at || p.starts_at<=now;
+      const expiresOk=!p.expires_at || p.expires_at>=now;
+      const usageOk=!p.usage_limit || Number(p.usage_count||0)<Number(p.usage_limit);
+      return startsOk && expiresOk && usageOk;
+    }):null;
+
+    if(!promo){
+      D.promo=null;
+      status.textContent='Code invalide, expiré ou déjà entièrement utilisé.';
+      status.className='promo-status-v9 ko';
+      if(typeof updateKadduOfferSimulation==='function') updateKadduOfferSimulation();renderOwnerScoreV1();
+      return;
+    }
+
+    D.promo=promo;
+    const label=promo.type==='percent' ? `-${promo.value}%` : `-${Number(promo.value||0).toLocaleString('fr-FR')} F CFA`;
+    status.textContent=`Code validé : ${label} sera appliqué à votre projection.`;
+    status.className='promo-status-v9 ok';
+    if(typeof updateKadduOfferSimulation==='function') updateKadduOfferSimulation();
+  }catch(e){
+    console.warn('[Kàddu promo]',e);
+    status.textContent='Impossible de vérifier le code pour le moment.';
+    status.className='promo-status-v9 ko';
+  }
+}
 
 // LOYER
 function adjLoyer(d){D.loyer=Math.max(30000,D.loyer+d);document.getElementById('loyerVal').textContent=D.loyer.toLocaleString('fr-FR');document.getElementById('devisLoyer').textContent=D.loyer.toLocaleString('fr-FR')+' F CFA';updateCalcs();renderFlux();}
@@ -1683,13 +2158,138 @@ function nextStep(){if(!validate())return;if(cs<6)showStep(cs+1);}
 function prevStep(){if(cs>1)showStep(cs-1);}
 function validate(){
   clearAlert();
-  if(cs===2){
-    if(!document.getElementById('c-prenom').value.trim()||!document.getElementById('c-nom').value.trim()||!document.getElementById('c-email').value.trim()){showAlert('Merci de remplir tous les champs obligatoires.','w');return false;}
-    if(!document.getElementById('c-cgu').checked){showAlert("Vous devez accepter les conditions d'utilisation.",'w');return false;}
-    D.prenom=document.getElementById('c-prenom').value.trim();
-    D.nom=document.getElementById('c-nom').value.trim();
-    D.email=document.getElementById('c-email').value.trim();
+
+  if(cs === 1){
+    // Adresse / quartier
+    const adresse = D.adresse || document.getElementById('addrIn')?.value?.trim() || document.getElementById('adresse')?.value?.trim() || '';
+    if(!adresse){
+      showAlert("Merci de renseigner l'adresse ou le quartier du bien.", "w");
+      document.getElementById('addrIn')?.classList.add('field-error');
+      document.getElementById('adresse')?.classList.add('field-error');
+      return false;
+    }
+
+    // Nombre de pièces
+    if(!D.pieces){
+      showAlert("Merci de sélectionner le nombre de pièces.", "w");
+      return false;
+    }
+
+    // Meublé / non meublé
+    if(!D.meuble){
+      showAlert("Merci de préciser si le bien est meublé ou non meublé.", "w");
+      return false;
+    }
+
+    // Surface
+    const surfaceInput =
+      document.getElementById('surface') ||
+      document.getElementById('bien-surface') ||
+      document.getElementById('surf') ||
+      document.querySelector('input[name="surface"]');
+
+    const surfaceVal = Number(D.surface || surfaceInput?.value || 0);
+    if(!surfaceVal || surfaceVal <= 0){
+      showAlert("Merci de renseigner la surface du bien.", "w");
+      if(surfaceInput) surfaceInput.classList.add('field-error');
+      return false;
+    }
+    D.adresse = adresse;
+    D.surface = surfaceVal;
   }
+
+  if(cs === 2){
+    if(!validateContactV9()) return false;
+  }
+
+  if(cs === 3){
+    // Disponibilité
+    if(!D.dispo){
+      showAlert("Merci de préciser la disponibilité du logement.", "w");
+      return false;
+    }
+
+    // Facteur le plus déterminant
+    if(!D.factor_primary){
+      const box = document.getElementById('factor-grid-v9');
+      if(box) box.scrollIntoView({behavior:'smooth', block:'center'});
+      showAlert("Merci de sélectionner le facteur le plus déterminant pour vous.", "w");
+      return false;
+    }
+
+    // Champs facultatifs : stockage sans blocage
+    D.besoin = document.getElementById('besoin-sel')?.value || '';
+    D.infos = document.getElementById('proj-infos')?.value || '';
+    D.source = document.getElementById('proj-src')?.value || '';
+  }
+
+  if(cs === 4){
+    // Loyer souhaité ou acceptation du loyer recommandé Kàddu.
+    // Si le tunnel a déjà une estimation, elle vaut acceptation implicite.
+    const loyerInput =
+      document.getElementById('loyer') ||
+      document.getElementById('loyer-input') ||
+      document.getElementById('loyerSouhaite') ||
+      document.querySelector('input[name="loyer"]');
+
+    const loyerVal = Number(D.loyer || loyerInput?.value || 0);
+    if(!loyerVal || loyerVal <= 0){
+      showAlert("Merci de définir un loyer ou d'accepter la recommandation Kàddu.", "w");
+      if(loyerInput) loyerInput.classList.add('field-error');
+      return false;
+    }
+    D.loyer = loyerVal;
+  }
+
+  if(cs === 5){
+    if(!KADDU_SELECTED_OFFER){
+      showAlert("Merci de sélectionner une offre Kàddu : Essentiel, Sérénité ou Premium.", "w");
+      return false;
+    }
+
+    if(!KADDU_ANALYSIS_UNLOCKED){
+      const lock = document.getElementById('kadduLeadLock');
+      if(lock) lock.scrollIntoView({behavior:'smooth', block:'center'});
+      showAlert("Merci de créer votre espace bailleur pour accéder à l'analyse complète et continuer vers le mandat.", "w");
+      return false;
+    }
+  }
+
+  if(cs === 6){
+    const sigPrenom = document.getElementById('sig-p')?.value?.trim() || D.prenom || '';
+    const sigNom = document.getElementById('sig-n')?.value?.trim() || D.nom || '';
+    const sigEmail = document.getElementById('sig-e')?.value?.trim() || D.email || '';
+    const sigAdresse = document.getElementById('sig-a')?.value?.trim() || D.adresse || '';
+
+    if(!sigPrenom || !sigNom){
+      showAlert("Merci de renseigner l'identité du signataire.", "w");
+      return false;
+    }
+
+    if(!sigEmail || !isEmailV9(sigEmail)){
+      showAlert("Merci de renseigner un email valide pour la signature.", "w");
+      document.getElementById('sig-e')?.classList.add('field-error');
+      return false;
+    }
+
+    if(!sigAdresse){
+      showAlert("Merci de renseigner l'adresse du bien dans le mandat.", "w");
+      document.getElementById('sig-a')?.classList.add('field-error');
+      return false;
+    }
+
+    const mandatAccepted =
+      document.getElementById('mandat-check')?.checked ||
+      document.getElementById('sig-ok')?.checked ||
+      document.getElementById('mandat-accept')?.checked ||
+      document.querySelector('input[name="mandat_accept"]')?.checked;
+
+    if(!mandatAccepted){
+      showAlert("Vous devez accepter le mandat pour continuer.", "w");
+      return false;
+    }
+  }
+
   return true;
 }
 function updateBottomBar(){
@@ -1790,115 +2390,31 @@ function kdFormatBudget(n){
   return Math.round(Number(n||0)/10000)*10000;
 }
 
-function updateNearbyTenants(){
-  const boxTitle = [...document.querySelectorAll('*')].find(el => (el.textContent||'').trim().toUpperCase() === 'NOS LOCATAIRES À PROXIMITÉ');
-  if(!boxTitle) return;
-  const container = boxTitle.parentElement;
-  if(!container) return;
 
-  const loyer = Number(D.loyer || 0);
-  if(!loyer) return;
+function updateNearbyTenants(){ renderPersonas(D.adresse); }
 
-  const type = (String(D.pieces || '3').toLowerCase().includes('studio')) ? 'Studio' : 'F' + String(D.pieces || '3').replace('+','');
-  const meubleTxt = D.meuble === 'meuble' ? 'Meublé' : (D.meuble === 'non' ? 'Non meublé' : 'Meublé ou non meublé');
-  const score = computeAttractivenessScore ? computeAttractivenessScore() : 70;
-  const profils = Math.max(6, Math.min(42, Math.round((score - 50) * 0.8)));
-  const b1min = kdFormatBudget(loyer * 0.85);
-  const b1max = kdFormatBudget(loyer * 1.07);
-  const b2min = kdFormatBudget(loyer * 0.90);
-  const b2max = kdFormatBudget(loyer * 1.18);
-
-  let html = `
-    <div class="tenant-card">
-      <div class="tenant-avatar">FB</div>
-      <div>
-        <div class="tenant-name">Fatou B.</div>
-        <div class="tenant-search">Recherche ${type} · ${meubleTxt} · ${b1min.toLocaleString('fr-FR')}–${b1max.toLocaleString('fr-FR')} F / mois</div>
-        <div class="tenant-meta">Profil actif depuis 1 mois</div>
-      </div>
-    </div>
-    <div class="tenant-card">
-      <div class="tenant-avatar">AD</div>
-      <div>
-        <div class="tenant-name">Amadou D.</div>
-        <div class="tenant-search">Recherche ${type} · ${meubleTxt} · ${b2min.toLocaleString('fr-FR')}–${b2max.toLocaleString('fr-FR')} F / mois</div>
-        <div class="tenant-meta">Profil actif depuis 2 semaines</div>
-      </div>
-    </div>
-    <div class="tenant-compatible">+${profils} profils compatibles dans cette zone</div>
-  `;
-
-  const oldCards = container.querySelectorAll('.tenant-card,.tenant-compatible');
-  if(oldCards.length){
-    oldCards.forEach(e=>e.remove());
-    boxTitle.insertAdjacentHTML('afterend', html);
-  } else {
-    // Try to replace everything after title until next major block if initial old structure exists
-    const children = [...container.children];
-    const idx = children.indexOf(boxTitle);
-    children.slice(idx+1).forEach(e => {
-      if((e.textContent||'').includes('ATTRACTIVITÉ') || (e.textContent||'').includes('PROJECTION')) return;
-      e.remove();
-    });
-    boxTitle.insertAdjacentHTML('afterend', html);
-  }
-}
 
 function premiumizeVisibleEmojis(){
   const replacements = [
-    ['🏠','home'], ['🏢','building'], ['🛏️','bed'], ['🛋️','sofa'],
-    ['📦','box'], ['❓','help'], ['?','help'], ['📋','doc'], ['🗺️','map'], ['☎️','phone'], ['📞','phone']
+    ['🏠','home','kduo kduo-green'],
+    ['🏢','building','kduo kduo-blue'],
+    ['🛏️','bed','kduo kduo-blue'],
+    ['🛋️','sofa','kduo kduo-green'],
+    ['📦','box','kduo'],
+    ['❓','help','kduo kduo-pink'],
+    ['📋','doc','kduo'],
+    ['🗺️','map','kduo kduo-blue'],
+    ['☎️','phone','kduo kduo-green'],
+    ['📞','phone','kduo kduo-green']
   ];
-  document.querySelectorAll('button, .opt, .choice, .card, .step-title, h1, h2, h3, label, a, div').forEach(el => {
-    if(el.children.length > 3) return;
+  document.querySelectorAll('button, .opt, .choice, .ico, .option, .card-option, .select-card').forEach(el => {
     let t = el.innerHTML;
-    replacements.forEach(([emo,icon]) => {
-      if(t.includes(emo)) t = t.split(emo).join(kdIcon(icon));
+    replacements.forEach(([emo,icon,cls]) => {
+      if(t.includes(emo)) t = t.split(emo).join(kdIcon(icon, cls));
     });
     el.innerHTML = t;
   });
 }
-
-// ══ KÀDDU V2 CONVERSION — Offres dynamiques + révélation complète ═══════════
-let KADDU_SELECTED_OFFER = 'serenite';
-let KADDU_ANALYSIS_UNLOCKED = false;
-
-const KADDU_OFFERS = {
-  essentiel: {
-    name: 'Essentiel',
-    searchFeeRate: 0.80,
-    monthlyFeeRate: 0,
-    minMonthlyFee: 0,
-    vacancyMonths: 1.2,
-    delai: '21–30 j',
-    security: 'standard',
-    boost: 0,
-    reco: 'Bon choix si vous souhaitez garder la main sur la gestion après location.'
-  },
-  serenite: {
-    name: 'Sérénité',
-    searchFeeRate: 0.80,
-    monthlyFeeRate: 0.049,
-    minMonthlyFee: 15000,
-    vacancyMonths: 0.7,
-    delai: '10–18 j',
-    security: 'élevée',
-    boost: 8,
-    reco: 'Recommandée : bon équilibre entre rendement, sécurité et tranquillité.'
-  },
-  premium: {
-    name: 'Premium',
-    searchFeeRate: 1.00,
-    monthlyFeeRate: 0.069,
-    minMonthlyFee: 20000,
-    vacancyMonths: 0.4,
-    delai: '7–14 j',
-    security: 'maximale',
-    boost: 13,
-    reco: 'Idéale pour maximiser la vitesse de location et déléguer totalement.'
-  }
-};
-
 function kadduFcfa(n){
   n = Math.round(Number(n || 0));
   return n.toLocaleString('fr-FR') + ' F';
@@ -1949,7 +2465,12 @@ function updateKadduOfferSimulation(){
   const monthlyFee = offer.monthlyFeeRate ? Math.max(offer.minMonthlyFee, loyer * offer.monthlyFeeRate) : 0;
   const annualFee = monthlyFee * 12;
   const vacancyCost = (loyer * offer.vacancyMonths);
-  const netAnnuel = Math.max(0, brutAnnuel - searchFee - annualFee - vacancyCost);
+  let netAnnuel = Math.max(0, brutAnnuel - searchFee - annualFee - vacancyCost);
+  if(D.promo){
+    const promoVal=Number(D.promo.value||0);
+    if(D.promo.type==='percent') netAnnuel += Math.min(searchFee + annualFee, (searchFee + annualFee) * promoVal / 100);
+    if(D.promo.type==='fixed') netAnnuel += promoVal;
+  }
   const netMensuel = netAnnuel / 12;
   const score = computeAttractivenessScore();
 
@@ -2025,9 +2546,331 @@ if(_kadduOrigUpdateFourchette){
   }
 }
 
+
+// ══ KÀDDU V9 — vrai contact international + email + facteurs ═══════════════
+let kadduIti=null;
+D.factor_primary=D.factor_primary||'';
+D.factor_secondary=D.factor_secondary||'';
+D.promo=D.promo||null;
+
+function markField(id, ok, msg){
+  const el=document.getElementById(id);
+  const err=document.getElementById('err-'+id.replace('c-',''));
+  if(!el) return;
+  el.classList.toggle('field-error', !ok);
+  if(err){err.textContent=msg||err.textContent;err.style.display=ok?'none':'block';}
+}
+
+function isEmailV9(v){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v||'').trim());
+}
+
+function initPhoneV9(){
+  const input=document.getElementById('c-tel');
+  if(!input || !window.intlTelInput || kadduIti) return;
+  input.value='';
+  input.placeholder='';
+  kadduIti=window.intlTelInput(input,{
+    initialCountry:'sn',
+    preferredCountries:['sn','fr','ci','ma','gm','ml','gn','us','gb','ca'],
+    separateDialCode:true,
+    nationalMode:true,
+    autoPlaceholder:'aggressive',
+    utilsScript:'https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js'
+  });
+  input.addEventListener('blur',()=>{
+    if(input.value.trim() && kadduIti && !kadduIti.isValidNumber()) markField('c-tel',false,'Veuillez saisir un numéro de téléphone valide.');
+    else {markField('c-tel',true); if(kadduIti) D.tel=kadduIti.getNumber();}
+  });
+}
+
+function validateContactV9(){
+  let ok=true;
+  const prenom=document.getElementById('c-prenom')?.value.trim()||'';
+  const nom=document.getElementById('c-nom')?.value.trim()||'';
+  const email=document.getElementById('c-email')?.value.trim()||'';
+  const telInput=document.getElementById('c-tel');
+
+  if(!prenom){markField('c-prenom',false,'Prénom obligatoire.');ok=false}else markField('c-prenom',true);
+  if(!nom){markField('c-nom',false,'Nom obligatoire.');ok=false}else markField('c-nom',true);
+
+  if(!isEmailV9(email)){markField('c-email',false,'Veuillez saisir une adresse email valide.');ok=false}
+  else markField('c-email',true);
+
+  if(!telInput?.value.trim() || !kadduIti || !kadduIti.isValidNumber()){
+    markField('c-tel',false,'Veuillez saisir un numéro de téléphone valide.');
+    ok=false;
+  } else {
+    markField('c-tel',true);
+  }
+
+  if(!document.getElementById('c-cgu')?.checked){
+    showAlert("Vous devez accepter les conditions d'utilisation.",'w');
+    ok=false;
+  }
+
+  if(ok){
+    D.prenom=prenom;
+    D.nom=nom;
+    D.email=email;
+    D.tel=kadduIti.getNumber();
+    D.newsletter=document.getElementById('c-news')?.checked||false;
+    D.cgu=true;
+  }
+  return ok;
+}
+
+function selectFactorV9(factor){
+  if(!D.factor_primary){
+    D.factor_primary=factor;
+  } else if(D.factor_primary===factor){
+    D.factor_primary=D.factor_secondary||'';
+    D.factor_secondary='';
+  } else if(D.factor_secondary===factor){
+    D.factor_secondary='';
+  } else {
+    D.factor_secondary=factor;
+  }
+
+  document.querySelectorAll('.factor-card-v9').forEach(card=>{
+    const f=card.dataset.factor;
+    card.classList.toggle('primary',f===D.factor_primary);
+    card.classList.toggle('secondary',f===D.factor_secondary);
+    const tag=card.querySelector('.factor-tag');
+    if(tag) tag.textContent=f===D.factor_primary?'Principal':(f===D.factor_secondary?'Secondaire':'Principal');
+  });
+
+  const label={
+    rapidite:'Louer rapidement',
+    revenu:'Maximiser le revenu',
+    securite:'Sécuriser le locataire',
+    delegation:'Déléguer la gestion'
+  };
+  D.facteur=[label[D.factor_primary],label[D.factor_secondary]].filter(Boolean).join(' + ');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(initPhoneV9,250);
+  document.getElementById('c-email')?.addEventListener('blur',e=>{
+    const v=e.target.value;
+    if(v && !isEmailV9(v)) markField('c-email',false,'Veuillez saisir une adresse email valide.');
+    else markField('c-email',true);
+  });
+});
+
+const _showStepV9=showStep;
+showStep=function(n){
+  _showStepV9(n);
+  if(n===2) setTimeout(initPhoneV9,80);
+};
+
+
+// ══ KÀDDU V10 — nettoyage erreurs après saisie ══════════════════════════════
+document.addEventListener('input', (e)=>{
+  if(e.target && e.target.classList) e.target.classList.remove('field-error');
+});
+document.addEventListener('change', (e)=>{
+  if(e.target && e.target.classList) e.target.classList.remove('field-error');
+});
+
+// Sécurise la valeur de surface si le champ existe sous plusieurs noms
+function syncSurfaceV10(){
+  const surfaceInput =
+    document.getElementById('surface') ||
+    document.getElementById('bien-surface') ||
+    document.getElementById('surf') ||
+    document.querySelector('input[name="surface"]');
+  if(surfaceInput){
+    const v = Number(surfaceInput.value || 0);
+    if(v > 0) D.surface = v;
+  }
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  setTimeout(()=>{
+    const surfaceInput =
+      document.getElementById('surface') ||
+      document.getElementById('bien-surface') ||
+      document.getElementById('surf') ||
+      document.querySelector('input[name="surface"]');
+    if(surfaceInput) surfaceInput.addEventListener('input', syncSurfaceV10);
+  }, 250);
+});
+
+
+// ══ KÀDDU V11 — Scoring bailleur intelligent V1 ═════════════════════════════
+function clampScore(n, min=0, max=100){
+  return Math.max(min, Math.min(max, Math.round(Number(n || 0))));
+}
+
+function scoreLocationV1(){
+  const a = String(D.adresse || '').toLowerCase();
+  let pts = 16;
+  if(/sipres|vdn|almadies|ngor|mermoz|point e|plateau|fann|sacre|sacré/.test(a)) pts = 28;
+  else if(/ouakam|yoff|mamelles|liberte|sicap|grand yoff|hann/.test(a)) pts = 23;
+  else if(/pikine|guediawaye|keur massar|rufisque|diamniadio/.test(a)) pts = 19;
+  return {pts, max:30};
+}
+
+function scorePriceV1(){
+  const loyer = Number(D.loyer || 0);
+  const min = Number(D.est_min || 0);
+  const max = Number(D.est_max || 0);
+  const med = Number(D.est_median || 0) || loyer;
+
+  if(!loyer || !med) return {pts:12, max:25, status:'à affiner'};
+
+  let pts = 18;
+  const gap = Math.abs(loyer - med) / med;
+
+  if(gap <= 0.08) pts = 25;
+  else if(gap <= 0.15) pts = 22;
+  else if(gap <= 0.25) pts = 18;
+  else pts = 12;
+
+  if(min && max && loyer >= min && loyer <= max) pts += 1;
+  return {pts:clampScore(pts,0,25), max:25, status: gap <= .15 ? 'cohérent' : 'à optimiser'};
+}
+
+function scoreTypeV1(){
+  let pts = 8;
+  const p = String(D.pieces || '').toLowerCase();
+  if(p.includes('2') || p.includes('3') || p.includes('4')) pts += 5;
+  if(D.meuble === 'meuble') pts += 3;
+  if(Number(D.surface || 0) >= 60) pts += 2;
+  return {pts:clampScore(pts,0,15), max:15};
+}
+
+function scoreCompletenessV1(){
+  let pts = 0;
+  if(D.adresse) pts += 2;
+  if(D.pieces) pts += 1.5;
+  if(D.meuble) pts += 1.5;
+  if(D.surface) pts += 2;
+  if(D.prenom && D.nom && D.email && D.tel) pts += 2;
+  if(D.factor_primary) pts += 1;
+  return {pts:clampScore(pts,0,10), max:10};
+}
+
+function scoreAvailabilityV1(){
+  let pts = 4;
+  if(D.dispo === '1mois') pts = 10;
+  else if(D.dispo === '3mois') pts = 7;
+  else if(D.dispo === 'plus') pts = 5;
+  return {pts, max:10};
+}
+
+function scoreProjectV1(){
+  const comp = scoreCompletenessV1();
+  const dispo = scoreAvailabilityV1();
+  return {pts:comp.pts + dispo.pts, max:20};
+}
+
+function computeOwnerScoreV1(){
+  const loc = scoreLocationV1();
+  const price = scorePriceV1();
+  const type = scoreTypeV1();
+  const project = scoreProjectV1();
+
+  const total = loc.pts + price.pts + type.pts + project.pts;
+
+  const recos = [];
+  if(price.status === 'à optimiser') recos.push("Prix à affiner : un conseiller Kàddu peut repositionner le loyer pour éviter la vacance.");
+  if(!D.surface) recos.push("Ajoutez la surface pour améliorer la précision de l’estimation.");
+  if(!D.factor_primary) recos.push("Indiquez votre priorité : rapidité, revenu, sécurité ou délégation.");
+  if(D.meuble !== 'meuble') recos.push("Pour un bien non meublé, la qualité du dossier locataire devient un levier central de sécurité.");
+  if(total >= 80) recos.unshift("Potentiel fort : ce bien peut être traité en priorité commerciale.");
+  else if(total >= 65) recos.unshift("Potentiel solide : quelques ajustements peuvent améliorer la vitesse de location.");
+  else recos.unshift("Potentiel à travailler : Kàddu peut vous aider à améliorer le positionnement du bien.");
+
+  let label = 'À qualifier';
+  if(total >= 82) label = 'Fort';
+  else if(total >= 66) label = 'Solide';
+  else if(total >= 50) label = 'Moyen';
+
+  return { total:clampScore(total), label, loc, price, type, project, recos };
+}
+
+function setScoreLine(prefix, part){
+  const pct = part.max ? clampScore((part.pts / part.max) * 100) : 0;
+  const txt = document.getElementById(prefix+'Txt');
+  const fill = document.getElementById(prefix+'Fill');
+  if(txt) txt.textContent = `${Math.round(part.pts)} / ${part.max}`;
+  if(fill) fill.style.width = pct + '%';
+}
+
+function renderOwnerScoreV1(){
+  const card = document.getElementById('ownerScoreCard');
+  if(!card) return;
+
+  const s = computeOwnerScoreV1();
+
+  const num = document.getElementById('ownerScoreNum');
+  const label = document.getElementById('ownerScoreLabel');
+  const recos = document.getElementById('ownerScoreRecos');
+
+  if(num) num.textContent = s.total + '/100';
+  if(label) label.textContent = s.label;
+
+  setScoreLine('scoreLoc', s.loc);
+  setScoreLine('scorePrice', s.price);
+  setScoreLine('scoreType', s.type);
+  setScoreLine('scoreProject', s.project);
+
+  if(recos){
+    recos.innerHTML = s.recos.slice(0,4).map(r => `<div class="score-reco"><span>✦</span><span>${r}</span></div>`).join('');
+  }
+
+  D.owner_score = s.total;
+  D.owner_score_label = s.label;
+  D.owner_score_detail = {
+    localisation:s.loc.pts,
+    prix:s.price.pts,
+    typologie:s.type.pts,
+    projet:s.project.pts
+  };
+}
+
+// Hooks scoring
+const _selectKadduOfferScore = typeof selectKadduOffer === 'function' ? selectKadduOffer : null;
+if(_selectKadduOfferScore){
+  selectKadduOffer = function(name){
+    _selectKadduOfferScore(name);
+    renderOwnerScoreV1();
+  }
+}
+
+const _renderFluxScore = typeof renderFlux === 'function' ? renderFlux : null;
+if(_renderFluxScore){
+  renderFlux = function(){
+    _renderFluxScore();
+    setTimeout(renderOwnerScoreV1,0);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(renderOwnerScoreV1,600);
+});
+
 // INIT
 updateProgress();updateCalcs();renderFlux();selectKadduOffer('serenite');updateKadduOfferSimulation();setTimeout(()=>{premiumizeVisibleEmojis();updateNearbyTenants();},250);
 document.getElementById('xtra-simple').classList.add('show');
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    try { premiumizeVisibleEmojis(); updateNearbyTenants(); } catch(e) { console.warn('[Kaddu V5 cleanup]', e); }
+  }, 500);
+});
+
+
+(function ensureTenantBlockClean(){
+  let n = 0;
+  const timer = setInterval(() => {
+    try { updateNearbyTenants(); } catch(e) {}
+    n++;
+    if(n > 8) clearInterval(timer);
+  }, 500);
+})();
+
 </script>
 </body>
 </html>
