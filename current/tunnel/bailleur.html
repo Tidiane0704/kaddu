@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Déposer mon dossier — Kàddu</title>
+  <title>Confier mon bien — Kàddu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
@@ -13,863 +13,1376 @@
       --nbl:#07182B;--card:#0b2039;
       --blanc:#F8F4EE;--muted:rgba(248,244,238,.62);
       --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.30);
-      --green:#00C875;--red:#FF5454;--blue:#4A9EFF;
-      --bg:#070f1a;
+      --green:#4CAF7D;--greenl:#6EC99A;
+      --red:#FF5454;--orange:#F59E0B;--blue:#4A9EFF;
+      --bg:#0d1117;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html,body{min-height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--blanc);-webkit-font-smoothing:antialiased}
     a{text-decoration:none;color:inherit}
 
-    /* ── NAV ── */
-    .nav{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:16px 32px;border-bottom:1px solid var(--bdr);
-      background:rgba(7,15,26,.8);backdrop-filter:blur(8px);
-      position:sticky;top:0;z-index:100;
+    /* LAYOUT */
+    .app{display:grid;grid-template-columns:256px 1fr;min-height:100vh}
+    @media(max-width:800px){.app{grid-template-columns:1fr}.sidebar{display:none!important}}
+
+    /* SIDEBAR */
+    .sidebar{background:#080d15;border-right:1px solid rgba(191,150,80,.1);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;padding:28px 0}
+    .sb-logo{padding:0 24px 24px;border-bottom:1px solid rgba(191,150,80,.08);display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--or)}
+    .sb-logo img{height:24px}
+
+    /* Ring */
+    .ring-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 0 16px;border-bottom:1px solid rgba(191,150,80,.08)}
+    .ring-pos{position:relative;width:76px;height:76px;margin-bottom:6px}
+    .ring-svg{transform:rotate(-90deg)}
+    .ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:5}
+    .ring-fill{fill:none;stroke:var(--green);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .5s ease;stroke-dasharray:201;stroke-dashoffset:201}
+    .ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .ring-pct{font-size:1rem;font-weight:700}
+    .ring-time{font-size:.64rem;color:rgba(248,244,238,.3);margin-top:2px}
+
+    /* Steps nav */
+    .steps-nav{padding:14px 0}
+    .sn{display:flex;align-items:center;gap:11px;padding:9px 20px;cursor:pointer;transition:.2s}
+    .sn:hover .sn-lbl{color:rgba(248,244,238,.7)}
+    .sn-n{width:24px;height:24px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;transition:.3s}
+    .sn-n.done{background:var(--green);color:#fff}
+    .sn-n.active{background:rgba(191,150,80,.2);color:var(--or);border:1px solid var(--or)}
+    .sn-n.idle{background:rgba(255,255,255,.04);color:rgba(248,244,238,.2);border:1px solid rgba(255,255,255,.08)}
+    .sn-lbl{font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(248,244,238,.32);transition:.2s}
+    .sn-lbl.active{color:var(--green)}
+    .sn-lbl.done{color:rgba(248,244,238,.48)}
+    .sn-sub{padding-left:51px}
+    .sn-sub-item{font-size:.68rem;color:rgba(248,244,238,.25);padding:3px 20px 3px 0;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:5px}
+    .sn-sub-item::before{content:'—';opacity:.35}
+    .sn-sub-item:hover,.sn-sub-item.active{color:var(--green)}
+
+    .sb-bottom{margin-top:auto;padding:16px 20px 0;border-top:1px solid rgba(191,150,80,.08)}
+    .sb-tel{font-size:.76rem;color:var(--green);display:flex;align-items:center;gap:6px}
+    .sb-skip{display:block;margin-top:7px;font-size:.7rem;color:rgba(248,244,238,.25);cursor:pointer;transition:.2s}
+    .sb-skip:hover{color:rgba(248,244,238,.5);text-decoration:underline}
+
+    /* MAIN */
+    .main{display:flex;flex-direction:column;min-height:100vh}
+    .main-grid{flex:1;display:grid;grid-template-columns:1fr 360px;gap:0}
+    @media(max-width:1100px){.main-grid{grid-template-columns:1fr}.right-panel{display:none!important}}
+
+    /* FORM */
+    .form-panel{padding:36px 44px;overflow-y:auto}
+    @media(max-width:800px){.form-panel{padding:20px 18px}}
+
+    /* RIGHT PANEL */
+    .right-panel{background:#080d15;border-left:1px solid rgba(191,150,80,.08);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+    .map-box{width:100%;height:200px;border-radius:10px;background:linear-gradient(135deg,#0d1a2d,#071018);border:1px solid rgba(191,150,80,.12);position:relative;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center}
+    .map-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(191,150,80,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(191,150,80,.04) 1px,transparent 1px);background-size:22px 22px}
+    .map-pin{font-size:2rem;position:relative;z-index:1;filter:drop-shadow(0 4px 10px rgba(191,150,80,.4));animation:float 2s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    .map-lbl{position:absolute;bottom:8px;left:10px;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.28);z-index:2}
+    .personas-ttl{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28);margin-bottom:9px}
+    .persona-card{display:flex;align-items:center;gap:11px;padding:11px 13px;background:rgba(11,32,57,.55);border:1px solid rgba(191,150,80,.1);border-radius:9px;margin-bottom:7px}
+    .persona-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,rgba(191,150,80,.2),rgba(191,150,80,.04));border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.95rem}
+    .persona-name{font-size:.8rem;font-weight:500}
+    .persona-budget{font-size:.7rem;color:var(--orl);margin-top:1px}
+    .persona-since{font-size:.62rem;color:rgba(248,244,238,.28);margin-top:1px}
+    .persona-more{font-size:.66rem;color:rgba(248,244,238,.28);text-align:center;padding:6px;cursor:pointer;transition:.2s}
+    .persona-more:hover{color:var(--or)}
+
+    /* STEP SECTIONS */
+    .step{display:none}.step.active{display:block}
+    .step-hd{margin-bottom:26px}
+    .step-icon{font-size:1.5rem;margin-bottom:8px;display:block}
+    .step-title{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:300;margin-bottom:5px}
+    .step-title em{font-style:italic;color:var(--or)}
+    .step-sub{font-size:.86rem;color:var(--muted);line-height:1.6}
+
+    /* Q ROWS */
+    .q{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;padding:18px 0;border-bottom:1px solid rgba(248,244,238,.05)}
+    .q:last-child{border:none}
+    @media(max-width:650px){.q{grid-template-columns:1fr;gap:6px}}
+    .q-lbl{font-size:.84rem;color:rgba(248,244,238,.68);line-height:1.4;padding-top:2px}
+
+    /* Address */
+    .addr-wrap{position:relative}
+    .addr-in{width:100%;padding:12px 38px 12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.1);border-radius:8px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:.2s}
+    .addr-in:focus{border-color:var(--green);background:rgba(76,175,125,.05)}
+    .addr-in::placeholder{color:rgba(248,244,238,.2)}
+    .addr-in.ok{border-color:var(--green)}
+    .addr-chk{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--green);display:none}
+    .addr-drop{position:absolute;top:calc(100% + 3px);left:0;right:0;background:#0d1a2d;border:1px solid var(--bdr);border-radius:8px;z-index:50;display:none;max-height:190px;overflow-y:auto}
+    .addr-drop.open{display:block}
+    .addr-opt{padding:9px 13px;font-size:.82rem;cursor:pointer;transition:.15s;border-bottom:1px solid rgba(255,255,255,.04)}
+    .addr-opt:hover{background:rgba(191,150,80,.08);color:var(--or)}
+    .addr-opt:last-child{border:none}
+    .addr-multi{font-size:.72rem;color:var(--orl);cursor:pointer;margin-top:7px;display:inline-flex;align-items:center;gap:3px}
+    .addr-multi::before{content:'›'}
+
+    /* Pills */
+    .pills{display:flex;flex-wrap:wrap;gap:7px}
+    .pill{padding:8px 16px;border-radius:7px;cursor:pointer;border:1.5px solid rgba(248,244,238,.1);background:rgba(255,255,255,.03);font-size:.8rem;color:rgba(248,244,238,.58);transition:.2s}
+    .pill:hover{border-color:rgba(191,150,80,.3)}
+    .pill.on{border-color:var(--green);background:rgba(76,175,125,.1);color:var(--blanc)}
+
+    /* Big cards */
+    .bcards{display:grid;gap:10px}
+    .bcards-3{grid-template-columns:repeat(3,1fr)}
+    .bcards-2{grid-template-columns:repeat(2,1fr)}
+    @media(max-width:580px){.bcards-3,.bcards-2{grid-template-columns:1fr 1fr}}
+    .bcard{padding:18px 12px;border-radius:9px;cursor:pointer;text-align:center;border:1.5px solid rgba(248,244,238,.1);background:rgba(255,255,255,.03);transition:.2s}
+    .bcard:hover{border-color:rgba(191,150,80,.3)}
+    .bcard.on{border-color:var(--green);background:rgba(76,175,125,.1)}
+    .bcard-ico{font-size:1.8rem;margin-bottom:7px;display:block}
+    .bcard-lbl{font-size:.78rem;color:rgba(248,244,238,.62);line-height:1.3}
+    .bcard.on .bcard-lbl{color:var(--blanc)}
+
+    /* Inputs */
+    .inp,.sel,.textarea{width:100%;padding:11px 13px;background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.1);border-radius:7px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:.2s}
+    .sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%234CAF7D' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:32px}
+    .textarea{resize:vertical;min-height:85px}
+    .inp:focus,.sel:focus,.textarea:focus{border-color:var(--green);background:rgba(76,175,125,.05)}
+    .inp::placeholder,.textarea::placeholder{color:rgba(248,244,238,.2)}
+    .sel option{background:#0d1a2d}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    @media(max-width:580px){.frow{grid-template-columns:1fr}}
+    .fg{margin-bottom:12px}
+    .flbl{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.32);margin-bottom:6px;display:block}
+
+    /* Extra fields */
+    .xtra{display:none;margin-top:10px;padding:14px;background:rgba(255,255,255,.02);border-radius:7px;border:1px solid rgba(248,244,238,.06)}
+    .xtra.show{display:block;animation:fadeUp .22s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Toggle */
+    .tog-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0}
+    .tog-lbl{font-size:.84rem;color:rgba(248,244,238,.62)}
+    .tog{position:relative;width:42px;height:23px;flex-shrink:0}
+    .tog input{opacity:0;width:0;height:0}
+    .tog-sl{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:23px;cursor:pointer;transition:.3s;border:1px solid rgba(255,255,255,.1)}
+    .tog-sl::before{content:'';position:absolute;left:3px;top:3px;width:15px;height:15px;background:rgba(248,244,238,.4);border-radius:50%;transition:.3s}
+    .tog input:checked+.tog-sl{background:rgba(76,175,125,.3);border-color:var(--green)}
+    .tog input:checked+.tog-sl::before{transform:translateX(19px);background:var(--green)}
+
+    /* Checkbox */
+    .chk{display:flex;align-items:flex-start;gap:11px;padding:9px 0;font-size:.82rem;color:rgba(248,244,238,.58);cursor:pointer}
+    .chk-box{width:17px;height:17px;border-radius:4px;border:1.5px solid rgba(248,244,238,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;margin-top:1px}
+    .chk:hover .chk-box{border-color:var(--green)}
+    .chk input[type=checkbox]{display:none}
+    .chk input:checked+.chk-box{background:var(--green);border-color:var(--green)}
+    .chk input:checked+.chk-box::after{content:'✓';font-size:.68rem;color:#fff}
+    .chk a{color:var(--orl);text-decoration:underline}
+
+    /* Radio */
+    .radio-list{display:flex;flex-direction:column;gap:7px}
+    .ri{display:flex;align-items:flex-start;gap:11px;cursor:pointer;padding:3px 0}
+    .ri-dot{width:19px;height:19px;border-radius:50%;border:2px solid rgba(248,244,238,.18);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s;margin-top:1px}
+    .ri:hover .ri-dot,.ri.on .ri-dot{border-color:var(--green)}
+    .ri.on .ri-dot::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);display:block}
+    .ri-txt{font-size:.82rem;color:rgba(248,244,238,.62);line-height:1.4}
+    .ri.on .ri-txt{color:var(--blanc)}
+
+    /* Ctx help */
+    .ctx{background:rgba(76,175,125,.06);border-left:3px solid var(--green);border-radius:0 7px 7px 0;padding:10px 13px;margin-top:7px;font-size:.76rem;color:rgba(248,244,238,.58);line-height:1.6;display:none}
+    .ctx.show{display:block;animation:fadeUp .2s ease}
+    .ctx strong{color:var(--blanc);display:block;margin-bottom:3px}
+    .ctx-item{display:flex;align-items:flex-start;gap:5px;margin-top:3px}
+    .ctx-item::before{content:'✓';color:var(--green);flex-shrink:0;font-size:.68rem;margin-top:2px}
+
+
+    /* Estimation marché locatif */
+    .estimation-panel{
+      display:none;
+      margin-top:14px;
+      padding:15px 16px;
+      border-radius:10px;
+      border:1px solid rgba(76,175,125,.22);
+      background:linear-gradient(135deg,rgba(76,175,125,.08),rgba(11,32,57,.48));
     }
-    .nav-logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--or)}
-    .nav-logo img{height:28px}
-    .nav-back{font-size:.76rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
-    .nav-back:hover{color:var(--or)}
+    .estimation-panel.show{display:block;animation:fadeUp .22s ease}
+    .estimation-kicker{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--greenl);margin-bottom:7px}
+    .estimation-main{font-family:'Playfair Display',serif;font-size:1.05rem;line-height:1.45;color:var(--blanc)}
+    .estimation-main strong{color:var(--orl);font-weight:400}
+    .estimation-note{margin-top:7px;font-size:.72rem;color:rgba(248,244,238,.45);line-height:1.5}
+    .estimation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .estimation-chip{font-size:.66rem;padding:5px 9px;border-radius:999px;border:1px solid rgba(191,150,80,.18);color:rgba(248,244,238,.55);background:rgba(255,255,255,.03)}
 
-    /* ── BIEN STICKY (right panel) ── */
-    .layout{display:grid;grid-template-columns:1fr 320px;gap:40px;max-width:1100px;margin:0 auto;padding:40px 24px}
-    @media(max-width:900px){.layout{grid-template-columns:1fr}.bien-panel{display:none}}
-    .bien-panel{position:sticky;top:80px;align-self:start}
-    .bien-card{background:rgba(11,32,57,.8);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
-    .bien-card-img{width:100%;height:160px;object-fit:cover;background:rgba(191,150,80,.1);display:flex;align-items:center;justify-content:center;font-size:2.5rem}
-    .bien-card-body{padding:16px}
-    .bien-card-label{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-bottom:6px}
-    .bien-card-ville{font-size:.78rem;color:rgba(248,244,238,.4);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
-    .bien-card-prix{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--or);margin-bottom:2px}
-    .bien-card-charges{font-size:.74rem;color:rgba(248,244,238,.35);margin-bottom:10px}
-    .bien-card-details{font-size:.78rem;color:var(--muted)}
-    .bien-card-badge{display:inline-flex;align-items:center;gap:5px;font-size:.62rem;padding:4px 10px;border-radius:20px;background:rgba(0,200,117,.1);color:var(--green);border:1px solid rgba(0,200,117,.2);margin-top:10px}
 
-    /* ── STEPPER ── */
-    .stepper{display:flex;align-items:flex-start;gap:0;margin-bottom:40px;position:relative}
-    .stepper::before{content:'';position:absolute;top:16px;left:16px;right:16px;height:2px;background:rgba(248,244,238,.08);z-index:0}
-    .step-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1;cursor:pointer}
-    .step-circle{
-      width:32px;height:32px;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:.72rem;font-weight:700;transition:.3s;
-    }
-    .step-circle.done{background:var(--green);color:#fff;border:2px solid var(--green)}
-    .step-circle.active{background:rgba(191,150,80,.15);color:var(--or);border:2px solid var(--or)}
-    .step-circle.pending{background:rgba(255,255,255,.04);color:rgba(248,244,238,.25);border:2px solid rgba(248,244,238,.1)}
-    .step-label{font-size:.66rem;text-align:center;line-height:1.3;max-width:90px}
-    .step-label.active-lbl{color:var(--or)}
-    .step-label.done-lbl{color:var(--green)}
-    .step-label.pending-lbl{color:rgba(248,244,238,.3)}
-    .step-line{flex:1;height:2px;align-self:flex-start;margin-top:15px;position:relative;z-index:0}
-    .step-line.done{background:var(--green)}
-    .step-line.pending{background:rgba(248,244,238,.08)}
 
-    /* ── FORM SECTIONS ── */
-    .form-section{display:none}
-    .form-section.active{display:block}
+    /* Carte réelle + attractivité + projection financière */
+    .real-map-frame{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.85) brightness(.82);z-index:1}
+    .map-overlay-soft{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(8,13,21,.02),rgba(8,13,21,.28))}
+    .map-actions{position:absolute;right:10px;top:10px;z-index:3;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+    .map-mini-btn{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(191,150,80,.28);background:rgba(8,13,21,.78);color:var(--or);border-radius:999px;padding:5px 9px;cursor:pointer;backdrop-filter:blur(8px)}
+    .attract-card,.projection-side-card{background:rgba(11,32,57,.58);border:1px solid rgba(191,150,80,.13);border-radius:11px;padding:14px;margin-top:14px}
+    .attract-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .attract-title,.projection-side-title{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.32)}
+    .attract-score{font-family:'Playfair Display',serif;font-size:1.65rem;color:var(--orl);line-height:1}
+    .attract-bar{height:7px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:9px}
+    .attract-fill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--orl));transition:width .35s ease;border-radius:999px}
+    .attract-label{font-size:.78rem;color:rgba(248,244,238,.72);margin-bottom:8px}
+    .attract-reasons{display:flex;flex-direction:column;gap:6px}
+    .attract-reason{font-size:.68rem;color:rgba(248,244,238,.46);line-height:1.35;display:flex;gap:6px}
+    .attract-reason::before{content:'✓';color:var(--green);flex-shrink:0}
+    .projection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}
+    .projection-metric{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:10px;text-align:center}
+    .projection-metric strong{display:block;font-family:'Playfair Display',serif;color:var(--orl);font-size:1.08rem;font-weight:300}
+    .projection-metric span{display:block;font-size:.6rem;color:rgba(248,244,238,.35);margin-top:3px;line-height:1.3}
+    .projection-note{font-size:.68rem;color:rgba(248,244,238,.38);line-height:1.45;margin-top:10px;text-align:center}
+    .financial-projection{background:linear-gradient(135deg,rgba(76,175,125,.08),rgba(11,32,57,.42));border:1px solid rgba(76,175,125,.18);border-radius:11px;padding:16px;margin:-6px 0 22px}
+    .financial-projection .fp-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--greenl);text-align:center;margin-bottom:10px}
+    .fp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+    .fp-cell{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:10px;text-align:center}
+    .fp-cell strong{display:block;color:var(--orl);font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:300;white-space:nowrap}
+    .fp-cell span{display:block;font-size:.59rem;color:rgba(248,244,238,.38);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;line-height:1.3}
+    @media(max-width:680px){.fp-row,.projection-grid{grid-template-columns:1fr 1fr}.fp-cell:last-child{grid-column:1/-1}}
 
-    .section-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:300;margin-bottom:8px}
-    .section-title em{font-style:italic;color:var(--or)}
-    .section-sub{font-size:.88rem;color:var(--muted);margin-bottom:32px;line-height:1.6}
+    /* Loyer */
+    .loyer-box{background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:11px;padding:18px;margin-bottom:14px}
+    .loyer-ctrl{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0}
+    .loyer-btn{width:38px;height:38px;border-radius:7px;border:1.5px solid var(--bds);background:rgba(191,150,80,.1);color:var(--or);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+    .loyer-btn:hover{background:rgba(191,150,80,.2)}
+    .loyer-val{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:300;min-width:160px;text-align:center;border:1px solid rgba(248,244,238,.1);border-radius:7px;padding:9px 14px;background:rgba(255,255,255,.03)}
+    .loyer-unit{font-size:.78rem;color:rgba(248,244,238,.38);margin-left:3px}
+    .loyer-rng{text-align:center;font-size:.8rem;color:var(--green)}
+    .loyer-rng strong{color:var(--greenl)}
+    .hint-box{display:flex;align-items:flex-start;gap:11px;padding:12px;background:rgba(245,158,11,.05);border-radius:7px;border:1px solid rgba(245,158,11,.15);font-size:.8rem;color:rgba(248,244,238,.58);line-height:1.5;margin-top:11px}
+    .commerciaux-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}
+    .comm-card{background:rgba(11,32,57,.5);border:1px solid var(--bdr);border-radius:9px;padding:13px;text-align:center}
+    .comm-av{width:48px;height:48px;border-radius:50%;background:rgba(191,150,80,.1);border:2px solid var(--bds);margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+    .comm-name{font-size:.8rem;font-weight:500;margin-bottom:1px}
+    .comm-role{font-size:.63rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+    .comm-stat{font-size:.68rem;color:var(--orl);margin-top:5px}
 
-    /* ── CHOICE CARDS ── */
-    .choice-grid{display:grid;gap:12px;margin-bottom:28px}
-    .choice-grid-2{grid-template-columns:repeat(2,1fr)}
-    .choice-grid-4{grid-template-columns:repeat(4,1fr)}
-    @media(max-width:600px){.choice-grid-4{grid-template-columns:repeat(2,1fr)}}
-    .choice-card{
-      padding:20px 14px;border-radius:10px;cursor:pointer;text-align:center;
-      border:1.5px solid rgba(248,244,238,.1);background:rgba(255,255,255,.03);
-      transition:.2s;
-    }
-    .choice-card:hover{border-color:var(--bds);background:rgba(191,150,80,.05)}
-    .choice-card.selected{border-color:var(--or);background:rgba(191,150,80,.1)}
-    .choice-icon{font-size:2rem;margin-bottom:8px;display:block}
-    .choice-label{font-size:.8rem;color:rgba(248,244,238,.7);line-height:1.3}
-    .choice-card.selected .choice-label{color:var(--or);font-weight:500}
+    /* DEVIS */
+    .devis-top{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;align-items:start}
+    @media(max-width:680px){.devis-top{grid-template-columns:1fr}}
+    .fadoum-card{background:rgba(11,32,57,.7);border:1px solid var(--bdr);border-radius:11px;overflow:hidden}
+    .fadoum-img{height:150px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a2a1a,#0d1a10);position:relative;overflow:hidden}
+    .fadoum-info{padding:13px}
+    .fadoum-name{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--or);font-style:italic;margin-bottom:1px}
+    .fadoum-title{font-size:.66rem;color:rgba(248,244,238,.38);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
+    .fadoum-item{display:flex;align-items:flex-start;gap:7px;font-size:.73rem;color:rgba(248,244,238,.58);line-height:1.4;margin-bottom:5px}
+    .fadoum-item::before{content:'✓';color:var(--green);flex-shrink:0;margin-top:1px}
 
-    /* Compteur +/- */
-    .counter-box{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:14px 16px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);
-      border-radius:10px;margin-bottom:10px;
-    }
-    .counter-label{font-size:.86rem;color:var(--blanc)}
-    .counter-ctrl{display:flex;align-items:center;gap:12px}
-    .counter-btn{
-      width:32px;height:32px;border-radius:50%;border:1.5px solid var(--bds);
-      background:rgba(191,150,80,.1);color:var(--or);font-size:1.1rem;
-      cursor:pointer;display:flex;align-items:center;justify-content:center;
-      transition:.2s;
-    }
-    .counter-btn:hover{background:rgba(191,150,80,.2)}
-    .counter-val{min-width:48px;text-align:center;font-size:.9rem;font-weight:500}
+    .devis-loyer-bar{background:rgba(11,32,57,.5);border:1px solid var(--bdr);border-radius:9px;padding:11px 15px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .dlb-lbl{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,244,238,.32)}
+    .dlb-val{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--orl)}
+    .dlb-edit{font-size:.7rem;color:var(--or);cursor:pointer;text-decoration:underline}
 
-    /* ── FORM FIELDS ── */
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-    @media(max-width:600px){.form-row{grid-template-columns:1fr}}
-    .form-group{margin-bottom:16px}
-    .form-label{font-size:.72rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.38);margin-bottom:8px;display:block}
-    .form-input,.form-select,.form-textarea{
-      width:100%;padding:13px 16px;
-      background:rgba(255,255,255,.04);border:1px solid rgba(248,244,238,.10);
-      border-radius:8px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.92rem;
-      transition:.2s;outline:none;
-    }
-    .form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23BF9650' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
-    .form-textarea{resize:vertical;min-height:100px}
-    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--or);background:rgba(191,150,80,.05)}
-    .form-input::placeholder,.form-textarea::placeholder{color:rgba(248,244,238,.2)}
-    .form-select option{background:#0b2039;color:var(--blanc)}
-    .form-hint{font-size:.72rem;color:rgba(248,244,238,.3);margin-top:6px}
+    /* Flux */
+    .flux-card{background:rgba(11,32,57,.5);border:1px solid var(--bdr);border-radius:11px;padding:18px;margin-bottom:22px}
+    .flux-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orl);margin-bottom:14px;text-align:center}
+    .flux-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .flux-bw{text-align:center}
+    .flux-stack{height:110px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04)}
+    .fs{transition:.4s;display:flex;align-items:center;justify-content:center;font-size:.54rem;color:rgba(255,255,255,.7);font-weight:600}
+    .fs.fg{background:rgba(255,84,84,.25)}.fs.fa{background:rgba(245,158,11,.2)}.fs.fr{background:rgba(74,158,255,.2)}.fs.fv{background:rgba(76,175,125,.5);flex:1}
+    .flux-bl{font-size:.62rem;color:rgba(248,244,238,.38);margin-top:5px}
+    .flux-bs{font-size:.56rem;color:rgba(248,244,238,.22)}
+    .flux-leg{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px;justify-content:center}
+    .fl-item{display:flex;align-items:center;gap:4px;font-size:.6rem;color:rgba(248,244,238,.42)}
+    .fl-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
 
-    /* ── TOGGLE ── */
-    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(248,244,238,.06)}
-    .toggle-label{font-size:.86rem;color:rgba(248,244,238,.65)}
-    .toggle{position:relative;width:42px;height:24px;flex-shrink:0}
-    .toggle input{opacity:0;width:0;height:0}
-    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:24px;cursor:pointer;transition:.3s;border:1px solid rgba(248,244,238,.12)}
-    .toggle-slider::before{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;background:rgba(248,244,238,.4);border-radius:50%;transition:.3s}
-    .toggle input:checked + .toggle-slider{background:rgba(191,150,80,.3);border-color:var(--or)}
-    .toggle input:checked + .toggle-slider::before{transform:translateX(18px);background:var(--or)}
+    /* Offres */
+    .offres-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+    @media(max-width:680px){.offres-grid{grid-template-columns:1fr}}
+    .offre{background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:12px;overflow:hidden;position:relative}
+    .offre-tiers{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid rgba(255,255,255,.05)}
+    .offre-tier{padding:9px 5px;text-align:center;cursor:pointer;transition:.2s;font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;font-weight:600;color:rgba(248,244,238,.28);border-right:1px solid rgba(255,255,255,.05);display:flex;flex-direction:column;align-items:center;gap:4px}
+    .offre-tier:last-child{border-right:none}
+    .offre-tier:hover{color:rgba(248,244,238,.55)}
+    .offre-tier.on{color:var(--green);background:rgba(76,175,125,.06)}
+    .tier-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(248,244,238,.14);transition:.2s}
+    .offre-tier.on .tier-dot{border-color:var(--green);background:var(--green);box-shadow:0 0 7px rgba(76,175,125,.4)}
+    .offre-body{padding:16px}
+    .offre-ico{font-size:1.8rem;margin-bottom:9px;display:block}
+    .offre-name{font-size:.84rem;color:var(--green);margin-bottom:3px;font-weight:500}
+    .offre-price{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:2px}
+    .offre-psub{font-size:.68rem;color:rgba(248,244,238,.32);margin-bottom:2px}
+    .offre-calc{font-size:.74rem;color:var(--orl);font-weight:600;margin-bottom:11px}
+    .offre-feats{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+    .of{display:flex;align-items:flex-start;gap:6px;font-size:.72rem;color:rgba(248,244,238,.52);line-height:1.4}
+    .of.ok::before{content:'✓';color:var(--green);flex-shrink:0;font-weight:700;margin-top:1px}
+    .of.no::before{content:'✗';color:rgba(255,255,255,.18);flex-shrink:0;margin-top:1px}
+    .ptag{background:rgba(191,150,80,.15);color:var(--orl);font-size:.54rem;padding:1px 4px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-right:2px;flex-shrink:0}
+    .offre-tag{position:absolute;top:11px;right:-22px;background:var(--or);color:#0a0a0a;font-size:.54rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 28px;transform:rotate(45deg) translate(8px,0)}
+    .btn-esm{width:100%;padding:9px;border-radius:7px;background:rgba(76,175,125,.1);border:1px solid rgba(76,175,125,.2);color:var(--green);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif}
+    .btn-esm:hover{background:rgba(76,175,125,.2)}
 
-    /* ── SECTION HEADER ── */
-    .sub-section{margin:24px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
-    .sub-section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or)}
+    /* MANDAT */
+    .mandat-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--bdr)}
+    .mt{padding:11px 18px;font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,244,238,.32);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.2s}
+    .mt.active{color:var(--green);border-bottom-color:var(--green)}
+    .mp{display:none}.mp.active{display:block}
 
-    /* ── LOCATAIRE / GARANT CARDS ── */
-    .person-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-    .person-card{
-      display:flex;align-items:center;gap:14px;padding:14px 16px;
-      background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;
-    }
-    .person-avatar{width:36px;height:36px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--or);flex-shrink:0}
-    .person-info{flex:1}
-    .person-name{font-size:.88rem;font-weight:500}
-    .person-meta{font-size:.72rem;color:var(--muted);margin-top:2px}
-    .person-actions{display:flex;gap:8px}
-    .btn-icon-sm{background:none;border:none;color:rgba(248,244,238,.35);cursor:pointer;font-size:1rem;transition:.2s;padding:4px}
-    .btn-icon-sm:hover{color:var(--or)}
+    /* Timeline */
+    .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:24px;position:relative}
+    .timeline::before{content:'';position:absolute;top:18px;left:18px;right:18px;height:2px;background:var(--green);z-index:0}
+    .tls{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;z-index:1}
+    .tl-n{width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:7px;box-shadow:0 0 14px rgba(76,175,125,.3)}
+    .tl-ico{font-size:1.2rem;margin-bottom:5px}
+    .tl-ttl{font-size:.68rem;font-weight:600;color:var(--blanc);margin-bottom:3px;line-height:1.3}
+    .tl-desc{font-size:.6rem;color:rgba(248,244,238,.32);line-height:1.4}
 
-    .add-btn{
-      display:flex;align-items:center;gap:10px;padding:12px 16px;
-      border:1.5px dashed rgba(191,150,80,.25);border-radius:10px;
-      color:rgba(248,244,238,.45);cursor:pointer;transition:.2s;
-      background:transparent;font-family:'DM Sans',sans-serif;font-size:.84rem;width:100%;
-    }
-    .add-btn:hover{border-color:var(--or);color:var(--or);background:rgba(191,150,80,.05)}
-    .add-btn .plus{width:24px;height:24px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--or);flex-shrink:0}
+    .stats-banner{background:rgba(11,32,57,.5);border:1px solid var(--bdr);border-radius:9px;padding:14px 18px;margin-bottom:22px}
+    .sb-title{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orl);margin-bottom:10px}
+    .sb-stats{display:flex;gap:20px;flex-wrap:wrap}
+    .sb-stat{font-size:.78rem;color:rgba(248,244,238,.52);display:flex;align-items:center;gap:5px}
+    .sb-stat::before{content:'•';color:var(--green)}
+    .sb-stat strong{color:var(--blanc)}
 
-    /* ── SUB FORM (locataire / garant inline) ── */
-    .sub-form{
-      background:rgba(11,32,57,.5);border:1px solid var(--bdr);
-      border-radius:12px;padding:20px;margin-bottom:16px;
-    }
-    .sub-form-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--or);margin-bottom:16px;font-weight:300}
-    .sub-form-title em{font-style:italic}
+    .statut-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .statut-btn{padding:7px 16px;border-radius:20px;cursor:pointer;border:1.5px solid rgba(248,244,238,.1);background:rgba(255,255,255,.03);font-size:.76rem;color:rgba(248,244,238,.48);transition:.2s;display:flex;align-items:center;gap:6px}
+    .statut-btn:hover{border-color:rgba(76,175,125,.3)}
+    .statut-btn.on{border-color:var(--green);background:rgba(76,175,125,.08);color:var(--blanc)}
+    .statut-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(248,244,238,.18);flex-shrink:0;transition:.2s}
+    .statut-btn.on .statut-dot{border-color:var(--green);background:var(--green)}
 
-    /* Situation pro dynamic fields */
-    .pro-fields{display:none}
-    .pro-fields.visible{display:block}
+    .sig-card{background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:11px;padding:18px;margin-bottom:14px}
+    .sig-num{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.28);margin-bottom:13px}
 
-    /* ── GARANT TYPE GRID ── */
-    .garant-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
-    @media(max-width:600px){.garant-grid{grid-template-columns:repeat(2,1fr)}}
+    .retract-box{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.18);border-radius:9px;padding:14px;margin:18px 0;font-size:.8rem;color:rgba(248,244,238,.55);line-height:1.6}
 
-    /* ── NAVIGATION BUTTONS ── */
-    .form-nav{display:flex;align-items:center;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--bdr)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.10em;text-transform:uppercase;transition:.2s;border:none}
-    .btn-primary{background:var(--or);color:#0a0a0a}
-    .btn-primary:hover:not(:disabled){background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}
-    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
-    .btn-ghost{background:transparent;color:rgba(248,244,238,.5);border:1px solid rgba(248,244,238,.12)}
-    .btn-ghost:hover{border-color:var(--or);color:var(--or)}
-    .btn-lg{padding:16px 32px;font-size:.82rem}
-    .spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.2);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;display:none}
+    /* Modal */
+    .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:36px 14px;overflow-y:auto}
+    .modal-ov.open{display:flex}
+    .modal-box{background:#0d1a2d;border:1px solid var(--bdr);border-radius:14px;padding:24px;max-width:540px;width:100%;animation:fadeUp .18s ease}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .modal-ttl{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--or)}
+    .modal-cls{background:none;border:none;color:rgba(248,244,238,.38);font-size:1.3rem;cursor:pointer;transition:.2s}
+    .modal-cls:hover{color:var(--blanc)}
+    .modal-sec{margin-bottom:14px}
+    .modal-sec-ttl{font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid rgba(76,175,125,.14)}
+    .mf{display:flex;align-items:flex-start;gap:7px;font-size:.78rem;color:rgba(248,244,238,.58);line-height:1.5;margin-bottom:5px}
+    .mf::before{content:'✓';color:var(--green);flex-shrink:0;margin-top:2px}
+    .mf.prem::before{content:'★';color:var(--orl)}
+
+    /* Mandat preview */
+    #mandat-preview{display:none;margin-top:22px;background:rgba(255,255,255,.03);border:1px solid var(--bdr);border-radius:9px;padding:22px}
+    .mp-doc{background:rgba(255,255,255,.92);color:#111;padding:18px;border-radius:7px;font-size:.78rem;line-height:1.8}
+
+    /* Bottom bar */
+    .bottom-bar{position:sticky;bottom:0;background:rgba(13,17,23,.96);backdrop-filter:blur(8px);border-top:1px solid rgba(191,150,80,.1);padding:13px 44px;display:flex;align-items:center;justify-content:space-between;z-index:20}
+    @media(max-width:800px){.bottom-bar{padding:13px 18px}}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:.2s;border:none}
+    .btn-p{background:var(--green);color:#fff}
+    .btn-p:hover{background:var(--greenl);transform:translateY(-1px);box-shadow:0 7px 20px rgba(76,175,125,.28)}
+    .btn-g{background:transparent;color:rgba(248,244,238,.48);border:1px solid rgba(248,244,238,.1)}
+    .btn-g:hover{border-color:var(--green);color:var(--green)}
+    .btn-skip{background:transparent;border:none;font-size:.74rem;color:rgba(248,244,238,.28);cursor:pointer;text-decoration:underline}
+    .btn-skip:hover{color:rgba(248,244,238,.5)}
+    .spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.18);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ── ALERT ── */
-    .alert{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border-radius:8px;margin-bottom:20px;font-size:.84rem;line-height:1.5}
-    .alert-warn{background:rgba(191,150,80,.08);border:1px solid rgba(191,150,80,.3);color:var(--orl)}
-    .alert-error{background:rgba(255,84,84,.08);border:1px solid rgba(255,84,84,.28);color:#ff8080}
-    .alert-success{background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.28);color:var(--green)}
-    .alert-info{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.22);color:var(--blue)}
+    .alert{display:flex;align-items:flex-start;gap:9px;padding:11px 14px;border-radius:7px;margin-bottom:14px;font-size:.81rem;line-height:1.5}
+    .alert-w{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.24);color:var(--orange)}
+    .alert-s{background:rgba(76,175,125,.07);border:1px solid rgba(76,175,125,.2);color:var(--green)}
 
-    /* ── MODAL ── */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
-    .modal-overlay.open{display:flex}
-    .modal{background:#0b2039;border:1px solid var(--bdr);border-radius:16px;padding:32px;max-width:420px;width:100%}
-    .modal-title{font-size:1rem;font-weight:500;margin-bottom:12px;line-height:1.4}
-    .modal-body{font-size:.86rem;color:var(--muted);line-height:1.6;margin-bottom:24px}
-    .modal-actions{display:flex;justify-content:flex-end;gap:10px}
-
-    /* ── SUCCESS PAGE ── */
-    #success-page{display:none;text-align:center;padding:60px 24px}
-    .success-icon{font-size:4rem;margin-bottom:24px}
-    .success-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:300;margin-bottom:12px}
-    .success-title em{font-style:italic;color:var(--green)}
-    .success-sub{color:var(--muted);font-size:.94rem;line-height:1.7;max-width:480px;margin:0 auto 32px}
-
-    /* ── GUARD ── */
-    #guard{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
-    .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--or)}
-    .loading-bar{width:200px;height:2px;background:rgba(191,150,80,.15);border-radius:2px;overflow:hidden}
-    .loading-bar-inner{height:100%;background:var(--or);animation:load 1s ease both}
-    @keyframes load{from{width:0}to{width:100%}}
-
-    /* BG */
-    body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(191,150,80,.06) 0%,transparent 60%)}
+    #success{display:none;flex:1;align-items:center;justify-content:center;text-align:center;padding:56px 22px}
   </style>
 </head>
 <body>
 
-<!-- Guard -->
-<div id="guard">
-  <div class="loading-logo">Kàddu</div>
-  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
-</div>
-
-<!-- Modal "pas de garant" -->
-<div class="modal-overlay" id="modal-no-garant">
-  <div class="modal">
-    <div class="modal-title">⚠️ Les profils avec garants sont très souvent étudiés en priorité.</div>
-    <div class="modal-body">Êtes-vous sûr(e) de ne pas vouloir ajouter un garant ? Un garant renforce considérablement votre dossier auprès du bailleur.</div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeNoGarantModal()">Annuler</button>
-      <button class="btn btn-primary" onclick="confirmNoGarant()">Continuer sans garant</button>
+<!-- Modal -->
+<div class="modal-ov" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-ttl" id="modal-ttl">—</div>
+      <button class="modal-cls" onclick="closeModal()">×</button>
     </div>
+    <div id="modal-cnt"></div>
   </div>
 </div>
 
-<nav class="nav">
-  <div class="nav-logo">
-    <img src="/assets/LOGO_KADDU-2.png" alt="Kàddu" onerror="this.style.display='none'">
-    <span>Kàddu</span>
-  </div>
-  <a href="/biens/" class="nav-back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-    Retour aux annonces
-  </a>
-</nav>
-
-<div id="main-wrap">
-  <div class="layout">
-    <!-- MAIN FORM -->
-    <div>
-      <!-- STEPPER -->
-      <div class="stepper" id="stepper">
-        <div class="step-item" onclick="goStep(1)">
-          <div class="step-circle active" id="sc1">1</div>
-          <div class="step-label active-lbl" id="sl1">Informations<br>générales</div>
-        </div>
-        <div class="step-line pending" id="line1"></div>
-        <div class="step-item" onclick="goStep(2)">
-          <div class="step-circle pending" id="sc2">2</div>
-          <div class="step-label pending-lbl" id="sl2">Informations<br>locataires</div>
-        </div>
-        <div class="step-line pending" id="line2"></div>
-        <div class="step-item" onclick="goStep(3)">
-          <div class="step-circle pending" id="sc3">3</div>
-          <div class="step-label pending-lbl" id="sl3">Informations<br>garants</div>
-        </div>
-      </div>
-
-      <div id="alert-global"></div>
-
-      <!-- ═══════════════════════════════
-           ÉTAPE 1 — INFOS GÉNÉRALES
-      ═══════════════════════════════ -->
-      <div class="form-section active" id="section-1">
-        <h1 class="section-title">Bienvenue chez <em>Kàddu</em></h1>
-        <p class="section-sub">Commençons par renseigner votre fiche d'information. Ce document vous permet de postuler rapidement aux logements qui vous intéressent.</p>
-
-        <!-- Composition -->
-        <div class="form-group">
-          <label class="form-label">Qui occupera le logement ?</label>
-          <div class="choice-grid choice-grid-4">
-            <div class="choice-card selected" onclick="selectCompo(this,'seul')"><span class="choice-icon">🧍</span><span class="choice-label">Locataire seul(e)</span></div>
-            <div class="choice-card" onclick="selectCompo(this,'couple')"><span class="choice-icon">👫</span><span class="choice-label">Couple (sans enfants)</span></div>
-            <div class="choice-card" onclick="selectCompo(this,'famille')"><span class="choice-icon">👨‍👩‍👧</span><span class="choice-label">Famille</span></div>
-            <div class="choice-card" onclick="selectCompo(this,'colocation')"><span class="choice-icon">👥</span><span class="choice-label">Colocation</span></div>
-          </div>
-          <!-- Famille -->
-          <div id="compo-famille" style="display:none">
-            <div class="counter-box"><span class="counter-label">Nombre d'adultes</span><div class="counter-ctrl"><button class="counter-btn" onclick="counter('adultes',-1)">−</button><span class="counter-val" id="val-adultes">0 adulte(s)</span><button class="counter-btn" onclick="counter('adultes',1)">+</button></div></div>
-            <div class="counter-box"><span class="counter-label">Nombre d'enfants</span><div class="counter-ctrl"><button class="counter-btn" onclick="counter('enfants',-1)">−</button><span class="counter-val" id="val-enfants">0 enfant(s)</span><button class="counter-btn" onclick="counter('enfants',1)">+</button></div></div>
-          </div>
-          <!-- Colocation -->
-          <div id="compo-colocation" style="display:none">
-            <div class="counter-box"><span class="counter-label">Nombre de colocataires</span><div class="counter-ctrl"><button class="counter-btn" onclick="counter('coloc',-1)">−</button><span class="counter-val" id="val-coloc">0 coloc.</span><button class="counter-btn" onclick="counter('coloc',1)">+</button></div></div>
-          </div>
-        </div>
-
-        <!-- Emménagement -->
-        <div class="form-group">
-          <label class="form-label">Quand souhaitez-vous emménager ?</label>
-          <p class="form-hint" style="margin-bottom:12px">Merci de prévoir une date hors week-end, afin qu'un agent Kàddu soit disponible le jour de l'emménagement.</p>
-          <div class="choice-grid choice-grid-4">
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','semaine')"><span class="choice-icon">⚡</span><span class="choice-label">Moins d'une semaine</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','deux-semaines')"><span class="choice-icon">➡️</span><span class="choice-label">Une à deux semaines</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','mois')"><span class="choice-icon">🔄</span><span class="choice-label">D'ici un mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'emmenagement','plus-mois')"><span class="choice-icon">📅</span><span class="choice-label">Plus d'un mois</span></div>
-          </div>
-        </div>
-
-        <!-- Durée -->
-        <div class="form-group">
-          <label class="form-label">Durée envisagée</label>
-          <p class="form-hint" style="margin-bottom:12px">Votre réponse ne constitue pas un engagement : cette estimation nous permet d'en savoir plus sur votre projet.</p>
-          <div class="choice-grid choice-grid-4">
-            <div class="choice-card" onclick="selectChoice(this,'duree','6mois')"><span class="choice-icon">🏠</span><span class="choice-label">Moins de 6 mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'duree','6-12mois')"><span class="choice-icon">🏠</span><span class="choice-label">6 à 12 mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'duree','12-36mois')"><span class="choice-icon">🏠</span><span class="choice-label">12 à 36 mois</span></div>
-            <div class="choice-card" onclick="selectChoice(this,'duree','3ans')"><span class="choice-icon">🏠</span><span class="choice-label">Plus de 3 ans</span></div>
-          </div>
-        </div>
-
-        <!-- Ville précédente -->
-        <div class="form-row">
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label">Ville de votre précédent logement</label>
-            <input class="form-input" type="text" id="ville-precedente" placeholder="Ex : Dakar, Thiès…">
-          </div>
-          <div class="form-group" style="margin-bottom:0">
-            <label class="form-label">Précédent bailleur (optionnel)</label>
-            <input class="form-input" type="text" id="bailleur-precedent" placeholder="Nom ou agence">
-          </div>
-        </div>
-
-        <div class="form-nav">
-          <span></span>
-          <button class="btn btn-primary btn-lg" onclick="nextStep(1)">Valider et aller à l'étape suivante →</button>
-        </div>
-      </div>
-
-      <!-- ═══════════════════════════════
-           ÉTAPE 2 — LOCATAIRES
-      ═══════════════════════════════ -->
-      <div class="form-section" id="section-2">
-        <h1 class="section-title">Parlez-nous des <em>locataires</em></h1>
-        <p class="section-sub">Veuillez renseigner les informations concernant chacun des locataires du futur logement. Les noms renseignés seront ceux qui apparaîtront sur le bail.</p>
-
-        <div class="person-list" id="loc-list"></div>
-        <button class="add-btn" onclick="addLocataire()"><div class="plus">+</div> Ajouter un locataire</button>
-
-        <!-- Sub-form locataire -->
-        <div class="sub-form" id="loc-form" style="display:none">
-          <div class="sub-form-title" id="loc-form-title">1<sup>er</sup> locataire sur le bail</div>
-
-          <!-- Nature -->
-          <div class="form-group">
-            <label class="form-label">Quelle est la nature de ce locataire ?</label>
-            <div class="choice-grid choice-grid-2">
-              <div class="choice-card selected" onclick="selectNature(this,'physique','loc')"><span class="choice-icon">👤</span><span class="choice-label">Personne physique</span></div>
-              <div class="choice-card" onclick="selectNature(this,'societe','loc')"><span class="choice-icon">🏢</span><span class="choice-label">Société</span></div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Prénom</label><input class="form-input" id="loc-prenom" placeholder="Prénom"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom</label><input class="form-input" id="loc-nom" placeholder="Nom"></div>
-          </div>
-          <div class="form-row" style="margin-top:16px">
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email</label><input class="form-input" id="loc-email" type="email" placeholder="email@exemple.com"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone</label><input class="form-input" id="loc-tel" placeholder="+221 77 000 00 00"></div>
-          </div>
-
-          <!-- Situation pro -->
-          <div class="form-group" style="margin-top:16px">
-            <label class="form-label">Situation professionnelle</label>
-            <select class="form-select" id="loc-situation" onchange="updateProFields('loc')">
-              <option value="">Sélectionner…</option>
-              <option value="cdi">Salarié(e) en CDI</option>
-              <option value="cdd">Salarié(e) en CDD</option>
-              <option value="independant">Indépendant(e)</option>
-              <option value="etudiant">Étudiant(e) / Alternant(e)</option>
-              <option value="interimaire">Intérimaire</option>
-              <option value="retraite">Retraité(e)</option>
-              <option value="sans_emploi">Sans emploi</option>
-              <option value="autre">Autre</option>
-            </select>
-          </div>
-
-          <!-- Champs dynamiques CDI/CDD/Indépendant/Intérimaire/Autre -->
-          <div class="pro-fields" id="loc-fields-standard">
-            <div class="form-row">
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Dans le poste depuis le</label><input class="form-input" id="loc-date-poste" type="date"></div>
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="loc-revenu" type="number" placeholder="0"></div>
-            </div>
-            <div class="form-row" style="margin-top:0">
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Intitulé du poste</label><input class="form-input" id="loc-poste" placeholder="Ex : Ingénieur, Comptable…"></div>
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom de la société</label><input class="form-input" id="loc-societe" placeholder="Nom de l'entreprise"></div>
-            </div>
-          </div>
-          <!-- CDI uniquement -->
-          <div class="pro-fields" id="loc-fields-cdi">
-            <div class="toggle-row"><span class="toggle-label">En période d'essai ?</span><label class="toggle"><input type="checkbox" id="loc-essai"><span class="toggle-slider"></span></label></div>
-            <div class="toggle-row"><span class="toggle-label">Travaille dans le secteur privé ?</span><label class="toggle"><input type="checkbox" id="loc-prive"><span class="toggle-slider"></span></label></div>
-            <div class="toggle-row" style="border:none"><span class="toggle-label">Dans une entreprise de plus de 10 employés ?</span><label class="toggle"><input type="checkbox" id="loc-10emp"><span class="toggle-slider"></span></label></div>
-          </div>
-          <!-- CDD uniquement -->
-          <div class="pro-fields" id="loc-fields-cdd">
-            <div class="form-group" style="margin-top:8px"><label class="form-label">Date de fin de contrat</label><input class="form-input" id="loc-fin-cdd" type="date"></div>
-          </div>
-          <!-- Étudiant -->
-          <div class="pro-fields" id="loc-fields-etudiant">
-            <div class="form-row">
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="loc-revenu-etu" type="number" placeholder="0"></div>
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Date estimée fin des études</label><input class="form-input" id="loc-fin-etudes" type="date"></div>
-            </div>
-          </div>
-          <!-- Retraité / Sans emploi -->
-          <div class="pro-fields" id="loc-fields-retraite">
-            <div class="form-row">
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Dans cette situation depuis le</label><input class="form-input" id="loc-date-retraite" type="date"></div>
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="loc-revenu-retraite" type="number" placeholder="0"></div>
-            </div>
-          </div>
-
-          <!-- Infos supplémentaires -->
-          <div class="form-group" style="margin-top:16px">
-            <label class="form-label">Informations supplémentaires</label>
-            <textarea class="form-textarea" id="loc-infos" placeholder="Présentez-nous ce locataire et son projet de location (activité professionnelle, raisons de l'emménagement, etc.)"></textarea>
-          </div>
-
-          <div style="display:flex;justify-content:flex-end;margin-top:8px">
-            <button class="btn btn-primary" onclick="saveLoc()">Enregistrer ce locataire</button>
-          </div>
-        </div>
-
-        <div class="form-nav">
-          <button class="btn btn-ghost" onclick="prevStep(2)">← Retour</button>
-          <button class="btn btn-primary btn-lg" onclick="nextStep(2)">Valider et aller à l'étape suivante →</button>
-        </div>
-      </div>
-
-      <!-- ═══════════════════════════════
-           ÉTAPE 3 — GARANTS
-      ═══════════════════════════════ -->
-      <div class="form-section" id="section-3">
-        <h1 class="section-title">Boostez votre <em>dossier</em></h1>
-        <p class="section-sub">Un dossier locatif avec un garant a davantage de chances d'être accepté par un propriétaire. Ajoutez un garant pour renforcer votre candidature.</p>
-
-        <div class="person-list" id="gar-list"></div>
-
-        <!-- Choix type garant -->
-        <div id="gar-type-wrap">
-          <div class="garant-grid">
-            <div class="choice-card" onclick="selectGarantType('physique')"><span class="choice-icon">👤</span><span class="choice-label">Personne physique</span></div>
-            <div class="choice-card" onclick="selectGarantType('societe')"><span class="choice-icon">🏢</span><span class="choice-label">Société</span></div>
-            <div class="choice-card" onclick="selectGarantType('garant_prive')"><span class="choice-icon">🛡️</span><span class="choice-label">Garant privé</span></div>
-            <div class="choice-card" onclick="openNoGarantModal()"><span class="choice-icon">🚫</span><span class="choice-label">Je n'ai pas de garant</span></div>
-          </div>
-        </div>
-
-        <!-- Sub-form garant -->
-        <div class="sub-form" id="gar-form" style="display:none">
-          <div class="sub-form-title" id="gar-form-title">1<sup>er</sup> garant</div>
-          <div class="form-row">
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Prénom</label><input class="form-input" id="gar-prenom" placeholder="Prénom"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom</label><input class="form-input" id="gar-nom" placeholder="Nom"></div>
-          </div>
-          <div class="form-row" style="margin-top:16px">
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email</label><input class="form-input" id="gar-email" type="email" placeholder="email@exemple.com"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone</label><input class="form-input" id="gar-tel" placeholder="+221 77 000 00 00"></div>
-          </div>
-          <!-- Lien avec locataire -->
-          <div class="form-group" style="margin-top:16px">
-            <label class="form-label">Locataire(s) dont la personne se porte garante</label>
-            <div id="gar-loc-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px"></div>
-          </div>
-          <!-- Situation pro garant -->
-          <div class="form-group">
-            <label class="form-label">Situation professionnelle</label>
-            <select class="form-select" id="gar-situation" onchange="updateProFields('gar')">
-              <option value="">Sélectionner…</option>
-              <option value="cdi">Salarié(e) en CDI</option>
-              <option value="cdd">Salarié(e) en CDD</option>
-              <option value="independant">Indépendant(e)</option>
-              <option value="etudiant">Étudiant(e)</option>
-              <option value="retraite">Retraité(e)</option>
-              <option value="autre">Autre</option>
-            </select>
-          </div>
-          <div class="pro-fields" id="gar-fields-standard">
-            <div class="form-row">
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Dans le poste depuis le</label><input class="form-input" id="gar-date-poste" type="date"></div>
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Revenu net mensuel (F CFA)</label><input class="form-input" id="gar-revenu" type="number" placeholder="0"></div>
-            </div>
-            <div class="form-row" style="margin-top:0">
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Intitulé du poste</label><input class="form-input" id="gar-poste" placeholder="Intitulé du poste"></div>
-              <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom de la société</label><input class="form-input" id="gar-societe" placeholder="Nom de l'entreprise"></div>
-            </div>
-          </div>
-          <div style="display:flex;justify-content:flex-end;margin-top:16px">
-            <button class="btn btn-primary" onclick="saveGar()">Enregistrer ce garant</button>
-          </div>
-        </div>
-
-        <button class="add-btn" id="add-gar-btn" onclick="showGarType()" style="display:none"><div class="plus">+</div> J'ai déjà un garant et souhaite l'ajouter à mon dossier</button>
-
-        <div class="form-nav">
-          <button class="btn btn-ghost" onclick="prevStep(3)">← Retour</button>
-          <button class="btn btn-primary btn-lg" onclick="submitDossier(this)">
-            <span>Postuler pour ce logement</span>
-            <div class="spinner" id="spinner-submit"></div>
-          </button>
-        </div>
-        <p style="text-align:center;font-size:.76rem;color:rgba(248,244,238,.3);margin-top:12px;cursor:pointer" onclick="submitDossier(document.querySelector('#section-3 .btn-primary'))">Je souhaite postuler à un autre logement</p>
-      </div>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <img src="/assets/LOGO_KADDU-2.png" alt="" onerror="this.style.display='none'">
+      <span>Kàddu</span>
     </div>
-
-    <!-- RIGHT PANEL — Bien -->
-    <div class="bien-panel">
-      <div class="bien-card">
-        <div class="bien-card-img" id="bien-img">🏠</div>
-        <div class="bien-card-body">
-          <div class="bien-card-label">Vous postulez pour :</div>
-          <div class="bien-card-ville" id="bien-ville">—</div>
-          <div class="bien-card-prix" id="bien-prix">—</div>
-          <div class="bien-card-charges" id="bien-charges"></div>
-          <div class="bien-card-details" id="bien-details"></div>
-          <div class="bien-card-badge" id="bien-dispo">● Disponible</div>
+    <div class="ring-wrap">
+      <div class="ring-pos">
+        <svg class="ring-svg" width="76" height="76" viewBox="0 0 76 76">
+          <circle class="ring-bg" cx="38" cy="38" r="32"/>
+          <circle class="ring-fill" id="ringFill" cx="38" cy="38" r="32"/>
+        </svg>
+        <div class="ring-inner">
+          <span class="ring-pct" id="ringPct">0%</span>
+        </div>
+      </div>
+      <div class="ring-time" id="ringTime">Temps estimé : 3 min</div>
+    </div>
+    <div class="steps-nav">
+      <div class="sn" onclick="goStep(1)"><div class="sn-n active" id="sn1">1</div><div class="sn-lbl active" id="sl1">Logement</div></div>
+      <div class="sn" onclick="goStep(2)"><div class="sn-n idle" id="sn2">2</div><div class="sn-lbl" id="sl2">Contact</div></div>
+      <div class="sn" onclick="goStep(3)"><div class="sn-n idle" id="sn3">3</div><div class="sn-lbl" id="sl3">Projet</div></div>
+      <div class="sn" onclick="goStep(4)"><div class="sn-n idle" id="sn4">4</div><div class="sn-lbl" id="sl4">Loyer</div></div>
+      <div class="sn" onclick="goStep(5)"><div class="sn-n idle" id="sn5">5</div><div class="sn-lbl" id="sl5">Devis</div></div>
+      <div id="sn-mandat" style="display:none">
+        <div class="sn" onclick="goStep(6)"><div class="sn-n idle" id="sn6">5</div><div class="sn-lbl" id="sl6">Mandat</div></div>
+        <div class="sn-sub">
+          <div class="sn-sub-item" id="ssub1" onclick="showMTab('etapes')">Prochaines étapes</div>
+          <div class="sn-sub-item" id="ssub2" onclick="showMTab('signature')">Signature</div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+    <div class="sb-bottom">
+      <div class="sb-tel">📞 +221 70 000 00 00</div>
+      <span class="sb-skip" onclick="location.href='/espace-bailleur/'">Continuer plus tard</span>
+    </div>
+  </aside>
 
-<!-- SUCCESS PAGE -->
-<div id="success-page">
-  <div class="success-icon">🎉</div>
-  <h1 class="success-title">Dossier <em>envoyé</em> !</h1>
-  <p class="success-sub">Votre dossier de candidature a bien été transmis. L'équipe Kàddu va l'analyser et reviendra vers vous dans les meilleurs délais.</p>
-  <a href="/espace-locataire/" class="btn btn-primary btn-lg">Suivre mon dossier →</a>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-grid" id="mainGrid">
+      <div class="form-panel">
+        <div id="gAlert"></div>
+
+        <!-- ÉTAPE 1 -->
+        <div class="step active" id="step1">
+          <div class="step-hd">
+            <span class="step-icon">🏠</span>
+            <h1 class="step-title">Votre <em>logement</em></h1>
+            <p class="step-sub">Renseignez les informations de base sur votre bien.</p>
+          </div>
+          <div class="q">
+            <div class="q-lbl">Où se situe votre logement ?</div>
+            <div>
+              <div class="addr-wrap">
+                <input class="addr-in" id="addrIn" type="text" placeholder="Quartier, rue… (ex: Almadies, Dakar)" oninput="onAddr(this)" autocomplete="off">
+                <span class="addr-chk" id="addrChk">✓</span>
+                <div class="addr-drop" id="addrDrop"></div>
+              </div>
+              <div class="addr-multi" onclick="alert('Contactez-nous au +221 70 000 00 00 pour plusieurs biens.')">J'ai plusieurs logements à confier</div>
+            </div>
+          </div>
+          <div class="q">
+            <div class="q-lbl">Combien de pièces ?</div>
+            <div>
+              <div class="pills" id="pieces-pills">
+                <div class="pill on" onclick="selPieces(this,'studio')">Studio</div>
+                <div class="pill" onclick="selPieces(this,'1')">1</div>
+                <div class="pill" onclick="selPieces(this,'2')">2</div>
+                <div class="pill" onclick="selPieces(this,'3')">3</div>
+                <div class="pill" onclick="selPieces(this,'4')">4</div>
+                <div class="pill" onclick="selPieces(this,'5+')">5+</div>
+              </div>
+              <div class="xtra show" id="xtra-simple">
+                <div class="fg"><label class="flbl">Surface totale (m²)</label><input class="inp" id="surface-s" type="number" placeholder="Ex : 35" oninput="collectSurface(); if(D.adresse) updateAttractivite(findZone(D.adresse),D.marche);"></div>
+              </div>
+              <div class="xtra" id="xtra-ext">
+                <div class="frow">
+                  <div class="fg"><label class="flbl">Chambres</label><input class="inp" id="nb-ch" type="number" placeholder="0"></div>
+                  <div class="fg"><label class="flbl">Salle(s) de bain</label><input class="inp" id="nb-sdb" type="number" placeholder="0"></div>
+                </div>
+                <div class="frow">
+                  <div class="fg"><label class="flbl">Étage</label><input class="inp" id="etage" placeholder="RDC, 2ème…"></div>
+                  <div class="fg"><label class="flbl">Surface (m²)</label><input class="inp" id="surface-e" type="number" placeholder="Ex : 120" oninput="collectSurface(); if(D.adresse) updateAttractivite(findZone(D.adresse),D.marche);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="q" id="loc-mode-q" style="display:none">
+            <div class="q-lbl">Souhaitez-vous louer les chambres individuellement ?</div>
+            <div>
+              <div class="bcards bcards-2">
+                <div class="bcard on" onclick="selCard(this,'loc-mode','entier')"><span class="bcard-ico">🏢</span><span class="bcard-lbl">Louer le logement entier</span></div>
+                <div class="bcard" onclick="selCard(this,'loc-mode','chambre')"><span class="bcard-ico">🛏️</span><span class="bcard-lbl">Louer à la chambre</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="q">
+            <div class="q-lbl">Le logement sera-t-il loué meublé ?</div>
+            <div>
+              <div class="bcards bcards-3">
+                <div class="bcard" onclick="selMeuble(this,'meuble')"><span class="bcard-ico">🛋️</span><span class="bcard-lbl">Meublé</span></div>
+                <div class="bcard" onclick="selMeuble(this,'non_meuble')"><span class="bcard-ico">📦</span><span class="bcard-lbl">Non meublé</span></div>
+                <div class="bcard" onclick="selMeuble(this,'nsp')"><span class="bcard-ico">❓</span><span class="bcard-lbl">Je ne sais pas</span></div>
+              </div>
+              <div class="xtra" id="xtra-meuble">
+                <div class="q-lbl" style="font-size:.78rem;color:rgba(248,244,238,.48);margin-bottom:7px;margin-top:3px">Déjà occupé par un locataire ?</div>
+                <div class="pills">
+                  <div class="pill" onclick="selPill(this,'occupe','oui')">Oui, actuellement loué</div>
+                  <div class="pill" onclick="selPill(this,'occupe','non')">Non, vacant</div>
+                </div>
+              </div>
+
+              <div class="estimation-panel" id="estimationBox">
+                <div class="estimation-kicker">Projection indicative Kàddu</div>
+                <div class="estimation-main" id="estimationMain">Sélectionnez le quartier, les pièces et le statut meublé/non-meublé pour afficher une fourchette.</div>
+                <div class="estimation-note" id="estimationNote">Cette projection reste indicative et sera affinée par un conseiller selon l’état du bien, la surface, l’étage et le standing.</div>
+                <div class="estimation-actions">
+                  <span class="estimation-chip" id="estimationZone">Zone à confirmer</span>
+                  <span class="estimation-chip" id="estimationType">Type à confirmer</span>
+                  <span class="estimation-chip" id="estimationMeuble">Statut à confirmer</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 2 -->
+        <div class="step" id="step2">
+          <div class="step-hd">
+            <span class="step-icon">📋</span>
+            <h1 class="step-title">Vos <em>coordonnées</em></h1>
+            <p class="step-sub">Un conseiller Kàddu vous accompagnera dans votre projet.</p>
+          </div>
+          <div class="frow"><div class="fg"><label class="flbl">Prénom</label><input class="inp" id="c-prenom" placeholder="Votre prénom" autocomplete="given-name"></div><div class="fg"><label class="flbl">Nom</label><input class="inp" id="c-nom" placeholder="Votre nom" autocomplete="family-name"></div></div>
+          <div class="fg">
+            <label class="flbl">Téléphone</label>
+            <div style="display:flex;gap:9px">
+              <select class="sel" style="width:115px;flex-shrink:0" id="c-ind"><option value="+221">🇸🇳 +221</option><option value="+33">🇫🇷 +33</option><option value="+225">🇨🇮 +225</option><option value="+212">🇲🇦 +212</option></select>
+              <input class="inp" id="c-tel" type="tel" placeholder="77 000 00 00" style="flex:1">
+            </div>
+          </div>
+          <div class="fg"><label class="flbl">Email</label><input class="inp" id="c-email" type="email" placeholder="votre@email.com" autocomplete="email"></div>
+          <label class="chk"><input type="checkbox" id="c-news"><div class="chk-box"></div>Je souhaite recevoir les actualités immobilières de Kàddu</label>
+          <label class="chk"><input type="checkbox" id="c-cgu"><div class="chk-box"></div>J'accepte les <a href="/conditions-utilisation" target="_blank">conditions d'utilisation</a> de Kàddu</label>
+        </div>
+
+        <!-- ÉTAPE 3 -->
+        <div class="step" id="step3">
+          <div class="step-hd">
+            <span class="step-icon">🎯</span>
+            <h1 class="step-title">Votre projet <em>locatif</em></h1>
+            <p class="step-sub">Ces informations permettront à votre conseiller de mieux vous accompagner.</p>
+          </div>
+          <div class="q">
+            <div class="q-lbl">À partir de quand votre logement est-il disponible ?</div>
+            <div>
+              <div class="bcards bcards-3">
+                <div class="bcard" onclick="selCard(this,'dispo','1mois')"><span class="bcard-ico">⚡</span><span class="bcard-lbl">Moins d'1 mois</span></div>
+                <div class="bcard" onclick="selCard(this,'dispo','3mois')"><span class="bcard-ico">→</span><span class="bcard-lbl">Dans 3 mois</span></div>
+                <div class="bcard" onclick="selCard(this,'dispo','plus')"><span class="bcard-ico">📅</span><span class="bcard-lbl">Plus tard</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="q">
+            <div class="q-lbl">Avez-vous des besoins particuliers ?</div>
+            <div>
+              <select class="sel" id="besoin-sel" onchange="updateCtx()">
+                <option value="">Pas de besoin particulier</option>
+                <option value="expatrie">Je suis expatrié(e) / en diaspora</option>
+                <option value="invest">J'ai un investissement locatif (SCI, indivision…)</option>
+                <option value="neuf">J'ai acheté sur plan (neuf / VEFA)</option>
+                <option value="multi">J'ai plusieurs logements</option>
+              </select>
+              <div class="ctx" id="ctx-expatrie"><strong>Kàddu s'adapte :</strong><div class="ctx-item">Communication par mail et WhatsApp</div><div class="ctx-item">Suivi complet à distance</div><div class="ctx-item">Reversement sur compte international possible</div></div>
+              <div class="ctx" id="ctx-invest"><strong>Kàddu s'adapte :</strong><div class="ctx-item">Évitez la vacance locative grâce aux visites 360°</div><div class="ctx-item">Offres adaptées pour préserver votre rentabilité</div><div class="ctx-item">Récapitulatif détaillé des encaissements / décaissements</div></div>
+              <div class="ctx" id="ctx-neuf"><strong>Kàddu s'adapte :</strong><div class="ctx-item">Recherche de locataires dès la pré-livraison</div><div class="ctx-item">Experts formés aux réglementations locales</div></div>
+              <div class="ctx" id="ctx-multi"><strong>Kàddu s'adapte :</strong><div class="ctx-item">Tableau de bord unifié pour tous vos biens</div><div class="ctx-item">Tarifs dégressifs selon le nombre de logements</div></div>
+            </div>
+          </div>
+          <div class="q">
+            <div class="q-lbl">Quel facteur est déterminant pour vous ?</div>
+            <div>
+              <div class="radio-list" id="facteur-list">
+                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La rapidité (trouver un locataire vite)</span></label>
+                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">Le prix (tarifs attractifs)</span></label>
+                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La sécurité (solvabilité, garantie loyers impayés)</span></label>
+                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">Le conseil / l'expertise (loyer de marché, accompagnement)</span></label>
+                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La tranquillité (déléguer 100%)</span></label>
+                <label class="ri" onclick="selRI(this)"><div class="ri-dot"></div><span class="ri-txt">La réactivité (résolution rapide des incidents)</span></label>
+              </div>
+            </div>
+          </div>
+          <div class="q"><div class="q-lbl">Informations supplémentaires</div><div><textarea class="textarea" id="proj-infos" placeholder="Ex : logement en rénovation, disponible à partir du 1er septembre…"></textarea></div></div>
+          <div class="q"><div class="q-lbl">Comment avez-vous connu Kàddu ?</div><div><select class="sel" id="proj-src"><option value="">Choisir…</option><option>Recommandation</option><option>Réseaux sociaux</option><option>Recherche Google</option><option>Affichage / publicité</option><option>Partenaire professionnel</option><option>Autre</option></select></div></div>
+          <div class="q">
+            <div class="q-lbl">Code promotionnel ?</div>
+            <div>
+              <div class="tog-row"><span class="tog-lbl">Activer un code promo</span><label class="tog"><input type="checkbox" id="promo-tog" onchange="togglePromo(this)"><span class="tog-sl"></span></label></div>
+              <div class="xtra" id="xtra-promo">
+                <div style="display:flex;gap:9px;margin-top:3px">
+                  <input class="inp" id="promo-code" placeholder="Code d'avantage" style="flex:1">
+                  <button class="btn btn-p" style="padding:11px 16px;font-size:.72rem" onclick="validatePromo()">Valider</button>
+                </div>
+                <div style="font-size:.7rem;color:rgba(248,244,238,.28);margin-top:5px">La réduction sera visible sur vos prochaines factures.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 4 -->
+        <div class="step" id="step4">
+          <div class="step-hd">
+            <span class="step-icon">💰</span>
+            <h1 class="step-title">Votre <em>loyer</em></h1>
+            <p class="step-sub">Quel loyer charges comprises souhaitez-vous appliquer ?</p>
+          </div>
+          <div class="loyer-box">
+            <div class="loyer-ctrl">
+              <button class="loyer-btn" onclick="adjLoyer(-5000)">−</button>
+              <div style="text-align:center"><div class="loyer-val"><span id="loyerVal">150 000</span><span class="loyer-unit">F CFA</span></div></div>
+              <button class="loyer-btn" onclick="adjLoyer(5000)">+</button>
+            </div>
+            <div class="loyer-rng" id="loyerRng">Selon nos données, un logement similaire est loué entre <strong>120 000 F</strong> et <strong>185 000 F CFA</strong> / mois</div>
+          </div>
+          <div class="hint-box"><span>👥</span><span>Un conseiller Kàddu vous accompagnera dans la fixation de votre loyer à partir de notre connaissance du marché sénégalais.</span></div>
+          <div style="margin-top:22px">
+            <div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.28);margin-bottom:11px">Nos conseillers dans votre secteur</div>
+            <div class="commerciaux-grid">
+              <div class="comm-card"><div class="comm-av">👩🏾</div><div class="comm-name">Fadoum S.</div><div class="comm-role">Conseillère senior</div><div class="comm-stat">⭐ 4.9 · 100+ locations</div></div>
+              <div class="comm-card"><div class="comm-av">👨🏾</div><div class="comm-name">Ibrahima D.</div><div class="comm-role">Expert locatif</div><div class="comm-stat">⭐ 4.8 · 80+ locations</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 5 — DEVIS -->
+        <div class="step" id="step5">
+          <div class="step-hd">
+            <span class="step-icon">📄</span>
+            <h1 class="step-title">Votre <em>devis</em></h1>
+            <p class="step-sub">Sélectionnez vos services. <strong>Vous ne payez rien avant la sélection finale du locataire !</strong></p>
+          </div>
+          <div class="devis-top">
+            <div class="fadoum-card">
+              <div class="fadoum-img">
+                <svg width="96" height="132" viewBox="0 0 96 132" fill="none">
+                  <ellipse cx="48" cy="110" rx="26" ry="18" fill="#1a4a2e"/>
+                  <circle cx="48" cy="52" r="21" fill="#8B5E3C"/>
+                  <ellipse cx="48" cy="34" rx="21" ry="7" fill="#2a1506"/>
+                  <ellipse cx="29" cy="45" rx="5" ry="11" fill="#2a1506"/>
+                  <ellipse cx="67" cy="45" rx="5" ry="11" fill="#2a1506"/>
+                  <circle cx="41" cy="50" r="2.5" fill="#2a1506"/>
+                  <circle cx="55" cy="50" r="2.5" fill="#2a1506"/>
+                  <circle cx="42" cy="49" r="1" fill="white"/>
+                  <circle cx="56" cy="49" r="1" fill="white"/>
+                  <path d="M41 59 Q48 65 55 59" stroke="#5a2a0a" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+                  <path d="M42 60 Q48 64 54 60" fill="#c0785a"/>
+                  <rect x="44" y="60" width="8" height="2.5" rx="1" fill="white"/>
+                  <circle cx="27" cy="55" r="2.5" fill="#BF9650"/>
+                  <circle cx="69" cy="55" r="2.5" fill="#BF9650"/>
+                  <ellipse cx="48" cy="76" rx="11" ry="2.5" stroke="#BF9650" stroke-width="1.4" fill="none"/>
+                  <path d="M24 82 Q33 75 48 75 Q63 75 72 82 L72 116 Q48 121 24 116Z" fill="#1a4a2e"/>
+                  <circle cx="38" cy="92" r="2.5" fill="rgba(191,150,80,.4)"/>
+                  <circle cx="48" cy="89" r="1.8" fill="rgba(191,150,80,.3)"/>
+                  <circle cx="58" cy="92" r="2.5" fill="rgba(191,150,80,.4)"/>
+                  <path d="M24 84 Q18 91 19 103" stroke="#8B5E3C" stroke-width="7" stroke-linecap="round" fill="none"/>
+                  <path d="M72 84 Q78 91 77 103" stroke="#8B5E3C" stroke-width="7" stroke-linecap="round" fill="none"/>
+                  <circle cx="19" cy="105" r="4.5" fill="#8B5E3C"/>
+                  <circle cx="77" cy="105" r="4.5" fill="#8B5E3C"/>
+                </svg>
+              </div>
+              <div class="fadoum-info">
+                <div class="fadoum-name">Fadoum S.</div>
+                <div class="fadoum-title">Conseillère immobilier · Kàddu depuis 4 ans</div>
+                <div class="fadoum-item">Déléguer 100% de la gestion — Notre équipe résout les problèmes à votre place.</div>
+                <div class="fadoum-item">Trouver un locataire sérieux en 10 jours — 100+ mises en location effectuées.</div>
+              </div>
+            </div>
+            <div>
+              <div class="devis-loyer-bar">
+                <div><div class="dlb-lbl">Loyer renseigné</div></div>
+                <div style="display:flex;align-items:center;gap:11px">
+                  <div class="dlb-val"><span id="devisLoyer">150 000 F CFA</span></div>
+                  <div class="dlb-edit" onclick="goStep(4)">✏ Modifier</div>
+                </div>
+              </div>
+              <div class="flux-card">
+                <div class="flux-title">Aperçu de vos prochains flux financiers *</div>
+                <div class="flux-bars" id="flux-bars"></div>
+                <div style="font-size:.6rem;color:rgba(248,244,238,.22);margin-top:9px">* Estimation basée sur les offres sélectionnées.</div>
+                <div class="flux-leg">
+                  <div class="fl-item"><div class="fl-dot" style="background:rgba(255,84,84,.4)"></div>Gestion</div>
+                  <div class="fl-item"><div class="fl-dot" style="background:rgba(245,158,11,.35)"></div>Assurance</div>
+                  <div class="fl-item"><div class="fl-dot" style="background:rgba(74,158,255,.35)"></div>Recherche</div>
+                  <div class="fl-item"><div class="fl-dot" style="background:rgba(76,175,125,.5)"></div>Versement</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="financial-projection" id="financialProjection" style="display:none">
+            <div class="fp-title">Projection financière Kàddu</div>
+            <div class="fp-row">
+              <div class="fp-cell"><strong id="fpMensuel">—</strong><span>Loyer mensuel estimé</span></div>
+              <div class="fp-cell"><strong id="fpAnnuel">—</strong><span>Brut annuel</span></div>
+              <div class="fp-cell"><strong id="fpFrais">—</strong><span>Services estimés / an</span></div>
+              <div class="fp-cell"><strong id="fpNet">—</strong><span>Net indicatif</span></div>
+            </div>
+            <div class="projection-note">Cette projection aide le bailleur à se projeter. Elle sera affinée selon les charges réelles, la fiscalité, la vacance et les options retenues.</div>
+          </div>
+
+          <div class="offres-grid">
+            <!-- Mission A -->
+            <div class="offre" id="offre-a">
+              <div class="offre-tiers">
+                <div class="offre-tier" onclick="selTier('a','non',this)"><div class="tier-dot"></div>NON</div>
+                <div class="offre-tier on" onclick="selTier('a','std',this)"><div class="tier-dot"></div>STANDARD</div>
+                <div class="offre-tier" onclick="selTier('a','prem',this)"><div class="tier-dot"></div>PREMIUM</div>
+              </div>
+              <div class="offre-body">
+                <span class="offre-ico">🔑</span>
+                <div class="offre-name">Recherche de locataire</div>
+                <div class="offre-price" id="ap">80% d'un mois de loyer</div>
+                <div class="offre-psub">TTC, à la relocation</div>
+                <div class="offre-calc" id="ac">soit ~ 120 000 F CFA / loc.</div>
+                <div class="offre-feats">
+                  <div class="of ok">Accompagnement expert (mail, téléphone, RDV)</div>
+                  <div class="of ok">Reportage professionnel (photos HD, visite 360°)</div>
+                  <div class="of ok">Diffusion sur plateformes immobilières sénégalaises</div>
+                  <div class="of ok">Vérification dossiers locataires (solvabilité, cautions)</div>
+                  <div class="of ok">Rédaction et signature des baux</div>
+                  <div class="of ok">État des lieux d'entrée digital</div>
+                  <div class="of no"><span class="ptag">Premium</span>Emplacements premium (expatriés, universités)</div>
+                  <div class="of no"><span class="ptag">Premium</span>Remise en état avant location</div>
+                </div>
+                <button class="btn-esm" onclick="openModal('a')">En savoir plus</button>
+              </div>
+            </div>
+            <!-- Mission B -->
+            <div class="offre" id="offre-b">
+              <div class="offre-tag">Recommandé</div>
+              <div class="offre-tiers">
+                <div class="offre-tier" onclick="selTier('b','non',this)"><div class="tier-dot"></div>NON</div>
+                <div class="offre-tier on" onclick="selTier('b','std',this)"><div class="tier-dot"></div>STANDARD</div>
+                <div class="offre-tier" onclick="selTier('b','prem',this)"><div class="tier-dot"></div>PREMIUM</div>
+              </div>
+              <div class="offre-body">
+                <span class="offre-ico">🏡</span>
+                <div class="offre-name">Gestion locative complète</div>
+                <div class="offre-price" id="bp">4,9% du loyer</div>
+                <div class="offre-psub">TTC / mois (min. 15 000 F CFA)</div>
+                <div class="offre-calc" id="bc">soit ~ 7 350 F CFA / mois</div>
+                <div class="offre-feats">
+                  <div class="of ok">Conseiller dédié (tel, WhatsApp, mail)</div>
+                  <div class="of ok">Quittances, révision loyers, régularisation charges</div>
+                  <div class="of ok">Reversement des loyers en 7 jours ouvrés</div>
+                  <div class="of ok">Suivi en temps réel sur votre espace</div>
+                  <div class="of ok">Gestion travaux jusqu'à 200 000 F CFA</div>
+                  <div class="of ok">Relocation offerte si locataire &lt; 3 mois</div>
+                  <div class="of no"><span class="ptag">Premium</span>Relocation offerte si locataire &lt; 6 mois</div>
+                  <div class="of no"><span class="ptag">Premium</span>Aide déclaration fiscale complète</div>
+                </div>
+                <button class="btn-esm" onclick="openModal('b')">En savoir plus</button>
+              </div>
+            </div>
+            <!-- Mission C -->
+            <div class="offre" id="offre-c">
+              <div class="offre-tiers">
+                <div class="offre-tier" onclick="selTier('c','non',this)"><div class="tier-dot"></div>NON</div>
+                <div class="offre-tier on" onclick="selTier('c','std',this)"><div class="tier-dot"></div>STANDARD</div>
+                <div class="offre-tier" style="opacity:.3;cursor:not-allowed"><div class="tier-dot"></div>PREMIUM</div>
+              </div>
+              <div class="offre-body">
+                <span class="offre-ico">🛡️</span>
+                <div class="offre-name">Assurance Loyers Impayés</div>
+                <div class="offre-price">2,5% du loyer</div>
+                <div class="offre-psub">TTC / mois</div>
+                <div class="offre-calc" id="cc">soit ~ 3 750 F CFA / mois</div>
+                <div class="offre-feats">
+                  <div class="of ok">Loyers impayés — sans limite de montant</div>
+                  <div class="of ok">Détériorations jusqu'à 1 000 000 F CFA</div>
+                  <div class="of ok">Protection juridique propriétaire bailleur</div>
+                  <div class="of ok">Gestion dossiers avec assureurs</div>
+                  <div class="of ok">Relances email, SMS et téléphone incluses</div>
+                </div>
+                <button class="btn-esm" onclick="openModal('c')">En savoir plus</button>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;margin-bottom:14px">
+            <button class="btn btn-p" style="padding:14px 36px;font-size:.84rem" onclick="goMandat()">Obtenir mon devis personnalisé →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 6 — MANDAT -->
+        <div class="step" id="step6">
+          <div class="step-hd">
+            <span class="step-icon">✍️</span>
+            <h1 class="step-title">Votre <em>mandat</em></h1>
+            <p class="step-sub">Nous générons un mandat que vous pourrez consulter et signer en ligne.</p>
+          </div>
+          <div class="mandat-tabs">
+            <div class="mt active" id="mt-etapes" onclick="showMTab('etapes')">Prochaines étapes</div>
+            <div class="mt" id="mt-signature" onclick="showMTab('signature')">Signature du mandat</div>
+          </div>
+          <div class="mp active" id="mp-etapes">
+            <div class="stats-banner">
+              <div class="sb-title">Le meilleur de la technologie et de l'humain</div>
+              <div class="sb-stats">
+                <div class="sb-stat"><strong>500+</strong> logements gérés au Sénégal</div>
+                <div class="sb-stat"><strong>10 villes</strong> couvertes</div>
+                <div class="sb-stat"><strong>30+</strong> conseillers</div>
+                <div class="sb-stat">Note Google ⭐ <strong>4,7/5</strong></div>
+              </div>
+            </div>
+            <div class="timeline">
+              <div class="tls"><div class="tl-n">1</div><span class="tl-ico">✍️</span><div class="tl-ttl">Signature du mandat</div><div class="tl-desc">Vous ne payez rien avant l'emménagement.</div></div>
+              <div class="tls"><div class="tl-n">2</div><span class="tl-ico">👤</span><div class="tl-ttl">Bilan avec un expert</div><div class="tl-desc">Point sur votre projet et modalités pratiques.</div></div>
+              <div class="tls"><div class="tl-n">3</div><span class="tl-ico">📁</span><div class="tl-ttl">Envoi des documents</div><div class="tl-desc">Constitution de votre dossier sur votre espace.</div></div>
+              <div class="tls"><div class="tl-n">4</div><span class="tl-ico">📷</span><div class="tl-ttl">Reportage photo</div><div class="tl-desc">Photographe professionnel à votre logement.</div></div>
+              <div class="tls"><div class="tl-n">5</div><span class="tl-ico">🤝</span><div class="tl-ttl">Sélection locataire</div><div class="tl-desc">Kàddu pré-sélectionne, vous choisissez !</div></div>
+            </div>
+            <div style="text-align:center;margin-top:10px">
+              <button class="btn btn-p" style="padding:13px 32px" onclick="showMTab('signature')">J'ai compris les prochaines étapes →</button>
+            </div>
+          </div>
+          <div class="mp" id="mp-signature">
+            <div style="margin-bottom:18px">
+              <div style="font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,244,238,.28);margin-bottom:9px">Quel est votre statut ?</div>
+              <div class="statut-row">
+                <div class="statut-btn on" onclick="selStatut(this,'mono')"><div class="statut-dot"></div>Mono-propriétaire</div>
+                <div class="statut-btn" onclick="selStatut(this,'indivision')"><div class="statut-dot"></div>Indivision</div>
+                <div class="statut-btn" onclick="selStatut(this,'societe')"><div class="statut-dot"></div>Société (SCI…)</div>
+              </div>
+            </div>
+            <div class="sig-card">
+              <div class="sig-num">Signataire N°1</div>
+              <div class="frow"><div class="fg"><label class="flbl">Prénom</label><input class="inp" id="sig-p" placeholder="Votre prénom"></div><div class="fg"><label class="flbl">Nom</label><input class="inp" id="sig-n" placeholder="Votre nom"></div></div>
+              <div class="fg"><label class="flbl">Email</label><input class="inp" id="sig-e" type="email" placeholder="votre@email.com"><div style="font-size:.68rem;color:rgba(248,244,238,.28);margin-top:4px">Doit être identique à l'email saisi à l'étape Contact.</div></div>
+              <div class="fg"><label class="flbl">Adresse postale</label><input class="inp" id="sig-a" placeholder="Votre adresse complète"></div>
+              <button class="btn btn-p" style="margin-top:3px" onclick="enregSignataire()">Enregistrer le signataire</button>
+            </div>
+            <div class="retract-box">
+              <label class="chk" style="padding:0"><input type="checkbox" id="retract-chk"><div class="chk-box"></div><div>Faire exécuter le contrat sans attendre l'issue du délai de rétractation de 14 jours</div></label>
+              <div style="margin-top:9px;font-size:.76rem;color:rgba(248,244,238,.42);line-height:1.6">Si vous souhaitez bénéficier de ce délai, les prestations ne commenceront qu'après 14 jours. Le reportage photo et la mise en ligne ne pourront pas être effectués pendant ce temps.</div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+              <button class="btn btn-g" onclick="location.href='/espace-bailleur/'">Contacter un conseiller Kàddu</button>
+              <button class="btn btn-p" onclick="consulterMandat()">Consulter le mandat →</button>
+            </div>
+            <div id="mandat-preview">
+              <div style="font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:14px">Aperçu du mandat de gestion locative</div>
+              <div class="mp-doc">
+                <div style="text-align:center;font-size:1rem;font-weight:700;margin-bottom:14px">MANDAT DE GESTION LOCATIVE</div>
+                <div style="margin-bottom:7px"><strong>MANDAT N° : <span id="mandatNum"></span></strong></div>
+                <hr style="border-color:#ddd;margin:10px 0">
+                <div style="margin-bottom:8px"><strong>Kàddu SARL</strong> — Carte professionnelle délivrée par la CCI de Dakar.</div>
+                <div style="margin-bottom:8px">D'une part, ci-après dénommé le <strong>"Mandataire"</strong>,</div>
+                <div style="margin-bottom:10px">et, <strong>Le Propriétaire bailleur</strong> <span id="mandatProp"></span>, demeurant au <span id="mandatAddr"></span>.</div>
+                <div>D'autre part, ci-après dénommé le <strong>"Mandant"</strong> ou <strong>"Propriétaire"</strong></div>
+                <hr style="border-color:#ddd;margin:14px 0">
+                <div style="margin-bottom:7px"><strong>Bien concerné :</strong></div>
+                <div id="mandatBien" style="background:#f5f5f5;padding:9px;border-radius:4px;margin-bottom:10px"></div>
+                <div style="margin-bottom:7px"><strong>Durée :</strong> 1 an renouvelable par tacite reconduction</div>
+                <div style="margin-bottom:7px"><strong>Droit de rétractation :</strong> 14 jours calendaires à compter de la signature</div>
+                <div style="margin-top:14px;font-size:.68rem;color:#888">Lu et approuvé — Date et signature électronique</div>
+              </div>
+              <div style="text-align:center;margin-top:14px">
+                <button class="btn btn-p" onclick="signerMandat()">✍️ Signer le mandat</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="right-panel" id="rightPanel">
+        <div class="map-box" id="mapBox">
+          <div class="map-grid-bg" id="mapGridBg"></div>
+          <iframe class="real-map-frame" id="realMapFrame" title="Carte du bien" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="display:none"></iframe>
+          <div class="map-overlay-soft"></div>
+          <div class="map-pin" id="mapPin">📍</div>
+          <div class="map-actions"><button class="map-mini-btn" id="openMapsBtn" onclick="openCurrentMap()" type="button">Ouvrir Maps</button></div>
+          <div class="map-lbl" id="mapLbl">Localisation</div>
+        </div>
+        <div id="personas-wrap" style="display:none">
+          <div class="personas-ttl">Nos locataires à proximité</div>
+          <div id="personas-list"></div>
+          <div class="persona-more" id="persona-more"></div>
+        </div>
+        <div class="attract-card" id="attractCard" style="display:none">
+          <div class="attract-head">
+            <div class="attract-title">Attractivité du bien</div>
+            <div class="attract-score"><span id="attractScore">—</span>/100</div>
+          </div>
+          <div class="attract-bar"><div class="attract-fill" id="attractFill"></div></div>
+          <div class="attract-label" id="attractLabel">À calculer</div>
+          <div class="attract-reasons" id="attractReasons"></div>
+        </div>
+        <div class="projection-side-card" id="projectionSideCard" style="display:none">
+          <div class="projection-side-title">Projection rapide</div>
+          <div class="projection-grid">
+            <div class="projection-metric"><strong id="sideMensuel">—</strong><span>revenu mensuel estimé</span></div>
+            <div class="projection-metric"><strong id="sideAnnuel">—</strong><span>revenu brut annuel</span></div>
+            <div class="projection-metric"><strong id="sideNet">—</strong><span>net estimé après services</span></div>
+          </div>
+          <div class="projection-note">Projection indicative hors charges réelles, fiscalité et vacance effective.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+      <button class="btn btn-g" id="btnBack" onclick="prevStep()" style="display:none">← Retour</button>
+      <div></div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <button class="btn-skip" onclick="location.href='/espace-bailleur/'">Continuer plus tard</button>
+        <button class="btn btn-p" id="btnNext" onclick="nextStep()">
+          <span id="btnTxt">Valider les informations</span>
+          <div class="spin" id="spin"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="success" style="display:none;flex:1;align-items:center;justify-content:center;text-align:center;padding:56px 22px">
+      <div>
+        <div style="font-size:4rem;margin-bottom:18px">🎉</div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:300;margin-bottom:10px">Mandat <em style="color:var(--green);font-style:italic">signé</em> !</h2>
+        <p style="color:var(--muted);font-size:.92rem;line-height:1.7;max-width:420px;margin:0 auto 26px">Votre mandat de gestion locative a bien été enregistré. Un conseiller Kàddu vous contactera dans les 24h.</p>
+        <a href="/espace-bailleur/" class="btn btn-p" style="padding:14px 34px">Accéder à mon espace bailleur →</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL='https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_KEY='sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 
-// ── SESSION ──────────────────────────────────────────────────
-function getSession(){
-  try{
-    const r=sessionStorage.getItem('kaddu_jwt');
-    if(!r)return null;
-    const s=JSON.parse(r);
-    if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return null;}
-    return s;
-  }catch{return null;}
-}
-window.addEventListener('beforeunload',()=>sessionStorage.removeItem('kaddu_jwt'));
+// STATE
+let cs=1;
+let D={adresse:'',zone_slug:'',pieces:'studio',meuble:'',occupe:'',surface:0,loc_mode:'entier',prenom:'',nom:'',tel:'',email:'',newsletter:false,cgu:false,dispo:'',besoin:'',facteur:'',infos:'',source:'',promo:'',loyer:150000,oa:'std',ob:'std',oc:'std',statut:'mono',marche:null};
 
-// ── INIT ─────────────────────────────────────────────────────
-const params = new URLSearchParams(location.search);
-const bienId = params.get('bien_id');
-const session = getSession();
+// PERSONAS
+const PS={
+  'almadies':[{n:'Aminata D.',b:'180 000–250 000 F',s:'Recherche active depuis 2 semaines',a:'👩🏾'},{n:'Moussa K.',b:'200 000–280 000 F',s:'Recherche active depuis 1 mois',a:'👨🏾'}],
+  'plateau':[{n:'Fatou N.',b:'120 000–180 000 F',s:'Recherche active depuis 3 semaines',a:'👩🏾'},{n:'Ibrahima S.',b:'150 000–200 000 F',s:'Recherche active depuis 1 semaine',a:'👨🏿'},{n:'Marième B.',b:'100 000–160 000 F',s:'Recherche active depuis 2 mois',a:'👩🏿'}],
+  'mermoz':[{n:'Ousmane F.',b:'90 000–130 000 F',s:'Recherche active depuis 2 semaines',a:'👨🏾'},{n:'Ndéye T.',b:'80 000–120 000 F',s:'Recherche active depuis 3 semaines',a:'👩🏾'}],
+  'yoff':[{n:'Cheikh M.',b:'80 000–130 000 F',s:'Recherche active depuis 1 mois',a:'👨🏿'},{n:'Aissatou L.',b:'90 000–140 000 F',s:'Recherche active depuis 3 semaines',a:'👩🏾'}],
+  'default':[{n:'Fatou B.',b:'80 000–120 000 F',s:'Recherche active depuis 1 mois',a:'👩🏾'},{n:'Amadou D.',b:'100 000–150 000 F',s:'Recherche active depuis 2 semaines',a:'👨🏾'}]
+};
 
-// Auth guard — allow non-logged in (they can still fill) but note user
-setTimeout(()=>{
-  document.getElementById('guard').style.display='none';
-  if(bienId) loadBien(bienId);
-},800);
+const KADDU_ZONES=[{"ville": "Dakar", "quartier": "Plateau", "slug": "dakar__plateau", "label": "Plateau, Dakar"}, {"ville": "Dakar", "quartier": "Médina", "slug": "dakar__medina", "label": "Médina, Dakar"}, {"ville": "Dakar", "quartier": "Fann · Point E · Amitié", "slug": "dakar__fann-point-e-amitie", "label": "Fann · Point E · Amitié, Dakar"}, {"ville": "Dakar", "quartier": "Gueule Tapée · Fass · Colobane", "slug": "dakar__gueule-tapee-fass-colobane", "label": "Gueule Tapée · Fass · Colobane, Dakar"}, {"ville": "Dakar", "quartier": "Almadies", "slug": "dakar__almadies", "label": "Almadies, Dakar"}, {"ville": "Dakar", "quartier": "Mermoz · Sacré-Cœur", "slug": "dakar__mermoz-sacre-cur", "label": "Mermoz · Sacré-Cœur, Dakar"}, {"ville": "Dakar", "quartier": "Ngor", "slug": "dakar__ngor", "label": "Ngor, Dakar"}, {"ville": "Dakar", "quartier": "Ouakam", "slug": "dakar__ouakam", "label": "Ouakam, Dakar"}, {"ville": "Dakar", "quartier": "Yoff", "slug": "dakar__yoff", "label": "Yoff, Dakar"}, {"ville": "Dakar", "quartier": "Sipres VDN", "slug": "dakar__sipres-vdn", "label": "Sipres VDN, Dakar"}, {"ville": "Dakar", "quartier": "Sipres VDN 2", "slug": "dakar__sipres-vdn-2", "label": "Sipres VDN 2, Dakar"}, {"ville": "Dakar", "quartier": "Les Mamelles", "slug": "dakar__les-mamelles", "label": "Les Mamelles, Dakar"}, {"ville": "Dakar", "quartier": "Grand Dakar", "slug": "dakar__grand-dakar", "label": "Grand Dakar, Dakar"}, {"ville": "Dakar", "quartier": "HLM", "slug": "dakar__hlm", "label": "HLM, Dakar"}, {"ville": "Dakar", "quartier": "Sicap Liberté", "slug": "dakar__sicap-liberte", "label": "Sicap Liberté, Dakar"}, {"ville": "Dakar", "quartier": "Dieuppeul · Derklé", "slug": "dakar__dieuppeul-derkle", "label": "Dieuppeul · Derklé, Dakar"}, {"ville": "Dakar", "quartier": "Biscuiterie", "slug": "dakar__biscuiterie", "label": "Biscuiterie, Dakar"}, {"ville": "Dakar", "quartier": "Hann Bel Air", "slug": "dakar__hann-bel-air", "label": "Hann Bel Air, Dakar"}, {"ville": "Dakar", "quartier": "Parcelles Assainies", "slug": "dakar__parcelles-assainies", "label": "Parcelles Assainies, Dakar"}, {"ville": "Dakar", "quartier": "Grand Yoff", "slug": "dakar__grand-yoff", "label": "Grand Yoff, Dakar"}, {"ville": "Dakar", "quartier": "Cambérène", "slug": "dakar__camberene", "label": "Cambérène, Dakar"}, {"ville": "Dakar", "quartier": "Patte d'Oie", "slug": "dakar__patte-d-oie", "label": "Patte d'Oie, Dakar"}, {"ville": "Dakar", "quartier": "Liberté", "slug": "dakar__liberte", "label": "Liberté, Dakar"}, {"ville": "Dakar", "quartier": "Pikine", "slug": "dakar__pikine", "label": "Pikine, Dakar"}, {"ville": "Dakar", "quartier": "Guédiawaye", "slug": "dakar__guediawaye", "label": "Guédiawaye, Dakar"}, {"ville": "Dakar", "quartier": "Thiaroye", "slug": "dakar__thiaroye", "label": "Thiaroye, Dakar"}, {"ville": "Dakar", "quartier": "Yeumbeul", "slug": "dakar__yeumbeul", "label": "Yeumbeul, Dakar"}, {"ville": "Dakar", "quartier": "Keur Massar", "slug": "dakar__keur-massar", "label": "Keur Massar, Dakar"}, {"ville": "Dakar", "quartier": "Rufisque", "slug": "dakar__rufisque", "label": "Rufisque, Dakar"}, {"ville": "Dakar", "quartier": "Bargny", "slug": "dakar__bargny", "label": "Bargny, Dakar"}, {"ville": "Dakar", "quartier": "Diamniadio", "slug": "dakar__diamniadio", "label": "Diamniadio, Dakar"}, {"ville": "Dakar", "quartier": "Lac Rose", "slug": "dakar__lac-rose", "label": "Lac Rose, Dakar"}, {"ville": "Thiès", "quartier": "Centre-ville Thiès", "slug": "thies__centre-ville-thies", "label": "Centre-ville Thiès, Thiès"}, {"ville": "Thiès", "quartier": "Thiès Nord", "slug": "thies__thies-nord", "label": "Thiès Nord, Thiès"}, {"ville": "Thiès", "quartier": "Thiès Sud", "slug": "thies__thies-sud", "label": "Thiès Sud, Thiès"}, {"ville": "Thiès", "quartier": "Mbour Route", "slug": "thies__mbour-route", "label": "Mbour Route, Thiès"}, {"ville": "Thiès", "quartier": "Tassette", "slug": "thies__tassette", "label": "Tassette, Thiès"}, {"ville": "Thiès", "quartier": "Keur Moussa", "slug": "thies__keur-moussa", "label": "Keur Moussa, Thiès"}, {"ville": "Saint-Louis", "quartier": "Île de Saint-Louis", "slug": "saint-louis__ile-de-saint-louis", "label": "Île de Saint-Louis, Saint-Louis"}, {"ville": "Saint-Louis", "quartier": "Sor", "slug": "saint-louis__sor", "label": "Sor, Saint-Louis"}, {"ville": "Saint-Louis", "quartier": "Guet Ndar", "slug": "saint-louis__guet-ndar", "label": "Guet Ndar, Saint-Louis"}, {"ville": "Saint-Louis", "quartier": "Langue de Barbarie", "slug": "saint-louis__langue-de-barbarie", "label": "Langue de Barbarie, Saint-Louis"}, {"ville": "Saint-Louis", "quartier": "Bango", "slug": "saint-louis__bango", "label": "Bango, Saint-Louis"}, {"ville": "Saint-Louis", "quartier": "Thiaka Ndiaye", "slug": "saint-louis__thiaka-ndiaye", "label": "Thiaka Ndiaye, Saint-Louis"}, {"ville": "Ziguinchor", "quartier": "Centre Ziguinchor", "slug": "ziguinchor__centre-ziguinchor", "label": "Centre Ziguinchor, Ziguinchor"}, {"ville": "Ziguinchor", "quartier": "Boucotte", "slug": "ziguinchor__boucotte", "label": "Boucotte, Ziguinchor"}, {"ville": "Ziguinchor", "quartier": "Kandialang", "slug": "ziguinchor__kandialang", "label": "Kandialang, Ziguinchor"}, {"ville": "Ziguinchor", "quartier": "Lyndiane", "slug": "ziguinchor__lyndiane", "label": "Lyndiane, Ziguinchor"}, {"ville": "Ziguinchor", "quartier": "Tilène Ziguinchor", "slug": "ziguinchor__tilene-ziguinchor", "label": "Tilène Ziguinchor, Ziguinchor"}, {"ville": "Kaolack", "quartier": "Centre Kaolack", "slug": "kaolack__centre-kaolack", "label": "Centre Kaolack, Kaolack"}, {"ville": "Kaolack", "quartier": "Médina Baye", "slug": "kaolack__medina-baye", "label": "Médina Baye, Kaolack"}, {"ville": "Kaolack", "quartier": "Léona", "slug": "kaolack__leona", "label": "Léona, Kaolack"}, {"ville": "Kaolack", "quartier": "Sam-Sam", "slug": "kaolack__sam-sam", "label": "Sam-Sam, Kaolack"}, {"ville": "Kaolack", "quartier": "Ndangane", "slug": "kaolack__ndangane", "label": "Ndangane, Kaolack"}, {"ville": "Mbour", "quartier": "Centre Mbour", "slug": "mbour__centre-mbour", "label": "Centre Mbour, Mbour"}, {"ville": "Mbour", "quartier": "Saly Portudal", "slug": "mbour__saly-portudal", "label": "Saly Portudal, Mbour"}, {"ville": "Mbour", "quartier": "Nianing", "slug": "mbour__nianing", "label": "Nianing, Mbour"}, {"ville": "Mbour", "quartier": "Pointe Sarène", "slug": "mbour__pointe-sarene", "label": "Pointe Sarène, Mbour"}, {"ville": "Mbour", "quartier": "Warang", "slug": "mbour__warang", "label": "Warang, Mbour"}, {"ville": "Touba", "quartier": "Centre Touba", "slug": "touba__centre-touba", "label": "Centre Touba, Touba"}, {"ville": "Touba", "quartier": "Darou Khoudoss", "slug": "touba__darou-khoudoss", "label": "Darou Khoudoss, Touba"}, {"ville": "Touba", "quartier": "Guédé Bousso", "slug": "touba__guede-bousso", "label": "Guédé Bousso, Touba"}, {"ville": "Touba", "quartier": "Ndamatou", "slug": "touba__ndamatou", "label": "Ndamatou, Touba"}, {"ville": "Rufisque", "quartier": "Centre Rufisque", "slug": "rufisque__centre-rufisque", "label": "Centre Rufisque, Rufisque"}, {"ville": "Rufisque", "quartier": "Colobane Rufisque", "slug": "rufisque__colobane-rufisque", "label": "Colobane Rufisque, Rufisque"}, {"ville": "Rufisque", "quartier": "Mbao", "slug": "rufisque__mbao", "label": "Mbao, Rufisque"}, {"ville": "Rufisque", "quartier": "Bargny", "slug": "rufisque__bargny", "label": "Bargny, Rufisque"}, {"ville": "Rufisque", "quartier": "Sébikotane", "slug": "rufisque__sebikotane", "label": "Sébikotane, Rufisque"}, {"ville": "Saly", "quartier": "Saly Portudal", "slug": "saly__saly-portudal", "label": "Saly Portudal, Saly"}, {"ville": "Saly", "quartier": "Saly Nord", "slug": "saly__saly-nord", "label": "Saly Nord, Saly"}, {"ville": "Saly", "quartier": "Saly Sud", "slug": "saly__saly-sud", "label": "Saly Sud, Saly"}, {"ville": "Saly", "quartier": "Nguérigne", "slug": "saly__nguerigne", "label": "Nguérigne, Saly"}, {"ville": "Saly", "quartier": "Somone", "slug": "saly__somone", "label": "Somone, Saly"}];
 
-async function loadBien(id){
-  try{
-    const res=await fetch(`${SB_URL}/rest/v1/biens?id=eq.${id}&select=titre,quartier,ville,prix,charges,surface,pieces,statut,photos`,{headers:{'apikey':SB_KEY}});
-    const d=await res.json();
-    if(!d.length)return;
-    const b=d[0];
-    document.getElementById('bien-ville').textContent=(b.quartier||'')+(b.ville?', '+b.ville:'');
-    document.getElementById('bien-prix').textContent=b.prix?b.prix.toLocaleString('fr-FR')+' F / mois':'—';
-    document.getElementById('bien-charges').textContent=b.charges?'(dont '+b.charges.toLocaleString('fr-FR')+' F de charges)':'';
-    document.getElementById('bien-details').textContent=[b.pieces?b.pieces+' pièces':null,b.surface?b.surface+' m²':null].filter(Boolean).join(' · ');
-    document.getElementById('bien-dispo').textContent='● '+(b.statut==='disponible'?'Disponible immédiatement':'Disponible');
-    // Photo
-    try{const ph=JSON.parse(b.photos||'[]');if(ph[0]){document.getElementById('bien-img').innerHTML=`<img src="${ph[0]}" style="width:100%;height:160px;object-fit:cover">`; }}catch{}
-  }catch{}
+function normTxt(v){
+  return String(v||'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase()
+    .replace(/·/g,' ')
+    .replace(/'/g,'')
+    .replace(/[^a-z0-9]+/g,' ')
+    .trim();
 }
 
-// ── STATE ─────────────────────────────────────────────────────
-let currentStep=1;
-let compoType='seul';
-let counts={adultes:0,enfants:0,coloc:0};
-let choices={emmenagement:'',duree:''};
-let locataires=[];
-let garants=[];
-let editingLocIdx=-1;
-let editingGarIdx=-1;
-let noGarant=false;
-
-// ── STEPPER ──────────────────────────────────────────────────
-function goStep(n){
-  if(n>currentStep)return; // only go back freely
-  currentStep=n;
-  renderStepper();
-  document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('section-'+n).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function renderStepper(){
-  for(let i=1;i<=3;i++){
-    const c=document.getElementById('sc'+i);
-    const l=document.getElementById('sl'+i);
-    if(i<currentStep){c.className='step-circle done';c.textContent='✓';l.className='step-label done-lbl';}
-    else if(i===currentStep){c.className='step-circle active';c.textContent=i;l.className='step-label active-lbl';}
-    else{c.className='step-circle pending';c.textContent=i;l.className='step-label pending-lbl';}
-    if(i<3){const line=document.getElementById('line'+i);line.className='step-line '+(i<currentStep?'done':'pending');}
-  }
-}
-
-function nextStep(from){
-  if(from===1){
-    if(!choices.emmenagement||!choices.duree){showAlert('Veuillez sélectionner la date d\'emménagement et la durée souhaitée.','warn');return;}
-  }
-  if(from===2){
-    if(!locataires.length){showAlert('Veuillez ajouter au moins un locataire.','warn');return;}
-  }
-  currentStep=from+1;
-  renderStepper();
-  document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('section-'+currentStep).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-  clearAlert();
-}
-function prevStep(from){goStep(from-1);}
-
-// ── CHOICE HELPERS ───────────────────────────────────────────
-function selectCompo(card,type){
-  card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
-  compoType=type;
-  document.getElementById('compo-famille').style.display=type==='famille'?'block':'none';
-  document.getElementById('compo-colocation').style.display=type==='colocation'?'block':'none';
-}
-function selectChoice(card,key,val){
-  card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
-  choices[key]=val;
-}
-function counter(key,delta){
-  counts[key]=Math.max(0,counts[key]+delta);
-  const labels={adultes:' adulte(s)',enfants:' enfant(s)',coloc:' coloc.'};
-  document.getElementById('val-'+key).textContent=counts[key]+labels[key];
-}
-function selectNature(card,type,prefix){
-  card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
-}
-
-// ── PRO FIELDS DYNAMIC ───────────────────────────────────────
-function updateProFields(prefix){
-  const val=document.getElementById(prefix+'-situation').value;
-  const fields=['standard','cdi','cdd','etudiant','retraite'];
-  fields.forEach(f=>{
-    const el=document.getElementById(prefix+'-fields-'+f);
-    if(el)el.classList.remove('visible');
+function findZone(adresse){
+  const raw=normTxt(adresse);
+  if(!raw) return null;
+  let best=null, bestScore=0;
+  KADDU_ZONES.forEach(z=>{
+    const q=normTxt(z.quartier);
+    const v=normTxt(z.ville);
+    const label=normTxt(z.label);
+    const slug=normTxt(z.slug.replace(/__/g,' '));
+    let score=0;
+    if(raw.includes(label)) score=100;
+    else if(raw.includes(q) && raw.includes(v)) score=90;
+    else if(raw.includes(q)) score=70 + Math.min(q.length,20);
+    else if(raw.includes(slug)) score=60;
+    if(score>bestScore){best=z;bestScore=score;}
   });
-  if(['cdi','cdd','independant','interimaire','autre'].includes(val)){
-    const el=document.getElementById(prefix+'-fields-standard');
-    if(el)el.classList.add('visible');
+  return best || null;
+}
+
+function typeBienLabel(v){
+  if(v==='studio') return 'Studio';
+  if(v==='1') return '1 pièce';
+  if(v==='2') return 'F2';
+  if(v==='3') return 'F3';
+  if(v==='4') return 'F4';
+  if(v==='5+') return 'F5+';
+  return v || '—';
+}
+
+function typeBienSupabase(v){
+  if(v==='studio' || v==='1') return 'studio';
+  if(v==='2') return 'F2';
+  if(v==='3') return 'F3';
+  if(v==='4') return 'F4';
+  if(v==='5+') return 'F5+';
+  return 'studio';
+}
+
+function meubleSupabase(v){
+  return v === 'meuble';
+}
+
+function meubleLabel(v){
+  if(v==='meuble') return 'Meublé';
+  if(v==='non_meuble') return 'Non meublé';
+  if(v==='nsp') return 'À définir';
+  return 'Statut à confirmer';
+}
+
+function fcfa(n){
+  return Number(n||0).toLocaleString('fr-FR')+' F CFA';
+}
+
+function mapsQueryFromCurrent(zone){
+  return encodeURIComponent(D.adresse || (zone ? zone.label : '') || 'Dakar, Sénégal');
+}
+
+function renderRealMap(zone){
+  const q = mapsQueryFromCurrent(zone);
+  const frame=document.getElementById('realMapFrame');
+  const pin=document.getElementById('mapPin');
+  const grid=document.getElementById('mapGridBg');
+  const btn=document.getElementById('openMapsBtn');
+  if(frame){
+    frame.src='https://www.google.com/maps?q='+q+'&output=embed';
+    frame.style.display='block';
   }
-  if(val==='cdi'){const el=document.getElementById(prefix+'-fields-cdi');if(el)el.classList.add('visible');}
-  if(val==='cdd'){const el=document.getElementById(prefix+'-fields-cdd');if(el)el.classList.add('visible');}
-  if(val==='etudiant'){const el=document.getElementById(prefix+'-fields-etudiant');if(el)el.classList.add('visible');}
-  if(['retraite','sans_emploi'].includes(val)){const el=document.getElementById(prefix+'-fields-retraite');if(el)el.classList.add('visible');}
+  if(pin) pin.style.display='none';
+  if(grid) grid.style.display='none';
+  if(btn){
+    btn.dataset.q=q;
+    btn.style.display='inline-flex';
+  }
 }
 
-// ── LOCATAIRES ───────────────────────────────────────────────
-function addLocataire(){
-  editingLocIdx=-1;
-  clearLocForm();
-  document.getElementById('loc-form').style.display='block';
-  document.getElementById('loc-form-title').innerHTML=`${locataires.length+1}<sup>${locataires.length===0?'er':'ème'}</sup> locataire sur le bail`;
-  document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function clearLocForm(){
-  ['loc-prenom','loc-nom','loc-email','loc-tel','loc-poste','loc-societe','loc-infos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['loc-revenu','loc-revenu-etu','loc-revenu-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
-  document.getElementById('loc-situation').value='';
-  ['loc-fields-standard','loc-fields-cdi','loc-fields-cdd','loc-fields-etudiant','loc-fields-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
-}
-function saveLoc(){
-  const prenom=document.getElementById('loc-prenom').value.trim();
-  const nom=document.getElementById('loc-nom').value.trim();
-  if(!prenom||!nom){showAlert('Prénom et nom sont obligatoires.','warn');return;}
-  const loc={
-    prenom,nom,
-    email:document.getElementById('loc-email').value.trim(),
-    tel:document.getElementById('loc-tel').value.trim(),
-    situation:document.getElementById('loc-situation').value,
-    revenu:document.getElementById('loc-revenu').value||document.getElementById('loc-revenu-etu').value||document.getElementById('loc-revenu-retraite').value||0,
-    poste:document.getElementById('loc-poste')?.value||'',
-    societe:document.getElementById('loc-societe')?.value||'',
-    infos:document.getElementById('loc-infos').value,
-  };
-  if(editingLocIdx>=0)locataires[editingLocIdx]=loc;
-  else locataires.push(loc);
-  document.getElementById('loc-form').style.display='none';
-  renderLocList();
-  clearAlert();
-}
-function editLoc(i){
-  editingLocIdx=i;
-  const l=locataires[i];
-  document.getElementById('loc-prenom').value=l.prenom;
-  document.getElementById('loc-nom').value=l.nom;
-  document.getElementById('loc-email').value=l.email;
-  document.getElementById('loc-tel').value=l.tel;
-  document.getElementById('loc-situation').value=l.situation;
-  updateProFields('loc');
-  document.getElementById('loc-infos').value=l.infos||'';
-  document.getElementById('loc-form').style.display='block';
-  document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function deleteLoc(i){locataires.splice(i,1);renderLocList();}
-function renderLocList(){
-  const el=document.getElementById('loc-list');
-  el.innerHTML=locataires.map((l,i)=>`
-    <div class="person-card">
-      <div class="person-avatar">${l.prenom[0].toUpperCase()}</div>
-      <div class="person-info">
-        <div class="person-name">${l.prenom} ${l.nom.toUpperCase()}</div>
-        <div class="person-meta">Locataire · ${l.situation||'Situation non précisée'}</div>
-      </div>
-      <div class="person-actions">
-        <button class="btn-icon-sm" onclick="editLoc(${i})">✏️</button>
-        <button class="btn-icon-sm" onclick="deleteLoc(${i})">🗑️</button>
-      </div>
-    </div>`).join('');
-  // Update garant chips
-  updateGarChips();
+function openCurrentMap(){
+  const btn=document.getElementById('openMapsBtn');
+  const q=(btn&&btn.dataset.q)||mapsQueryFromCurrent(null);
+  window.open('https://www.google.com/maps/search/?api=1&query='+q,'_blank');
 }
 
-// ── GARANTS ──────────────────────────────────────────────────
-let currentGarType='physique';
-function selectGarantType(type){
-  currentGarType=type;
-  document.getElementById('gar-type-wrap').style.display='none';
-  document.getElementById('gar-form').style.display='block';
-  document.getElementById('gar-form-title').innerHTML=`${garants.length+1}<sup>${garants.length===0?'er':'ème'}</sup> garant`;
-  updateGarChips();
-}
-function showGarType(){
-  document.getElementById('gar-type-wrap').style.display='block';
-  document.getElementById('add-gar-btn').style.display='none';
-  document.getElementById('gar-form').style.display='none';
-}
-function updateGarChips(){
-  const wrap=document.getElementById('gar-loc-chips');
-  if(!wrap)return;
-  wrap.innerHTML=locataires.map((l,i)=>`
-    <div style="padding:6px 12px;border:1.5px dashed rgba(191,150,80,.3);border-radius:6px;font-size:.76rem;cursor:pointer;color:rgba(248,244,238,.5)" onclick="this.style.borderColor='var(--or)';this.style.color='var(--orl)'">
-      ${l.prenom} ${l.nom}
-    </div>`).join('');
-}
-function saveGar(){
-  const prenom=document.getElementById('gar-prenom').value.trim();
-  const nom=document.getElementById('gar-nom').value.trim();
-  if(!prenom||!nom){showAlert('Prénom et nom du garant sont obligatoires.','warn');return;}
-  const gar={
-    type:currentGarType,prenom,nom,
-    email:document.getElementById('gar-email').value.trim(),
-    tel:document.getElementById('gar-tel').value.trim(),
-    situation:document.getElementById('gar-situation').value,
-    revenu:document.getElementById('gar-revenu')?.value||0,
-  };
-  if(editingGarIdx>=0)garants[editingGarIdx]=gar;
-  else garants.push(gar);
-  document.getElementById('gar-form').style.display='none';
-  document.getElementById('gar-type-wrap').style.display='none';
-  document.getElementById('add-gar-btn').style.display='flex';
-  renderGarList();
-  clearAlert();
-}
-function deleteGar(i){garants.splice(i,1);renderGarList();}
-function renderGarList(){
-  const el=document.getElementById('gar-list');
-  const typeLabel={physique:'Personne physique',societe:'Société',garant_prive:'Garant privé'};
-  el.innerHTML=garants.map((g,i)=>`
-    <div class="person-card">
-      <div class="person-avatar" style="background:rgba(74,158,255,.15);border-color:rgba(74,158,255,.25);color:var(--blue)">${g.prenom[0].toUpperCase()}</div>
-      <div class="person-info">
-        <div class="person-name">${g.prenom} ${g.nom.toUpperCase()}</div>
-        <div class="person-meta">Garant(e) · ${typeLabel[g.type]||g.type} · ${g.situation||'—'}</div>
-      </div>
-      <div class="person-actions">
-        <button class="btn-icon-sm" onclick="deleteGar(${i})">🗑️</button>
-      </div>
-    </div>`).join('');
+function collectSurface(){
+  const s1=Number(document.getElementById('surface-s')?.value||0);
+  const s2=Number(document.getElementById('surface-e')?.value||0);
+  D.surface=s2||s1||D.surface||0;
+  return D.surface;
 }
 
-// ── MODAL NO GARANT ──────────────────────────────────────────
-function openNoGarantModal(){document.getElementById('modal-no-garant').classList.add('open');}
-function closeNoGarantModal(){document.getElementById('modal-no-garant').classList.remove('open');}
-function confirmNoGarant(){
-  noGarant=true;
-  closeNoGarantModal();
-  document.getElementById('gar-type-wrap').style.display='none';
-  document.getElementById('add-gar-btn').style.display='flex';
-  showAlert('Dossier sans garant. Vous pouvez quand même postuler.','info');
+function calcServiceFeesAnnual(){
+  const l=Number(D.loyer||0);
+  const gestion = D.ob!=='non' ? Math.max(15000, Math.round(l*(D.ob==='prem'?.069:.049)))*12 : 0;
+  const assurance = D.oc!=='non' ? Math.round(l*.025)*12 : 0;
+  const recherche = D.oa!=='non' ? Math.round(l*(D.oa==='prem'?1:.8)) : 0;
+  return gestion + assurance + recherche;
 }
 
-// ── SUBMIT ───────────────────────────────────────────────────
-async function submitDossier(btn){
-  clearAlert();
-  btn.disabled=true;
-  document.getElementById('spinner-submit').style.display='block';
+function updateAttractivite(zone, ref){
+  const card=document.getElementById('attractCard'); if(!card) return;
+  const surface=collectSurface();
+  let score=52;
+  const reasons=[];
+  if(zone && /almadies|ngor|mermoz|sacre|point|sipres|plateau|saly|mamelles/i.test(zone.slug)){ score+=14; reasons.push('Zone recherchée ou à fort potentiel locatif.'); }
+  else if(zone){ score+=7; reasons.push('Zone identifiée dans le référentiel Kàddu.'); }
+  if(D.meuble==='meuble'){ score+=9; reasons.push('Bien meublé : attractif pour diaspora, expatriés et courts/moyens séjours.'); }
+  if(['3','4','5+'].includes(D.pieces)){ score+=8; reasons.push('Format familial / professionnel plus lisible pour les dossiers sérieux.'); }
+  else if(['studio','1','2'].includes(D.pieces)){ score+=5; reasons.push('Format compact, généralement plus rapide à positionner.'); }
+  if(surface){
+    if(surface>=80){ score+=8; reasons.push('Surface confortable : meilleur pouvoir de projection.'); }
+    else if(surface>=35){ score+=5; reasons.push('Surface cohérente avec le type de bien déclaré.'); }
+  }
+  if(ref && Number(ref.nb_annonces||0)>0){ score+=5; reasons.push('Référence marché disponible pour comparer le prix.'); }
+  if(D.loc_mode==='chambre'){ score-=5; reasons.push('Location à la chambre : rendement possible, mais gestion plus exigeante.'); }
+  score=Math.max(35,Math.min(94,score));
+  const label = score>=80 ? 'Très attractif' : score>=65 ? 'Attractif' : score>=50 ? 'À optimiser' : 'À renforcer';
+  document.getElementById('attractScore').textContent=score;
+  document.getElementById('attractFill').style.width=score+'%';
+  document.getElementById('attractLabel').textContent=label;
+  document.getElementById('attractReasons').innerHTML=reasons.slice(0,4).map(r=>'<div class="attract-reason">'+r+'</div>').join('');
+  card.style.display='block';
+}
 
-  const dossier={
-    locataire_id: session?.user?.id || null,
-    bien_id: bienId || null,
-    statut: 'en_attente',
-    message: JSON.stringify({
-      composition: compoType,
-      counts,
-      emmenagement: choices.emmenagement,
-      duree: choices.duree,
-      ville_precedente: document.getElementById('ville-precedente').value,
-      bailleur_precedent: document.getElementById('bailleur-precedent').value,
-      locataires,
-      garants,
-      no_garant: noGarant,
-    }),
-    docs_fournis: [],
-  };
+function updateFinancialProjection(){
+  const l=Number(D.loyer||0);
+  if(!l) return;
+  const annual=l*12;
+  const fees=calcServiceFeesAnnual();
+  const net=Math.max(0, annual-fees);
+  const ids={fpMensuel:l,fpAnnuel:annual,fpFrais:fees,fpNet:net,sideMensuel:l,sideAnnuel:annual,sideNet:net};
+  Object.entries(ids).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=fcfa(val); });
+  const fp=document.getElementById('financialProjection'); if(fp) fp.style.display='block';
+  const sp=document.getElementById('projectionSideCard'); if(sp) sp.style.display='block';
+}
+
+function showEstimationMessage(message, note){
+  const box=document.getElementById('estimationBox');
+  if(!box) return;
+  box.classList.add('show');
+  document.getElementById('estimationMain').innerHTML=message;
+  document.getElementById('estimationNote').innerHTML=note||'Cette projection sera affinée par un conseiller Kàddu.';
+  const ez=document.getElementById('estimationZone');
+  const et=document.getElementById('estimationType');
+  const em=document.getElementById('estimationMeuble');
+  if(ez) ez.textContent=D.adresse||'Zone à confirmer';
+  if(et) et.textContent=typeBienLabel(D.pieces);
+  if(em) em.textContent=meubleLabel(D.meuble);
+}
+
+async function updateFourchette(adresse){
+  const zone=findZone(adresse||D.adresse);
+  if(!zone){
+    D.zone_slug='';
+    showEstimationMessage(
+      'Zone non reconnue dans le référentiel Kàddu.',
+      'Choisissez une suggestion dans la liste ou vérifiez l’orthographe du quartier.'
+    );
+    return;
+  }
+
+  D.zone_slug=zone.slug;
+
+  if(!D.meuble){
+    showEstimationMessage(
+      'Sélectionnez aussi <strong>meublé</strong> ou <strong>non meublé</strong> pour calculer la fourchette.',
+      `Zone détectée : <strong>${zone.quartier}, ${zone.ville}</strong>.`
+    );
+    return;
+  }
+
+  const type=typeBienSupabase(D.pieces);
+  const meuble=meubleSupabase(D.meuble);
+
+  const qs=new URLSearchParams();
+  qs.set('zone_slug','eq.'+zone.slug);
+  qs.set('type_bien','eq.'+type);
+  qs.set('meuble','eq.'+meuble);
+  qs.set('actif','eq.true');
+  qs.set('select','ville,quartier,zone_slug,type_bien,meuble,loyer_bas,loyer_median,loyer_haut,nb_annonces,fiabilite');
 
   try{
-    const res=await fetch(`${SB_URL}/rest/v1/dossiers`,{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'apikey':SB_KEY,
-        'Authorization': session?'Bearer '+session.access_token:'Bearer '+SB_KEY,
-        'Prefer':'return=minimal'
-      },
-      body:JSON.stringify(dossier)
+    const res=await fetch(`${SB_URL}/rest/v1/loyer_reference_zones?${qs.toString()}`,{
+      headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}
     });
-    if(!res.ok){
-      const err=await res.json();
-      throw new Error(err.message||'Erreur lors de la soumission.');
+
+    if(!res.ok) throw new Error('Erreur Supabase '+res.status);
+    const rows=await res.json();
+    const ref=rows && rows.length ? rows[0] : null;
+
+    if(!ref){
+      showEstimationMessage(
+        'Aucune référence disponible pour cette combinaison.',
+        `Zone : <strong>${zone.quartier}, ${zone.ville}</strong> · Type : <strong>${typeBienLabel(D.pieces)}</strong> · Statut : <strong>${meubleLabel(D.meuble)}</strong>.`
+      );
+      return;
     }
-    document.getElementById('main-wrap').style.display='none';
-    document.getElementById('success-page').style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
+
+    D.marche=ref;
+    D.loyer=Number(ref.loyer_median||D.loyer||150000);
+
+    const low=fcfa(ref.loyer_bas);
+    const med=fcfa(ref.loyer_median);
+    const high=fcfa(ref.loyer_haut);
+
+    const loyerRng=document.getElementById('loyerRng');
+    if(loyerRng){
+      loyerRng.innerHTML=`Selon notre référentiel Kàddu, un logement similaire est loué entre <strong>${low}</strong> et <strong>${high}</strong> / mois. Médiane indicative : <strong>${med}</strong>.`;
+    }
+
+    const loyerVal=document.getElementById('loyerVal');
+    const devisLoyer=document.getElementById('devisLoyer');
+    if(loyerVal) loyerVal.textContent=D.loyer.toLocaleString('fr-FR');
+    if(devisLoyer) devisLoyer.textContent=fcfa(D.loyer);
+
+    showEstimationMessage(
+      `Ce bien pourrait se louer entre <strong>${low}</strong> et <strong>${high}</strong> / mois.`,
+      `Médiane indicative : <strong>${med}</strong> · Zone : <strong>${ref.quartier}, ${ref.ville}</strong> · Référentiel modifiable depuis l’admin Marché locatif.`
+    );
+
+    renderRealMap(zone);
+    updateAttractivite(zone, ref);
+    updateCalcs();
+    renderFlux();
+    updateFinancialProjection();
   }catch(e){
-    showAlert(e.message,'error');
-    btn.disabled=false;
-    document.getElementById('spinner-submit').style.display='none';
+    console.warn('[Kàddu Marché locatif]',e);
+    showEstimationMessage(
+      'Estimation temporairement indisponible.',
+      'La connexion au référentiel marché n’a pas abouti. Le conseiller Kàddu affinera le loyer.'
+    );
   }
 }
 
-// ── ALERTS ───────────────────────────────────────────────────
-function showAlert(msg,type){
-  document.getElementById('alert-global').innerHTML=`<div class="alert alert-${type}">${msg}</div>`;
-  document.getElementById('alert-global').scrollIntoView({behavior:'smooth',block:'nearest'});
+function renderPersonas(addr){
+  const k=Object.keys(PS).find(k=>addr.toLowerCase().includes(k))||'default';
+  const ps=PS[k];
+  document.getElementById('personas-list').innerHTML=ps.map(p=>`<div class="persona-card"><div class="persona-av">${p.a}</div><div><div class="persona-name">${p.n}</div><div class="persona-budget">Recherche ${typeBienLabel(D.pieces)} · ${meubleLabel(D.meuble)} · ${p.b} / mois</div><div class="persona-since">${p.s}</div></div></div>`).join('');
+  const tot=k!=='default'?Math.floor(Math.random()*4000+400):Math.floor(Math.random()*1500+150);
+  document.getElementById('persona-more').textContent='+ '+tot.toLocaleString('fr-FR')+' autres locataires potentiels';
+  document.getElementById('personas-wrap').style.display='block';
 }
-function clearAlert(){document.getElementById('alert-global').innerHTML='';}
+
+const ADDR_SUGG=["Plateau, Dakar", "Médina, Dakar", "Fann · Point E · Amitié, Dakar", "Gueule Tapée · Fass · Colobane, Dakar", "Almadies, Dakar", "Mermoz · Sacré-Cœur, Dakar", "Ngor, Dakar", "Ouakam, Dakar", "Yoff, Dakar", "Sipres VDN, Dakar", "Sipres VDN 2, Dakar", "Les Mamelles, Dakar", "Grand Dakar, Dakar", "HLM, Dakar", "Sicap Liberté, Dakar", "Dieuppeul · Derklé, Dakar", "Biscuiterie, Dakar", "Hann Bel Air, Dakar", "Parcelles Assainies, Dakar", "Grand Yoff, Dakar", "Cambérène, Dakar", "Patte d'Oie, Dakar", "Liberté, Dakar", "Pikine, Dakar", "Guédiawaye, Dakar", "Thiaroye, Dakar", "Yeumbeul, Dakar", "Keur Massar, Dakar", "Rufisque, Dakar", "Bargny, Dakar", "Diamniadio, Dakar", "Lac Rose, Dakar", "Centre-ville Thiès, Thiès", "Thiès Nord, Thiès", "Thiès Sud, Thiès", "Mbour Route, Thiès", "Tassette, Thiès", "Keur Moussa, Thiès", "Île de Saint-Louis, Saint-Louis", "Sor, Saint-Louis", "Guet Ndar, Saint-Louis", "Langue de Barbarie, Saint-Louis", "Bango, Saint-Louis", "Thiaka Ndiaye, Saint-Louis", "Centre Ziguinchor, Ziguinchor", "Boucotte, Ziguinchor", "Kandialang, Ziguinchor", "Lyndiane, Ziguinchor", "Tilène Ziguinchor, Ziguinchor", "Centre Kaolack, Kaolack", "Médina Baye, Kaolack", "Léona, Kaolack", "Sam-Sam, Kaolack", "Ndangane, Kaolack", "Centre Mbour, Mbour", "Saly Portudal, Mbour", "Nianing, Mbour", "Pointe Sarène, Mbour", "Warang, Mbour", "Centre Touba, Touba", "Darou Khoudoss, Touba", "Guédé Bousso, Touba", "Ndamatou, Touba", "Centre Rufisque, Rufisque", "Colobane Rufisque, Rufisque", "Mbao, Rufisque", "Bargny, Rufisque", "Sébikotane, Rufisque", "Saly Portudal, Saly", "Saly Nord, Saly", "Saly Sud, Saly", "Nguérigne, Saly", "Somone, Saly"];
+
+function onAddr(inp){
+  const v=inp.value.trim();
+  const drop=document.getElementById('addrDrop');
+  if(v.length<2){drop.classList.remove('open');return;}
+  const f=ADDR_SUGG.filter(s=>s.toLowerCase().includes(v.toLowerCase())).slice(0,6);
+  drop.innerHTML=(f.length?f:[v+' (confirmer cette adresse)']).map(s=>`<div class="addr-opt" onclick="selAddr('${s}')">${s}</div>`).join('');
+  drop.classList.add('open');
+}
+function selAddr(a){
+  D.adresse=a;
+  document.getElementById('addrIn').value=a;
+  document.getElementById('addrDrop').classList.remove('open');
+  document.getElementById('addrChk').style.display='block';
+  document.getElementById('addrIn').classList.add('ok');
+  document.getElementById('mapLbl').textContent=a.substring(0,28)+(a.length>28?'…':'');
+  const zone=findZone(a);
+  if(zone) renderRealMap(zone);
+  renderPersonas(a);
+  updateFourchette(a);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.addr-wrap'))document.getElementById('addrDrop').classList.remove('open');});
+
+
+
+function selPieces(el,v){
+  document.querySelectorAll('#pieces-pills .pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');D.pieces=v;
+  const simple=['studio','1','2'].includes(v);
+  const ext=['3','4','5+'].includes(v);
+  document.getElementById('xtra-simple').classList.toggle('show',simple);
+  document.getElementById('xtra-ext').classList.toggle('show',ext);
+  document.getElementById('loc-mode-q').style.display=ext?'':'none';
+  if(D.adresse) updateFourchette(D.adresse);
+}
+function selMeuble(el,v){
+  el.closest('.bcards').querySelectorAll('.bcard').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');D.meuble=v;
+  document.getElementById('xtra-meuble').classList.toggle('show',v==='meuble'||v==='non_meuble');
+  if(D.adresse){
+    renderPersonas(D.adresse);
+    updateFourchette(D.adresse);
+  }
+}
+function selCard(el,k,v){
+  el.closest('.bcards').querySelectorAll('.bcard').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');D[k]=v;
+  if(k==='loc-mode' && D.adresse) updateAttractivite(findZone(D.adresse),D.marche);
+}
+function selPill(el,k,v){
+  el.closest('.pills').querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');D[k]=v;
+}
+function selRI(el){
+  document.querySelectorAll('#facteur-list .ri').forEach(r=>r.classList.remove('on'));
+  el.classList.add('on');D.facteur=el.querySelector('.ri-txt').textContent;
+}
+function updateCtx(){
+  const v=document.getElementById('besoin-sel').value;
+  ['expatrie','invest','neuf','multi'].forEach(k=>document.getElementById('ctx-'+k).classList.toggle('show',v===k));
+  D.besoin=v;
+}
+function togglePromo(t){document.getElementById('xtra-promo').classList.toggle('show',t.checked);}
+function validatePromo(){const c=document.getElementById('promo-code').value.trim();if(c)alert('Code "'+c+'" appliqué !');}
+
+// LOYER
+function adjLoyer(d){D.loyer=Math.max(30000,D.loyer+d);document.getElementById('loyerVal').textContent=D.loyer.toLocaleString('fr-FR');document.getElementById('devisLoyer').textContent=D.loyer.toLocaleString('fr-FR')+' F CFA';updateCalcs();renderFlux();}
+
+// OFFRES
+function selTier(o,t,el){el.closest('.offre-tiers').querySelectorAll('.offre-tier').forEach(e=>e.classList.remove('on'));el.classList.add('on');D['o'+o]=t;updateCalcs();renderFlux();}
+function updateCalcs(){
+  const l=D.loyer;
+  if(D.oa==='std'){document.getElementById('ap').textContent="80% d'un mois de loyer";document.getElementById('ac').textContent='soit ~ '+Math.round(l*.8).toLocaleString('fr-FR')+' F CFA / loc.';}
+  else if(D.oa==='prem'){document.getElementById('ap').textContent="100% d'un mois de loyer";document.getElementById('ac').textContent='soit ~ '+l.toLocaleString('fr-FR')+' F CFA / loc.';}
+  else{document.getElementById('ac').textContent='Non sélectionné';}
+  const rb=D.ob==='prem'?.069:.049;
+  if(D.ob!=='non'){document.getElementById('bp').textContent=(D.ob==='prem'?'6,9%':'4,9%')+' du loyer';document.getElementById('bc').textContent='soit ~ '+Math.max(15000,Math.round(l*rb)).toLocaleString('fr-FR')+' F CFA / mois';}
+  else{document.getElementById('bc').textContent='Non sélectionné';}
+  document.getElementById('cc').textContent=D.oc!=='non'?'soit ~ '+Math.round(l*.025).toLocaleString('fr-FR')+' F CFA / mois':'Non sélectionné';
+}
+function renderFlux(){
+  const l=D.loyer;
+  const fg=D.ob!=='non'?Math.max(15000,Math.round(l*(D.ob==='prem'?.069:.049))):0;
+  const fa=D.oc!=='non'?Math.round(l*.025):0;
+  const fr=D.oa!=='non'?Math.round(l*(D.oa==='prem'?1:.8)):0;
+  const mois=[{lb:'1er mois',fg,fa,fr,v:Math.max(0,l-fg-fa-fr)},{lb:'2ème mois',fg,fa,fr:0,v:Math.max(0,l-fg-fa)},{lb:'3ème mois',fg,fa,fr:0,v:Math.max(0,l-fg-fa)}];
+  const el=document.getElementById('flux-bars');if(!el)return;
+  el.innerHTML=mois.map(m=>{
+    const pFG=l?Math.round(m.fg/l*100):0,pFA=l?Math.round(m.fa/l*100):0,pFR=l?Math.round(m.fr/l*100):0,pV=Math.max(0,100-pFG-pFA-pFR);
+    return`<div class="flux-bw"><div class="flux-stack">${m.fr>0?`<div class="fs fr" style="height:${pFR}%">${pFR>6?'-'+Math.round(m.fr/1000)+'k':''}</div>`:''
+    }${m.fa>0?`<div class="fs fa" style="height:${pFA}%"></div>`:''
+    }${m.fg>0?`<div class="fs fg" style="height:${pFG}%"></div>`:''
+    }<div class="fs fv" style="height:${pV}%">= ${Math.round(m.v/1000)}k</div></div><div class="flux-bl">${m.lb}</div><div class="flux-bs">Loyer ${l.toLocaleString('fr-FR')} F</div></div>`;
+  }).join('');
+  updateFinancialProjection();
+}
+
+// NAVIGATION
+function showStep(n){
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  cs=n;updateStepper();updateProgress();updateBottomBar();
+  if(n>=5)renderFlux();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goStep(n){if(n<=cs)showStep(n);}
+function nextStep(){if(!validate())return;if(cs<6)showStep(cs+1);}
+function prevStep(){if(cs>1)showStep(cs-1);}
+function validate(){
+  clearAlert();
+  if(cs===2){
+    if(!document.getElementById('c-prenom').value.trim()||!document.getElementById('c-nom').value.trim()||!document.getElementById('c-email').value.trim()){showAlert('Merci de remplir tous les champs obligatoires.','w');return false;}
+    if(!document.getElementById('c-cgu').checked){showAlert("Vous devez accepter les conditions d'utilisation.",'w');return false;}
+    D.prenom=document.getElementById('c-prenom').value.trim();
+    D.nom=document.getElementById('c-nom').value.trim();
+    D.email=document.getElementById('c-email').value.trim();
+  }
+  return true;
+}
+function updateBottomBar(){
+  document.getElementById('btnBack').style.display=cs>1?'inline-flex':'none';
+  const t=cs===5?'Obtenir mon devis →':cs===6?'Consulter le mandat →':'Valider les informations';
+  document.getElementById('btnTxt').textContent=t;
+}
+function updateStepper(){
+  for(let i=1;i<=5;i++){
+    const n=document.getElementById('sn'+i),l=document.getElementById('sl'+i);if(!n||!l)continue;
+    if(i<cs){n.className='sn-n done';n.textContent='✓';l.className='sn-lbl done';}
+    else if(i===cs){n.className='sn-n active';n.textContent=i;l.className='sn-lbl active';}
+    else{n.className='sn-n idle';n.textContent=i;l.className='sn-lbl';}
+  }
+  document.getElementById('sn-mandat').style.display=cs>=6?'block':'none';
+}
+function updateProgress(){
+  const pcts=[0,14,28,42,57,71,85,100];
+  const p=pcts[Math.min(cs,7)];
+  document.getElementById('ringPct').textContent=p+'%';
+  const c=201,off=c-(c*p/100);
+  document.getElementById('ringFill').style.strokeDashoffset=off;
+  const times=['3 min','2 min 30 s','2 min','1 min 30 s','1 min','45 s','30 s','—'];
+  document.getElementById('ringTime').textContent='Temps estimé : '+(times[cs-1]||'—');
+}
+
+// MANDAT
+function goMandat(){showStep(6);document.getElementById('sig-p').value=D.prenom||document.getElementById('c-prenom').value||'';document.getElementById('sig-n').value=D.nom||document.getElementById('c-nom').value||'';document.getElementById('sig-e').value=D.email||document.getElementById('c-email').value||'';document.getElementById('sig-a').value=D.adresse||'';}
+function showMTab(t){
+  ['etapes','signature'].forEach(tab=>{document.getElementById('mt-'+tab).classList.toggle('active',tab===t);document.getElementById('mp-'+tab).classList.toggle('active',tab===t);const s=document.getElementById('ssub'+(tab==='etapes'?1:2));if(s)s.classList.toggle('active',tab===t);});
+}
+function selStatut(btn,v){document.querySelectorAll('.statut-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');D.statut=v;}
+function enregSignataire(){const p=document.getElementById('sig-p').value.trim(),n=document.getElementById('sig-n').value.trim();if(!p||!n){alert('Prénom et nom obligatoires.');return;}showAlert('Signataire enregistré. Vous pouvez maintenant consulter et signer le mandat.','s');}
+function consulterMandat(){
+  const p=document.getElementById('sig-p').value||D.prenom||'—',n=document.getElementById('sig-n').value||D.nom||'—',a=document.getElementById('sig-a').value||D.adresse||'—';
+  const d=new Date().toISOString().slice(0,10).replace(/-/g,'');
+  document.getElementById('mandatNum').textContent=d+'-'+n.toUpperCase();
+  document.getElementById('mandatProp').textContent=p+' '+n;
+  document.getElementById('mandatAddr').textContent=a;
+  document.getElementById('mandatBien').innerHTML='<strong>Type :</strong> '+D.pieces+' pièce(s) — '+(D.meuble==='meuble'?'Meublé':'Non meublé')+'<br><strong>Surface :</strong> '+(D.surface||'—')+' m²<br><strong>Adresse :</strong> '+(D.adresse||'—')+'<br><strong>Loyer indicatif :</strong> '+D.loyer.toLocaleString('fr-FR')+' F CFA';
+  document.getElementById('mandat-preview').style.display='block';
+  document.getElementById('mandat-preview').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function signerMandat(){
+  document.getElementById('mainGrid').style.display='none';
+  document.querySelector('.bottom-bar').style.display='none';
+  document.getElementById('success').style.display='flex';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// MODAL
+const MODAL={
+  a:{t:'🔑 Recherche de locataire',h:`<div class="modal-sec"><div class="modal-sec-ttl">Mise en location</div><div class="mf">Définition de votre projet avec un expert (mail, téléphone, RDV)</div><div class="mf">Estimation du loyer selon les données du marché sénégalais</div><div class="mf">Reportage professionnel (photos HD, vidéos, visite virtuelle 360°)</div><div class="mf">Diffusion sur les plateformes immobilières sénégalaises (Expat Dakar, SenLouer, Jumia Immo, réseaux entreprises)</div><div class="mf">Vérification des dossiers locataires (solvabilité, cautions, authenticité)</div><div class="mf">Rédaction et signature des baux (conforme législation sénégalaise)</div><div class="mf">État des lieux d'entrée digital avec photos</div><div class="mf prem">Premium — Emplacements premium sur plateformes partenaires</div><div class="mf prem">Premium — Remise en état avant location</div></div>`},
+  b:{t:'🏡 Gestion locative complète',h:`<div class="modal-sec"><div class="modal-sec-ttl">Gestion administrative et comptable</div><div class="mf">Interlocuteur Kàddu dédié (tel, WhatsApp, mail — réponse en 24h)</div><div class="mf">Quittances, révision annuelle des loyers</div><div class="mf">Reversement des loyers en 7 jours ouvrés</div><div class="mf">Suivi financier en temps réel + export</div><div class="mf">Traitement des dépôts de garantie</div><div class="mf prem">Premium — Aide à la déclaration fiscale immobilière</div></div><div class="modal-sec"><div class="modal-sec-ttl">Maintenance et assistance</div><div class="mf">Réseau d'artisans professionnels sélectionnés par Kàddu</div><div class="mf">Gestion des travaux jusqu'à 200 000 F CFA</div><div class="mf">Relocation offerte si locataire &lt; 3 mois</div><div class="mf prem">Premium — Relocation offerte si locataire &lt; 6 mois</div></div><div class="modal-sec"><div class="modal-sec-ttl">En cas d'impayé</div><div class="mf">Relances email, SMS, téléphone et courrier recommandé</div><div class="mf">Gestion avec les assureurs (GLI)</div></div>`},
+  c:{t:'🛡️ Assurance Loyers Impayés',h:`<div class="modal-sec"><div class="modal-sec-ttl">Garanties incluses</div><div class="mf">Loyers impayés — sans limite de montant ni de durée</div><div class="mf">Détériorations immobilières jusqu'à 1 000 000 F CFA</div><div class="mf">Protection juridique jusqu'à 1 500 000 F CFA</div><div class="mf">Relances amiables incluses</div><div class="mf">Tarif : 2,5% du loyer TTC / mois</div></div>`}
+};
+function openModal(o){const m=MODAL[o];if(!m)return;document.getElementById('modal-ttl').textContent=m.t;document.getElementById('modal-cnt').innerHTML=m.h;document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+
+// ALERTS
+function showAlert(msg,t){document.getElementById('gAlert').innerHTML=`<div class="alert alert-${t==='w'?'w':'s'}">${msg}</div>`;}
+function clearAlert(){document.getElementById('gAlert').innerHTML='';}
+
+// INIT
+updateProgress();updateCalcs();renderFlux();
+document.getElementById('xtra-simple').classList.add('show');
 </script>
 </body>
 </html>
