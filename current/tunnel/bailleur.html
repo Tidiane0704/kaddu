@@ -598,6 +598,48 @@
       border-radius:999px;
     }
 
+  
+    /* ══ KÀDDU V3 — icônes premium + locataires dynamiques ══ */
+    .kduo{
+      width:32px;height:32px;
+      display:inline-flex;align-items:center;justify-content:center;
+      border-radius:10px;
+      background:linear-gradient(145deg,rgba(191,150,80,.16),rgba(191,150,80,.045));
+      border:1px solid rgba(191,150,80,.18);
+      color:var(--or);
+      vertical-align:middle;
+      flex-shrink:0;
+    }
+    .kduo svg{width:20px;height:20px;display:block}
+    .kduo .soft{opacity:.34}
+    .kduo .strong{opacity:.96}
+    .kduo-lg{width:44px;height:44px;border-radius:14px}
+    .kduo-lg svg{width:27px;height:27px}
+    .tenant-card{
+      display:flex;gap:10px;align-items:flex-start;
+      padding:12px 14px;
+      border:1px solid rgba(191,150,80,.12);
+      border-radius:12px;
+      background:rgba(7,24,43,.70);
+      margin-bottom:10px;
+    }
+    .tenant-avatar{
+      width:34px;height:34px;border-radius:50%;
+      background:linear-gradient(145deg,rgba(191,150,80,.20),rgba(83,183,255,.08));
+      border:1px solid rgba(191,150,80,.20);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--or);font-size:.72rem;font-weight:700;flex-shrink:0;
+    }
+    .tenant-name{font-size:.82rem;font-weight:700;color:var(--blanc);line-height:1.2}
+    .tenant-search{font-size:.70rem;color:var(--or);line-height:1.38;margin-top:2px}
+    .tenant-meta{font-size:.65rem;color:rgba(248,244,238,.32);margin-top:4px}
+    .tenant-compatible{
+      text-align:center;
+      font-size:.70rem;
+      color:rgba(248,244,238,.38);
+      padding:4px 0 2px;
+    }
+
   </style>
 </head>
 <body>
@@ -647,7 +689,7 @@
       </div>
     </div>
     <div class="sb-bottom">
-      <div class="sb-tel">📞 +221 70 000 00 00</div>
+      <div class="sb-tel">📞 +221 78 187 58 58</div>
       <span class="sb-skip" onclick="location.href='/espace-bailleur/'">Continuer plus tard</span>
     </div>
   </aside>
@@ -673,7 +715,7 @@
                 <span class="addr-chk" id="addrChk">✓</span>
                 <div class="addr-drop" id="addrDrop"></div>
               </div>
-              <div class="addr-multi" onclick="alert('Contactez-nous au +221 70 000 00 00 pour plusieurs biens.')">J'ai plusieurs logements à confier</div>
+              <div class="addr-multi" onclick="alert('Contactez-nous au +221 78 187 58 58 pour plusieurs biens.')">J'ai plusieurs logements à confier</div>
             </div>
           </div>
           <div class="q">
@@ -753,7 +795,7 @@
             <label class="flbl">Téléphone</label>
             <div style="display:flex;gap:9px">
               <select class="sel" style="width:115px;flex-shrink:0" id="c-ind"><option value="+221">🇸🇳 +221</option><option value="+33">🇫🇷 +33</option><option value="+225">🇨🇮 +225</option><option value="+212">🇲🇦 +212</option></select>
-              <input class="inp" id="c-tel" type="tel" placeholder="77 000 00 00" style="flex:1">
+              <input class="inp" id="c-tel" type="tel" placeholder="78 187 58 58" style="flex:1">
             </div>
           </div>
           <div class="fg"><label class="flbl">Email</label><input class="inp" id="c-email" type="email" placeholder="votre@email.com" autocomplete="email"></div>
@@ -1727,6 +1769,96 @@ function showAlert(msg,t){document.getElementById('gAlert').innerHTML=`<div clas
 function clearAlert(){document.getElementById('gAlert').innerHTML='';}
 
 
+
+// ══ KÀDDU V3 — Icônes SVG premium + locataires dynamiques ═══════════════════
+function kdIcon(name, cls='kduo'){
+  const icons = {
+    home:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-9.5Z" fill="currentColor"/><path class="strong" d="M3 11.2 12 4l9 7.2M7 21v-9h10v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    bed:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="M4 12h16v6H4z" fill="currentColor"/><path class="strong" d="M4 18V7m0 7h16m0 4V9a2 2 0 0 0-2-2h-5v7M4 11h6a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    building:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="M5 4h9v17H5z" fill="currentColor"/><path class="strong" d="M5 21V4h9v17m0-10h5v10M8 8h3m-3 4h3m-3 4h3m8-1h1M3 21h18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    sofa:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="M6 10h12a3 3 0 0 1 3 3v4H3v-4a3 3 0 0 1 3-3Z" fill="currentColor"/><path class="strong" d="M6 11V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3M3 17v-4a2 2 0 0 1 2-2h1m15 6v-4a2 2 0 0 0-2-2h-1M5 17v2m14-2v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    box:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" fill="currentColor"/><path class="strong" d="m12 3 8 4.5-8 4.5-8-4.5L12 3Zm0 9v9m8-13.5v9L12 21l-8-4.5v-9" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
+    help:`<svg viewBox="0 0 24 24" fill="none"><circle class="soft" cx="12" cy="12" r="9" fill="currentColor"/><path class="strong" d="M9.8 9a2.4 2.4 0 1 1 3.4 2.2c-.8.4-1.2 1-1.2 1.8v.4m0 3.1h.01" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>`,
+    doc:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="M7 3h7l4 4v14H7z" fill="currentColor"/><path class="strong" d="M7 21V3h7l4 4v14H7Zm7-18v5h4M9.5 12h5M9.5 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    map:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="m9 5 6 3 5-2v13l-5 2-6-3-5 2V7l5-2Z" fill="currentColor"/><path class="strong" d="M9 5v13m6-10v13M4 7l5-2 6 3 5-2v13l-5 2-6-3-5 2V7Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    phone:`<svg viewBox="0 0 24 24" fill="none"><path class="soft" d="M7 3h10v18H7z" fill="currentColor"/><path class="strong" d="M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm3.5 15h1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`
+  };
+  return `<span class="${cls}">${icons[name]||icons.home}</span>`;
+}
+
+function kdFormatBudget(n){
+  return Math.round(Number(n||0)/10000)*10000;
+}
+
+function updateNearbyTenants(){
+  const boxTitle = [...document.querySelectorAll('*')].find(el => (el.textContent||'').trim().toUpperCase() === 'NOS LOCATAIRES À PROXIMITÉ');
+  if(!boxTitle) return;
+  const container = boxTitle.parentElement;
+  if(!container) return;
+
+  const loyer = Number(D.loyer || 0);
+  if(!loyer) return;
+
+  const type = (String(D.pieces || '3').toLowerCase().includes('studio')) ? 'Studio' : 'F' + String(D.pieces || '3').replace('+','');
+  const meubleTxt = D.meuble === 'meuble' ? 'Meublé' : (D.meuble === 'non' ? 'Non meublé' : 'Meublé ou non meublé');
+  const score = computeAttractivenessScore ? computeAttractivenessScore() : 70;
+  const profils = Math.max(6, Math.min(42, Math.round((score - 50) * 0.8)));
+  const b1min = kdFormatBudget(loyer * 0.85);
+  const b1max = kdFormatBudget(loyer * 1.07);
+  const b2min = kdFormatBudget(loyer * 0.90);
+  const b2max = kdFormatBudget(loyer * 1.18);
+
+  let html = `
+    <div class="tenant-card">
+      <div class="tenant-avatar">FB</div>
+      <div>
+        <div class="tenant-name">Fatou B.</div>
+        <div class="tenant-search">Recherche ${type} · ${meubleTxt} · ${b1min.toLocaleString('fr-FR')}–${b1max.toLocaleString('fr-FR')} F / mois</div>
+        <div class="tenant-meta">Profil actif depuis 1 mois</div>
+      </div>
+    </div>
+    <div class="tenant-card">
+      <div class="tenant-avatar">AD</div>
+      <div>
+        <div class="tenant-name">Amadou D.</div>
+        <div class="tenant-search">Recherche ${type} · ${meubleTxt} · ${b2min.toLocaleString('fr-FR')}–${b2max.toLocaleString('fr-FR')} F / mois</div>
+        <div class="tenant-meta">Profil actif depuis 2 semaines</div>
+      </div>
+    </div>
+    <div class="tenant-compatible">+${profils} profils compatibles dans cette zone</div>
+  `;
+
+  const oldCards = container.querySelectorAll('.tenant-card,.tenant-compatible');
+  if(oldCards.length){
+    oldCards.forEach(e=>e.remove());
+    boxTitle.insertAdjacentHTML('afterend', html);
+  } else {
+    // Try to replace everything after title until next major block if initial old structure exists
+    const children = [...container.children];
+    const idx = children.indexOf(boxTitle);
+    children.slice(idx+1).forEach(e => {
+      if((e.textContent||'').includes('ATTRACTIVITÉ') || (e.textContent||'').includes('PROJECTION')) return;
+      e.remove();
+    });
+    boxTitle.insertAdjacentHTML('afterend', html);
+  }
+}
+
+function premiumizeVisibleEmojis(){
+  const replacements = [
+    ['🏠','home'], ['🏢','building'], ['🛏️','bed'], ['🛋️','sofa'],
+    ['📦','box'], ['❓','help'], ['?','help'], ['📋','doc'], ['🗺️','map'], ['☎️','phone'], ['📞','phone']
+  ];
+  document.querySelectorAll('button, .opt, .choice, .card, .step-title, h1, h2, h3, label, a, div').forEach(el => {
+    if(el.children.length > 3) return;
+    let t = el.innerHTML;
+    replacements.forEach(([emo,icon]) => {
+      if(t.includes(emo)) t = t.split(emo).join(kdIcon(icon));
+    });
+    el.innerHTML = t;
+  });
+}
+
 // ══ KÀDDU V2 CONVERSION — Offres dynamiques + révélation complète ═══════════
 let KADDU_SELECTED_OFFER = 'serenite';
 let KADDU_ANALYSIS_UNLOCKED = false;
@@ -1792,6 +1924,7 @@ function selectKadduOffer(name){
   updateCalcs();
   renderFlux();
   updateKadduOfferSimulation();
+  updateNearbyTenants();
 }
 
 function computeAttractivenessScore(){
@@ -1836,6 +1969,8 @@ function updateKadduOfferSimulation(){
   }
 
   const fullAdvice = document.getElementById('simFullAdvice');
+  updateNearbyTenants();
+
   if(fullAdvice){
     fullAdvice.innerHTML = `Avec l’offre <strong>${offer.name}</strong>, votre revenu net indicatif est de <strong>${kadduFcfa(netAnnuel)} / an</strong>. Le score d’attractivité tient compte de la zone, du type de bien, du statut meublé/non-meublé et du niveau d’accompagnement choisi.`;
   }
@@ -1891,7 +2026,7 @@ if(_kadduOrigUpdateFourchette){
 }
 
 // INIT
-updateProgress();updateCalcs();renderFlux();selectKadduOffer('serenite');updateKadduOfferSimulation();
+updateProgress();updateCalcs();renderFlux();selectKadduOffer('serenite');updateKadduOfferSimulation();setTimeout(()=>{premiumizeVisibleEmojis();updateNearbyTenants();},250);
 document.getElementById('xtra-simple').classList.add('show');
 </script>
 </body>
