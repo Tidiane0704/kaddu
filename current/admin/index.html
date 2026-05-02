@@ -450,7 +450,30 @@
         </div>
       </a>
 
-      <!-- MODULE 4 : RÉSERVATIONS (à venir) -->
+      <!-- MODULE 5 : MARKETING & OPÉRATIONS -->
+      <a class="module-card" href="admin-marketing-operations.html">
+        <div class="module-top">
+          <div class="module-icon">🧩</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+            <span class="mbadge mbadge-new">Nouveau</span>
+          </div>
+        </div>
+        <div class="module-name">Marketing <em>& opérations</em></div>
+        <div class="module-desc">Pilotez les codes promo, campagnes, tracking et offres intelligentes Kàddu pour améliorer la conversion des bailleurs.</div>
+        <div class="module-features">
+          <span class="mfeat">Création de codes promo</span>
+          <span class="mfeat">Ciblage zone · type bien · offre</span>
+          <span class="mfeat">Usage max · durée · statut</span>
+          <span class="mfeat">Suivi performance et conversion</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Ouvrir le module →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">O</span></span>
+        </div>
+      </a>
+
+      <!-- MODULE 6 : RÉSERVATIONS (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
           <div class="module-icon" style="opacity:.5">📅</div>
@@ -470,7 +493,7 @@
         </div>
       </div>
 
-      <!-- MODULE 5 : PAIEMENTS (à venir) -->
+      <!-- MODULE 7 : PAIEMENTS (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
           <div class="module-icon" style="opacity:.5">💳</div>
@@ -490,7 +513,7 @@
         </div>
       </div>
 
-      <!-- MODULE 6 : CONTENU (à venir) -->
+      <!-- MODULE 8 : CONTENU (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
           <div class="module-icon" style="opacity:.5">✍️</div>
@@ -557,6 +580,7 @@
             <div class="shortcut-pill"><span class="key">G</span><span class="key">D</span> Dossiers</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">K</span> KPIs</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">M</span> Marché</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">O</span> Marketing</div>
             <div class="shortcut-pill"><span class="key">?</span> Aide</div>
           </div>
         </div>
@@ -566,7 +590,7 @@
   </div><!-- /main -->
 
   <div class="hub-footer">
-    <span>Kàddu Admin Hub · <span id="footerVersion">v3.0</span></span>
+    <span>Kàddu Admin Hub · <span id="footerVersion">v3.1</span></span>
     <span id="footerDate"></span>
   </div>
 
@@ -710,6 +734,7 @@ document.addEventListener("keydown", e => {
     if(e.key==="d"||e.key==="D") location.href="admin-dossiers-v3-secured.html";
     if(e.key==="k"||e.key==="K") location.href="dashboard-kaddu-kpi-secured.html";
     if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
+    if(e.key==="o"||e.key==="O") location.href="admin-marketing-operations.html";
   }
 });
 
