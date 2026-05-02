@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu Admin — Marketing & opérations</title>
+  <style>
+    :root{
+      --or:#BF9650;--orl:#DDB96E;--nbl:#07182B;--bg:#070f1a;--card:#0b2039;
+      --txt:#F8F4EE;--muted:rgba(248,244,238,.58);--bdr:rgba(191,150,80,.18);
+      --green:#00C875;--red:#FF6B6B;--orange:#F5A623;--blue:#53b7ff;
+      --shadow:0 24px 64px rgba(0,0,0,.34);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Arial,system-ui,sans-serif;background:linear-gradient(180deg,#070f1a,#07182B);
+      color:var(--txt);min-height:100vh;
+    }
+    a{text-decoration:none;color:inherit}
+    .wrap{max-width:1320px;margin:0 auto;padding:28px}
+    .top{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;
+      border:1px solid var(--bdr);background:rgba(255,255,255,.035);border-radius:22px;padding:18px 20px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:44px;height:44px;border-radius:14px;border:1px solid rgba(191,150,80,.35);
+      display:flex;align-items:center;justify-content:center;color:var(--or);
+      font-family:Georgia,serif;font-size:22px;background:rgba(191,150,80,.08)
+    }
+    h1{font-family:Georgia,serif;font-weight:300;margin:0;font-size:28px}
+    .sub{color:var(--muted);font-size:13px;margin-top:3px}
+    .btn{
+      border:0;border-radius:999px;padding:11px 16px;cursor:pointer;font-weight:700;font-size:12px;
+      letter-spacing:.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn-p{background:var(--or);color:#080808}
+    .btn-s{background:transparent;color:var(--txt);border:1px solid rgba(248,244,238,.18)}
+    .btn-d{background:rgba(255,107,107,.12);color:#ffb3b3;border:1px solid rgba(255,107,107,.25)}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
+    @media(max-width:1050px){.grid{grid-template-columns:1fr}}
+    .card{
+      border:1px solid var(--bdr);background:rgba(11,32,57,.72);border-radius:22px;padding:18px;
+      box-shadow:0 12px 36px rgba(0,0,0,.18);
+    }
+    .card h2{font-family:Georgia,serif;font-weight:300;margin:0 0 6px;font-size:22px}
+    .card p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+    .kpi{
+      border:1px solid rgba(191,150,80,.14);border-radius:18px;padding:15px;background:rgba(255,255,255,.03)
+    }
+    .kpi .l{font-size:11px;color:rgba(248,244,238,.38);letter-spacing:.12em;text-transform:uppercase}
+    .kpi .v{font-family:Georgia,serif;font-size:28px;color:var(--or);margin-top:7px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+    .tab{
+      padding:10px 13px;border-radius:999px;border:1px solid rgba(191,150,80,.16);
+      background:rgba(255,255,255,.03);color:rgba(248,244,238,.62);cursor:pointer;font-size:12px;
+      letter-spacing:.08em;text-transform:uppercase;font-weight:700
+    }
+    .tab.on{background:rgba(191,150,80,.14);color:var(--or);border-color:rgba(191,150,80,.38)}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+    input,select,textarea{
+      width:100%;border:1px solid rgba(191,150,80,.18);background:rgba(7,24,43,.86);color:var(--txt);
+      border-radius:12px;padding:11px 12px;outline:none;font-family:inherit;
+    }
+    input:focus,select:focus,textarea:focus{border-color:var(--or)}
+    textarea{min-height:86px;resize:vertical}
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:11px;color:var(--or);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:680px){.form-grid{grid-template-columns:1fr}}
+    table{width:100%;border-collapse:collapse;overflow:hidden}
+    th,td{padding:12px 10px;border-bottom:1px solid rgba(191,150,80,.10);font-size:13px;text-align:left;vertical-align:top}
+    th{font-size:11px;color:var(--or);letter-spacing:.12em;text-transform:uppercase;background:rgba(191,150,80,.045)}
+    tr:hover td{background:rgba(255,255,255,.02)}
+    .badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid transparent}
+    .b-green{background:rgba(0,200,117,.12);color:#8cffc9;border-color:rgba(0,200,117,.25)}
+    .b-red{background:rgba(255,107,107,.12);color:#ffb3b3;border-color:rgba(255,107,107,.25)}
+    .b-gold{background:rgba(191,150,80,.14);color:var(--orl);border-color:rgba(191,150,80,.25)}
+    .b-blue{background:rgba(83,183,255,.12);color:#9ad7ff;border-color:rgba(83,183,255,.25)}
+    .actions{display:flex;gap:6px;flex-wrap:wrap}
+    .mini{padding:7px 10px;border-radius:999px;font-size:11px;border:1px solid rgba(248,244,238,.12);background:transparent;color:var(--txt);cursor:pointer}
+    .mini:hover{border-color:var(--or);color:var(--or)}
+    .hide{display:none!important}
+    .alert{border-radius:14px;padding:12px 14px;margin:12px 0;font-size:13px;display:none}
+    .alert.ok{display:block;background:rgba(0,200,117,.10);border:1px solid rgba(0,200,117,.25);color:#8cffc9}
+    .alert.ko{display:block;background:rgba(255,107,107,.10);border:1px solid rgba(255,107,107,.25);color:#ffb3b3}
+    .muted{color:var(--muted)}
+    .section{display:none}
+    .section.on{display:block}
+    .premium-box{
+      border:1px solid rgba(191,150,80,.18);border-radius:18px;padding:15px;background:linear-gradient(160deg,rgba(191,150,80,.08),rgba(255,255,255,.02));
+      margin-top:14px
+    }
+    .recos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+    @media(max-width:760px){.recos{grid-template-columns:1fr}}
+    .reco{border:1px solid rgba(191,150,80,.12);border-radius:14px;padding:12px;background:rgba(255,255,255,.025)}
+    .reco strong{display:block;margin-bottom:4px}
+    .reco span{font-size:12px;color:var(--muted);line-height:1.45}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">K</div>
+        <div>
+          <h1>Marketing & opérations</h1>
+          <div class="sub">Codes promo · campagnes · tracking · recommandations intelligentes</div>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-s" href="/admin/">← Hub admin</a>
+        <button class="btn btn-p" onclick="openCreateCode()">Créer un code</button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="l">Codes actifs</div><div class="v" id="kpiActive">—</div></div>
+      <div class="kpi"><div class="l">Utilisations</div><div class="v" id="kpiUses">—</div></div>
+      <div class="kpi"><div class="l">Conversion</div><div class="v" id="kpiConv">—</div></div>
+      <div class="kpi"><div class="l">CA estimé</div><div class="v" id="kpiRevenue">—</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" onclick="showTab('codes',this)">Codes promo</button>
+      <button class="tab" onclick="showTab('campaigns',this)">Campagnes</button>
+      <button class="tab" onclick="showTab('tracking',this)">Performance</button>
+      <button class="tab" onclick="showTab('rules',this)">Automations</button>
+      <button class="tab" onclick="showTab('insights',this)">Insights</button>
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <div class="grid">
+      <main>
+        <section class="section on" id="sec-codes">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px">
+              <div>
+                <h2>Codes promo</h2>
+                <p>Créez des offres ciblées par zone, type de bien, offre Kàddu et source marketing.</p>
+              </div>
+              <button class="btn btn-p" onclick="openCreateCode()">+ Nouveau</button>
+            </div>
+
+            <div class="toolbar">
+              <input id="searchCode" placeholder="Rechercher un code, une zone, une campagne…" oninput="renderCodes()">
+              <select id="filterActive" onchange="renderCodes()" style="max-width:180px">
+                <option value="">Tous statuts</option><option value="true">Actifs</option><option value="false">Inactifs</option>
+              </select>
+              <select id="filterOffer" onchange="renderCodes()" style="max-width:210px">
+                <option value="">Toutes offres</option><option>Essentiel</option><option>Sérénité</option><option>Premium</option>
+              </select>
+            </div>
+
+            <div style="overflow:auto">
+              <table>
+                <thead><tr><th>Code</th><th>Ciblage</th><th>Avantage</th><th>Durée</th><th>Usage</th><th>Statut</th><th>Actions</th></tr></thead>
+                <tbody id="codesTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="sec-campaigns">
+          <div class="card">
+            <h2>Campagnes</h2>
+            <p>Regroupez vos codes, sources et messages marketing : TikTok, diaspora, lancement VDN, offres propriétaires.</p>
+            <div style="margin:16px 0"><button class="btn btn-p" onclick="openCreateCampaign()">Créer une campagne</button></div>
+            <div style="overflow:auto">
+              <table>
+                <thead><tr><th>Campagne</th><th>Objectif</th><th>Canal</th><th>Période</th><th>Codes liés</th><th>Statut</th></tr></thead>
+                <tbody id="campaignTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="sec-tracking">
+          <div class="card">
+            <h2>Performance</h2>
+            <p>Suivez les utilisations, conversions et revenus estimés par code/campagne.</p>
+            <div style="overflow:auto;margin-top:16px">
+              <table>
+                <thead><tr><th>Code</th><th>Vues</th><th>Utilisations</th><th>Leads</th><th>Mandats</th><th>Conversion</th><th>CA estimé</th></tr></thead>
+                <tbody id="trackingTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="sec-rules">
+          <div class="card">
+            <h2>Automations</h2>
+            <p>Règles marketing intelligentes à activer dans le tunnel bailleur.</p>
+            <div class="recos">
+              <div class="reco"><strong>Score fort → Premium</strong><span>Si score bailleur ≥ 82, recommander Premium avec bonus visibilité.</span></div>
+              <div class="reco"><strong>VDN + F3 → Offre ciblée</strong><span>Appliquer une offre “lancement VDN” si zone = Sipres VDN et type = F3.</span></div>
+              <div class="reco"><strong>Diaspora → Sérénité</strong><span>Si besoin = diaspora, mettre Sérénité en recommandation par défaut.</span></div>
+              <div class="reco"><strong>Prix trop haut → Conseil</strong><span>Si loyer > médiane + 20%, afficher recommandation de repositionnement.</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="sec-insights">
+          <div class="card">
+            <h2>Insights marketing</h2>
+            <p>Vue métier pour piloter les zones, offres et messages qui convertissent le mieux.</p>
+            <div class="premium-box">
+              <strong>Heatmap demande locative — V1</strong>
+              <p style="margin-top:6px">À brancher ensuite sur les recherches locataires, les dossiers déposés et les estimations bailleurs.</p>
+            </div>
+            <div class="recos">
+              <div class="reco"><strong>Sipres VDN</strong><span>F3 non meublé : forte demande, budget cible à surveiller.</span></div>
+              <div class="reco"><strong>Almadies</strong><span>Meublé premium : privilégier offres Sérénité/Premium.</span></div>
+              <div class="reco"><strong>Mermoz · Sacré-Cœur</strong><span>Marché équilibré : conversion sensible au prix.</span></div>
+              <div class="reco"><strong>Diaspora</strong><span>Message gagnant : gestion à distance + reporting clair.</span></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside>
+        <div class="card" id="formCard">
+          <h2 id="formTitle">Créer un code promo</h2>
+          <p>Les codes créés ici pourront être vérifiés depuis le tunnel bailleur.</p>
+
+          <div class="field"><label>Code</label><input id="f-code" placeholder="Ex : LANCEMENT-VDN"></div>
+          <div class="field"><label>Nom interne</label><input id="f-name" placeholder="Ex : Lancement propriétaires VDN"></div>
+          <div class="field"><label>Description visible</label><textarea id="f-desc" placeholder="Ex : Offre de lancement réservée aux biens éligibles."></textarea></div>
+
+          <div class="form-grid">
+            <div class="field"><label>Type</label><select id="f-type"><option value="percent">Pourcentage</option><option value="fixed">Montant fixe</option></select></div>
+            <div class="field"><label>Valeur</label><input id="f-value" type="number" placeholder="10"></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field"><label>Début</label><input id="f-start" type="date"></div>
+            <div class="field"><label>Fin</label><input id="f-end" type="date"></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field"><label>Usage max</label><input id="f-limit" type="number" placeholder="50"></div>
+            <div class="field"><label>Offre applicable</label><select id="f-offer"><option value="">Toutes</option><option>Essentiel</option><option>Sérénité</option><option>Premium</option></select></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field"><label>Zone ciblée</label><input id="f-zone" placeholder="sipres_vdn, almadies…"></div>
+            <div class="field"><label>Type bien</label><select id="f-bien"><option value="">Tous</option><option>studio</option><option>F2</option><option>F3</option><option>F4</option><option>F5+</option></select></div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field"><label>Canal source</label><select id="f-source"><option value="">Tous</option><option>TikTok</option><option>WhatsApp</option><option>Google</option><option>Direct</option><option>Partenaire</option></select></div>
+            <div class="field"><label>Premier bailleur uniquement</label><select id="f-first"><option value="false">Non</option><option value="true">Oui</option></select></div>
+          </div>
+
+          <div class="field"><label>Statut</label><select id="f-active"><option value="true">Actif</option><option value="false">Inactif</option></select></div>
+
+          <div class="actions">
+            <button class="btn btn-p" onclick="saveCode()">Enregistrer</button>
+            <button class="btn btn-s" onclick="resetForm()">Réinitialiser</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h2>Différenciant Kàddu</h2>
+          <p>Ce module sert à piloter les opérations terrain comme un SaaS : offres ciblées, conversion, tracking, recommandations.</p>
+          <div class="premium-box">
+            <strong>À connecter ensuite</strong>
+            <p style="margin-top:6px">Tunnel bailleur, scoring bailleur, marché locatif, dossiers locataires et sources marketing.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+const SB_URL  = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+
+let codes = [];
+let campaigns = [];
+let tracking = [];
+let editingId = null;
+
+function $(id){return document.getElementById(id)}
+function alertMsg(msg,type='ok'){const a=$('alert');a.textContent=msg;a.className='alert '+type;setTimeout(()=>{a.className='alert'},3500)}
+function fcfa(n){return Number(n||0).toLocaleString('fr-FR')+' F'}
+
+function showTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('on'));
+  $('sec-'+name).classList.add('on');
+}
+
+async function sbGet(table, qs='select=*'){
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${qs}`,{headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}});
+  if(!r.ok) throw new Error(await r.text());
+  return await r.json();
+}
+async function sbPost(table,obj){
+  const r = await fetch(`${SB_URL}/rest/v1/${table}`,{
+    method:'POST',
+    headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(obj)
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return await r.json();
+}
+async function sbPatch(table,id,obj){
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(obj)
+  });
+  if(!r.ok) throw new Error(await r.text());
+  return await r.json();
+}
+async function sbDelete(table,id){
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`,{
+    method:'DELETE',
+    headers:{apikey:SB_ANON,Authorization:'Bearer '+SB_ANON}
+  });
+  if(!r.ok) throw new Error(await r.text());
+}
+
+function openCreateCode(){resetForm();window.scrollTo({top:0,behavior:'smooth'});$('f-code').focus()}
+function resetForm(){
+  editingId=null;$('formTitle').textContent='Créer un code promo';
+  ['f-code','f-name','f-desc','f-value','f-start','f-end','f-limit','f-zone'].forEach(id=>$(id).value='');
+  $('f-type').value='percent';$('f-offer').value='';$('f-bien').value='';$('f-source').value='';$('f-first').value='false';$('f-active').value='true';
+}
+function payload(){
+  const code=$('f-code').value.trim().toUpperCase();
+  if(!code) throw new Error('Code obligatoire');
+  const value=Number($('f-value').value||0);
+  if(!value || value<=0) throw new Error('Valeur obligatoire');
+  return {
+    code,
+    nom_interne:$('f-name').value.trim(),
+    description:$('f-desc').value.trim(),
+    type:$('f-type').value,
+    value,
+    starts_at:$('f-start').value ? new Date($('f-start').value).toISOString() : null,
+    expires_at:$('f-end').value ? new Date($('f-end').value+'T23:59:59').toISOString() : null,
+    usage_limit:$('f-limit').value ? Number($('f-limit').value) : null,
+    usage_count:0,
+    active:$('f-active').value==='true',
+    ciblage_zone:$('f-zone').value.trim() || null,
+    ciblage_type_bien:$('f-bien').value || null,
+    offre_applicable:$('f-offer').value || null,
+    source:$('f-source').value || null,
+    first_time_only:$('f-first').value==='true',
+    updated_at:new Date().toISOString()
+  };
+}
+async function saveCode(){
+  try{
+    const p=payload();
+    if(editingId){
+      delete p.usage_count;
+      await sbPatch('promo_codes',editingId,p);
+      alertMsg('Code mis à jour.');
+    }else{
+      p.created_at=new Date().toISOString();
+      await sbPost('promo_codes',p);
+      alertMsg('Code créé.');
+    }
+    resetForm(); await loadAll();
+  }catch(e){alertMsg(e.message,'ko')}
+}
+function editCode(id){
+  const c=codes.find(x=>x.id===id); if(!c)return;
+  editingId=id;$('formTitle').textContent='Modifier le code promo';
+  $('f-code').value=c.code||'';$('f-name').value=c.nom_interne||'';$('f-desc').value=c.description||'';
+  $('f-type').value=c.type||'percent';$('f-value').value=c.value||'';
+  $('f-start').value=c.starts_at?c.starts_at.slice(0,10):'';$('f-end').value=c.expires_at?c.expires_at.slice(0,10):'';
+  $('f-limit').value=c.usage_limit||'';$('f-zone').value=c.ciblage_zone||'';
+  $('f-bien').value=c.ciblage_type_bien||'';$('f-offer').value=c.offre_applicable||'';
+  $('f-source').value=c.source||'';$('f-first').value=String(!!c.first_time_only);$('f-active').value=String(!!c.active);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function toggleCode(id){
+  const c=codes.find(x=>x.id===id); if(!c)return;
+  await sbPatch('promo_codes',id,{active:!c.active,updated_at:new Date().toISOString()});
+  await loadAll();
+}
+async function deleteCode(id){
+  if(!confirm('Supprimer ce code promo ?')) return;
+  await sbDelete('promo_codes',id); await loadAll(); alertMsg('Code supprimé.');
+}
+function renderCodes(){
+  const q=$('searchCode').value.toLowerCase();
+  const active=$('filterActive').value;
+  const offer=$('filterOffer').value;
+  let rows=[...codes];
+  if(q) rows=rows.filter(c=>[c.code,c.nom_interne,c.ciblage_zone,c.source].join(' ').toLowerCase().includes(q));
+  if(active) rows=rows.filter(c=>String(!!c.active)===active);
+  if(offer) rows=rows.filter(c=>(c.offre_applicable||'')===offer);
+  $('codesTbody').innerHTML=rows.map(c=>{
+    const val=c.type==='percent'?`-${c.value}%`:`-${fcfa(c.value)}`;
+    const period=`${c.starts_at?c.starts_at.slice(0,10):'—'} → ${c.expires_at?c.expires_at.slice(0,10):'—'}`;
+    const usage=`${c.usage_count||0}${c.usage_limit?' / '+c.usage_limit:''}`;
+    const targeting=[c.ciblage_zone,c.ciblage_type_bien,c.offre_applicable,c.source].filter(Boolean).join(' · ') || 'Tous';
+    return `<tr>
+      <td><strong>${c.code}</strong><br><span class="muted">${c.nom_interne||''}</span></td>
+      <td>${targeting}</td><td><span class="badge b-gold">${val}</span></td><td>${period}</td><td>${usage}</td>
+      <td>${c.active?'<span class="badge b-green">Actif</span>':'<span class="badge b-red">Inactif</span>'}</td>
+      <td><div class="actions"><button class="mini" onclick="editCode('${c.id}')">Modifier</button><button class="mini" onclick="toggleCode('${c.id}')">${c.active?'Désactiver':'Activer'}</button><button class="mini" onclick="deleteCode('${c.id}')">Supprimer</button></div></td>
+    </tr>`
+  }).join('') || `<tr><td colspan="7" class="muted">Aucun code promo.</td></tr>`;
+}
+function renderCampaigns(){
+  $('campaignTbody').innerHTML=campaigns.map(c=>`<tr>
+    <td><strong>${c.nom||''}</strong><br><span class="muted">${c.description||''}</span></td>
+    <td>${c.objectif||'—'}</td><td>${c.canal||'—'}</td>
+    <td>${c.starts_at?c.starts_at.slice(0,10):'—'} → ${c.expires_at?c.expires_at.slice(0,10):'—'}</td>
+    <td>${c.codes_lies||'—'}</td><td>${c.active?'<span class="badge b-green">Active</span>':'<span class="badge b-red">Inactive</span>'}</td>
+  </tr>`).join('') || `<tr><td colspan="6" class="muted">Aucune campagne pour le moment.</td></tr>`;
+}
+function renderTracking(){
+  const byCode={};
+  tracking.forEach(t=>{
+    const k=t.code||'—'; byCode[k]=byCode[k]||{views:0,uses:0,leads:0,mandats:0,revenue:0};
+    byCode[k].views+=Number(t.views||0);byCode[k].uses+=Number(t.uses||0);byCode[k].leads+=Number(t.leads||0);byCode[k].mandats+=Number(t.mandats||0);byCode[k].revenue+=Number(t.revenue_estime||0);
+  });
+  const rows=Object.entries(byCode);
+  $('trackingTbody').innerHTML=rows.map(([code,v])=>{
+    const conv=v.views?Math.round((v.leads/v.views)*100):0;
+    return `<tr><td><strong>${code}</strong></td><td>${v.views}</td><td>${v.uses}</td><td>${v.leads}</td><td>${v.mandats}</td><td>${conv}%</td><td>${fcfa(v.revenue)}</td></tr>`
+  }).join('') || `<tr><td colspan="7" class="muted">Aucune donnée de tracking.</td></tr>`;
+}
+function renderKpis(){
+  const active=codes.filter(c=>c.active).length;
+  const uses=codes.reduce((s,c)=>s+Number(c.usage_count||0),0);
+  const views=tracking.reduce((s,t)=>s+Number(t.views||0),0);
+  const leads=tracking.reduce((s,t)=>s+Number(t.leads||0),0);
+  const revenue=tracking.reduce((s,t)=>s+Number(t.revenue_estime||0),0);
+  $('kpiActive').textContent=active;$('kpiUses').textContent=uses;$('kpiConv').textContent=views?Math.round((leads/views)*100)+'%':'—';$('kpiRevenue').textContent=revenue?fcfa(revenue):'—';
+}
+async function loadAll(){
+  try{
+    codes=await sbGet('promo_codes','select=*&order=created_at.desc');
+  }catch(e){codes=[]; alertMsg('Table promo_codes introuvable ou non accessible. Exécute le SQL fourni.', 'ko')}
+  try{campaigns=await sbGet('marketing_campaigns','select=*&order=created_at.desc')}catch(e){campaigns=[]}
+  try{tracking=await sbGet('promo_tracking','select=*')}catch(e){tracking=[]}
+  renderCodes();renderCampaigns();renderTracking();renderKpis();
+}
+function openCreateCampaign(){alertMsg('V1 : création campagne prévue. Pour l’instant, crée le code promo et rattache-le via nom_interne/source.','ok')}
+loadAll();
+</script>
+</body>
+</html>
