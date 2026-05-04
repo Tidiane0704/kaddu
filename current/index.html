@@ -2688,7 +2688,7 @@
   async function loadBiensFromSupabase() {
     try {
       const r = await fetch(
-        `${SB_URL}/rest/v1/biens?statut=neq.brouillon&order=created_at.desc&limit=4&select=*,commerciaux(id,nom,role,telephone,whatsapp,photo_url,reponse,wa_message)`,
+        `${SB_URL}/rest/v1/biens?or=(statut.neq.brouillon,statut.is.null)&order=created_at.desc&limit=4&select=*,...`
         { headers:{ 'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON } }
       );
       if(!r.ok) return null;
