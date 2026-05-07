@@ -84,7 +84,7 @@
   p{margin:0}
   strong{font-weight:600}
   .container{max-width:var(--container);margin:0 auto;padding:0 28px}
-  .section{padding:88px 0}
+  .section{padding:64px 0}
 
   h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:300;line-height:1.08}
   h1 em,h2 em,h3 em{font-style:italic;color:var(--bl)}
@@ -136,7 +136,7 @@
 
   /* ════════ HERO ════════ */
   .hero{padding:72px 0 56px;overflow:hidden}
-  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;min-height:580px}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center;min-height:580px}
 
   /* Animated entrance */
   .hero-copy{animation:fadeUp .7s ease both}
@@ -250,9 +250,9 @@
   .t-sep{color:rgba(59,158,245,.2);flex-shrink:0}
 
   /* ════════ MATCHING INTELLIGENT ════════ */
-  .matching-section{padding:88px 0}
+  .matching-section{padding:64px 0}
 
-  .profiles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:44px}
+  .profiles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:32px}
   .profile-match-card{
     border:1px solid var(--bl-bdr);border-radius:var(--radius);
     background:var(--bl-bg);
@@ -290,7 +290,7 @@
 
   /* Match result panel */
   .match-result{
-    margin-top:28px;
+    margin-top:22px;
     background:linear-gradient(135deg,rgba(59,158,245,.09),rgba(9,21,37,.7));
     border:1px solid var(--bl-bds);border-radius:var(--radius);
     padding:28px 32px;
@@ -312,12 +312,12 @@
   .simulation-section{
     background:rgba(9,20,34,.5);
     border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
-    padding:88px 0;
+    padding:64px 0;
   }
   .sim-wrap{
     background:linear-gradient(160deg,rgba(59,158,245,.07),rgba(9,21,37,.6));
     border:1px solid var(--bl-bds);border-radius:var(--radius-lg);
-    padding:44px 48px;
+    padding:34px 40px;
     max-width:860px;margin:44px auto 0;
     position:relative;overflow:hidden;
   }
@@ -392,10 +392,44 @@
     margin-top:14px;
   }
 
+  /* ════════ LISIBILITÉ TEXTE ════════ */
+  .hero-lead,
+  .section-head p,
+  .section p,
+  .matching-section p,
+  .simulation-section p,
+  .passport-section p,
+  .immersive-section p,
+  .score-section p,
+  .antisurprise-section p,
+  .testi-section p,
+  .faq-section p,
+  .cta-box p,
+  .foot-text{
+    text-align:justify;
+    text-justify:inter-word;
+  }
+  .cta-box p,
+  .testi-quote,
+  .faq-q-text,
+  .cmp-row,
+  .trust-chip,
+  .btn,
+  .eyebrow,
+  .hero-step-row,
+  .t-stat,
+  .pm-tag,
+  .sim-chip,
+  .match-r-chip strong,
+  .foot-links a{
+    text-align:initial;
+  }
+
+
   /* ════════ MICRO-CTA ════════ */
   .micro-cta-row{
     display:flex;align-items:center;gap:12px;
-    margin-top:28px;padding-top:24px;
+    margin-top:22px;padding-top:24px;
     border-top:1px solid var(--bl-bdr);
   }
   .micro-cta-row .btn-micro{
@@ -413,9 +447,9 @@
   .micro-cta-row .micro-note{font-size:.74rem;color:var(--dim)}
 
   /* ════════ VISITE IMMERSIVE WOW ════════ */
-  .immersive-section{padding:88px 0;overflow:hidden}
+  .immersive-section{padding:64px 0;overflow:hidden}
   .immersive-inner{
-    display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;
+    display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
   }
   .phone-mockup-wrap{display:flex;justify-content:center;align-items:center;position:relative;min-height:520px}
   /* Ambient glow behind phone */
@@ -552,7 +586,7 @@
 
   /* Copy side */
   .immersive-copy{}
-  .immersive-features{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+  .immersive-features{display:flex;flex-direction:column;gap:12px;margin-top:22px}
   .if-row{
     display:flex;align-items:flex-start;gap:12px;
     padding:14px 16px;border:1px solid var(--bl-bdr);border-radius:14px;
@@ -569,9 +603,9 @@
     background:rgba(9,20,34,.55);
     border-top:1px solid var(--bl-bdr);
     border-bottom:1px solid var(--bl-bdr);
-    padding:88px 0;
+    padding:64px 0;
   }
-  .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;margin-top:52px}
+  .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center;margin-top:36px}
   .score-card-wrap{display:flex;flex-direction:column;gap:14px}
   .score-card{
     background:linear-gradient(160deg,rgba(59,158,245,.07),rgba(9,21,37,.7));
@@ -651,7 +685,7 @@
   .sb-desc{font-size:.74rem;color:var(--dim);margin-top:6px;line-height:1.45}
 
   /* ════════ HOW ════════ */
-  .how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px;position:relative}
+  .how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:34px;position:relative}
   .how-card{
     padding:28px 22px;border:1px solid var(--bl-bdr);border-radius:var(--radius);
     background:rgba(9,21,37,.38);transition:.22s;
@@ -681,9 +715,9 @@
   .passport-section{
     background:rgba(9,20,34,.5);
     border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
-    padding:88px 0;
+    padding:64px 0;
   }
-  .passport-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;margin-top:52px}
+  .passport-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:start;margin-top:36px}
 
   /* The passport card itself */
   .passport-card{
@@ -753,8 +787,8 @@
   .pb-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
 
   /* ════════ VISITES IMMERSIVES ════════ */
-  .visite-section{padding:88px 0}
-  .visite-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;margin-top:48px}
+  .visite-section{padding:64px 0}
+  .visite-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px;align-items:center;margin-top:34px}
   .visite-visual{
     background:linear-gradient(160deg,rgba(59,158,245,.08),rgba(9,21,37,.65));
     border:1px solid var(--bl-bdr);border-radius:var(--radius-lg);
@@ -801,11 +835,11 @@
   .antisurprise-section{
     background:rgba(9,20,34,.5);
     border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
-    padding:88px 0;
+    padding:64px 0;
   }
   .compare-wrap{
     display:grid;grid-template-columns:1fr auto 1fr;gap:0;
-    margin-top:48px;border:1px solid var(--bl-bdr);border-radius:var(--radius);overflow:hidden;
+    margin-top:34px;border:1px solid var(--bl-bdr);border-radius:var(--radius);overflow:hidden;
     max-width:820px;margin-left:auto;margin-right:auto;
   }
   .cmp-col{padding:0}
@@ -824,8 +858,8 @@
   .cmp-after .cmp-row::before{content:"✓  ";color:rgba(0,200,117,.7);font-size:.76rem}
 
   /* ════════ TEMOIGNAGES ════════ */
-  .testi-section{padding:88px 0}
-  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+  .testi-section{padding:64px 0}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
   .testi-card{
     border:1px solid var(--bl-bdr);border-radius:var(--radius);
     background:var(--bl-bg);padding:26px;
@@ -850,9 +884,9 @@
   .testi-meta{font-size:.72rem;color:var(--dim)}
 
   /* ════════ FAQ FRICTIONS KILLERS ════════ */
-  .faq-section{padding:88px 0}
+  .faq-section{padding:64px 0}
   .faq-intro{
-    max-width:580px;margin-bottom:44px
+    max-width:580px;margin-bottom:30px
   }
   .faq-grid{
     display:grid;grid-template-columns:1fr 1fr;gap:10px;
@@ -886,11 +920,11 @@
   }
 
   /* ════════ CTA FINAL ════════ */
-  .cta-final-section{padding:88px 0}
+  .cta-final-section{padding:64px 0}
   .cta-box{
     background:linear-gradient(135deg,rgba(59,158,245,.12) 0%,rgba(9,21,37,.8) 40%,rgba(191,150,80,.05) 100%);
     border:1px solid var(--bl-bds);border-radius:var(--radius-lg);
-    padding:72px 56px;text-align:center;position:relative;overflow:hidden;
+    padding:54px 46px;text-align:center;position:relative;overflow:hidden;
   }
   .cta-box::before{
     content:"";position:absolute;inset:0;
@@ -939,7 +973,7 @@
   @media(max-width:760px){
     .nav-links{display:none}
     .nav-cta .btn-outline{display:none}
-    .section,.matching-section,.passport-section,.visite-section,.antisurprise-section,.testi-section,.simulation-section,.faq-section,.cta-final-section{padding:56px 0}
+    .section,.matching-section,.passport-section,.visite-section,.antisurprise-section,.testi-section,.simulation-section,.faq-section,.cta-final-section{padding:46px 0}
     .container{padding:0 18px}
     .hero{padding:44px 0 28px}
     .hero h1{font-size:2.2rem}
@@ -1000,7 +1034,7 @@
         <em>sans mauvaise surprise</em>.
       </h1>
       <p class="hero-lead">
-        Kàddu vérifie chaque bien sur site, vous offre une visite immersive en 360° et valorise votre dossier avec un moteur d'analyse qui parle aux propriétaires. Depuis n'importe où. En toute confiance.
+        Chaque bien est vérifié avant publication. Vous visitez en 360°, candidatez avec un dossier structuré et avancez sereinement, même à distance.
       </p>
       <div class="hero-trust-row">
         <div class="trust-chip"><span>🛡️</span>Biens vérifiés sur site</div>
@@ -1092,10 +1126,10 @@
 <section class="matching-section reveal">
   <div class="container">
     <div style="max-width:640px">
-      <span class="eyebrow">Matching intelligent</span>
-      <h2>Kàddu comprend<br><em>votre situation réelle</em>.</h2>
+      <span class="eyebrow">Votre situation</span>
+      <h2>Parce qu’un étudiant, une famille<br>et un expatrié ne cherchent pas<br><em>le même Dakar</em>.</h2>
       <p style="color:var(--muted);font-size:.96rem;margin-top:12px;line-height:1.7">
-        Pas un formulaire de plus. Dites-nous dans quelle situation vous êtes — Kàddu affiche immédiatement les biens, les quartiers et les options qui vous correspondent vraiment.
+        Un séjour de quelques semaines, une installation durable ou un retour au pays ne demandent pas le même accompagnement. Kàddu adapte les biens, les quartiers et le parcours à votre réalité.
       </p>
     </div>
 
@@ -1198,9 +1232,9 @@
   <div class="container">
     <div style="text-align:center">
       <span class="eyebrow" style="justify-content:center">Simulation locataire</span>
-      <h2>Votre budget à Dakar,<br><em>en temps réel</em>.</h2>
+      <h2>Ce que votre budget<br>permet réellement<br><em>à Dakar</em>.</h2>
       <p style="color:var(--muted);font-size:.95rem;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7">
-        Choisissez vos critères. Kàddu vous montre immédiatement ce qui est accessible, les quartiers compatibles et la tension du marché.
+        Sélectionnez votre budget, le type de bien recherché et la durée souhaitée. Kàddu vous montre les quartiers accessibles, le niveau de tension du marché et les biens compatibles.
       </p>
     </div>
 
@@ -1272,32 +1306,32 @@
         <span class="eyebrow">Le parcours locataire</span>
         <h2>4 étapes.<br>De la <em>recherche aux clés</em>.</h2>
       </div>
-      <p style="color:var(--muted);max-width:380px;font-size:.9rem;padding-top:8px;line-height:1.72">Un parcours entièrement digital pensé pour aller vite sans sacrifier la confiance ni la sécurité.</p>
+      <p style="color:var(--muted);max-width:380px;font-size:.9rem;padding-top:8px;line-height:1.72">Un parcours digital, simple et sécurisé, pensé pour avancer vite sans perdre en confiance.</p>
     </div>
     <div class="how-grid">
       <div class="how-card">
         <div class="how-num">01</div>
         <div class="how-icon">🔍</div>
         <h3>Je cherche & simule</h3>
-        <p>Filtrez par budget, quartier, type et durée. Chaque bien affiché est vérifié sur site et actif. Plus d'annonces fantômes.</p>
+        <p>Filtrez selon votre budget, le quartier ou le type de bien recherché. Chaque annonce publiée sur Kàddu est vérifiée avant mise en ligne. Plus d’annonces fantômes.</p>
       </div>
       <div class="how-card">
         <div class="how-num">02</div>
         <div class="how-icon">🌀</div>
         <h3>Je visite en 360°</h3>
-        <p>Explorez chaque pièce, chaque couloir depuis votre écran. Aucun déplacement avant d'être certain de vouloir candidater.</p>
+        <p>Visitez le bien à votre rythme, depuis votre téléphone ou votre ordinateur. Vous savez exactement à quoi vous attendre avant de vous déplacer.</p>
       </div>
       <div class="how-card">
         <div class="how-num">03</div>
         <div class="how-icon">📋</div>
         <h3>Mon Passeport Locatif</h3>
-        <p>10 minutes pour structurer votre dossier. Identité, revenus, situation — présenté clairement, analysé par le moteur Kàddu.</p>
+        <p>10 minutes pour préparer un dossier clair : identité, revenus et situation locative. Tout est présenté de façon lisible pour faciliter l’analyse par le propriétaire.</p>
       </div>
       <div class="how-card">
         <div class="how-num">04</div>
         <div class="how-icon">🔑</div>
         <h3>Je signe & reçois mes clés</h3>
-        <p>Contrat digital, paiement Wave/Stripe, réponse garantie sous 48h. Remise des clés en main propre ou par délégué.</p>
+        <p>Contrat digital, paiement sécurisé et réponse sous 48h. Les clés sont remises en main propre ou à une personne de confiance désignée.</p>
       </div>
     </div>
   </div>
@@ -1312,7 +1346,7 @@
       <span class="eyebrow">Le différenciateur Kàddu</span>
       <h2>Votre <em>Passeport Locatif</em>.<br>Créé une fois. Accepté partout.</h2>
       <p style="color:var(--muted);font-size:.95rem;margin-top:14px;line-height:1.72">
-        Oubliez la paperasse à imprimer à chaque candidature. Le Passeport Locatif Kàddu structure votre profil une seule fois — et vous positionne en tête de liste à chaque bien.
+        Votre dossier locatif est centralisé, structuré et réutilisable pour toutes vos candidatures Kàddu. Plus besoin de repartir de zéro à chaque demande.
       </p>
     </div>
 
@@ -1468,37 +1502,37 @@
       <!-- Copy -->
       <div class="immersive-copy">
         <span class="eyebrow">Visites immersives 360°</span>
-        <h2>Visitez Dakar<br>avant même<br><em>d'arriver</em>.</h2>
+        <h2>Visitez votre futur logement<br>avant même<br><em>d’arriver</em>.</h2>
         <p style="color:var(--muted);font-size:.96rem;margin-top:14px;margin-bottom:0;line-height:1.75;max-width:460px">
-          Votre plus grand avantage avec Kàddu. Le scoring rassure — le 360° fait <em style="font-style:italic;color:var(--bll)">ressentir</em>. Explorez chaque pièce, repérez les détails, projetez-vous dans votre futur chez-vous. Depuis n'importe où dans le monde.
+          Les photos montrent un appartement. Le 360° permet de vraiment s’y projeter. Explorez les pièces, repérez les détails importants et avancez avec une vision claire du bien, où que vous soyez.
         </p>
         <div class="immersive-features">
           <div class="if-row">
             <div class="if-icon">🌀</div>
             <div class="if-body">
               <div class="if-title">Rotation complète pièce par pièce</div>
-              <div class="if-desc">Salon, chambres, cuisine, espaces communs. Chaque angle, chaque détail. Rien n'est caché.</div>
+              <div class="if-desc">Salon, chambres, cuisine, espaces communs : vous visualisez le bien dans son ensemble, sans dépendre de quelques photos choisies.</div>
             </div>
           </div>
           <div class="if-row">
             <div class="if-icon">📍</div>
             <div class="if-body">
               <div class="if-title">Hotspots interactifs</div>
-              <div class="if-desc">Touchez un point dans la pièce pour obtenir des détails : équipement, matière, dimension réelle.</div>
+              <div class="if-desc">Certains points de la visite affichent des informations utiles : équipement, dimensions, état général ou élément à retenir.</div>
             </div>
           </div>
           <div class="if-row">
             <div class="if-icon">🗺️</div>
             <div class="if-body">
               <div class="if-title">Quartier + vue satellite</div>
-              <div class="if-desc">Accès, commerces, écoles, transports — vous connaissez votre quartier avant de signer.</div>
+              <div class="if-desc">Accès, commerces, écoles, transports : vous comprenez aussi l’environnement du bien avant de vous engager.</div>
             </div>
           </div>
           <div class="if-row">
             <div class="if-icon">📸</div>
             <div class="if-body">
               <div class="if-title">Photos réelles · Prises lors du contrôle Kàddu</div>
-              <div class="if-desc">Aucune retouche. Aucune mise en scène. Ce que vous voyez est exactement ce que vous obtenez.</div>
+              <div class="if-desc">Photos récentes, prises lors du contrôle Kàddu, pour montrer le bien tel qu’il est réellement.</div>
             </div>
           </div>
         </div>
@@ -1521,10 +1555,10 @@
 <section class="score-section reveal" id="score">
   <div class="container">
     <div style="max-width:600px">
-      <span class="eyebrow">Le Kàddu Score</span>
-      <h2>Votre profil a<br><em>de la valeur</em>. Montrons-le.</h2>
+      <span class="eyebrow">Fiabilité du dossier</span>
+      <h2>Un bon dossier mérite<br><em>d’être bien présenté</em>.</h2>
       <p style="color:var(--muted);font-size:.96rem;margin-top:14px;line-height:1.75">
-        Le Kàddu Score n'est pas une note abstraite. C'est un signal visuel clair que le propriétaire lit en quelques secondes — et qui vous distingue immédiatement d'un dossier classique.
+        Votre dossier ne se résume pas à quelques pièces jointes. Kàddu le rend lisible, cohérent et rassurant pour aider le propriétaire à décider plus vite.
       </p>
     </div>
 
@@ -1600,10 +1634,10 @@
 
       <!-- Score builder -->
       <div>
-        <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:6px">Comment booster votre score</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;margin-bottom:20px">Chaque élément compte.</div>
+        <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:6px">Comment renforcer votre dossier</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;margin-bottom:20px">Chaque pièce utile renforce la confiance.</div>
         <div class="score-builder">
-          <p class="sb-intro">Le Passeport Locatif est structuré pour valoriser ce que vous avez, pas pour pénaliser ce qui manque. Voici les leviers qui font la différence.</p>
+          <p class="sb-intro">Le Passeport Locatif met en valeur les éléments solides de votre situation. Il vous aide aussi à identifier ce qui peut rassurer davantage un propriétaire.</p>
           <div class="sb-item" onclick="animateSb(this,100)">
             <div class="sb-item-head">
               <div class="sb-item-label">🪪 Identité vérifiée</div>
@@ -1663,12 +1697,12 @@
 <section class="antisurprise-section reveal" id="garanties">
   <div class="container">
     <div style="text-align:center;max-width:580px;margin:0 auto 0">
-      <span class="eyebrow" style="justify-content:center">Pourquoi Kàddu est différent</span>
-      <h2>Le marché vous a déjà <em>déçu</em>.<br>Kàddu a été pensé pour ça.</h2>
-      <p style="color:var(--muted);font-size:.93rem;margin-top:12px;line-height:1.7">Ce ne sont pas des promesses marketing. Ce sont des engagements vérifiables à chaque étape.</p>
+      <span class="eyebrow" style="justify-content:center">Pourquoi Kàddu rassure</span>
+      <h2>Louer à Dakar peut être compliqué.<br>Kàddu rend le parcours<br><em>plus clair</em>.</h2>
+      <p style="color:var(--muted);font-size:.93rem;margin-top:12px;line-height:1.7">Des biens contrôlés, des informations vérifiées et un délai de réponse clair : l’objectif est simple, réduire les mauvaises surprises.</p>
     </div>
 
-    <div class="compare-wrap" style="margin-top:44px">
+    <div class="compare-wrap" style="margin-top:32px">
       <div class="cmp-col cmp-before">
         <div class="cmp-head cmp-head-before">Marché traditionnel</div>
         <div class="cmp-row">Annonces inexactes ou déjà louées</div>
@@ -1701,12 +1735,12 @@
   <div class="container">
     <div style="max-width:540px;margin-bottom:0">
       <span class="eyebrow">Ils ont trouvé avec Kàddu</span>
-      <h2>Du vécu.<br>Pas du <em>corporate</em>.</h2>
+      <h2>Des retours simples.<br>Des expériences <em>concrètes</em>.</h2>
     </div>
     <div class="testi-grid">
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">J'ai signé depuis Paris avant mon arrivée à Dakar. La visite 360° était bluffante — j'ai vu chaque pièce comme si j'y étais. Tout s'est fait à distance en 4 jours.</div>
+        <div class="testi-quote">J’avais peur de signer sans visiter sur place. La visite 360° m’a vraiment rassuré et, à l’arrivée, l’appartement correspondait à ce que j’avais vu.</div>
         <div class="testi-author">
           <div class="testi-avatar">👨🏾</div>
           <div>
@@ -1717,7 +1751,7 @@
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">Enfin une annonce conforme à la réalité. Le bien correspondait exactement aux photos et à la description. Mon dossier a été traité en moins de 24h.</div>
+        <div class="testi-quote">Ce qui m’a plu, c’est la clarté. Le bien correspondait aux photos, le dossier était simple à déposer et j’ai eu un retour rapide.</div>
         <div class="testi-author">
           <div class="testi-avatar">👩🏽</div>
           <div>
@@ -1728,7 +1762,7 @@
       </div>
       <div class="testi-card">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">Mission de 2 mois à Dakar pour un client. Le meublé était opérationnel dès le soir même — WiFi, cuisine équipée, tout. Jamais vu ça avec une agence locale.</div>
+        <div class="testi-quote">Je venais pour une mission de deux mois. Le logement était prêt le soir même : WiFi, cuisine équipée, arrivée organisée. C’est exactement ce qu’il me fallait.</div>
         <div class="testi-author">
           <div class="testi-avatar">👨🏽‍💼</div>
           <div>
@@ -1749,7 +1783,7 @@
     <div class="faq-intro">
       <span class="eyebrow">Questions directes</span>
       <h2>Les vraies questions<br>que vous <em>vous posez</em>.</h2>
-      <p style="color:var(--muted);font-size:.93rem;margin-top:12px;line-height:1.72">Pas de FAQ corporate. Les objections réelles du marché, avec des réponses courtes et honnêtes.</p>
+      <p style="color:var(--muted);font-size:.93rem;margin-top:12px;line-height:1.72">Les questions que l’on se pose vraiment avant de louer : paiement, distance, documents, quartier, garanties. Réponses courtes et concrètes.</p>
     </div>
     <!-- Chargé dynamiquement depuis Supabase -->
     <div class="faq-grid" id="faqGrid">
@@ -1769,7 +1803,7 @@
       <div class="cta-box-inner">
         <span class="eyebrow" style="justify-content:center;margin-bottom:16px">Prêt à commencer ?</span>
         <h2>Votre prochain chez-vous<br>est à <em>un passeport d'ici</em>.</h2>
-        <p>Rejoignez les locataires sérieux qui trouvent vite parce qu'ils candidatent bien — avec un dossier structuré, analysé, et présenté par Kàddu.</p>
+        <p>Préparez un dossier clair, consultez des biens vérifiés et avancez avec un parcours simple, même à distance.</p>
         <div class="cta-box-btns">
           <a class="btn btn-blue btn-lg" href="/tunnel/dossier-v2-step1.html">Créer mon Passeport Locatif →</a>
           <a class="btn btn-outline btn-lg" href="/#biens">Explorer les biens disponibles</a>
@@ -1791,7 +1825,7 @@
           <div class="foot-mark">K</div>
           <div class="foot-name">Kàddu</div>
         </div>
-        <p class="foot-text">La première agence immobilière 100% digitale au Sénégal. Biens vérifiés, Passeport Locatif, visites 360° — la confiance à chaque étape.</p>
+        <p class="foot-text">Agence immobilière digitale au Sénégal. Biens vérifiés, Passeport Locatif, visites 360° : un parcours plus clair pour louer en confiance.</p>
       </div>
       <div>
         <div class="foot-col-title">Locataires</div>
