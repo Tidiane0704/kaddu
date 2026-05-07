@@ -889,8 +889,8 @@
         </div>
       </a>
       <div class="nav-links">
-        <a href="/proprietaires/">Propriétaires</a>
-        <a href="#locataires">Locataires</a>
+        <a href="/proprietaires/" id="nav-proprietaires">Propriétaires</a>
+        <a href="#locataires" id="nav-locataires">Locataires</a>
         <a href="#confiance">Pourquoi Kàddu</a>
         <a href="#biens">Biens</a>
       </div>
@@ -1133,7 +1133,7 @@
               <span>Dossier mal valorisé</span>
               <span>Manque de confiance dans le processus</span>
             </div>
-            <a href="/tunnel/dossier-v2-step1.html" class="pain-cta-link pain-cta-blue">Déposer mon dossier →</a>
+            <a href="/locataires/" class="pain-cta-link pain-cta-blue">Découvrir nos offres locataires →</a>
           </article>
         </div>
       </div>
@@ -3322,6 +3322,44 @@
     if (!track) return;
     // Clone le contenu pour créer la boucle seamless
     track.innerHTML += track.innerHTML;
+  })();
+
+  // ══ DOUBLE-CLIC NAV — Propriétaires & Locataires ════════════════════════════
+  // 1er clic → scroll vers la section anchor sur la page d'accueil
+  // 2e clic (si déjà dans la section visible) → redirige vers la page dédiée
+  (function initDoubleClickNav() {
+    function setupDoubleClick(linkId, anchorId, dedicatedUrl) {
+      const link = document.getElementById(linkId);
+      if (!link) return;
+      let firstClickDone = false;
+      let timer = null;
+
+      link.addEventListener('click', function(e) {
+        const anchor = document.getElementById(anchorId);
+        if (!anchor) { window.location.href = dedicatedUrl; return; }
+
+        // Vérifie si la section anchor est déjà dans le viewport
+        const rect = anchor.getBoundingClientRect();
+        const inView = rect.top >= -80 && rect.top <= window.innerHeight * 0.55;
+
+        if (inView || firstClickDone) {
+          // 2e clic ou section déjà visible → page dédiée
+          e.preventDefault();
+          window.location.href = dedicatedUrl;
+        } else {
+          // 1er clic → scroll vers la section
+          e.preventDefault();
+          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstClickDone = true;
+          clearTimeout(timer);
+          // Reset après 4s si l'utilisateur ne reclique pas
+          timer = setTimeout(() => { firstClickDone = false; }, 4000);
+        }
+      });
+    }
+
+    setupDoubleClick('nav-proprietaires', 'proprietaires', '/proprietaires/');
+    setupDoubleClick('nav-locataires',    'locataires',    '/locataires/');
   })();
   // ─────────────────────────────────────────────────────────────────────────────
   </script>
