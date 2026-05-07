@@ -270,6 +270,144 @@
       .modules-grid{grid-template-columns:1fr}
       .top-user{display:none}
     }
+
+    /* ══ FAQ MANAGER PANEL ══════════════════════════════════════ */
+    .faq-overlay{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(4,8,18,.88);backdrop-filter:blur(8px);
+      display:none;align-items:flex-start;justify-content:center;
+      padding:24px 16px;overflow-y:auto;
+    }
+    .faq-overlay.open{display:flex}
+    .faq-panel{
+      width:100%;max-width:860px;
+      background:linear-gradient(160deg,rgba(12,20,38,.98),rgba(7,14,28,.98));
+      border:1px solid rgba(191,150,80,.22);border-radius:24px;
+      overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5);
+      margin:auto;
+    }
+    .faq-panel-head{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:22px 28px;border-bottom:1px solid rgba(191,150,80,.12);
+      background:rgba(7,15,28,.7);
+    }
+    .faq-panel-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300}
+    .faq-panel-title em{font-style:italic;color:var(--or)}
+    .faq-close{
+      width:34px;height:34px;border-radius:50%;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+      color:rgba(248,244,238,.5);font-size:1rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;
+    }
+    .faq-close:hover{background:rgba(255,107,107,.15);border-color:rgba(255,107,107,.3);color:#ffb3b3}
+
+    .faq-panel-toolbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 28px;border-bottom:1px solid rgba(191,150,80,.08);
+      flex-wrap:wrap;
+    }
+    .faq-count{font-size:.76rem;color:rgba(248,244,238,.35)}
+    .faq-toolbar-right{display:flex;gap:8px}
+    .faq-btn{
+      padding:8px 16px;border-radius:999px;font-size:.74rem;font-weight:600;
+      letter-spacing:.08em;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;
+      border:1px solid;display:inline-flex;align-items:center;gap:6px;
+    }
+    .faq-btn-primary{background:var(--or);color:#0a0a0a;border-color:var(--or)}
+    .faq-btn-primary:hover{background:var(--orl)}
+    .faq-btn-ghost{background:transparent;color:rgba(248,244,238,.55);border-color:rgba(191,150,80,.2)}
+    .faq-btn-ghost:hover{border-color:var(--or);color:var(--or)}
+    .faq-btn-danger{background:transparent;color:rgba(255,107,107,.7);border-color:rgba(255,107,107,.2)}
+    .faq-btn-danger:hover{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.4);color:#ff8a8a}
+    .faq-btn-green{background:rgba(0,200,117,.1);color:#00C875;border-color:rgba(0,200,117,.25)}
+    .faq-btn-green:hover{background:rgba(0,200,117,.18)}
+
+    /* List */
+    .faq-list-wrap{padding:16px 28px;display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow-y:auto}
+    .faq-list-wrap::-webkit-scrollbar{width:4px}
+    .faq-list-wrap::-webkit-scrollbar-track{background:transparent}
+    .faq-list-wrap::-webkit-scrollbar-thumb{background:rgba(191,150,80,.2);border-radius:2px}
+
+    .fq-item{
+      border:1px solid rgba(191,150,80,.14);border-radius:14px;
+      background:rgba(7,24,43,.45);
+      transition:.2s;
+    }
+    .fq-item.urgent-item{border-color:rgba(255,160,50,.2);background:rgba(255,140,30,.03)}
+    .fq-item-head{
+      display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;
+    }
+    .fq-drag{
+      color:rgba(248,244,238,.2);cursor:grab;font-size:.9rem;flex-shrink:0;
+      user-select:none;padding:0 2px;
+    }
+    .fq-drag:active{cursor:grabbing}
+    .fq-urgent-dot{
+      width:8px;height:8px;border-radius:50%;flex-shrink:0;
+      background:rgba(255,160,50,.5);
+    }
+    .fq-urgent-dot.active{background:#F59E0B}
+    .fq-question{flex:1;font-size:.86rem;color:rgba(248,244,238,.78);line-height:1.4}
+    .fq-actions{display:flex;gap:5px;flex-shrink:0}
+    .fq-btn-sm{
+      width:28px;height:28px;border-radius:8px;border:1px solid rgba(191,150,80,.15);
+      background:transparent;cursor:pointer;font-size:.8rem;
+      display:flex;align-items:center;justify-content:center;transition:.18s;color:rgba(248,244,238,.45);
+    }
+    .fq-btn-sm:hover{background:rgba(191,150,80,.1);border-color:rgba(191,150,80,.3);color:var(--or)}
+    .fq-btn-sm.del:hover{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.25);color:#ff8a8a}
+    .fq-answer-preview{
+      padding:0 16px 14px 42px;
+      font-size:.78rem;color:rgba(248,244,238,.38);line-height:1.6;
+      display:none;
+    }
+    .fq-item.expanded .fq-answer-preview{display:block}
+
+    /* Form */
+    .faq-form-wrap{
+      border-top:1px solid rgba(191,150,80,.1);padding:20px 28px;
+      background:rgba(7,14,28,.5);display:none;
+    }
+    .faq-form-wrap.open{display:block}
+    .faq-form-title{
+      font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--or);margin-bottom:14px
+    }
+    .faq-field{margin-bottom:12px}
+    .faq-field label{
+      display:block;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+      color:rgba(191,150,80,.65);margin-bottom:6px
+    }
+    .faq-field input,.faq-field textarea,.faq-field select{
+      width:100%;padding:10px 13px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.18);
+      color:rgba(248,244,238,.85);font-family:'DM Sans',sans-serif;font-size:.88rem;
+      border-radius:10px;transition:.2s;resize:vertical;
+    }
+    .faq-field input:focus,.faq-field textarea:focus,.faq-field select:focus{
+      outline:none;border-color:rgba(191,150,80,.45);background:rgba(255,255,255,.06)
+    }
+    .faq-field textarea{min-height:80px;line-height:1.6}
+    .faq-form-row{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+    .faq-form-row .faq-field{flex:1;min-width:180px}
+    .faq-check-row{display:flex;align-items:center;gap:9px;font-size:.82rem;color:rgba(248,244,238,.55);cursor:pointer;margin-bottom:14px}
+    .faq-check-row input[type=checkbox]{
+      width:16px;height:16px;accent-color:var(--or);cursor:pointer
+    }
+    .faq-form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+
+    /* Export */
+    .faq-export-wrap{
+      border-top:1px solid rgba(191,150,80,.08);
+      padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+      background:rgba(7,14,28,.4);
+    }
+    .faq-export-note{font-size:.74rem;color:rgba(248,244,238,.3)}
+    .faq-export-actions{display:flex;gap:8px}
+
+    .fq-empty{
+      text-align:center;padding:32px;color:rgba(248,244,238,.3);font-size:.84rem
+    }
   </style>
 </head>
 <body>
@@ -473,7 +611,30 @@
         </div>
       </a>
 
-      <!-- MODULE 6 : RÉSERVATIONS (à venir) -->
+      <!-- MODULE 6 : FAQ LOCATAIRES ← NOUVEAU -->
+      <a class="module-card" href="#" onclick="openFaqManager(event)">
+        <div class="module-top">
+          <div class="module-icon">❓</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+            <span class="mbadge mbadge-new">Nouveau</span>
+          </div>
+        </div>
+        <div class="module-name">FAQ <em>& Frictions</em></div>
+        <div class="module-desc">Gérez les questions/réponses de la page locataires. Ajoutez, modifiez, réordonnez ou supprimez les frictions sans toucher au code.</div>
+        <div class="module-features">
+          <span class="mfeat">Ajout / modification / suppression</span>
+          <span class="mfeat">Marquage "friction prioritaire"</span>
+          <span class="mfeat">Réordonnement par glisser-déposer</span>
+          <span class="mfeat">Export JSON pour déploiement</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Gérer les FAQ →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">F</span></span>
+        </div>
+      </a>
+
+      <!-- MODULE 7 : RÉSERVATIONS (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
           <div class="module-icon" style="opacity:.5">📅</div>
@@ -596,6 +757,81 @@
 
 </div><!-- /appShell -->
 
+<!-- ══ FAQ MANAGER OVERLAY ══ -->
+<div class="faq-overlay" id="faqOverlay">
+  <div class="faq-panel" id="faqPanel">
+
+    <div class="faq-panel-head">
+      <div>
+        <div class="faq-panel-title">FAQ <em>& Frictions locataires</em></div>
+        <div style="font-size:.72rem;color:rgba(248,244,238,.3);margin-top:3px">Questions/réponses affichées sur la page /locataires/</div>
+      </div>
+      <button class="faq-close" onclick="closeFaqManager()">✕</button>
+    </div>
+
+    <div class="faq-panel-toolbar">
+      <div class="faq-count" id="faqCount">— entrées</div>
+      <div class="faq-toolbar-right">
+        <button class="faq-btn faq-btn-ghost" onclick="toggleFaqForm()">＋ Nouvelle entrée</button>
+        <button class="faq-btn faq-btn-green" onclick="saveFaqsToSupabase()">💾 Enregistrer</button>
+      </div>
+    </div>
+
+    <!-- ADD / EDIT FORM -->
+    <div class="faq-form-wrap" id="faqFormWrap">
+      <div class="faq-form-title" id="faqFormTitle">Nouvelle entrée FAQ</div>
+      <input type="hidden" id="faqEditId" value="">
+      <div class="faq-field">
+        <label>Question</label>
+        <input id="faqQ" type="text" placeholder="Et si le bien ne correspond pas à l'annonce ?"/>
+      </div>
+      <div class="faq-field">
+        <label>Réponse</label>
+        <textarea id="faqA" placeholder="Réponse claire et directe…"></textarea>
+      </div>
+      <div class="faq-form-row">
+        <div class="faq-field">
+          <label>Pastille de confirmation (optionnel)</label>
+          <input id="faqBadge" type="text" placeholder="✓ Remboursement garanti sous 24h"/>
+        </div>
+        <div class="faq-field" style="max-width:180px">
+          <label>Catégorie</label>
+          <select id="faqCat">
+            <option value="general">Général</option>
+            <option value="dossier">Dossier / Documents</option>
+            <option value="paiement">Paiements</option>
+            <option value="logistique">Logistique / Arrivée</option>
+            <option value="quartier">Quartier / Dakar</option>
+            <option value="diaspora">Diaspora / International</option>
+          </select>
+        </div>
+      </div>
+      <label class="faq-check-row">
+        <input type="checkbox" id="faqUrgent"/>
+        Marquer comme "friction prioritaire" (encadré orange, traité en priorité)
+      </label>
+      <div class="faq-form-actions">
+        <button class="faq-btn faq-btn-ghost" onclick="cancelFaqForm()">Annuler</button>
+        <button class="faq-btn faq-btn-primary" onclick="saveFaqEntry()">Enregistrer l'entrée →</button>
+      </div>
+    </div>
+
+    <!-- FAQ LIST -->
+    <div class="faq-list-wrap" id="faqListWrap">
+      <div class="fq-empty" id="faqEmpty">Chargement…</div>
+    </div>
+
+    <!-- EXPORT BAR -->
+    <div class="faq-export-wrap">
+      <div class="faq-export-note">Les modifications sont sauvegardées dans Supabase et prises en compte à la prochaine publication.</div>
+      <div class="faq-export-actions">
+        <button class="faq-btn faq-btn-ghost" onclick="exportFaqJson()">⬇ Exporter JSON</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 // ══ CONFIG ════════════════════════════════════════
 const SB   = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
@@ -606,6 +842,9 @@ let session = null;
 // ══ HELPERS ══════════════════════════════════════
 function h(extra={}){ return {"apikey":ANON,"Authorization":"Bearer "+(session?.access_token||ANON),"Content-Type":"application/json",...extra} }
 async function sbGet(q){ const r=await fetch(`${SB}/rest/v1/${q}`,{headers:h()}); if(!r.ok) throw new Error(); return r.json(); }
+async function sbPost(table,body){ const r=await fetch(`${SB}/rest/v1/${table}`,{method:"POST",headers:h({"Prefer":"return=representation"}),body:JSON.stringify(body)}); return r.json(); }
+async function sbPatch(table,id,body){ await fetch(`${SB}/rest/v1/${table}?id=eq.${id}`,{method:"PATCH",headers:h({"Prefer":"return=minimal"}),body:JSON.stringify(body)}); }
+async function sbDelete(table,id){ await fetch(`${SB}/rest/v1/${table}?id=eq.${id}`,{method:"DELETE",headers:h()}); }
 
 function persistSess(s){ try{ localStorage.setItem("kaddu_admin_session",JSON.stringify({access_token:s.access_token,refresh_token:s.refresh_token,expires_at:Date.now()+(s.expires_in||3600)*1000})); }catch(_){} }
 function loadSess(){ try{ const r=localStorage.getItem("kaddu_admin_session"); if(!r) return null; const s=JSON.parse(r); if(s.expires_at&&Date.now()>s.expires_at-60000) return null; return s; }catch(_){ return null; } }
@@ -644,31 +883,20 @@ document.getElementById("authBtn").addEventListener("click", async () => {
   }
 });
 
-[document.getElementById("authEmail"),document.getElementById("authPw")]
-  .forEach(el => el.addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("authBtn").click(); }));
-
+["authEmail","authPw"].forEach(id => document.getElementById(id).addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("authBtn").click(); }));
 document.getElementById("logoutBtn").addEventListener("click", () => { clearSess(); location.reload(); });
 
 // ══ SHOW APP ══════════════════════════════════════
 function showApp(email="") {
   document.getElementById("authScreen").style.display = "none";
   document.getElementById("appShell").style.display   = "block";
-
-  // Greet
   const name = email.split("@")[0] || "Admin";
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Bonjour" : hour < 18 ? "Bon après-midi" : "Bonsoir";
   document.getElementById("hubHello").textContent = `${greeting}, ${name}`;
   document.getElementById("topUser").textContent = email;
-
-  // Footer date
   document.getElementById("footerDate").textContent = new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-
-  // Staggered fade-in
-  document.querySelectorAll(".fade-up").forEach((el,i) => {
-    setTimeout(() => el.classList.add("visible"), 80 + i*80);
-  });
-
+  document.querySelectorAll(".fade-up").forEach((el,i) => setTimeout(() => el.classList.add("visible"), 80 + i*80));
   loadStats();
   loadRecentDossiers();
 }
@@ -681,21 +909,15 @@ async function loadStats() {
       sbGet("rental_dossiers?select=id,status,scoring_total"),
       sbGet("commerciaux?select=id,statut&statut=eq.actif"),
     ]);
-
-    if(biens.status==="fulfilled"){
-      document.getElementById("statBiens").textContent = biens.value.filter(b=>b.statut!=="brouillon").length;
-    }
+    if(biens.status==="fulfilled") document.getElementById("statBiens").textContent = biens.value.filter(b=>b.statut!=="brouillon").length;
     if(dossiers.status==="fulfilled"){
       const d = dossiers.value;
       document.getElementById("statDossiers").textContent = d.length;
       document.getElementById("statAttente").textContent = d.filter(x=>x.status==="nouveau"||x.status==="en_attente"||!x.status).length;
       const scores = d.map(x=>x.scoring_total).filter(s=>s!=null&&s>0);
-      document.getElementById("statScore").textContent = scores.length
-        ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+"/100" : "—";
+      document.getElementById("statScore").textContent = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+"/100" : "—";
     }
-    if(comms.status==="fulfilled"){
-      document.getElementById("statComm").textContent = comms.value.length;
-    }
+    if(comms.status==="fulfilled") document.getElementById("statComm").textContent = comms.value.length;
   } catch(_) {}
 }
 
@@ -705,7 +927,6 @@ async function loadRecentDossiers() {
   try {
     const rows = await sbGet("rental_dossiers?select=prenom,nom,bien_vise,scoring_total,status,created_at&order=created_at.desc&limit=6");
     if(!rows.length){ el.innerHTML=`<div class="activity-empty">Aucun dossier reçu.</div>`; return; }
-
     const STATUS_COLOR = { nouveau:"dot-ok", en_attente:"dot-warn", valide:"dot-ok", refuse:"dot-info" };
     el.innerHTML = rows.map(r => {
       const name = [r.prenom,r.nom].filter(Boolean).join(" ") || "Candidat";
@@ -719,15 +940,14 @@ async function loadRecentDossiers() {
         <div class="activity-time">${dateStr}</div>
       </div>`;
     }).join("");
-  } catch(_) {
-    el.innerHTML = `<div class="activity-empty">Table dossiers non disponible.</div>`;
-  }
+  } catch(_) { el.innerHTML = `<div class="activity-empty">Table dossiers non disponible.</div>`; }
 }
 
 // ══ KEYBOARD SHORTCUTS ═══════════════════════════
 let gPressed = false;
 document.addEventListener("keydown", e => {
   if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
+  if(e.key==="Escape") closeFaqManager();
   if(e.key==="g"||e.key==="G"){ gPressed=true; setTimeout(()=>gPressed=false,1200); return; }
   if(gPressed){
     if(e.key==="b"||e.key==="B") location.href="admin-biens-v2-secured.html";
@@ -735,6 +955,7 @@ document.addEventListener("keydown", e => {
     if(e.key==="k"||e.key==="K") location.href="dashboard-kaddu-kpi-secured.html";
     if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
     if(e.key==="o"||e.key==="O") location.href="admin-marketing-operations.html";
+    if(e.key==="f"||e.key==="F") openFaqManager();
   }
 });
 
@@ -744,9 +965,227 @@ if(saved?.access_token){
   session = saved;
   const savedEmail = (() => { try{ return JSON.parse(atob(saved.access_token.split(".")[1])).email||""; }catch(_){ return ""; } })();
   showApp(savedEmail);
-} else {
-  // Auth screen already visible
 }
+
+// ══════════════════════════════════════════════════
+//  FAQ MANAGER
+// ══════════════════════════════════════════════════
+
+// In-memory store — synced from/to Supabase table `faq_locataires`
+// Expected columns: id (uuid), question (text), answer (text), badge (text), category (text), urgent (bool), sort_order (int)
+let faqItems = [];
+let faqEditingId = null;
+let faqFormOpen = false;
+
+// ── DEFAULTS (pre-loaded if table empty / not yet created) ──
+const FAQ_DEFAULTS = [
+  {id:'d1',question:"Et si le bien ne correspond pas à l'annonce à mon arrivée ?",answer:"Chaque bien est inspecté sur site avant publication. Si une différence significative est constatée, Kàddu vous trouve une solution de remplacement sous 24h ou vous rembourse intégralement.",badge:"✓ Remboursement ou remplacement garanti sous 24h",category:"general",urgent:true,sort_order:10},
+  {id:'d2',question:"Et si quelqu'un prend le bien avant que mon dossier soit validé ?",answer:"Dès qu'un dossier est complet et cohérent, Kàddu peut placer le bien en réservation temporaire le temps de finaliser la validation. Vous êtes informé en temps réel.",badge:"✓ Réservation temporaire · Suivi en temps réel",category:"logistique",urgent:true,sort_order:20},
+  {id:'d3',question:"Je n'ai pas de revenus sénégalais. Mon dossier sera-t-il accepté ?",answer:"Oui. Kàddu accepte les justificatifs de revenus étrangers. Le moteur analyse la cohérence globale du dossier, pas uniquement son origine.",badge:"✓ Revenus étrangers acceptés · Analyse contextuelle",category:"dossier",urgent:true,sort_order:30},
+  {id:'d4',question:"Puis-je payer depuis l'étranger en euros ou en dollars ?",answer:"Oui. Stripe, virement SWIFT, PayPal, Wave ou Orange Money. Les modalités sont affichées sur chaque fiche avant validation.",badge:"✓ Stripe · Virement · PayPal · Wave · OM",category:"paiement",urgent:true,sort_order:40},
+  {id:'d5',question:"Je ne connais pas Dakar. Comment choisir le bon quartier ?",answer:"Kàddu vous aide à choisir un mode de vie : quartier calme, proche écoles, vie nocturne, accès business, bord de mer. Le matching intelligent adapte les recommandations.",badge:"✓ Guide quartiers · Matching lifestyle",category:"quartier",urgent:false,sort_order:50},
+  {id:'d6',question:"Que se passe-t-il si j'arrive tard à Dakar ?",answer:"Certains biens Kàddu proposent une arrivée autonome sécurisée ou une remise des clés coordonnée avec l'équipe ou le gardien, même tard le soir.",badge:"✓ Arrivée autonome · Coordination gardien",category:"logistique",urgent:false,sort_order:60},
+  {id:'d7',question:"Comment savoir si le quartier est calme et sécurisé ?",answer:"Chaque bien est visité physiquement. L'environnement immédiat est évalué : circulation, voisinage, sécurité, accès et nuisances. Ces informations figurent dans la fiche.",badge:"✓ Évaluation terrain · Environnement documenté",category:"quartier",urgent:false,sort_order:70},
+  {id:'d8',question:"Je n'ai pas encore tous mes documents. Puis-je quand même commencer ?",answer:"Oui. Vous pouvez démarrer votre Passeport Locatif et compléter les éléments plus tard. Kàddu vous indique en temps réel ce qui manque.",badge:"✓ Dossier progressif · Indicateur de complétude",category:"dossier",urgent:false,sort_order:80},
+  {id:'d9',question:"Pourquoi Kàddu demande autant d'informations ?",answer:"Parce qu'un bon dossier se loue plus vite. Les informations permettent de rassurer le propriétaire, réduire les refus et accélérer les réponses — sans répéter votre candidature partout.",badge:"✓ Un dossier solide = moins de refus · Plus de réponses rapides",category:"dossier",urgent:false,sort_order:90},
+  {id:'d10',question:"Y a-t-il des frais cachés ou des commissions locataire ?",answer:"Non. Les frais Kàddu sont supportés par le propriétaire. Si des frais s'appliquent, ils sont affichés avant toute candidature.",badge:"✓ Zéro frais caché · Tout affiché avant candidature",category:"paiement",urgent:false,sort_order:100},
+];
+
+// ── OPEN / CLOSE ──
+function openFaqManager(e){
+  if(e) e.preventDefault();
+  document.getElementById("faqOverlay").classList.add("open");
+  document.body.style.overflow="hidden";
+  loadFaqs();
+}
+function closeFaqManager(){
+  document.getElementById("faqOverlay").classList.remove("open");
+  document.body.style.overflow="";
+  cancelFaqForm();
+}
+
+// ── LOAD ──
+async function loadFaqs(){
+  try{
+    const rows = await sbGet("faq_locataires?select=*&order=sort_order.asc");
+    faqItems = rows.length ? rows : [...FAQ_DEFAULTS];
+  }catch(_){
+    faqItems = [...FAQ_DEFAULTS];
+  }
+  renderFaqList();
+}
+
+// ── RENDER ──
+const CAT_LABELS={general:"Général",dossier:"Dossier",paiement:"Paiement",logistique:"Logistique",quartier:"Quartier",diaspora:"Diaspora"};
+function renderFaqList(){
+  const wrap = document.getElementById("faqListWrap");
+  document.getElementById("faqCount").textContent = `${faqItems.length} entrée${faqItems.length>1?"s":""}`;
+  if(!faqItems.length){
+    wrap.innerHTML=`<div class="fq-empty">Aucune entrée. Cliquez sur "Nouvelle entrée" pour commencer.</div>`;
+    return;
+  }
+  wrap.innerHTML = faqItems.map((f,i)=>`
+    <div class="fq-item ${f.urgent?'urgent-item':''}" id="fqi-${f.id}" draggable="true"
+      ondragstart="dragStart(event,'${f.id}')" ondragover="dragOver(event)" ondrop="dragDrop(event,'${f.id}')">
+      <div class="fq-item-head" onclick="toggleFqExpand('${f.id}')">
+        <span class="fq-drag" title="Réordonner">⠿</span>
+        <span class="fq-urgent-dot ${f.urgent?'active':''}" title="${f.urgent?'Friction prioritaire':'Standard'}"></span>
+        <span class="fq-question">${escHtml(f.question)}</span>
+        <span style="font-size:.65rem;color:rgba(248,244,238,.28);margin-right:4px;white-space:nowrap">${CAT_LABELS[f.category]||f.category||''}</span>
+        <div class="fq-actions">
+          <button class="fq-btn-sm" title="${f.urgent?'Retirer urgence':'Marquer urgent'}"
+            onclick="event.stopPropagation();toggleUrgent('${f.id}')">${f.urgent?'🔴':'⚪'}</button>
+          <button class="fq-btn-sm" title="Monter" onclick="event.stopPropagation();moveItem('${f.id}',-1)">↑</button>
+          <button class="fq-btn-sm" title="Descendre" onclick="event.stopPropagation();moveItem('${f.id}',1)">↓</button>
+          <button class="fq-btn-sm" title="Modifier" onclick="event.stopPropagation();editFaq('${f.id}')">✏️</button>
+          <button class="fq-btn-sm del" title="Supprimer" onclick="event.stopPropagation();deleteFaq('${f.id}')">🗑</button>
+        </div>
+      </div>
+      <div class="fq-answer-preview">${escHtml(f.answer)}${f.badge?`<div style="margin-top:6px;font-size:.72rem;color:rgba(0,200,117,.7)">${escHtml(f.badge)}</div>`:''}</div>
+    </div>`).join("");
+
+  // re-attach expanded state
+  document.getElementById("faqEmpty") && document.getElementById("faqEmpty").remove();
+}
+
+function toggleFqExpand(id){
+  const el=document.getElementById("fqi-"+id);
+  if(el) el.classList.toggle("expanded");
+}
+
+function escHtml(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+// ── FORM ──
+function toggleFaqForm(){
+  faqFormOpen=!faqFormOpen;
+  faqEditingId=null;
+  document.getElementById("faqEditId").value="";
+  document.getElementById("faqFormTitle").textContent="Nouvelle entrée FAQ";
+  document.getElementById("faqQ").value="";
+  document.getElementById("faqA").value="";
+  document.getElementById("faqBadge").value="";
+  document.getElementById("faqCat").value="general";
+  document.getElementById("faqUrgent").checked=false;
+  document.getElementById("faqFormWrap").classList.toggle("open",faqFormOpen);
+  if(faqFormOpen) document.getElementById("faqQ").focus();
+}
+
+function cancelFaqForm(){
+  faqFormOpen=false;
+  faqEditingId=null;
+  document.getElementById("faqFormWrap").classList.remove("open");
+}
+
+function editFaq(id){
+  const f=faqItems.find(x=>x.id===id);if(!f)return;
+  faqEditingId=id;
+  document.getElementById("faqEditId").value=id;
+  document.getElementById("faqFormTitle").textContent="Modifier l'entrée FAQ";
+  document.getElementById("faqQ").value=f.question||"";
+  document.getElementById("faqA").value=f.answer||"";
+  document.getElementById("faqBadge").value=f.badge||"";
+  document.getElementById("faqCat").value=f.category||"general";
+  document.getElementById("faqUrgent").checked=!!f.urgent;
+  faqFormOpen=true;
+  document.getElementById("faqFormWrap").classList.add("open");
+  document.getElementById("faqFormWrap").scrollIntoView({behavior:"smooth",block:"nearest"});
+  document.getElementById("faqQ").focus();
+}
+
+function saveFaqEntry(){
+  const q=document.getElementById("faqQ").value.trim();
+  const a=document.getElementById("faqA").value.trim();
+  if(!q||!a){alert("Question et réponse obligatoires.");return;}
+  const entry={
+    question:q,answer:a,
+    badge:document.getElementById("faqBadge").value.trim(),
+    category:document.getElementById("faqCat").value,
+    urgent:document.getElementById("faqUrgent").checked,
+  };
+  if(faqEditingId){
+    const idx=faqItems.findIndex(x=>x.id===faqEditingId);
+    if(idx>=0) faqItems[idx]={...faqItems[idx],...entry};
+  }else{
+    entry.id="local-"+Date.now();
+    entry.sort_order=(faqItems.length+1)*10;
+    faqItems.push(entry);
+  }
+  cancelFaqForm();
+  renderFaqList();
+}
+
+function deleteFaq(id){
+  if(!confirm("Supprimer cette entrée FAQ ?")) return;
+  faqItems=faqItems.filter(x=>x.id!==id);
+  renderFaqList();
+}
+
+function toggleUrgent(id){
+  const f=faqItems.find(x=>x.id===id);if(!f)return;
+  f.urgent=!f.urgent;
+  renderFaqList();
+}
+
+function moveItem(id,dir){
+  const idx=faqItems.findIndex(x=>x.id===id);
+  if(idx<0)return;
+  const newIdx=idx+dir;
+  if(newIdx<0||newIdx>=faqItems.length)return;
+  [faqItems[idx],faqItems[newIdx]]=[faqItems[newIdx],faqItems[idx]];
+  faqItems.forEach((f,i)=>f.sort_order=(i+1)*10);
+  renderFaqList();
+}
+
+// ── DRAG & DROP ──
+let dragId=null;
+function dragStart(e,id){ dragId=id; e.dataTransfer.effectAllowed="move"; }
+function dragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect="move"; }
+function dragDrop(e,targetId){
+  e.preventDefault();
+  if(!dragId||dragId===targetId)return;
+  const from=faqItems.findIndex(x=>x.id===dragId);
+  const to=faqItems.findIndex(x=>x.id===targetId);
+  if(from<0||to<0)return;
+  const [item]=faqItems.splice(from,1);
+  faqItems.splice(to,0,item);
+  faqItems.forEach((f,i)=>f.sort_order=(i+1)*10);
+  dragId=null;
+  renderFaqList();
+}
+
+// ── SAVE TO SUPABASE ──
+async function saveFaqsToSupabase(){
+  const btn=document.querySelector('.faq-btn-green');
+  btn.textContent="💾 Enregistrement…";btn.disabled=true;
+  try{
+    // Upsert all items
+    await fetch(`${SB}/rest/v1/faq_locataires`,{
+      method:"POST",
+      headers:h({"Prefer":"resolution=merge-duplicates"}),
+      body:JSON.stringify(faqItems.map(f=>({
+        id:f.id.startsWith("local-")?undefined:f.id,
+        question:f.question,answer:f.answer,badge:f.badge||null,
+        category:f.category||"general",urgent:!!f.urgent,sort_order:f.sort_order||0
+      })))
+    });
+    btn.textContent="✓ Enregistré";
+    setTimeout(()=>{btn.textContent="💾 Enregistrer";btn.disabled=false;},2000);
+  }catch(err){
+    btn.textContent="⚠ Erreur — réessayer";btn.disabled=false;
+  }
+}
+
+// ── EXPORT JSON ──
+function exportFaqJson(){
+  const blob=new Blob([JSON.stringify(faqItems,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`faq-locataires-${new Date().toISOString().slice(0,10)}.json`;a.click();
+}
+
+// Close on overlay click
+document.getElementById("faqOverlay").addEventListener("click",e=>{
+  if(e.target===document.getElementById("faqOverlay")) closeFaqManager();
+});
 </script>
 </body>
 </html>
