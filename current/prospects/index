@@ -1,1 +1,2133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu — Locataires · Votre prochain chez-vous à Dakar</title>
+  <meta name="description" content="Biens vérifiés, visites 360°, Passeport Locatif Kàddu. Trouvez votre logement à Dakar depuis n'importe où — en confiance, sans mauvaise surprise."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+
+  <style>
+  /* ════════════════════════════════════════════════════════
+     TOKENS
+  ════════════════════════════════════════════════════════ */
+  :root{
+    /* Gold (nav/brand only) */
+    --or:#BF9650; --orl:#DDB96E; --bds:rgba(191,150,80,.28);
+
+    /* Blue — dominante locataire */
+    --bl:#3B9EF5; --bll:#72BFFF; --bld:#1a6ec4;
+    --bl-bg:rgba(59,158,245,.07);
+    --bl-bdr:rgba(59,158,245,.18);
+    --bl-bds:rgba(59,158,245,.32);
+    --bl-glow:rgba(59,158,245,.10);
+
+    /* Surfaces */
+    --dark:#060d18;
+    --dark2:#091525;
+    --dark3:#0c1e35;
+    --card-bg:rgba(9,21,37,.72);
+
+    /* Text */
+    --blanc:#F0EDE8;
+    --muted:rgba(240,237,232,.55);
+    --dim:rgba(240,237,232,.30);
+
+    /* Semantic */
+    --green:#00C875;
+    --red:#FF5A5A;
+
+    /* Layout */
+    --radius:26px;
+    --radius-lg:36px;
+    --shadow:0 28px 72px rgba(0,0,0,.38);
+    --shadow-bl:0 16px 48px rgba(59,158,245,.12);
+
+    --fs-base:17px;
+    --container:1220px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;font-size:var(--fs-base)}
+  body{
+    font-family:'DM Sans',sans-serif;
+    background:var(--dark);
+    color:var(--blanc);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    line-height:1.72;
+  }
+
+  /* Background atmosphere — plus lumineuse que la page proprio */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(ellipse 100% 60% at 60% -10%, rgba(59,158,245,.11) 0%,transparent 62%),
+      radial-gradient(ellipse 70% 55% at -8% 55%, rgba(59,158,245,.07) 0%,transparent 58%),
+      radial-gradient(ellipse 80% 50% at 105% 90%, rgba(191,150,80,.05) 0%,transparent 55%),
+      linear-gradient(175deg,#060c17 0%,#091424 50%,#070f1e 100%);
+  }
+
+  /* Fine grid texture */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(59,158,245,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.025) 1px,transparent 1px);
+    background-size:52px 52px;
+    mask-image:radial-gradient(ellipse 100% 100% at 50% 0%,black 30%,transparent 90%);
+  }
+
+  a{text-decoration:none;color:inherit}
+  p{margin:0}
+  strong{font-weight:600}
+  .container{max-width:var(--container);margin:0 auto;padding:0 28px}
+  .section{padding:88px 0}
+
+  h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:300;line-height:1.08}
+  h1 em,h2 em,h3 em{font-style:italic;color:var(--bl)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:.7rem;
+    color:var(--bl);font-size:.70rem;letter-spacing:.24em;text-transform:uppercase;margin-bottom:12px
+  }
+  .eyebrow::before{content:"";width:18px;height:1px;background:var(--bl);flex-shrink:0}
+
+  /* ════════ NAV ════════ */
+  .nav{
+    position:sticky;top:0;z-index:100;
+    backdrop-filter:blur(22px) saturate(1.5);
+    background:rgba(6,12,22,.84);
+    border-bottom:1px solid rgba(191,150,80,.12);
+  }
+  .nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-mark{
+    width:38px;height:38px;border-radius:12px;
+    background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(191,150,80,.05));
+    border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--or);
+  }
+  .brand-text{display:flex;flex-direction:column;gap:1px}
+  .brand-name{font-size:.9rem;letter-spacing:.09em;text-transform:uppercase;font-weight:500}
+  .brand-tag{font-size:.58rem;color:rgba(240,237,232,.3);letter-spacing:.15em;text-transform:uppercase}
+  .nav-links{display:flex;gap:24px;align-items:center}
+  .nav-links a{font-size:.74rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(240,237,232,.45);transition:.2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--bl)}
+  .nav-cta{display:flex;gap:9px;align-items:center;flex-shrink:0}
+
+  /* ════════ BUTTONS ════════ */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+    border:none;cursor:pointer;padding:12px 22px;border-radius:999px;
+    font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.10em;
+    text-transform:uppercase;transition:.22s ease;white-space:nowrap
+  }
+  .btn-or{background:var(--or);color:#080808}
+  .btn-or:hover{background:var(--orl);transform:translateY(-1px);box-shadow:0 8px 24px rgba(191,150,80,.28)}
+  .btn-blue{background:var(--bl);color:#06111e}
+  .btn-blue:hover{background:var(--bll);transform:translateY(-1px);box-shadow:var(--shadow-bl)}
+  .btn-outline{background:transparent;color:var(--blanc);border:1px solid rgba(240,237,232,.16)}
+  .btn-outline:hover{border-color:var(--bl);color:var(--bll)}
+  .btn-ghost-bl{background:var(--bl-bg);color:var(--bl);border:1px solid var(--bl-bdr)}
+  .btn-ghost-bl:hover{background:rgba(59,158,245,.13);border-color:var(--bl-bds)}
+  .btn-lg{padding:15px 28px;font-size:.80rem}
+
+  /* ════════ HERO ════════ */
+  .hero{padding:72px 0 56px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;min-height:580px}
+
+  /* Animated entrance */
+  .hero-copy{animation:fadeUp .7s ease both}
+  .hero-visual{animation:fadeUp .7s .15s ease both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  .hero-live-badge{
+    display:inline-flex;align-items:center;gap:9px;
+    background:var(--bl-bg);border:1px solid var(--bl-bdr);
+    color:var(--bl);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    padding:6px 14px;border-radius:999px;margin-bottom:22px
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--bl);animation:pulse-bl 2s infinite}
+  @keyframes pulse-bl{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(59,158,245,.4)}60%{opacity:.6;box-shadow:0 0 0 6px rgba(59,158,245,0)}}
+
+  .hero h1{
+    font-size:clamp(2.4rem,4.2vw,3.9rem);
+    margin-bottom:18px;
+    line-height:1.06;
+  }
+  .hero-lead{
+    font-size:1.05rem;color:var(--muted);
+    max-width:520px;margin-bottom:32px;
+    line-height:1.72;
+  }
+
+  .hero-trust-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px}
+  .trust-chip{
+    display:flex;align-items:center;gap:7px;
+    padding:7px 14px;border-radius:999px;
+    border:1px solid var(--bl-bdr);
+    background:var(--bl-bg);
+    font-size:.74rem;color:rgba(240,237,232,.65)
+  }
+  .trust-chip span:first-child{font-size:.9rem}
+
+  .hero-cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+
+  .hero-step-row{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-size:.72rem;color:var(--dim);padding-top:6px
+  }
+  .hero-step-row .step{color:rgba(240,237,232,.52)}
+  .hero-step-row .arr{color:rgba(59,158,245,.4)}
+
+  /* Hero visual — emotion card */
+  .hero-visual{
+    background:linear-gradient(160deg,rgba(59,158,245,.08),rgba(9,21,37,.7));
+    border:1px solid var(--bl-bdr);border-radius:var(--radius-lg);
+    overflow:hidden;position:relative;
+    box-shadow:var(--shadow),var(--shadow-bl);
+    min-height:500px;
+  }
+  .hero-visual-grid{
+    background-image:
+      linear-gradient(rgba(59,158,245,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.04) 1px,transparent 1px);
+    background-size:38px 38px;
+    position:absolute;inset:0;
+  }
+  .deco-letter{
+    position:absolute;bottom:8px;right:14px;
+    font-family:'Playfair Display',serif;font-size:13rem;line-height:.88;
+    color:rgba(59,158,245,.04);user-select:none;pointer-events:none;
+  }
+  .hero-cards-inner{position:relative;z-index:2;padding:26px;display:flex;flex-direction:column;gap:12px}
+
+  /* Who am I cards */
+  .who-card{
+    background:rgba(9,21,37,.78);border:1px solid var(--bl-bdr);
+    border-radius:18px;padding:16px 18px;
+    display:flex;align-items:center;gap:14px;
+    transition:.28s cubic-bezier(.4,0,.2,1);
+    cursor:pointer;
+  }
+  .who-card:hover,.who-card.active{
+    border-color:rgba(59,158,245,.45);
+    background:rgba(59,158,245,.08);
+    transform:translateX(6px);
+    box-shadow:0 8px 28px rgba(59,158,245,.10);
+  }
+  .who-icon{
+    width:46px;height:46px;min-width:46px;border-radius:14px;
+    background:var(--bl-bg);border:1px solid var(--bl-bdr);
+    display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+    flex-shrink:0;
+  }
+  .who-body{}
+  .who-label{font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bl);margin-bottom:3px}
+  .who-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:300;margin-bottom:3px}
+  .who-tags{font-size:.73rem;color:var(--dim)}
+
+  /* Match result pill */
+  .match-pill{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:5px 12px;border-radius:999px;
+    background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.2);
+    color:rgba(0,200,117,.9);font-size:.68rem;letter-spacing:.08em;margin-top:8px
+  }
+
+  /* ════════ TICKER ════════ */
+  .ticker-bar{
+    border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
+    background:rgba(59,158,245,.03);overflow:hidden;
+  }
+  .ticker-wrap{overflow:hidden;padding:13px 0;mask-image:linear-gradient(to right,transparent,black 4%,black 96%,transparent)}
+  .ticker-track{display:flex;align-items:center;gap:18px;width:max-content;animation:ticker 52s linear infinite;white-space:nowrap}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .t-stat{display:flex;align-items:center;gap:7px;font-size:.76rem;color:rgba(240,237,232,.48);flex-shrink:0}
+  .t-stat strong{color:var(--bll)}
+  .t-sep{color:rgba(59,158,245,.2);flex-shrink:0}
+
+  /* ════════ MATCHING INTELLIGENT ════════ */
+  .matching-section{padding:88px 0}
+
+  .profiles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:44px}
+  .profile-match-card{
+    border:1px solid var(--bl-bdr);border-radius:var(--radius);
+    background:var(--bl-bg);
+    padding:28px;cursor:pointer;transition:.28s;
+    position:relative;overflow:hidden;
+  }
+  .profile-match-card::before{
+    content:"";position:absolute;inset:0;opacity:0;
+    background:linear-gradient(135deg,rgba(59,158,245,.10),transparent 70%);
+    transition:.28s
+  }
+  .profile-match-card:hover::before,.profile-match-card.sel::before{opacity:1}
+  .profile-match-card:hover,.profile-match-card.sel{
+    border-color:rgba(59,158,245,.40);
+    box-shadow:0 12px 36px rgba(59,158,245,.10);
+    transform:translateY(-3px);
+  }
+  .pm-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .pm-emoji{font-size:1.8rem;line-height:1}
+  .pm-check{
+    width:24px;height:24px;border-radius:50%;
+    background:rgba(0,200,117,.12);border:1px solid rgba(0,200,117,.25);
+    display:flex;align-items:center;justify-content:center;
+    font-size:.7rem;color:var(--green);opacity:0;transition:.2s;flex-shrink:0
+  }
+  .profile-match-card.sel .pm-check{opacity:1}
+  .pm-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:7px}
+  .pm-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:300;margin-bottom:8px}
+  .pm-desc{font-size:.82rem;color:var(--muted);margin-bottom:14px;line-height:1.6}
+  .pm-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .pm-tag{
+    padding:4px 11px;border-radius:999px;font-size:.69rem;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:var(--muted)
+  }
+
+  /* Match result panel */
+  .match-result{
+    margin-top:28px;
+    background:linear-gradient(135deg,rgba(59,158,245,.09),rgba(9,21,37,.7));
+    border:1px solid var(--bl-bds);border-radius:var(--radius);
+    padding:28px 32px;
+    display:none;animation:fadeUp .4s ease;
+  }
+  .match-result.show{display:block}
+  .match-result-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .match-result-icon{font-size:1.6rem}
+  .match-result-label{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:3px}
+  .match-result-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:300}
+  .match-result-rows{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+  .match-r-chip{
+    background:rgba(9,21,37,.6);border:1px solid var(--bl-bdr);border-radius:14px;
+    padding:12px 14px;font-size:.78rem;line-height:1.45;
+  }
+  .match-r-chip strong{display:block;color:var(--bl);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;font-weight:600}
+
+  /* ════════ SIMULATION BUDGET ════════ */
+  .simulation-section{
+    background:rgba(9,20,34,.5);
+    border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
+    padding:88px 0;
+  }
+  .sim-wrap{
+    background:linear-gradient(160deg,rgba(59,158,245,.07),rgba(9,21,37,.6));
+    border:1px solid var(--bl-bds);border-radius:var(--radius-lg);
+    padding:44px 48px;
+    max-width:860px;margin:44px auto 0;
+    position:relative;overflow:hidden;
+  }
+  .sim-grid-bg{
+    position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(59,158,245,.035) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.035) 1px,transparent 1px);
+    background-size:38px 38px;
+  }
+  .sim-inner{position:relative;z-index:2}
+
+  .sim-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:28px}
+  .sim-field label{
+    display:block;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--bl);margin-bottom:8px
+  }
+  .sim-field select{
+    width:100%;background:rgba(6,12,24,.8);border:1px solid var(--bl-bdr);
+    color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.88rem;
+    padding:11px 14px;border-radius:12px;outline:none;appearance:none;cursor:pointer;
+    transition:.2s;
+  }
+  .sim-field select:focus{border-color:var(--bl)}
+  .sim-field select option{background:#080f1c}
+
+  .sim-result{
+    border-top:1px solid var(--bl-bdr);padding-top:26px;
+    display:none;animation:fadeUp .4s ease;
+  }
+  .sim-result.show{display:block}
+  .sim-result-label{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:16px}
+  .sim-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+  .sim-chip{
+    padding:8px 16px;border-radius:999px;font-size:.78rem;
+    border:1px solid var(--bl-bdr);background:var(--bl-bg);color:rgba(240,237,232,.72);
+    display:flex;align-items:center;gap:6px;transition:.2s
+  }
+  .sim-chip.highlight{
+    background:rgba(59,158,245,.15);border-color:rgba(59,158,245,.4);
+    color:var(--bll);font-weight:600
+  }
+  .sim-tension{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 16px;background:rgba(9,21,37,.6);border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;font-size:.82rem;margin-bottom:18px
+  }
+  .tension-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .sim-cta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .sim-cta-note{font-size:.76rem;color:var(--dim)}
+
+  /* ── Live signals ── */
+  .live-signals{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  .ls{
+    display:flex;align-items:center;gap:7px;
+    padding:6px 13px;border-radius:999px;font-size:.74rem;
+    border:1px solid;white-space:nowrap;
+  }
+  .ls-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .ls-green{background:rgba(0,200,117,.07);border-color:rgba(0,200,117,.22);color:rgba(0,200,117,.9)}
+  .ls-green .ls-dot{background:#00C875;animation:pulse-dot 1.8s infinite}
+  .ls-amber{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.22);color:rgba(245,158,11,.9)}
+  .ls-amber .ls-dot{background:#F59E0B;animation:pulse-dot 2.2s infinite}
+  .ls-blue{background:var(--bl-bg);border-color:var(--bl-bdr);color:var(--bll)}
+  .ls-blue .ls-dot{background:var(--bl);animation:pulse-dot 2.5s infinite}
+  @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+
+  /* ════════ SECTION INTRO — alignement global ════════ */
+  /* Tous les <p> intro de section (color:muted, directement dans container) */
+  .section-intro{
+    font-size:.95rem;color:var(--muted);line-height:1.74;
+    margin-top:14px;
+  }
+
+  /* ════════ MICRO-CTA ════════ */
+  .micro-cta-row{
+    display:flex;align-items:center;gap:12px;
+    margin-top:28px;padding-top:24px;
+    border-top:1px solid var(--bl-bdr);
+  }
+  .micro-cta-row .btn-micro{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:10px 20px;border-radius:999px;
+    font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;
+    letter-spacing:.10em;text-transform:uppercase;
+    background:var(--bl-bg);border:1px solid var(--bl-bdr);color:var(--bl);
+    cursor:pointer;transition:.22s;text-decoration:none;
+  }
+  .micro-cta-row .btn-micro:hover{
+    background:rgba(59,158,245,.13);border-color:var(--bl-bds);
+    color:var(--bll);transform:translateX(3px);
+  }
+  .micro-cta-row .micro-note{font-size:.74rem;color:var(--dim)}
+
+  /* ════════ VISITE IMMERSIVE WOW ════════ */
+  .immersive-section{padding:88px 0;overflow:hidden}
+  .immersive-inner{
+    display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;
+  }
+  .phone-mockup-wrap{display:flex;justify-content:center;align-items:center;position:relative;min-height:520px}
+  /* Ambient glow behind phone */
+  .phone-mockup-wrap::before{
+    content:"";position:absolute;
+    width:320px;height:420px;border-radius:50%;
+    background:radial-gradient(ellipse,rgba(59,158,245,.18) 0%,transparent 70%);
+    filter:blur(32px);z-index:0;
+  }
+  .phone-frame{
+    position:relative;z-index:2;
+    width:240px;
+    background:linear-gradient(175deg,#0c1e38,#071525);
+    border:2px solid rgba(59,158,245,.35);
+    border-radius:36px;
+    box-shadow:0 32px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(59,158,245,.1), inset 0 1px 0 rgba(255,255,255,.06);
+    overflow:hidden;
+    animation:float 6s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .phone-notch{
+    height:24px;background:rgba(9,21,37,.95);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .phone-notch::after{
+    content:"";width:54px;height:13px;border-radius:8px;
+    background:#060e1c;border:1px solid rgba(59,158,245,.2);
+  }
+  .phone-screen{height:460px;position:relative;overflow:hidden}
+
+  /* 360° viewer inside phone */
+  .viewer-bg{
+    position:absolute;inset:0;
+    background:linear-gradient(160deg,#071222,#0a1e38,#06141f);
+    overflow:hidden;
+  }
+  /* Animated grid lines — "room" feel */
+  .viewer-room{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(59,158,245,.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.06) 1px,transparent 1px);
+    background-size:30px 30px;
+    animation:pan-room 14s linear infinite alternate;
+  }
+  @keyframes pan-room{from{background-position:0 0}to{background-position:60px 0}}
+  /* Perspective floor lines */
+  .viewer-floor{
+    position:absolute;bottom:0;left:0;right:0;height:160px;
+    background:
+      repeating-linear-gradient(
+        transparent 0,transparent 19px,rgba(59,158,245,.06) 19px,rgba(59,158,245,.06) 20px
+      );
+    transform:perspective(200px) rotateX(45deg);
+    transform-origin:bottom;
+    opacity:.7;
+  }
+  /* Hotspot dots */
+  .hotspot{
+    position:absolute;width:22px;height:22px;border-radius:50%;
+    background:rgba(59,158,245,.25);border:2px solid var(--bl);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    animation:hotspot-pulse 2.5s ease-in-out infinite;
+    z-index:4;
+  }
+  .hotspot::after{
+    content:"";position:absolute;inset:-5px;border-radius:50%;
+    border:1px solid rgba(59,158,245,.3);animation:hotspot-ring 2.5s ease-in-out infinite;
+  }
+  @keyframes hotspot-pulse{0%,100%{transform:scale(1);background:rgba(59,158,245,.25)}50%{transform:scale(1.15);background:rgba(59,158,245,.45)}}
+  @keyframes hotspot-ring{0%{transform:scale(1);opacity:.6}100%{transform:scale(2);opacity:0}}
+  .hotspot-label{
+    position:absolute;left:28px;top:50%;transform:translateY(-50%);
+    background:rgba(9,21,37,.9);border:1px solid var(--bl-bdr);
+    border-radius:8px;padding:4px 9px;font-size:.65rem;color:var(--bll);
+    white-space:nowrap;pointer-events:none;
+    opacity:0;transition:.2s;
+  }
+  .hotspot:hover .hotspot-label{opacity:1}
+  /* Furniture silhouettes */
+  .viewer-sofa{
+    position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+    width:100px;height:32px;
+    background:rgba(59,158,245,.08);border:1px solid rgba(59,158,245,.15);border-radius:8px 8px 0 0;
+    z-index:3;
+  }
+  .viewer-sofa::before{
+    content:"";position:absolute;top:-14px;left:8px;right:8px;height:14px;
+    background:rgba(59,158,245,.06);border:1px solid rgba(59,158,245,.12);border-radius:4px 4px 0 0;
+  }
+  .viewer-table{
+    position:absolute;bottom:72px;left:50%;transform:translateX(-50%);
+    width:44px;height:28px;
+    background:rgba(59,158,245,.05);border:1px solid rgba(59,158,245,.1);border-radius:4px;
+    z-index:3;
+  }
+  /* Navigation dots */
+  .viewer-nav{
+    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+    display:flex;gap:5px;z-index:5;
+  }
+  .viewer-dot{width:5px;height:5px;border-radius:50%;background:rgba(59,158,245,.3);border:none;cursor:pointer;padding:0}
+  .viewer-dot.active{background:var(--bl);width:14px;border-radius:3px}
+  /* Top HUD */
+  .viewer-hud{
+    position:absolute;top:12px;left:10px;right:10px;
+    display:flex;align-items:center;justify-content:space-between;z-index:5;
+  }
+  .viewer-badge{
+    background:rgba(9,21,37,.85);border:1px solid var(--bl-bdr);
+    border-radius:999px;padding:3px 9px;
+    font-size:.60rem;color:var(--bll);letter-spacing:.08em;text-transform:uppercase;
+  }
+  .viewer-360-btn{
+    background:rgba(59,158,245,.2);border:1px solid var(--bl-bds);
+    border-radius:999px;padding:3px 9px;
+    font-size:.62rem;color:var(--bll);letter-spacing:.06em;
+    animation:spin-glow 3s ease-in-out infinite;
+  }
+  @keyframes spin-glow{0%,100%{box-shadow:0 0 8px rgba(59,158,245,.2)}50%{box-shadow:0 0 20px rgba(59,158,245,.45)}}
+
+  /* Side floating cards */
+  .phone-float-card{
+    position:absolute;z-index:3;
+    background:rgba(9,21,37,.92);border:1px solid var(--bl-bdr);
+    border-radius:14px;padding:10px 14px;backdrop-filter:blur(8px);
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
+  }
+  .pfc-top{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+  .pfc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .pfc-label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+  .pfc-value{font-size:.80rem;color:var(--blanc);font-weight:600}
+
+  /* Copy side */
+  .immersive-copy{}
+  .immersive-features{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+  .if-row{
+    display:flex;align-items:flex-start;gap:12px;
+    padding:14px 16px;border:1px solid var(--bl-bdr);border-radius:14px;
+    background:rgba(9,21,37,.38);transition:.2s;
+  }
+  .if-row:hover{border-color:rgba(59,158,245,.32);background:var(--bl-bg)}
+  .if-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+  .if-body{}
+  .if-title{font-size:.86rem;font-weight:600;color:var(--blanc);margin-bottom:1px}
+  .if-desc{font-size:.76rem;color:var(--muted);line-height:1.5}
+
+  /* ════════ KÀDDU SCORE ════════ */
+  .score-section{
+    background:rgba(9,20,34,.55);
+    border-top:1px solid var(--bl-bdr);
+    border-bottom:1px solid var(--bl-bdr);
+    padding:88px 0;
+  }
+  .score-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;margin-top:52px}
+  .score-card-wrap{display:flex;flex-direction:column;gap:14px}
+  .score-card{
+    background:linear-gradient(160deg,rgba(59,158,245,.07),rgba(9,21,37,.7));
+    border:1px solid var(--bl-bds);border-radius:var(--radius-lg);
+    overflow:hidden;
+    box-shadow:var(--shadow),var(--shadow-bl);
+  }
+  .score-card-head{
+    background:rgba(9,21,37,.6);border-bottom:1px solid var(--bl-bdr);
+    padding:18px 22px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .score-card-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:300}
+  .score-badge-live{
+    display:flex;align-items:center;gap:6px;font-size:.65rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--green);
+  }
+  .score-badge-live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 2s infinite;flex-shrink:0}
+
+  .score-rows{padding:6px 22px 18px}
+  .score-row{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 0;border-bottom:1px solid rgba(59,158,245,.06);
+  }
+  .score-row:last-child{border-bottom:none}
+  .score-row-icon{
+    width:34px;height:34px;min-width:34px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0
+  }
+  .sr-green{background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.2)}
+  .sr-amber{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18)}
+  .sr-red{background:rgba(255,90,90,.08);border:1px solid rgba(255,90,90,.15)}
+  .score-row-body{flex:1}
+  .score-row-label{font-size:.84rem;color:var(--blanc);margin-bottom:2px}
+  .score-row-sub{font-size:.72rem;color:var(--dim)}
+  .score-row-status{
+    font-size:.72rem;font-weight:600;letter-spacing:.06em;
+    padding:4px 10px;border-radius:999px;flex-shrink:0;
+  }
+  .srs-green{background:rgba(0,200,117,.1);color:rgba(0,200,117,.9);border:1px solid rgba(0,200,117,.2)}
+  .srs-amber{background:rgba(245,158,11,.1);color:rgba(245,158,11,.9);border:1px solid rgba(245,158,11,.2)}
+  .srs-red{background:rgba(255,90,90,.08);color:rgba(255,100,100,.8);border:1px solid rgba(255,90,90,.15)}
+
+  /* Global score ring */
+  .score-ring-wrap{display:flex;align-items:center;gap:20px;padding:16px 22px;background:rgba(9,21,37,.5);border-top:1px solid var(--bl-bdr)}
+  .score-ring{
+    width:56px;height:56px;border-radius:50%;flex-shrink:0;
+    background:conic-gradient(var(--bl) 0%, var(--bl) var(--score-pct,78%), rgba(59,158,245,.12) var(--score-pct,78%));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 16px rgba(59,158,245,.2);
+    position:relative;
+  }
+  .score-ring::before{
+    content:"";position:absolute;inset:6px;border-radius:50%;
+    background:linear-gradient(160deg,#0b1e38,#071425);
+  }
+  .score-ring-val{position:relative;z-index:1;font-family:'Playfair Display',serif;font-size:1.0rem;font-weight:300;color:var(--bll)}
+  .score-ring-body{}
+  .score-ring-label{font-size:.7rem;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;font-weight:600}
+  .score-ring-desc{font-size:.78rem;color:var(--muted);line-height:1.4}
+
+  /* Score interactive builder */
+  .score-builder{display:flex;flex-direction:column;gap:14px}
+  .sb-intro{font-size:.88rem;color:var(--muted);margin-bottom:4px;line-height:1.65}
+  .sb-item{
+    padding:16px 18px;border:1px solid var(--bl-bdr);border-radius:16px;
+    background:rgba(9,21,37,.38);transition:.22s;cursor:pointer;
+  }
+  .sb-item:hover{border-color:rgba(59,158,245,.32);background:var(--bl-bg)}
+  .sb-item-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .sb-item-label{font-size:.84rem;font-weight:600;color:var(--blanc)}
+  .sb-item-tag{font-size:.68rem;padding:3px 9px;border-radius:999px;font-weight:600}
+  .sb-tag-required{background:rgba(59,158,245,.12);color:var(--bll);border:1px solid var(--bl-bdr)}
+  .sb-tag-boost{background:rgba(0,200,117,.1);color:rgba(0,200,117,.9);border:1px solid rgba(0,200,117,.18)}
+  .sb-tag-opt{background:rgba(245,158,11,.08);color:rgba(245,158,11,.85);border:1px solid rgba(245,158,11,.18)}
+  .sb-bar-wrap{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+  .sb-bar{height:100%;border-radius:2px;transition:width 1s ease}
+  .sb-desc{font-size:.74rem;color:var(--dim);margin-top:6px;line-height:1.45}
+
+  /* ════════ HOW ════════ */
+  .how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:48px;position:relative}
+  .how-card{
+    padding:28px 22px;border:1px solid var(--bl-bdr);border-radius:var(--radius);
+    background:rgba(9,21,37,.38);transition:.22s;
+    position:relative;overflow:hidden
+  }
+  .how-card::after{
+    content:"";position:absolute;bottom:0;left:0;right:0;
+    height:2px;background:linear-gradient(90deg,var(--bl),transparent);
+    transform:scaleX(0);transform-origin:left;transition:.3s
+  }
+  .how-card:hover{border-color:rgba(59,158,245,.35);transform:translateY(-3px)}
+  .how-card:hover::after{transform:scaleX(1)}
+  .how-num{
+    font-family:'Playfair Display',serif;font-size:2.8rem;line-height:1;
+    color:rgba(59,158,245,.11);margin-bottom:12px
+  }
+  .how-icon{font-size:1.4rem;margin-bottom:10px}
+  .how-card h3{font-size:1.08rem;margin-bottom:7px}
+  .how-card p{font-size:.82rem;color:var(--muted);line-height:1.6}
+  /* arrow connectors */
+  .how-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);right:-10px;
+    font-size:.85rem;color:rgba(59,158,245,.3);z-index:1;display:none
+  }
+
+  /* ════════ PASSEPORT LOCATIF ════════ */
+  .passport-section{
+    background:rgba(9,20,34,.5);
+    border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
+    padding:88px 0;
+  }
+  .passport-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;margin-top:52px}
+
+  /* The passport card itself */
+  .passport-card{
+    background:linear-gradient(160deg,#0b1e38,#071425);
+    border:1px solid var(--bl-bds);border-radius:var(--radius-lg);
+    overflow:hidden;position:relative;
+    box-shadow:var(--shadow),var(--shadow-bl);
+  }
+  .passport-card-top{
+    background:linear-gradient(135deg,rgba(59,158,245,.18),rgba(59,158,245,.04));
+    border-bottom:1px solid var(--bl-bdr);padding:24px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .passport-card-logo{
+    font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300;color:var(--bll)
+  }
+  .passport-card-logo span{color:var(--bl);font-style:italic}
+  .passport-card-chip{
+    width:44px;height:34px;border-radius:6px;
+    background:linear-gradient(135deg,rgba(59,158,245,.3),rgba(59,158,245,.08));
+    border:1px solid var(--bl-bdr);
+    display:flex;align-items:center;justify-content:center;
+    font-size:.68rem;color:var(--bl);letter-spacing:.06em;font-weight:600
+  }
+  .passport-card-body{padding:26px 28px}
+  .passport-field{margin-bottom:16px}
+  .passport-field-label{
+    font-size:.60rem;letter-spacing:.20em;text-transform:uppercase;
+    color:rgba(59,158,245,.55);margin-bottom:4px
+  }
+  .passport-field-value{
+    font-size:.9rem;color:var(--blanc);
+    border-bottom:1px solid rgba(59,158,245,.1);padding-bottom:8px
+  }
+  .passport-field-value.blur{
+    color:transparent;text-shadow:0 0 8px rgba(59,158,245,.6);
+    cursor:default;user-select:none
+  }
+  .passport-field-value.name-field{font-family:'Playfair Display',serif;font-size:1.15rem}
+  .passport-grid-fields{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+  .passport-card-footer{
+    border-top:1px solid var(--bl-bdr);padding:16px 28px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .passport-status{
+    display:flex;align-items:center;gap:8px;
+    font-size:.72rem;color:var(--green);letter-spacing:.08em;text-transform:uppercase
+  }
+  .passport-status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse-bl 2s infinite}
+  .passport-id{font-size:.68rem;color:var(--dim);font-family:monospace}
+
+  /* Right side benefits */
+  .passport-benefits{display:flex;flex-direction:column;gap:14px}
+  .pb-item{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:18px 20px;border:1px solid var(--bl-bdr);border-radius:18px;
+    background:var(--bl-bg);transition:.22s
+  }
+  .pb-item:hover{border-color:rgba(59,158,245,.35);background:rgba(59,158,245,.10)}
+  .pb-icon{
+    width:40px;height:40px;min-width:40px;border-radius:12px;
+    background:rgba(59,158,245,.12);border:1px solid var(--bl-bdr);
+    display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0
+  }
+  .pb-body{}
+  .pb-title{font-size:.88rem;font-weight:600;color:var(--blanc);margin-bottom:3px}
+  .pb-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+  /* ════════ VISITES IMMERSIVES ════════ */
+  .visite-section{padding:88px 0}
+  .visite-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;margin-top:48px}
+  .visite-visual{
+    background:linear-gradient(160deg,rgba(59,158,245,.08),rgba(9,21,37,.65));
+    border:1px solid var(--bl-bdr);border-radius:var(--radius-lg);
+    overflow:hidden;min-height:400px;position:relative;
+  }
+  .visite-placeholder{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:20px;padding:32px;
+  }
+  .visite-360-icon{
+    width:88px;height:88px;border-radius:50%;
+    background:rgba(59,158,245,.1);border:2px solid var(--bl-bds);
+    display:flex;align-items:center;justify-content:center;
+    font-size:2rem;
+    animation:spin-slow 12s linear infinite;
+    position:relative;
+  }
+  @keyframes spin-slow{from{box-shadow:0 0 0 0 rgba(59,158,245,.3),0 0 40px rgba(59,158,245,.08)}to{box-shadow:0 0 0 20px rgba(59,158,245,0),0 0 40px rgba(59,158,245,.08)}}
+  .visite-360-ring{
+    position:absolute;inset:-12px;border-radius:50%;
+    border:1px dashed rgba(59,158,245,.25);animation:spin-ring 8s linear infinite;
+  }
+  @keyframes spin-ring{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  .visite-placeholder-label{
+    font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);text-align:center
+  }
+  .visite-placeholder-title{
+    font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300;text-align:center;line-height:1.3
+  }
+
+  .visite-features{display:flex;flex-direction:column;gap:12px}
+  .vf-item{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:16px 18px;border:1px solid var(--bl-bdr);border-radius:16px;
+    background:rgba(9,21,37,.4);transition:.2s
+  }
+  .vf-item:hover{border-color:rgba(59,158,245,.32);background:var(--bl-bg)}
+  .vf-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+  .vf-body{}
+  .vf-title{font-size:.88rem;font-weight:600;color:var(--blanc);margin-bottom:2px}
+  .vf-desc{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+  /* ════════ ANTI-SURPRISES ════════ */
+  .antisurprise-section{
+    background:rgba(9,20,34,.5);
+    border-top:1px solid var(--bl-bdr);border-bottom:1px solid var(--bl-bdr);
+    padding:88px 0;
+  }
+  .compare-wrap{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:0;
+    margin-top:48px;border:1px solid var(--bl-bdr);border-radius:var(--radius);overflow:hidden;
+    max-width:820px;margin-left:auto;margin-right:auto;
+  }
+  .cmp-col{padding:0}
+  .cmp-head{
+    padding:18px 24px;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+    font-weight:700;
+  }
+  .cmp-head-before{background:rgba(255,90,90,.08);border-bottom:1px solid rgba(255,90,90,.15);color:rgba(255,110,110,.7)}
+  .cmp-head-after{background:rgba(0,200,117,.07);border-bottom:1px solid rgba(0,200,117,.18);color:rgba(0,200,117,.85)}
+  .cmp-divider{width:1px;background:var(--bl-bdr);display:flex;align-items:stretch}
+  .cmp-row{padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.045);font-size:.84rem;line-height:1.5}
+  .cmp-row:last-child{border-bottom:none}
+  .cmp-before .cmp-row{color:rgba(240,237,232,.42)}
+  .cmp-before .cmp-row::before{content:"✕  ";color:rgba(255,100,100,.5);font-size:.76rem}
+  .cmp-after .cmp-row{color:rgba(240,237,232,.75)}
+  .cmp-after .cmp-row::before{content:"✓  ";color:rgba(0,200,117,.7);font-size:.76rem}
+
+  /* ════════ TEMOIGNAGES ════════ */
+  .testi-section{padding:88px 0}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+  .testi-card{
+    border:1px solid var(--bl-bdr);border-radius:var(--radius);
+    background:var(--bl-bg);padding:26px;
+    display:flex;flex-direction:column;gap:16px;
+    transition:.22s
+  }
+  .testi-card:hover{border-color:rgba(59,158,245,.32);transform:translateY(-2px)}
+  .testi-stars{color:var(--or);font-size:.85rem;letter-spacing:2px}
+  .testi-quote{
+    font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:300;
+    line-height:1.6;color:var(--blanc);font-style:italic;flex:1;
+  }
+  .testi-quote::before{content:"\201C";color:var(--bl);font-size:1.4rem;line-height:.5;display:block;margin-bottom:6px}
+  .testi-author{display:flex;align-items:center;gap:12px}
+  .testi-avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:linear-gradient(135deg,rgba(59,158,245,.25),rgba(59,158,245,.06));
+    border:1px solid var(--bl-bdr);
+    display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0
+  }
+  .testi-name{font-size:.85rem;font-weight:600;color:var(--blanc);margin-bottom:1px}
+  .testi-meta{font-size:.72rem;color:var(--dim)}
+
+  /* ════════ FAQ FRICTIONS KILLERS ════════ */
+  .faq-section{padding:88px 0}
+  .faq-intro{
+    max-width:580px;margin-bottom:44px
+  }
+  .faq-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    max-width:960px;
+  }
+  .faq-item{
+    border:1px solid var(--bl-bdr);border-radius:18px;
+    background:rgba(9,21,37,.38);overflow:hidden;
+    transition:.2s;
+  }
+  .faq-item:hover{border-color:rgba(59,158,245,.28)}
+  .faq-item.urgent{border-color:rgba(255,180,50,.18);background:rgba(255,160,30,.03)}
+  .faq-q{
+    width:100%;padding:18px 22px;background:transparent;border:none;
+    color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:400;
+    display:flex;align-items:center;justify-content:space-between;
+    cursor:pointer;text-align:left;gap:14px;
+    transition:.18s;
+  }
+  .faq-q:hover{background:rgba(59,158,245,.04)}
+  .faq-q-text{flex:1;line-height:1.4}
+  .faq-arr{font-size:.78rem;color:var(--bl);transition:transform .25s;flex-shrink:0}
+  .faq-item.open .faq-arr{transform:rotate(180deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .25s ease;padding:0 22px}
+  .faq-item.open .faq-a{max-height:320px;padding-bottom:18px}
+  .faq-a p{font-size:.86rem;color:var(--muted);line-height:1.72}
+  .faq-a .friction-answer{
+    display:inline-flex;align-items:center;gap:7px;margin-top:10px;
+    padding:8px 14px;background:rgba(0,200,117,.07);border:1px solid rgba(0,200,117,.18);
+    border-radius:999px;font-size:.75rem;color:rgba(0,200,117,.9)
+  }
+
+  /* ════════ CTA FINAL ════════ */
+  .cta-final-section{padding:88px 0}
+  .cta-box{
+    background:linear-gradient(135deg,rgba(59,158,245,.12) 0%,rgba(9,21,37,.8) 40%,rgba(191,150,80,.05) 100%);
+    border:1px solid var(--bl-bds);border-radius:var(--radius-lg);
+    padding:72px 56px;text-align:center;position:relative;overflow:hidden;
+  }
+  .cta-box::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(59,158,245,.03) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.03) 1px,transparent 1px);
+    background-size:48px 48px;
+  }
+  .cta-box-inner{position:relative;z-index:1}
+  .cta-box h2{font-size:clamp(1.9rem,3.2vw,2.9rem);margin-bottom:14px}
+  .cta-box p{color:var(--muted);font-size:1.0rem;max-width:520px;margin:0 auto 36px}
+  .cta-box-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+  .cta-box-note{font-size:.74rem;color:var(--dim)}
+
+  /* ════════ FOOTER ════════ */
+  .footer{border-top:1px solid rgba(191,150,80,.1);padding:52px 0 32px}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;margin-bottom:40px}
+  .foot-brand{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .foot-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,rgba(191,150,80,.22),rgba(191,150,80,.05));border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.95rem;color:var(--or)}
+  .foot-name{font-size:.86rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500}
+  .foot-text{font-size:.80rem;color:rgba(240,237,232,.38);line-height:1.7;max-width:250px}
+  .foot-col-title{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,232,.3);margin-bottom:14px}
+  .foot-links{display:flex;flex-direction:column;gap:8px}
+  .foot-links a{font-size:.80rem;color:rgba(240,237,232,.42);transition:.2s}
+  .foot-links a:hover{color:var(--bll)}
+  .foot-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:20px;border-top:1px solid rgba(255,255,255,.05)}
+  .foot-copy{font-size:.72rem;color:rgba(240,237,232,.22)}
+  .foot-legal{display:flex;gap:16px}
+  .foot-legal a{font-size:.72rem;color:rgba(240,237,232,.28);transition:.2s}
+  .foot-legal a:hover{color:var(--bll)}
+
+  /* ════════ RESPONSIVE ════════ */
+  @media(max-width:1100px){
+    .hero-grid{grid-template-columns:1fr;gap:36px;min-height:auto}
+    .hero-visual{display:none}
+    .profiles-grid{grid-template-columns:1fr}
+    .match-result-rows{grid-template-columns:1fr 1fr}
+    .sim-controls{grid-template-columns:1fr 1fr}
+    .how-grid{grid-template-columns:1fr 1fr}
+    .passport-grid{grid-template-columns:1fr;gap:32px}
+    .visite-grid{grid-template-columns:1fr;gap:28px}
+    .testi-grid{grid-template-columns:1fr 1fr}
+    .footer-grid{grid-template-columns:1fr 1fr}
+    .faq-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:760px){
+    .nav-links{display:none}
+    .nav-cta .btn-outline{display:none}
+    .section,.matching-section,.passport-section,.visite-section,.antisurprise-section,.testi-section,.simulation-section,.faq-section,.cta-final-section{padding:56px 0}
+    .container{padding:0 18px}
+    .hero{padding:44px 0 28px}
+    .hero h1{font-size:2.2rem}
+    .how-grid,.testi-grid{grid-template-columns:1fr}
+    .compare-wrap{grid-template-columns:1fr;max-width:420px}
+    .cmp-divider{display:none}
+    .cmp-head-before,.cmp-head-after{text-align:center}
+    .sim-controls{grid-template-columns:1fr}
+    .cta-box{padding:44px 24px}
+    .match-result-rows{grid-template-columns:1fr}
+    .hero-stats{grid-template-columns:repeat(3,1fr)}
+    .footer-grid{grid-template-columns:1fr}
+  }
+
+  /* scroll reveal */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="brand">
+      <div class="brand-mark">K</div>
+      <div class="brand-text">
+        <div class="brand-name">Kàddu</div>
+        <div class="brand-tag">La parole qui engage</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/proprietaires/">Propriétaires</a>
+      <a href="/locataires/" class="active">Locataires</a>
+      <a href="/#confiance">Pourquoi Kàddu</a>
+      <a href="/#biens">Biens</a>
+    </div>
+    <div class="nav-cta">
+      <a id="nav-login-btn" class="btn btn-outline" href="/auth/">Connexion</a>
+      <a class="btn btn-blue" href="/tunnel/dossier-v2-step1.html">Mon dossier →</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ════════════════════════════
+     HERO
+════════════════════════════ -->
+<section class="hero">
+  <div class="container hero-grid">
+
+    <div class="hero-copy">
+      <div class="hero-live-badge"><div class="live-dot"></div>Biens vérifiés · Disponibles maintenant</div>
+      <h1>
+        Votre prochain<br>
+        chez-vous à Dakar,<br>
+        <em>sans mauvaise surprise</em>.
+      </h1>
+      <p class="hero-lead">
+        Kàddu vérifie chaque bien sur site, vous offre une visite immersive en 360° et valorise votre dossier avec un moteur d'analyse qui parle aux propriétaires. Depuis n'importe où. En toute confiance.
+      </p>
+      <div class="hero-trust-row">
+        <div class="trust-chip"><span>🛡️</span>Biens vérifiés sur site</div>
+        <div class="trust-chip"><span>🌀</span>Visites 360°</div>
+        <div class="trust-chip"><span>⚡</span>Réponse 48h</div>
+        <div class="trust-chip"><span>🌍</span>100% à distance possible</div>
+      </div>
+      <div class="hero-cta-row">
+        <a class="btn btn-blue btn-lg" href="/tunnel/dossier-v2-step1.html">Commencer ma recherche →</a>
+        <a class="btn btn-outline btn-lg" href="/#biens">Voir les biens</a>
+      </div>
+      <div class="hero-step-row">
+        <span class="step">① Je cherche</span>
+        <span class="arr">→</span>
+        <span class="step">② Je visite en 360°</span>
+        <span class="arr">→</span>
+        <span class="step">③ Passeport Locatif</span>
+        <span class="arr">→</span>
+        <span class="step">④ Clés remises</span>
+      </div>
+    </div>
+
+    <!-- Hero visual — profils interactifs -->
+    <aside class="hero-visual">
+      <div class="hero-visual-grid"></div>
+      <div class="deco-letter">K</div>
+      <div class="hero-cards-inner">
+        <div style="font-size:.62rem;letter-spacing:.20em;text-transform:uppercase;color:rgba(59,158,245,.5);margin-bottom:6px">Kàddu comprend votre profil</div>
+        <div id="heroWhoCards">
+          <div class="who-card active" data-who="diaspora">
+            <div class="who-icon">🌍</div>
+            <div class="who-body">
+              <div class="who-label">Diaspora & Expats</div>
+              <div class="who-title">Je loue depuis l'étranger</div>
+              <div class="who-tags">Visite à distance · Signature digitale · Stripe/Virement</div>
+            </div>
+          </div>
+          <div class="who-card" data-who="business">
+            <div class="who-icon">💼</div>
+            <div class="who-body">
+              <div class="who-label">Mission Pro & Business</div>
+              <div class="who-title">Je viens travailler à Dakar</div>
+              <div class="who-tags">Meublé prêt · Internet fibre · Plateaux Almadies/VDN</div>
+            </div>
+          </div>
+          <div class="who-card" data-who="famille">
+            <div class="who-icon">🏠</div>
+            <div class="who-body">
+              <div class="who-label">Famille & Résidents</div>
+              <div class="who-title">Je m'installe durablement</div>
+              <div class="who-tags">Non meublé · Bail longue durée · Quartiers familiaux</div>
+            </div>
+          </div>
+        </div>
+        <div id="heroMatchResult" style="margin-top:8px;padding:12px 14px;background:rgba(0,200,117,.06);border:1px solid rgba(0,200,117,.18);border-radius:12px;font-size:.78rem;color:rgba(0,200,117,.85);display:flex;align-items:center;gap:8px">
+          <span>✓</span><span id="heroMatchText">Biens adaptés disponibles · Almadies, Sipres VDN, Mermoz</span>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ════════════ TICKER ════════════ -->
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <div class="ticker-track" id="tickerTrack">
+      <div class="t-stat"><strong>🛡️</strong><span>Biens vérifiés · Contrôlés sur site par un agent Kàddu</span></div>
+      <div class="t-sep">·</div>
+      <div class="t-stat"><strong>🌀</strong><span>360° immersif · Visitez chaque pièce à distance</span></div>
+      <div class="t-sep">·</div>
+      <div class="t-stat"><strong>📋</strong><span>Passeport Locatif · Réutilisable · Accepté plus vite</span></div>
+      <div class="t-sep">·</div>
+      <div class="t-stat"><strong>⚡</strong><span>48h · Réponse garantie sur chaque dossier</span></div>
+      <div class="t-sep">·</div>
+      <div class="t-stat"><strong>💳</strong><span>Wave · OM · Stripe · PayPal · Virement international</span></div>
+      <div class="t-sep">·</div>
+      <div class="t-stat"><strong>🌍</strong><span>Diaspora · Expats · Zéro déplacement requis</span></div>
+      <div class="t-sep">·</div>
+      <div class="t-stat"><strong>🔐</strong><span>Propriétaires identifiés · Annonces conformes à la réalité</span></div>
+      <div class="t-sep">·</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     MATCHING INTELLIGENT
+════════════════════════════ -->
+<section class="matching-section reveal">
+  <div class="container">
+    <div style="max-width:640px">
+      <span class="eyebrow">Matching intelligent</span>
+      <h2>Kàddu comprend<br><em>votre situation réelle</em>.</h2>
+      <p style="color:var(--muted);font-size:.96rem;margin-top:12px;line-height:1.7">
+        Pas un formulaire de plus. Dites-nous dans quelle situation vous êtes — Kàddu affiche immédiatement les biens, les quartiers et les options qui vous correspondent vraiment.
+      </p>
+    </div>
+
+    <div class="profiles-grid">
+      <div class="profile-match-card sel" data-profile="diaspora" onclick="selectProfile(this)">
+        <div class="pm-top">
+          <div class="pm-emoji">🌍</div>
+          <div class="pm-check">✓</div>
+        </div>
+        <div class="pm-label">Diaspora & Expat</div>
+        <div class="pm-title">Je cherche depuis l'étranger</div>
+        <div class="pm-desc">Je ne peux pas me déplacer pour visiter. J'ai besoin de tout faire à distance, de la visite à la signature.</div>
+        <div class="pm-tags">
+          <span class="pm-tag">🌀 Visite 360°</span>
+          <span class="pm-tag">✍️ Signature digitale</span>
+          <span class="pm-tag">💳 Paiement international</span>
+          <span class="pm-tag">🔑 Remise par délégué</span>
+        </div>
+      </div>
+
+      <div class="profile-match-card" data-profile="business" onclick="selectProfile(this)">
+        <div class="pm-top">
+          <div class="pm-emoji">💼</div>
+          <div class="pm-check">✓</div>
+        </div>
+        <div class="pm-label">Mission Pro & Business</div>
+        <div class="pm-title">Je viens travailler à Dakar</div>
+        <div class="pm-desc">Mission de quelques semaines à quelques mois. Il me faut un meublé opérationnel dès le premier soir, bien connecté.</div>
+        <div class="pm-tags">
+          <span class="pm-tag">🛋️ Meublé complet</span>
+          <span class="pm-tag">📶 Fibre haut débit</span>
+          <span class="pm-tag">📍 Almadies · VDN · Plateau</span>
+          <span class="pm-tag">📄 Facturation entreprise</span>
+        </div>
+      </div>
+
+      <div class="profile-match-card" data-profile="famille" onclick="selectProfile(this)">
+        <div class="pm-top">
+          <div class="pm-emoji">🏠</div>
+          <div class="pm-check">✓</div>
+        </div>
+        <div class="pm-label">Famille & Résidents</div>
+        <div class="pm-title">Je m'installe durablement</div>
+        <div class="pm-desc">Bail longue durée, quartier calme, immeuble sécurisé. Je cherche un chez-moi stable, pas un logement de passage.</div>
+        <div class="pm-tags">
+          <span class="pm-tag">🏢 Non meublé</span>
+          <span class="pm-tag">📅 Bail long terme</span>
+          <span class="pm-tag">🔒 Sécurisé</span>
+          <span class="pm-tag">🏫 Proche écoles</span>
+        </div>
+      </div>
+
+      <div class="profile-match-card" data-profile="tourisme" onclick="selectProfile(this)">
+        <div class="pm-top">
+          <div class="pm-emoji">✈️</div>
+          <div class="pm-check">✓</div>
+        </div>
+        <div class="pm-label">Voyage & Découverte</div>
+        <div class="pm-title">Je visite Dakar quelques jours</div>
+        <div class="pm-desc">Séjour court, je veux un appartement premium plutôt qu'un hôtel. Confort, localisation, autonomie totale.</div>
+        <div class="pm-tags">
+          <span class="pm-tag">🌟 Premium</span>
+          <span class="pm-tag">🛏️ Courte durée</span>
+          <span class="pm-tag">🌊 Vue mer possible</span>
+          <span class="pm-tag">📦 Tout équipé</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match result dynamique -->
+    <div class="match-result show" id="matchResult">
+      <div class="match-result-head">
+        <div class="match-result-icon" id="matchIcon">🌍</div>
+        <div>
+          <div class="match-result-label">Kàddu vous recommande</div>
+          <div class="match-result-title" id="matchTitle">Appartements meublés · Parcours 100% à distance</div>
+        </div>
+      </div>
+      <div class="match-result-rows" id="matchRows">
+        <div class="match-r-chip"><strong>Types de biens</strong>Meublés · F2 à F4 · Équipés haut débit</div>
+        <div class="match-r-chip"><strong>Quartiers recommandés</strong>Almadies · Sipres VDN · Mermoz · Point E</div>
+        <div class="match-r-chip"><strong>Points forts Kàddu</strong>Visite 360° · Clés par délégué · Stripe/Virement</div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <a class="btn btn-blue" href="/#biens">Voir les biens correspondants →</a>
+        <a class="btn btn-ghost-bl" href="/tunnel/dossier-v2-step1.html">Préparer mon dossier</a>
+      </div>
+      <div class="micro-cta-row">
+        <a class="btn-micro" href="/#biens">Voir mes biens compatibles →</a>
+        <span class="micro-note">Résultats filtrés selon votre profil</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     SIMULATION BUDGET
+════════════════════════════ -->
+<section class="simulation-section reveal">
+  <div class="container">
+    <div style="text-align:center">
+      <span class="eyebrow" style="justify-content:center">Simulation locataire</span>
+      <h2>Votre budget à Dakar,<br><em>en temps réel</em>.</h2>
+      <p style="color:var(--muted);font-size:.95rem;margin-top:12px;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.7">
+        Choisissez vos critères. Kàddu vous montre immédiatement ce qui est accessible, les quartiers compatibles et la tension du marché.
+      </p>
+    </div>
+
+    <div class="sim-wrap">
+      <div class="sim-grid-bg"></div>
+      <div class="sim-inner">
+        <div class="sim-controls">
+          <div class="sim-field">
+            <label>Budget mensuel (FCFA)</label>
+            <select id="simBudget" onchange="runSimulation()">
+              <option value="">Choisir un budget</option>
+              <option value="100k">≤ 100 000 FCFA</option>
+              <option value="200k">≤ 200 000 FCFA</option>
+              <option value="350k">≤ 350 000 FCFA</option>
+              <option value="500k">≤ 500 000 FCFA</option>
+              <option value="750k">≤ 750 000 FCFA</option>
+              <option value="1m">≤ 1 000 000 FCFA</option>
+            </select>
+          </div>
+          <div class="sim-field">
+            <label>Type de bien</label>
+            <select id="simType" onchange="runSimulation()">
+              <option value="">Meublé ou non meublé</option>
+              <option value="meuble">Meublé</option>
+              <option value="non_meuble">Non meublé</option>
+            </select>
+          </div>
+          <div class="sim-field">
+            <label>Durée souhaitée</label>
+            <select id="simDuree" onchange="runSimulation()">
+              <option value="">Peu importe</option>
+              <option value="court">Courte durée (nuits / semaines)</option>
+              <option value="moyen">Moyen terme (1 – 3 mois)</option>
+              <option value="long">Longue durée (bail)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sim-result" id="simResult">
+          <div class="sim-result-label">Ce que vous pouvez trouver avec Kàddu</div>
+          <!-- Live market signals -->
+          <div class="live-signals" id="liveSignals"></div>
+          <div class="sim-chips" id="simChips"></div>
+          <div class="sim-tension" id="simTension">
+            <div class="tension-dot" id="tensionDot"></div>
+            <div id="tensionText"></div>
+          </div>
+          <div class="sim-cta">
+            <a class="btn btn-blue" href="/#biens" id="simCta">Voir les biens disponibles →</a>
+            <span class="sim-cta-note" id="simNote"></span>
+          </div>
+          <div class="micro-cta-row" style="border-top:1px solid rgba(59,158,245,.1);margin-top:16px;padding-top:16px">
+            <a class="btn-micro" href="/tunnel/dossier-v2-step1.html">Préparer mon dossier maintenant →</a>
+            <span class="micro-note">Passeport Locatif · 10 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     COMMENT ÇA MARCHE
+════════════════════════════ -->
+<section class="section reveal" id="comment">
+  <div class="container">
+    <div class="section-head" style="display:flex;align-items:start;justify-content:space-between;gap:32px;margin-bottom:0">
+      <div>
+        <span class="eyebrow">Le parcours locataire</span>
+        <h2>4 étapes.<br>De la <em>recherche aux clés</em>.</h2>
+      </div>
+      <p style="color:var(--muted);max-width:380px;font-size:.9rem;padding-top:8px;line-height:1.72">Un parcours entièrement digital pensé pour aller vite sans sacrifier la confiance ni la sécurité.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-icon">🔍</div>
+        <h3>Je cherche & simule</h3>
+        <p>Filtrez par budget, quartier, type et durée. Chaque bien affiché est vérifié sur site et actif. Plus d'annonces fantômes.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-icon">🌀</div>
+        <h3>Je visite en 360°</h3>
+        <p>Explorez chaque pièce, chaque couloir depuis votre écran. Aucun déplacement avant d'être certain de vouloir candidater.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-icon">📋</div>
+        <h3>Mon Passeport Locatif</h3>
+        <p>10 minutes pour structurer votre dossier. Identité, revenus, situation — présenté clairement, analysé par le moteur Kàddu.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-icon">🔑</div>
+        <h3>Je signe & reçois mes clés</h3>
+        <p>Contrat digital, paiement Wave/Stripe, réponse garantie sous 48h. Remise des clés en main propre ou par délégué.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     PASSEPORT LOCATIF
+════════════════════════════ -->
+<section class="passport-section reveal" id="passeport">
+  <div class="container">
+    <div style="max-width:600px">
+      <span class="eyebrow">Le différenciateur Kàddu</span>
+      <h2>Votre <em>Passeport Locatif</em>.<br>Créé une fois. Accepté partout.</h2>
+      <p style="color:var(--muted);font-size:.95rem;margin-top:14px;line-height:1.72">
+        Oubliez la paperasse à imprimer à chaque candidature. Le Passeport Locatif Kàddu structure votre profil une seule fois — et vous positionne en tête de liste à chaque bien.
+      </p>
+    </div>
+
+    <div class="passport-grid">
+      <!-- La carte passeport -->
+      <div>
+        <div class="passport-card">
+          <div class="passport-card-top">
+            <div class="passport-card-logo">Kàddu <span>Locatif</span></div>
+            <div class="passport-card-chip">NFC</div>
+          </div>
+          <div class="passport-card-body">
+            <div class="passport-field">
+              <div class="passport-field-label">Titulaire</div>
+              <div class="passport-field-value name-field">Votre nom complet</div>
+            </div>
+            <div class="passport-grid-fields">
+              <div class="passport-field">
+                <div class="passport-field-label">Statut</div>
+                <div class="passport-field-value" style="color:var(--green);font-weight:600">✓ Vérifié</div>
+              </div>
+              <div class="passport-field">
+                <div class="passport-field-label">Score fiabilité</div>
+                <div class="passport-field-value blur">●●●●●●●</div>
+              </div>
+              <div class="passport-field">
+                <div class="passport-field-label">Situation</div>
+                <div class="passport-field-value blur">●●●●●●</div>
+              </div>
+              <div class="passport-field">
+                <div class="passport-field-label">Revenus vérifiés</div>
+                <div class="passport-field-value blur">●●●●●●</div>
+              </div>
+            </div>
+          </div>
+          <div class="passport-card-footer">
+            <div class="passport-status">Passeport actif</div>
+            <div class="passport-id">KDU-XXXX-XXXX</div>
+          </div>
+        </div>
+        <div style="margin-top:20px;text-align:center">
+          <a class="btn btn-blue btn-lg" href="/tunnel/dossier-v2-step1.html">Créer mon Passeport Locatif →</a>
+        </div>
+      </div>
+
+      <!-- Les bénéfices -->
+      <div class="passport-benefits">
+        <div class="pb-item">
+          <div class="pb-icon">🔂</div>
+          <div class="pb-body">
+            <div class="pb-title">Vérifié une seule fois</div>
+            <div class="pb-desc">Vous remplissez votre dossier une fois. Il est utilisable pour toutes vos candidatures Kàddu, sans répétition.</div>
+          </div>
+        </div>
+        <div class="pb-item">
+          <div class="pb-icon">⚡</div>
+          <div class="pb-body">
+            <div class="pb-title">Réponses prioritaires</div>
+            <div class="pb-desc">Les dossiers Kàddu certifiés sont traités en priorité par les propriétaires. Moins d'attente, plus de chances.</div>
+          </div>
+        </div>
+        <div class="pb-item">
+          <div class="pb-icon">🛡️</div>
+          <div class="pb-body">
+            <div class="pb-title">Vos données protégées</div>
+            <div class="pb-desc">Vos documents ne sont transmis qu'au propriétaire du bien pour lequel vous candidatez. Jamais partagés autrement.</div>
+          </div>
+        </div>
+        <div class="pb-item">
+          <div class="pb-icon">🌍</div>
+          <div class="pb-body">
+            <div class="pb-title">Depuis n'importe où</div>
+            <div class="pb-desc">Téléphone ou ordinateur. Depuis Paris, Montréal, Dubaï ou Dakar. Le passeport se crée en 10 minutes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     VISITE IMMERSIVE — WOW MOMENT
+════════════════════════════ -->
+<section class="immersive-section reveal" id="visites">
+  <div class="container">
+    <div class="immersive-inner">
+
+      <!-- Phone mockup with 360° viewer -->
+      <div class="phone-mockup-wrap">
+        <!-- Floating info card — top left -->
+        <div class="phone-float-card" style="top:40px;left:-10px">
+          <div class="pfc-top">
+            <div class="pfc-dot" style="background:#00C875;animation:pulse-dot 2s infinite"></div>
+            <div class="pfc-label" style="color:rgba(0,200,117,.7)">Disponible</div>
+          </div>
+          <div class="pfc-value">Le Petit Bantukay</div>
+          <div style="font-size:.68rem;color:var(--dim);margin-top:2px">Sipres VDN 2 · Dakar</div>
+        </div>
+
+        <!-- Floating info card — bottom right -->
+        <div class="phone-float-card" style="bottom:52px;right:-12px;text-align:right">
+          <div class="pfc-top" style="justify-content:flex-end">
+            <div class="pfc-label" style="color:var(--bl)">Surface</div>
+            <div class="pfc-dot" style="background:var(--bl)"></div>
+          </div>
+          <div class="pfc-value">72 m²</div>
+          <div style="font-size:.68rem;color:var(--dim);margin-top:2px">3 pièces · Climatisé</div>
+        </div>
+
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="viewer-bg">
+              <div class="viewer-room"></div>
+              <div class="viewer-floor"></div>
+
+              <!-- HUD -->
+              <div class="viewer-hud">
+                <div class="viewer-badge">📍 Salon principal</div>
+                <div class="viewer-360-btn">🌀 360°</div>
+              </div>
+
+              <!-- Furniture silhouettes -->
+              <div class="viewer-sofa"></div>
+              <div class="viewer-table"></div>
+
+              <!-- Hotspots -->
+              <div class="hotspot" style="top:38%;left:22%">
+                <div class="hotspot-label">Climatisation</div>
+              </div>
+              <div class="hotspot" style="top:55%;right:24%">
+                <div class="hotspot-label">WiFi Fibre</div>
+              </div>
+              <div class="hotspot" style="top:25%;left:50%;transform:translateX(-50%)">
+                <div class="hotspot-label">Vue dégagée</div>
+              </div>
+
+              <!-- Nav dots -->
+              <div class="viewer-nav">
+                <button class="viewer-dot active" onclick="switchRoom(0,this)"></button>
+                <button class="viewer-dot" onclick="switchRoom(1,this)"></button>
+                <button class="viewer-dot" onclick="switchRoom(2,this)"></button>
+                <button class="viewer-dot" onclick="switchRoom(3,this)"></button>
+              </div>
+
+              <!-- Room label -->
+              <div id="roomLabel" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:.63rem;color:var(--dim);letter-spacing:.1em;white-space:nowrap">Salon · 1/4 pièces</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy -->
+      <div class="immersive-copy">
+        <span class="eyebrow">Visites immersives 360°</span>
+        <h2>Visitez Dakar<br>avant même<br><em>d'arriver</em>.</h2>
+        <p style="color:var(--muted);font-size:.96rem;margin-top:14px;margin-bottom:0;line-height:1.75;max-width:460px">
+          Votre plus grand avantage avec Kàddu. Le scoring rassure — le 360° fait <em style="font-style:italic;color:var(--bll)">ressentir</em>. Explorez chaque pièce, repérez les détails, projetez-vous dans votre futur chez-vous. Depuis n'importe où dans le monde.
+        </p>
+        <div class="immersive-features">
+          <div class="if-row">
+            <div class="if-icon">🌀</div>
+            <div class="if-body">
+              <div class="if-title">Rotation complète pièce par pièce</div>
+              <div class="if-desc">Salon, chambres, cuisine, espaces communs. Chaque angle, chaque détail. Rien n'est caché.</div>
+            </div>
+          </div>
+          <div class="if-row">
+            <div class="if-icon">📍</div>
+            <div class="if-body">
+              <div class="if-title">Hotspots interactifs</div>
+              <div class="if-desc">Touchez un point dans la pièce pour obtenir des détails : équipement, matière, dimension réelle.</div>
+            </div>
+          </div>
+          <div class="if-row">
+            <div class="if-icon">🗺️</div>
+            <div class="if-body">
+              <div class="if-title">Quartier + vue satellite</div>
+              <div class="if-desc">Accès, commerces, écoles, transports — vous connaissez votre quartier avant de signer.</div>
+            </div>
+          </div>
+          <div class="if-row">
+            <div class="if-icon">📸</div>
+            <div class="if-body">
+              <div class="if-title">Photos réelles · Prises lors du contrôle Kàddu</div>
+              <div class="if-desc">Aucune retouche. Aucune mise en scène. Ce que vous voyez est exactement ce que vous obtenez.</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:24px">
+          <a class="btn btn-blue btn-lg" href="/#biens">Explorer les biens en 360° →</a>
+        </div>
+        <div class="micro-cta-row">
+          <a class="btn-micro" href="/#biens">Tester une visite 360° →</a>
+          <span class="micro-note">Sans inscription · Immédiat</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     KÀDDU SCORE — VISUEL
+════════════════════════════ -->
+<section class="score-section reveal" id="score">
+  <div class="container">
+    <div style="max-width:600px">
+      <span class="eyebrow">Le Kàddu Score</span>
+      <h2>Votre profil a<br><em>de la valeur</em>. Montrons-le.</h2>
+      <p style="color:var(--muted);font-size:.96rem;margin-top:14px;line-height:1.75">
+        Le Kàddu Score n'est pas une note abstraite. C'est un signal visuel clair que le propriétaire lit en quelques secondes — et qui vous distingue immédiatement d'un dossier classique.
+      </p>
+    </div>
+
+    <div class="score-grid">
+      <!-- Score card -->
+      <div class="score-card-wrap">
+        <div class="score-card">
+          <div class="score-card-head">
+            <div class="score-card-title">Passeport Locatif · Analyse Kàddu</div>
+            <div class="score-badge-live">Mis à jour en temps réel</div>
+          </div>
+          <div class="score-rows">
+            <div class="score-row">
+              <div class="score-row-icon sr-green">🪪</div>
+              <div class="score-row-body">
+                <div class="score-row-label">Identité</div>
+                <div class="score-row-sub">CNI / Passeport · Cohérence vérifiée</div>
+              </div>
+              <div class="score-row-status srs-green">✓ Vérifié</div>
+            </div>
+            <div class="score-row">
+              <div class="score-row-icon sr-green">💰</div>
+              <div class="score-row-body">
+                <div class="score-row-label">Revenus</div>
+                <div class="score-row-sub">Justificatifs analysés · Taux d'effort calculé</div>
+              </div>
+              <div class="score-row-status srs-green">✓ Cohérents</div>
+            </div>
+            <div class="score-row">
+              <div class="score-row-icon sr-green">📍</div>
+              <div class="score-row-body">
+                <div class="score-row-label">Historique locatif</div>
+                <div class="score-row-sub">Situation actuelle · Cohérence du parcours</div>
+              </div>
+              <div class="score-row-status srs-green">✓ Stable</div>
+            </div>
+            <div class="score-row">
+              <div class="score-row-icon sr-amber">🤝</div>
+              <div class="score-row-body">
+                <div class="score-row-label">Garant</div>
+                <div class="score-row-sub">Non fourni · Fortement recommandé</div>
+              </div>
+              <div class="score-row-status srs-amber">⚠ Conseillé</div>
+            </div>
+          </div>
+          <div class="score-ring-wrap">
+            <div class="score-ring" style="--score-pct:78%">
+              <div class="score-ring-val">78</div>
+            </div>
+            <div class="score-ring-body">
+              <div class="score-ring-label">Profil solide</div>
+              <div class="score-ring-desc">Votre dossier est bien positionné. Ajoutez un garant pour atteindre le niveau "Prioritaire".</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score levels legend -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div style="padding:10px 12px;border:1px solid rgba(59,158,245,.18);border-radius:12px;text-align:center;background:var(--bl-bg)">
+            <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bl);margin-bottom:4px">Standard</div>
+            <div style="font-size:1.1rem;font-family:'Playfair Display',serif;color:var(--bl)">0 – 59</div>
+          </div>
+          <div style="padding:10px 12px;border:1px solid rgba(245,158,11,.2);border-radius:12px;text-align:center;background:rgba(245,158,11,.05)">
+            <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,158,11,.8);margin-bottom:4px">Solide</div>
+            <div style="font-size:1.1rem;font-family:'Playfair Display',serif;color:rgba(245,158,11,.9)">60 – 79</div>
+          </div>
+          <div style="padding:10px 12px;border:1px solid rgba(0,200,117,.2);border-radius:12px;text-align:center;background:rgba(0,200,117,.05)">
+            <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,200,117,.85);margin-bottom:4px">Prioritaire</div>
+            <div style="font-size:1.1rem;font-family:'Playfair Display',serif;color:rgba(0,200,117,.95)">80 – 100</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score builder -->
+      <div>
+        <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:6px">Comment booster votre score</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;margin-bottom:20px">Chaque élément compte.</div>
+        <div class="score-builder">
+          <p class="sb-intro">Le Passeport Locatif est structuré pour valoriser ce que vous avez, pas pour pénaliser ce qui manque. Voici les leviers qui font la différence.</p>
+          <div class="sb-item" onclick="animateSb(this,100)">
+            <div class="sb-item-head">
+              <div class="sb-item-label">🪪 Identité vérifiée</div>
+              <div class="sb-item-tag sb-tag-required">Requis</div>
+            </div>
+            <div class="sb-bar-wrap"><div class="sb-bar" style="width:100%;background:linear-gradient(90deg,var(--bl),var(--bll))"></div></div>
+            <div class="sb-desc">Base indispensable. Sans identité vérifiée, aucune candidature n'est transmise.</div>
+          </div>
+          <div class="sb-item" onclick="animateSb(this,85)">
+            <div class="sb-item-head">
+              <div class="sb-item-label">💰 Revenus cohérents</div>
+              <div class="sb-item-tag sb-tag-required">Requis</div>
+            </div>
+            <div class="sb-bar-wrap"><div class="sb-bar" style="width:85%;background:linear-gradient(90deg,var(--bl),var(--bll))"></div></div>
+            <div class="sb-desc">Salaire, freelance, retraite, diaspora — tout type de revenu est analysé si justifié.</div>
+          </div>
+          <div class="sb-item" onclick="animateSb(this,72)">
+            <div class="sb-item-head">
+              <div class="sb-item-label">📍 Historique locatif</div>
+              <div class="sb-item-tag sb-tag-boost">+Score</div>
+            </div>
+            <div class="sb-bar-wrap"><div class="sb-bar" style="width:72%;background:linear-gradient(90deg,var(--bld),var(--bl))"></div></div>
+            <div class="sb-desc">Quittances passées, ancien bail, attestation hébergeur. Prouve la stabilité.</div>
+          </div>
+          <div class="sb-item" onclick="animateSb(this,60)">
+            <div class="sb-item-head">
+              <div class="sb-item-label">🤝 Garant</div>
+              <div class="sb-item-tag sb-tag-opt">Optionnel</div>
+            </div>
+            <div class="sb-bar-wrap"><div class="sb-bar" style="width:60%;background:linear-gradient(90deg,rgba(245,158,11,.6),rgba(245,158,11,.9))"></div></div>
+            <div class="sb-desc">Non obligatoire mais très impactant. Un garant sénégalais ou international est accepté.</div>
+          </div>
+          <div class="sb-item" onclick="animateSb(this,40)">
+            <div class="sb-item-head">
+              <div class="sb-item-label">✍️ Lettre de motivation</div>
+              <div class="sb-item-tag sb-tag-opt">Optionnel</div>
+            </div>
+            <div class="sb-bar-wrap"><div class="sb-bar" style="width:40%;background:linear-gradient(90deg,rgba(59,158,245,.3),rgba(59,158,245,.6))"></div></div>
+            <div class="sb-desc">Fortement recommandée pour les profils diaspora, freelance ou situations atypiques.</div>
+          </div>
+        </div>
+        <div style="margin-top:24px">
+          <a class="btn btn-blue btn-lg" href="/tunnel/dossier-v2-step1.html">Créer mon Passeport Locatif →</a>
+        </div>
+        <div class="micro-cta-row">
+          <a class="btn-micro" href="/tunnel/dossier-v2-step1.html">Voir mon score potentiel →</a>
+          <span class="micro-note">Estimation gratuite · 3 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     ANTI-MAUVAISES SURPRISES
+════════════════════════════ -->
+<section class="antisurprise-section reveal" id="garanties">
+  <div class="container">
+    <div style="text-align:center;max-width:580px;margin:0 auto 0">
+      <span class="eyebrow" style="justify-content:center">Pourquoi Kàddu est différent</span>
+      <h2>Le marché vous a déjà <em>déçu</em>.<br>Kàddu a été pensé pour ça.</h2>
+      <p style="color:var(--muted);font-size:.93rem;margin-top:12px;line-height:1.7">Ce ne sont pas des promesses marketing. Ce sont des engagements vérifiables à chaque étape.</p>
+    </div>
+
+    <div class="compare-wrap" style="margin-top:44px">
+      <div class="cmp-col cmp-before">
+        <div class="cmp-head cmp-head-before">Marché traditionnel</div>
+        <div class="cmp-row">Annonces inexactes ou déjà louées</div>
+        <div class="cmp-row">Visites longues, parfois inutiles</div>
+        <div class="cmp-row">Photos retouchées ou trompeuses</div>
+        <div class="cmp-row">Avances sans garantie de protection</div>
+        <div class="cmp-row">Propriétaire anonyme ou non joignable</div>
+        <div class="cmp-row">Délai de réponse inconnu</div>
+        <div class="cmp-row">Impossible à distance</div>
+      </div>
+      <div class="cmp-divider"></div>
+      <div class="cmp-col cmp-after">
+        <div class="cmp-head cmp-head-after">Avec Kàddu</div>
+        <div class="cmp-row">Biens vérifiés sur site avant publication</div>
+        <div class="cmp-row">Visite 360° depuis votre écran</div>
+        <div class="cmp-row">Photos prises lors du contrôle Kàddu</div>
+        <div class="cmp-row">Paiements sécurisés Wave / Stripe</div>
+        <div class="cmp-row">Propriétaire identifié et engagé</div>
+        <div class="cmp-row">Réponse garantie sous 48h</div>
+        <div class="cmp-row">Parcours 100% à distance possible</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     TÉMOIGNAGES
+════════════════════════════ -->
+<section class="testi-section reveal">
+  <div class="container">
+    <div style="max-width:540px;margin-bottom:0">
+      <span class="eyebrow">Ils ont trouvé avec Kàddu</span>
+      <h2>Du vécu.<br>Pas du <em>corporate</em>.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">J'ai signé depuis Paris avant mon arrivée à Dakar. La visite 360° était bluffante — j'ai vu chaque pièce comme si j'y étais. Tout s'est fait à distance en 4 jours.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">👨🏾</div>
+          <div>
+            <div class="testi-name">Mamadou S.</div>
+            <div class="testi-meta">Diaspora · Paris → Dakar · Meublé VDN</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">Enfin une annonce conforme à la réalité. Le bien correspondait exactement aux photos et à la description. Mon dossier a été traité en moins de 24h.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">👩🏽</div>
+          <div>
+            <div class="testi-name">Aïssatou D.</div>
+            <div class="testi-meta">Installation durable · Famille · Parcelles</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">Mission de 2 mois à Dakar pour un client. Le meublé était opérationnel dès le soir même — WiFi, cuisine équipée, tout. Jamais vu ça avec une agence locale.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">👨🏽‍💼</div>
+          <div>
+            <div class="testi-name">Thierno B.</div>
+            <div class="testi-meta">Mission pro · Consultant · Mermoz</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     FAQ FRICTIONS KILLERS
+════════════════════════════ -->
+<section class="faq-section reveal" id="faq">
+  <div class="container">
+    <div class="faq-intro">
+      <span class="eyebrow">Questions directes</span>
+      <h2>Les vraies questions<br>que vous <em>vous posez</em>.</h2>
+      <p style="color:var(--muted);font-size:.93rem;margin-top:12px;line-height:1.72">Pas de FAQ corporate. Les objections réelles du marché, avec des réponses courtes et honnêtes.</p>
+    </div>
+    <div class="faq-grid">
+
+      <div class="faq-item urgent" id="faq1">
+        <button class="faq-q" onclick="toggleFaq('faq1')">
+          <span class="faq-q-text">Et si le bien ne correspond pas à l'annonce à mon arrivée ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>C'est notre engagement le plus fort. Chaque bien est inspecté sur site avant publication. Si vous constatez une différence significative à votre arrivée, Kàddu vous trouve une solution de remplacement sous 24h ou vous rembourse intégralement. Nous engageons notre réputation sur chaque annonce.</p><div class="friction-answer">✓ Remboursement ou remplacement garanti sous 24h</div></div>
+      </div>
+
+      <div class="faq-item urgent" id="faq2">
+        <button class="faq-q" onclick="toggleFaq('faq2')">
+          <span class="faq-q-text">Je n'ai pas de revenus sénégalais. Mon dossier sera-t-il accepté ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Oui. Kàddu accepte les justificatifs de revenus étrangers — salaires, contrats, relevés bancaires en euros ou dollars. Le moteur d'analyse évalue la cohérence globale du dossier, pas uniquement son origine. De nombreux membres de la diaspora et expats ont été acceptés sans revenus locaux.</p><div class="friction-answer">✓ Revenus étrangers acceptés · Analyse contextuelle</div></div>
+      </div>
+
+      <div class="faq-item" id="faq3">
+        <button class="faq-q" onclick="toggleFaq('faq3')">
+          <span class="faq-q-text">Combien coûte la caution et comment est-elle protégée ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>La caution varie selon le bien : 1 nuit pour les meublés courte durée, 1 à 2 mois pour les baux longue durée. Elle est clairement indiquée sur chaque fiche avant toute candidature. Les modalités de restitution sont définies dans le contrat — Kàddu s'assure que les conditions sont équitables pour les deux parties.</p><div class="friction-answer">✓ Caution affichée sur chaque fiche · Contrat Kàddu</div></div>
+      </div>
+
+      <div class="faq-item" id="faq4">
+        <button class="faq-q" onclick="toggleFaq('faq4')">
+          <span class="faq-q-text">Y a-t-il des frais cachés ou des commissions locataire ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Non. Les frais de service Kàddu sont supportés par le propriétaire pour les biens en gestion complète. Si des frais de dossier s'appliquent sur certains biens (mandat simple), cela est indiqué explicitement avant toute démarche. Vous ne découvrez jamais un montant imprévu lors de la signature.</p><div class="friction-answer">✓ Zéro frais caché · Tout affiché avant candidature</div></div>
+      </div>
+
+      <div class="faq-item" id="faq5">
+        <button class="faq-q" onclick="toggleFaq('faq5')">
+          <span class="faq-q-text">Et si ma candidature est refusée ? Pourquoi ? Que faire ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>En cas de refus, un conseiller Kàddu vous contacte pour vous expliquer les points bloquants — pas un email automatique. Vous pouvez renforcer votre dossier et recandidater, ou être orienté vers un bien plus adapté à votre profil. Le refus n'est pas une fin, c'est une étape du parcours.</p><div class="friction-answer">✓ Explication humaine · Possibilité de recandidater</div></div>
+      </div>
+
+      <div class="faq-item" id="faq6">
+        <button class="faq-q" onclick="toggleFaq('faq6')">
+          <span class="faq-q-text">Est-ce que je peux vraiment tout faire depuis l'étranger ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Oui, c'est l'un des fondements de Kàddu. Visite en 360°, dossier en ligne, contrat digital, paiement Stripe ou virement international, remise des clés par un délégué sur place. Plusieurs locataires ont signé et récupéré leurs clés sans jamais se déplacer avant le Jour J.</p><div class="friction-answer">✓ Testé et validé · De Paris, Montréal, Dubaï et ailleurs</div></div>
+      </div>
+
+      <div class="faq-item urgent" id="faq7">
+        <button class="faq-q" onclick="toggleFaq('faq7')">
+          <span class="faq-q-text">Et si quelqu'un prend le bien avant que mon dossier soit validé ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>C'est la peur numéro un sur le marché dakarois. Dès qu'un dossier est complet et cohérent, Kàddu peut placer le bien en réservation temporaire le temps de finaliser la validation. Vous êtes informé en temps réel de l'avancement de votre candidature — plus d'attente dans le flou.</p><div class="friction-answer">✓ Réservation temporaire · Suivi en temps réel</div></div>
+      </div>
+
+      <div class="faq-item" id="faq8">
+        <button class="faq-q" onclick="toggleFaq('faq8')">
+          <span class="faq-q-text">Je ne connais pas Dakar. Comment choisir le bon quartier ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Kàddu ne montre pas uniquement des appartements. Nous vous aidons aussi à choisir un mode de vie : quartier calme, proche écoles, vie nocturne, accès business, bord de mer ou mobilité quotidienne. Le matching intelligent adapte les recommandations à votre profil et vos priorités.</p><div class="friction-answer">✓ Guide quartiers · Matching lifestyle · Ambiance vérifiée</div></div>
+      </div>
+
+      <div class="faq-item urgent" id="faq9">
+        <button class="faq-q" onclick="toggleFaq('faq9')">
+          <span class="faq-q-text">Puis-je payer depuis l'étranger en euros ou en dollars ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Oui. Selon le bien, Kàddu accepte Stripe (carte internationale), virement SWIFT, PayPal, Wave ou Orange Money. Les modalités disponibles sont toujours affichées clairement sur la fiche du bien avant validation — jamais de surprise au moment de payer.</p><div class="friction-answer">✓ Stripe · Virement · PayPal · Wave · OM · Modalités affichées</div></div>
+      </div>
+
+      <div class="faq-item" id="faq10">
+        <button class="faq-q" onclick="toggleFaq('faq10')">
+          <span class="faq-q-text">Que se passe-t-il si j'arrive tard à Dakar ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Certains biens Kàddu proposent une arrivée autonome sécurisée (boîte à clés, code d'accès) ou une remise des clés coordonnée avec notre équipe ou le gardien de l'immeuble, même tard le soir. Cette option est précisée sur chaque fiche.</p><div class="friction-answer">✓ Arrivée autonome disponible · Coordination gardien</div></div>
+      </div>
+
+      <div class="faq-item" id="faq11">
+        <button class="faq-q" onclick="toggleFaq('faq11')">
+          <span class="faq-q-text">Comment savoir si le quartier est calme et sécurisé ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Chaque bien Kàddu est visité physiquement par un agent. Nous évaluons aussi l'environnement immédiat : circulation, voisinage, sécurité, accès et nuisances éventuelles. Ces informations figurent dans la fiche du bien — pas seulement les photos du salon.</p><div class="friction-answer">✓ Évaluation terrain · Environnement documenté</div></div>
+      </div>
+
+      <div class="faq-item" id="faq12">
+        <button class="faq-q" onclick="toggleFaq('faq12')">
+          <span class="faq-q-text">Je n'ai pas encore tous mes documents. Puis-je quand même commencer ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Oui. Vous pouvez démarrer votre Passeport Locatif immédiatement et compléter certains éléments plus tard. Kàddu vous indique en temps réel ce qui manque pour renforcer votre dossier — aucune étape bloquante inutile.</p><div class="friction-answer">✓ Dossier progressif · Indicateur de complétude</div></div>
+      </div>
+
+      <div class="faq-item" id="faq13" style="grid-column:1/-1;border-color:rgba(59,158,245,.28);background:rgba(59,158,245,.04)">
+        <button class="faq-q" onclick="toggleFaq('faq13')" style="padding:20px 22px">
+          <span class="faq-q-text" style="color:var(--blanc);font-weight:500">Pourquoi Kàddu demande autant d'informations ?</span>
+          <span class="faq-arr">▾</span>
+        </button>
+        <div class="faq-a"><p>Parce qu'un bon dossier se loue plus vite. Les informations demandées permettent de rassurer le propriétaire, réduire les refus et accélérer les réponses — sans avoir à répéter votre candidature partout. Votre Passeport Locatif est votre meilleur argument. Pas une contrainte.</p><div class="friction-answer">✓ Un dossier solide = moins de refus · Plus de réponses rapides</div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════
+     CTA FINAL
+════════════════════════════ -->
+<section class="cta-final-section reveal">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-box-inner">
+        <span class="eyebrow" style="justify-content:center;margin-bottom:16px">Prêt à commencer ?</span>
+        <h2>Votre prochain chez-vous<br>est à <em>un passeport d'ici</em>.</h2>
+        <p>Rejoignez les locataires sérieux qui trouvent vite parce qu'ils candidatent bien — avec un dossier structuré, analysé, et présenté par Kàddu.</p>
+        <div class="cta-box-btns">
+          <a class="btn btn-blue btn-lg" href="/tunnel/dossier-v2-step1.html">Créer mon Passeport Locatif →</a>
+          <a class="btn btn-outline btn-lg" href="/#biens">Explorer les biens disponibles</a>
+        </div>
+        <div class="cta-box-note">Gratuit · 10 minutes · Utilisable sur tous les biens Kàddu</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="foot-brand">
+          <div class="foot-mark">K</div>
+          <div class="foot-name">Kàddu</div>
+        </div>
+        <p class="foot-text">La première agence immobilière 100% digitale au Sénégal. Biens vérifiés, Passeport Locatif, visites 360° — la confiance à chaque étape.</p>
+      </div>
+      <div>
+        <div class="foot-col-title">Locataires</div>
+        <div class="foot-links">
+          <a href="/#biens">Biens disponibles</a>
+          <a href="/tunnel/dossier-v2-step1.html">Mon Passeport Locatif</a>
+          <a href="#comment">Comment ça marche</a>
+          <a href="#garanties">Mes garanties</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-col-title">Propriétaires</div>
+        <div class="foot-links">
+          <a href="/proprietaires/">Nos offres</a>
+          <a href="/proprietaires/#confier">Confier mon bien</a>
+          <a href="/proprietaires/#moteur">Moteur antifraude</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-col-title">Kàddu</div>
+        <div class="foot-links">
+          <a href="/#confiance">Pourquoi Kàddu</a>
+          <a href="/auth/">Mon espace</a>
+          <a href="mailto:contact@kaddu.net">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="foot-copy">© 2024 Kàddu · La parole qui engage</div>
+      <div class="foot-legal">
+        <a href="/mentions-legales/">Mentions légales</a>
+        <a href="/confidentialite/">Confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Auth nav ── */
+(function(){
+  try{
+    var raw=sessionStorage.getItem('kaddu_jwt');if(!raw)return;
+    var s=JSON.parse(raw);if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return;}
+    document.addEventListener('DOMContentLoaded',function(){
+      var btn=document.getElementById('nav-login-btn');if(!btn)return;
+      var meta=(s.user&&s.user.user_metadata)||{};
+      var prenom=meta.prenom||(s.user&&s.user.email&&s.user.email.split('@')[0])||'Mon espace';
+      var href=s.role==='bailleur'?'/espace-bailleur/':'/espace-locataire/';
+      btn.href=href;btn.textContent='👤 '+prenom;
+      btn.style.background='rgba(59,158,245,.12)';btn.style.borderColor='rgba(59,158,245,.35)';btn.style.color='#72BFFF';
+    });
+  }catch(e){}
+})();
+
+/* ── Ticker ── */
+(function(){const t=document.getElementById('tickerTrack');if(t)t.innerHTML+=t.innerHTML;})();
+
+/* ── Hero who cards ── */
+const WHO_DATA = {
+  diaspora:{text:'Biens meublés · Visite 360° · Almadies, Sipres VDN, Mermoz'},
+  business:{text:'Meublés fibrés · Almadies, Plateau, VDN · Disponible sous 24h'},
+  famille:{text:'Non meublés · Longue durée · Parcelles, HLM, Sicap Liberté'},
+};
+document.querySelectorAll('.who-card').forEach(card=>{
+  card.addEventListener('click',()=>{
+    document.querySelectorAll('.who-card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    const d=WHO_DATA[card.dataset.who];
+    if(d) document.getElementById('heroMatchText').textContent=d.text;
+  });
+});
+
+/* ── Profile matching ── */
+const MATCH_DATA = {
+  diaspora:{
+    icon:'🌍',title:'Appartements meublés · Parcours 100% à distance',
+    rows:[
+      {label:'Types de biens',val:'Meublés · F2 à F4 · Équipés WiFi fibre'},
+      {label:'Quartiers recommandés',val:'Almadies · Sipres VDN · Mermoz · Point E'},
+      {label:'Points forts Kàddu',val:'Visite 360° · Clés par délégué · Stripe / Virement'},
+    ]
+  },
+  business:{
+    icon:'💼',title:'Meublés professionnels · Internet garanti · Disponibles vite',
+    rows:[
+      {label:'Types de biens',val:'Meublés courts / moyen terme · WiFi fibre obligatoire'},
+      {label:'Quartiers recommandés',val:'Almadies · VDN · Plateau · Fann'},
+      {label:'Points forts Kàddu',val:'Réponse 48h · Facturation entreprise · Check-in flexible'},
+    ]
+  },
+  famille:{
+    icon:'🏠',title:'Baux longue durée · Quartiers familiaux · Sécurité vérifiée',
+    rows:[
+      {label:'Types de biens',val:'Non meublés · F3 à F5 · Immeubles sécurisés'},
+      {label:'Quartiers recommandés',val:'Parcelles · HLM · Sicap · Dieuppeul · Grand Yoff'},
+      {label:'Points forts Kàddu',val:'Dossier sérieux traité · Wave / OM · Caution équitable'},
+    ]
+  },
+  tourisme:{
+    icon:'✈️',title:'Appartements premium · Courte durée · Expérience hôtel+',
+    rows:[
+      {label:'Types de biens',val:'Meublés premium · Coups de cœur · Vue mer possible'},
+      {label:'Quartiers recommandés',val:'Almadies · Ngor · Ouakam · Plateau'},
+      {label:'Points forts Kàddu',val:'Équipé jour J · Linge fourni · Conciergerie Kàddu'},
+    ]
+  },
+};
+
+function selectProfile(el){
+  document.querySelectorAll('.profile-match-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  const profile=el.dataset.profile;
+  const d=MATCH_DATA[profile];if(!d)return;
+  document.getElementById('matchIcon').textContent=d.icon;
+  document.getElementById('matchTitle').textContent=d.title;
+  document.getElementById('matchRows').innerHTML=d.rows.map(r=>`<div class="match-r-chip"><strong>${r.label}</strong>${r.val}</div>`).join('');
+  const res=document.getElementById('matchResult');
+  res.classList.remove('show');
+  void res.offsetWidth;
+  res.classList.add('show');
+}
+
+/* ── Budget simulation ── */
+const SIM_DATA = {
+  '100k':{
+    meuble:{court:{chips:['Studio meublé · Pikine / Guédiawaye','Chambre en colocation · Grand Dakar'],tension:'medium',tensionLabel:'Marché tendu à ce budget · Offre limitée côté meublé',note:'',signals:[{type:'amber',text:'Budget serré · 4 biens compatibles actuellement'},{type:'amber',text:'Meublé très demandé à ce tarif'}]},long:{chips:['Studio · Parcelles · HLM','Chambre seule · Grand Dakar'],tension:'low',tensionLabel:'Marché accessible · Quelques biens disponibles',note:'',signals:[{type:'blue',text:'6 biens dans cette fourchette'},{type:'green',text:'2 nouveaux biens cette semaine'}]}},
+    non_meuble:{long:{chips:['F2 · Pikine / Guédiawaye','F1 · Grand Dakar · HLM'],tension:'low',tensionLabel:'Bonne accessibilité à ce budget en non meublé',note:'',signals:[{type:'green',text:'9 biens non meublés disponibles'},{type:'blue',text:'Périphérie : forte offre'}]}},
+    any:{any:{chips:['Budget serré · Non meublé recommandé','Périphérie Dakar accessible'],tension:'medium',tensionLabel:'Budget bas · Options existent mais limitées',note:'Élargissez à la périphérie pour plus de choix',signals:[{type:'amber',text:'Marché tendu sur le centre-ville'},{type:'blue',text:'Périphérie plus accessible'}]}}
+  },
+  '200k':{
+    meuble:{court:{chips:['F2 meublé · Grand Dakar · Biscuiterie','Studio premium · Mermoz'],tension:'medium',tensionLabel:'Marché actif à ce budget · Bons rapports qualité/prix',note:'',signals:[{type:'green',text:'11 biens compatibles'},{type:'amber',text:'Mermoz : 3 candidatures en cours'},{type:'blue',text:'1 nouveau bien ajouté aujourd\'hui'}]},long:{chips:['F2 meublé · Liberté · Patte d\'Oie','Studio · Fann'],tension:'low',tensionLabel:'Offre correcte · Candidatez tôt',note:'',signals:[{type:'green',text:'8 biens disponibles'},{type:'blue',text:'Fann : quartier très demandé ce mois'}]}},
+    non_meuble:{long:{chips:['F3 · Parcelles Assainies','F2 · Sicap Liberté · HLM','F2 · Dieuppeul'],tension:'low',tensionLabel:'Excellent rapport qualité/prix en non meublé',note:'',signals:[{type:'green',text:'14 biens non meublés'},{type:'green',text:'4 disponibles immédiatement'}]}},
+    any:{any:{chips:['Bonne gamme · Meublé ou non meublé','Accès Sicap · Liberté · Parcelles'],tension:'low',tensionLabel:'Budget confortable · Large choix possible',note:'',signals:[{type:'green',text:'19 biens compatibles avec ce budget'},{type:'blue',text:'3 nouveaux biens cette semaine'}]}}
+  },
+  '350k':{
+    meuble:{court:{chips:['F2/F3 · Mermoz · Sacré-Cœur','Studio premium · Point E · Fann'],tension:'low',tensionLabel:'Bon marché · Plusieurs biens Kàddu dans cette fourchette',note:'',signals:[{type:'green',text:'8 biens Kàddu disponibles'},{type:'amber',text:'Mermoz très demandé cette semaine'},{type:'green',text:'Réponse moyenne : 18h'}]},long:{chips:['F3 meublé · VDN · Almadies','F2 premium · Plateau · Médina'],tension:'low',tensionLabel:'Très accessible · Forte concurrence sur les bons biens',note:'',signals:[{type:'green',text:'12 biens disponibles'},{type:'amber',text:'VDN : 5 candidatures en cours'},{type:'blue',text:'2 ajouts cette semaine'}]}},
+    non_meuble:{long:{chips:['F4 · Parcelles · Grand Yoff','F3 · Mermoz · HLM'],tension:'low',tensionLabel:'Excellent budget pour du non meublé familial',note:'',signals:[{type:'green',text:'16 biens familiaux compatibles'},{type:'green',text:'Parcelles : offre abondante'}]}},
+    any:{any:{chips:['Accès Mermoz · VDN · Fann','Meublé ou non meublé au choix'],tension:'low',tensionLabel:'Budget idéal pour le marché Kàddu actuel',note:'',signals:[{type:'green',text:'21 biens dans cette fourchette'},{type:'blue',text:'Budget optimal pour Dakar · Kàddu'},{type:'green',text:'3 nouveaux biens ajoutés aujourd\'hui'}]}}
+  },
+  '500k':{
+    meuble:{court:{chips:['F3 meublé · Almadies · Sipres VDN','Coup de cœur Kàddu disponible'],tension:'green',tensionLabel:'Marché favorable · Biens premium accessibles',note:'',signals:[{type:'green',text:'Coup de cœur disponible'},{type:'blue',text:'Almadies : 4 biens actifs'},{type:'green',text:'Réponse garantie < 24h'}]},long:{chips:['F3/F4 · Almadies · Ngor · VDN','Standing élevé · Gardiennage'],tension:'green',tensionLabel:'Excellent budget · Accès au standing Kàddu',note:'',signals:[{type:'green',text:'7 biens premium disponibles'},{type:'blue',text:'Almadies : quartier prioritaire'}]}},
+    non_meuble:{long:{chips:['F4/F5 · Quartiers résidentiels','Almadies · Mermoz possibles'],tension:'green',tensionLabel:'Accès aux grandes surfaces côté non meublé',note:'',signals:[{type:'green',text:'10 grands appartements disponibles'},{type:'blue',text:'Accès aux meilleurs quartiers'}]}},
+    any:{any:{chips:['Premium accessible · Almadies / VDN','Large sélection Kàddu disponible'],tension:'green',tensionLabel:'Très bon budget · Candidatez avec confiance',note:'',signals:[{type:'green',text:'18 biens premium compatibles'},{type:'green',text:'Marché favorable à ce budget'},{type:'blue',text:'4 biens ajoutés cette semaine'}]}}
+  },
+  '750k':{
+    any:{any:{chips:['F4/F5 meublé premium · Almadies','Vue mer envisageable · Ngor · Ouakam','Standing élevé · Toutes durées'],tension:'green',tensionLabel:'Budget premium · Accès au meilleur de l\'offre Kàddu',note:'Coups de cœur et sélections exclusives disponibles',signals:[{type:'green',text:'Sélection exclusive Kàddu'},{type:'green',text:'Vue mer disponible · Ngor'},{type:'blue',text:'Conseiller dédié disponible'}]}}
+  },
+  '1m':{
+    any:{any:{chips:['Villas et grands appartements · Almadies','Sélection exclusive Kàddu','Toutes options · Meublé premium · Vue mer'],tension:'green',tensionLabel:'Budget top gamme · Sélection exclusive Kàddu',note:'Contactez directement un conseiller Kàddu pour ce profil',signals:[{type:'green',text:'Offre exclusive Kàddu'},{type:'green',text:'Contactez un conseiller dédié'},{type:'blue',text:'Accès aux meilleures adresses de Dakar'}]}}
+  },
+};
+
+const TENSION_COLORS={green:'#00C875',low:'#4A9EFF',medium:'#F59E0B',high:'#FF5A5A'};
+const TENSION_LABELS={green:'Marché favorable pour vous',low:'Bon accès au marché',medium:'Marché tendu · Agissez vite',high:'Marché très tendu · Dossier solide requis'};
+
+function runSimulation(){
+  const budget=document.getElementById('simBudget').value;
+  const type=document.getElementById('simType').value||'any';
+  const duree=document.getElementById('simDuree').value||'any';
+  if(!budget)return;
+  const d=SIM_DATA[budget];if(!d)return;
+  const tryGet=(t,du)=>(d[t]&&d[t][du])||(d[t]&&d[t]['any'])||(d['any']&&d['any']['any'])||null;
+  const resolved=tryGet(type,duree)||tryGet('any','any');
+  if(!resolved)return;
+
+  // Live signals
+  const sigCls={green:'ls-green',amber:'ls-amber',blue:'ls-blue'};
+  document.getElementById('liveSignals').innerHTML=(resolved.signals||[]).map(s=>`
+    <div class="ls ${sigCls[s.type]||'ls-blue'}">
+      <div class="ls-dot"></div>${s.text}
+    </div>`).join('');
+
+  document.getElementById('simChips').innerHTML=resolved.chips.map((c,i)=>`<div class="sim-chip${i===0?' highlight':''}">${i===0?'⭐ ':''}${c}</div>`).join('');
+  const tc=TENSION_COLORS[resolved.tension]||TENSION_COLORS.low;
+  document.getElementById('tensionDot').style.background=tc;
+  document.getElementById('tensionText').innerHTML=`<strong style="color:${tc}">${TENSION_LABELS[resolved.tension]||''}</strong>${resolved.tensionLabel?' — '+resolved.tensionLabel:''}`;
+  document.getElementById('simNote').textContent=resolved.note||'';
+
+  const res=document.getElementById('simResult');
+  res.classList.remove('show');void res.offsetWidth;res.classList.add('show');
+}
+
+/* ── Score bar animate ── */
+function animateSb(el,pct){
+  const bar=el.querySelector('.sb-bar');
+  if(!bar)return;
+  bar.style.width='0';
+  setTimeout(()=>{bar.style.width=pct+'%'},50);
+}
+// Init bars on load
+document.querySelectorAll('.sb-bar').forEach(b=>{
+  const w=b.style.width;b.style.width='0';
+  setTimeout(()=>{b.style.width=w},600);
+});
+
+/* ── Score ring CSS var animation ── */
+(function(){
+  const ring=document.querySelector('.score-ring');
+  if(!ring)return;
+  ring.style.setProperty('--score-pct','0%');
+  setTimeout(()=>ring.style.setProperty('--score-pct','78%'),800);
+})();
+
+/* ── 360° viewer room switch ── */
+const ROOMS=['Salon · 1/4 pièces','Chambre principale · 2/4','Cuisine · 3/4','Salle de bain · 4/4'];
+function switchRoom(idx,btn){
+  document.querySelectorAll('.viewer-dot').forEach((d,i)=>{
+    d.classList.toggle('active',i===idx);
+  });
+  const lbl=document.getElementById('roomLabel');
+  if(lbl){lbl.style.opacity='0';setTimeout(()=>{lbl.textContent=ROOMS[idx]||'';lbl.style.opacity='1';},200);}
+  // Shift room background slightly for feel
+  const room=document.querySelector('.viewer-room');
+  if(room){room.style.backgroundPosition=`${idx*30}px ${idx*15}px`;}
+}
+
+/* ── FAQ ── */
+function toggleFaq(id){
+  const item=document.getElementById(id);
+  const was=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el=>{if(el.id!==id)el.classList.remove('open')});
+  item.classList.toggle('open',!was);
+}
+
+/* ── Scroll reveal ── */
+(function(){
+  const els=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+  els.forEach(el=>obs.observe(el));
+})();
+</script>
+
+</body>
+</html>
 
