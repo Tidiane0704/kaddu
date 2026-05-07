@@ -974,6 +974,7 @@ if(saved?.access_token){
 // In-memory store — synced from/to Supabase table `faq_locataires`
 // Expected columns: id (uuid), question (text), answer (text), badge (text), category (text), urgent (bool), sort_order (int)
 let faqItems = [];
+let faqDeletedIds = [];
 let faqEditingId = null;
 let faqFormOpen = false;
 
@@ -1116,6 +1117,8 @@ function saveFaqEntry(){
 
 function deleteFaq(id){
   if(!confirm("Supprimer cette entrée FAQ ?")) return;
+  // Tracker les vrais UUIDs pour suppression Supabase au prochain save
+  if(id && !id.startsWith('local-') && !id.startsWith('d')) faqDeletedIds.push(id);
   faqItems=faqItems.filter(x=>x.id!==id);
   renderFaqList();
 }
@@ -1156,22 +1159,62 @@ function dragDrop(e,targetId){
 // ── SAVE TO SUPABASE ──
 async function saveFaqsToSupabase(){
   const btn=document.querySelector('.faq-btn-green');
+  const origText=btn.textContent;
   btn.textContent="💾 Enregistrement…";btn.disabled=true;
   try{
-    // Upsert all items
-    await fetch(`${SB}/rest/v1/faq_locataires`,{
-      method:"POST",
-      headers:h({"Prefer":"resolution=merge-duplicates"}),
-      body:JSON.stringify(faqItems.map(f=>({
-        id:f.id.startsWith("local-")?undefined:f.id,
-        question:f.question,answer:f.answer,badge:f.badge||null,
-        category:f.category||"general",urgent:!!f.urgent,sort_order:f.sort_order||0
-      })))
-    });
+    // Séparer nouvelles entrées (id local-*) et existantes (uuid)
+    const toInsert=faqItems.filter(f=>f.id&&f.id.startsWith('local-')).map(f=>({
+      question:f.question,answer:f.answer,
+      badge:f.badge||null,category:f.category||'general',
+      urgent:!!f.urgent,sort_order:f.sort_order||0
+    }));
+    const toUpsert=faqItems.filter(f=>f.id&&!f.id.startsWith('local-')).map(f=>({
+      id:f.id,question:f.question,answer:f.answer,
+      badge:f.badge||null,category:f.category||'general',
+      urgent:!!f.urgent,sort_order:f.sort_order||0,
+      updated_at:new Date().toISOString()
+    }));
+
+    // Supprimer les entrées effacées
+    for(const delId of faqDeletedIds){
+      await fetch(`${SB}/rest/v1/faq_locataires?id=eq.${delId}`,{
+        method:"DELETE",headers:h()
+      });
+    }
+    faqDeletedIds=[];
+
+    // Upsert existants
+    if(toUpsert.length){
+      const r=await fetch(`${SB}/rest/v1/faq_locataires`,{
+        method:"POST",
+        headers:h({"Prefer":"resolution=merge-duplicates,return=minimal"}),
+        body:JSON.stringify(toUpsert)
+      });
+      if(!r.ok) throw new Error(await r.text());
+    }
+    // Insérer nouvelles entrées
+    if(toInsert.length){
+      const r=await fetch(`${SB}/rest/v1/faq_locataires`,{
+        method:"POST",
+        headers:h({"Prefer":"return=representation"}),
+        body:JSON.stringify(toInsert)
+      });
+      if(!r.ok) throw new Error(await r.text());
+      const inserted=await r.json();
+      // Mettre à jour les IDs locaux avec les vrais UUIDs Supabase
+      inserted.forEach(row=>{
+        const local=faqItems.find(f=>f.question===row.question&&f.id.startsWith('local-'));
+        if(local) local.id=row.id;
+      });
+    }
     btn.textContent="✓ Enregistré";
-    setTimeout(()=>{btn.textContent="💾 Enregistrer";btn.disabled=false;},2000);
+    setTimeout(()=>{btn.textContent=origText;btn.disabled=false;},2200);
+    // Recharger pour avoir les vrais IDs
+    await loadFaqs();
   }catch(err){
-    btn.textContent="⚠ Erreur — réessayer";btn.disabled=false;
+    console.error(err);
+    btn.textContent="⚠ Erreur — réessayer";
+    setTimeout(()=>{btn.textContent=origText;btn.disabled=false;},3000);
   }
 }
 
