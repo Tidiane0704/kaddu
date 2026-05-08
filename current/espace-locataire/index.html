@@ -102,6 +102,42 @@
     .loading-bar-inner{height:100%;background:var(--blue);animation:load 1s ease both}
     @keyframes load{from{width:0}to{width:100%}}
     body{background-image:radial-gradient(ellipse 50% 40% at 50% 0%,rgba(74,158,255,.04) 0%,transparent 60%)}
+
+    /* ── DOCUMENTS ENRICHIS ── */
+    .docs-real-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+    .doc-real-item{
+      display:flex;align-items:center;gap:14px;
+      padding:14px 16px;border-radius:10px;
+      border:1px solid rgba(191,150,80,.14);
+      background:rgba(11,32,57,.55);transition:.18s;
+    }
+    .doc-real-item.ok{border-color:rgba(0,200,117,.2);background:rgba(0,200,117,.03)}
+    .doc-real-item.missing{border-color:rgba(255,84,84,.15);border-style:dashed;background:rgba(255,84,84,.02)}
+    .doc-real-icon{font-size:1.3rem;flex-shrink:0;width:36px;text-align:center}
+    .doc-real-info{flex:1;min-width:0}
+    .doc-real-name{font-size:.86rem;font-weight:500;color:var(--blanc);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .doc-real-meta{font-size:.72rem;color:var(--muted)}
+    .doc-real-badge{font-size:.62rem;padding:3px 8px;border-radius:999px;font-weight:600;white-space:nowrap;flex-shrink:0}
+    .doc-real-badge.ok{background:rgba(0,200,117,.1);color:var(--green);border:1px solid rgba(0,200,117,.2)}
+    .doc-real-badge.missing{background:rgba(255,84,84,.08);color:var(--red);border:1px solid rgba(255,84,84,.15)}
+    .doc-real-badge.opt{background:rgba(248,244,238,.06);color:rgba(248,244,238,.35);border:1px solid rgba(248,244,238,.1)}
+    .doc-real-actions{display:flex;gap:7px;flex-shrink:0}
+    .doc-action-btn{
+      display:inline-flex;align-items:center;gap:5px;padding:6px 11px;
+      border-radius:7px;font-size:.7rem;cursor:pointer;transition:.18s;
+      font-family:'DM Sans',sans-serif;border:none;
+    }
+    .doc-action-view{background:rgba(74,158,255,.1);color:var(--blue);border:1px solid rgba(74,158,255,.2)}
+    .doc-action-view:hover{background:rgba(74,158,255,.2)}
+    .doc-action-del{background:rgba(255,84,84,.07);color:var(--red);border:1px solid rgba(255,84,84,.15)}
+    .doc-action-del:hover{background:rgba(255,84,84,.14)}
+    .doc-action-add{background:rgba(191,150,80,.08);color:var(--or);border:1px solid rgba(191,150,80,.2)}
+    .doc-action-add:hover{background:rgba(191,150,80,.16)}
+    .doc-action-add input[type=file]{display:none}
+    .doc-person-sep{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,244,238,.25);padding:14px 0 8px;border-bottom:1px solid rgba(191,150,80,.08);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+    .doc-person-sep-avatar{width:22px;height:22px;border-radius:50%;background:rgba(191,150,80,.12);border:1px solid rgba(191,150,80,.25);display:flex;align-items:center;justify-content:center;font-size:.64rem;color:var(--or);font-weight:600}
+    .doc-conf-banner{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:10px;background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.12);margin-bottom:20px;font-size:.8rem;color:rgba(248,244,238,.6);line-height:1.6}
+    .doc-conf-banner strong{color:var(--blue)}
   </style>
 </head>
 <body>
@@ -201,11 +237,15 @@
         </div>
         <div class="section-head" style="margin-bottom:14px"><h3 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28)">Personnes du dossier</h3></div>
         <div id="dossier-persons-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px"></div>
+        <div class="doc-conf-banner">
+          <span style="font-size:1.1rem;flex-shrink:0">🔒</span>
+          <div><strong>Vos documents sont protégés</strong><br>Ils ne seront transmis au propriétaire qu'en cas d'acceptation de votre candidature. Vous pouvez les retirer à tout moment.</div>
+        </div>
         <div class="section-head" style="margin-bottom:14px">
           <h3 style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.28)">Documents à fournir</h3>
-          <span id="docs-progress" style="font-size:.76rem;color:var(--muted)">0/5 complétés</span>
+          <span id="docs-progress" style="font-size:.76rem;color:var(--muted)">Chargement…</span>
         </div>
-        <div class="docs-grid" id="docs-grid"></div>
+        <div class="docs-real-grid" id="docs-grid"></div>
       </div>
 
       <!-- PARTENAIRES -->
@@ -328,8 +368,58 @@ if(!session||session.role!=='locataire'){
 const COMPO_LABELS={seul:'Locataire seul(e)',couple:'Couple (sans enfants)',famille:'Famille',colocation:'Colocation'};
 const EMMEN_LABELS={'semaine':'Moins d\'une semaine','deux-semaines':'Une à deux semaines','mois':'D\'ici un mois','plus-mois':'Plus d\'un mois'};
 const DUREE_LABELS={'6mois':'Moins de 6 mois','6-12mois':'6 à 12 mois','12-36mois':'12 à 36 mois','3ans':'Plus de 3 ans'};
-const DOCS=['Pièce d\'identité','Justificatif de revenus','Avis d\'imposition','Relevé bancaire (3 mois)','Justificatif de domicile'];
-const DOCS_ICONS=['🪪','💰','📄','🏦','🏠'];
+const SITUATION_LABELS={cdi:'Salarié CDI',cdd:'Salarié CDD',independant:'Indépendant',etudiant:'Étudiant',interimaire:'Intérimaire',retraite:'Retraité',sans_emploi:'Sans emploi',autre:'Autre'};
+function situationLabel(s){return SITUATION_LABELS[s]||s;}
+
+const DOC_RULES={
+  cdi:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'contrat',label:'Contrat de travail CDI',icon:'📋',required:true},
+    {id:'fiches_paie',label:'3 dernières fiches de paie',icon:'💰',required:true},
+    {id:'releve',label:'Relevé bancaire (3 mois)',icon:'🏦',required:false},
+    {id:'avis_impo',label:'Avis d\'imposition',icon:'📄',required:false},
+  ],
+  cdd:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'contrat',label:'Contrat de travail CDD',icon:'📋',required:true},
+    {id:'fiches_paie',label:'3 dernières fiches de paie',icon:'💰',required:true},
+    {id:'releve',label:'Relevé bancaire (3 mois)',icon:'🏦',required:true},
+  ],
+  independant:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'registre',label:'Registre de commerce / NINEA',icon:'🏢',required:true},
+    {id:'releve',label:'Relevé bancaire (6 mois)',icon:'🏦',required:true},
+    {id:'bilan',label:'Bilan ou déclaration fiscale',icon:'📊',required:false},
+    {id:'contrat_client',label:'Contrat client ou bon de commande',icon:'📋',required:false},
+  ],
+  etudiant:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'certif_scol',label:'Certificat de scolarité',icon:'🎓',required:true},
+    {id:'releve',label:'Relevé bancaire ou bourse',icon:'🏦',required:false},
+    {id:'lettre',label:'Lettre de motivation locative',icon:'✉️',required:false},
+  ],
+  interimaire:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'contrats_interim',label:'Contrats de mission (3 derniers)',icon:'📋',required:true},
+    {id:'fiches_paie',label:'3 dernières fiches de paie',icon:'💰',required:true},
+    {id:'releve',label:'Relevé bancaire (3 mois)',icon:'🏦',required:false},
+  ],
+  retraite:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'pension',label:'Titre de pension / retraite',icon:'📄',required:true},
+    {id:'releve',label:'Relevé bancaire (3 mois)',icon:'🏦',required:false},
+  ],
+  sans_emploi:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'releve',label:'Relevé bancaire (6 mois)',icon:'🏦',required:true},
+    {id:'justif_ressources',label:'Justificatif de ressources',icon:'💼',required:false},
+  ],
+  autre:[
+    {id:'cni',label:'Pièce d\'identité',icon:'🪪',required:true},
+    {id:'releve',label:'Relevé bancaire (3 mois)',icon:'🏦',required:true},
+    {id:'justif_situation',label:'Justificatif de situation',icon:'📄',required:false},
+  ],
+};
 
 async function init(s){
   const meta=s.user?.user_metadata||{};
@@ -369,19 +459,30 @@ function renderDossier(d){
     if(c)c.textContent=compo;if(e)e.textContent=emmen;if(du)du.textContent=duree;
   });
   const docs_fournis=Array.isArray(d.docs_fournis)?d.docs_fournis:[];
-  if(docs_fournis.length<DOCS.length)document.getElementById('badge-dossier').style.display='block';
   const locs=msg.locataires||[];const gars=msg.garants||[];
+
+  let totalReq=0,totalOk=0;
+  locs.forEach((loc,idx)=>{
+    const rules=DOC_RULES[loc.situation]||DOC_RULES['autre'];
+    rules.filter(r=>r.required).forEach(rule=>{
+      totalReq++;
+      if(docs_fournis.find(df=>df.key===`${idx}_${rule.id}`)) totalOk++;
+    });
+  });
+  if(totalOk<totalReq) document.getElementById('badge-dossier').style.display='block';
+
   document.getElementById('accueil-persons').innerHTML=[
     ...locs.map(l=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
       <div style="width:28px;height:28px;border-radius:50%;background:rgba(191,150,80,.15);border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--or)">${l.prenom[0].toUpperCase()}</div>
       <div><div style="font-size:.82rem;font-weight:500">${l.prenom} ${l.nom}</div><div style="font-size:.68rem;color:var(--muted)">Locataire · ${l.situation||'—'}</div></div>
-      ${docs_fournis.length<3?'<span style="margin-left:auto;font-size:.6rem;color:var(--orange);font-weight:600">! '+(DOCS.length-docs_fournis.length)+' docs</span>':''}
+      ${totalOk<totalReq?'<span style="margin-left:auto;font-size:.6rem;color:var(--orange);font-weight:600">!'+(totalReq-totalOk)+' manquant(s)</span>':'<span style="margin-left:auto;font-size:.6rem;color:var(--green)">✓ Complet</span>'}
     </div>`),
     ...gars.map(g=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
       <div style="width:28px;height:28px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--blue)">${g.prenom[0].toUpperCase()}</div>
       <div><div style="font-size:.82rem;font-weight:500">${g.prenom} ${g.nom}</div><div style="font-size:.68rem;color:var(--muted)">Garant(e) · ${g.situation||'—'}</div></div>
     </div>`)
   ].join('');
+
   const grid=document.getElementById('dossier-persons-grid');
   if(grid)grid.innerHTML=[
     ...locs.map(l=>`<div style="background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;padding:16px">
@@ -392,17 +493,78 @@ function renderDossier(d){
       <div style="font-family:'Playfair Display',serif;font-size:.88rem;color:var(--blue);margin-bottom:4px">${g.prenom} ${g.nom}</div>
       <div style="font-size:.72rem;color:var(--muted)">Garant(e) · ${g.situation||'—'}</div></div>`)
   ].join('');
-  renderDocs(docs_fournis);
+
+  renderDocs(locs, docs_fournis, d);
 }
 
-function renderDocs(provided){
-  const el=document.getElementById('docs-grid');const pg=document.getElementById('docs-progress');
+function renderDocs(locs, docs_fournis, dossier){
+  const el=document.getElementById('docs-grid');
+  const pg=document.getElementById('docs-progress');
   if(!el)return;
-  el.innerHTML=DOCS.map((d,i)=>{
-    const ok=provided.includes(i);
-    return `<div class="doc-card ${ok?'':'missing-card'}"><div class="doc-icon">${DOCS_ICONS[i]}</div><div class="doc-name">${d}</div><div class="doc-status ${ok?'ok':'missing'}">${ok?'✓ Fourni':'⚠ Manquant'}</div></div>`;
-  }).join('');
-  if(pg)pg.textContent=`${provided.length}/${DOCS.length} complétés`;
+  let totalReq=0,totalOk=0,html='';
+  if(!locs.length){el.innerHTML='<div style="color:var(--muted);font-size:.84rem;padding:12px">Aucun locataire renseigné.</div>';if(pg)pg.textContent='—';return;}
+  locs.forEach((loc,idx)=>{
+    const situation=loc.situation||'autre';
+    const rules=DOC_RULES[situation]||DOC_RULES['autre'];
+    const initiale=(loc.prenom||'?')[0].toUpperCase();
+    html+=`<div class="doc-person-sep"><div class="doc-person-sep-avatar">${initiale}</div>${loc.prenom||''} ${loc.nom||''} · ${situationLabel(situation)}</div>`;
+    rules.forEach(rule=>{
+      if(rule.required)totalReq++;
+      const key=`${idx}_${rule.id}`;
+      const uploaded=docs_fournis.find(d=>d.key===key);
+      if(uploaded)totalOk++;
+      const isOk=!!uploaded;
+      html+=`<div class="doc-real-item ${isOk?'ok':'missing'}" id="docrow-${key}">
+        <div class="doc-real-icon">${rule.icon}</div>
+        <div class="doc-real-info">
+          <div class="doc-real-name">${isOk?(uploaded.name||rule.label):rule.label}</div>
+          <div class="doc-real-meta">${isOk?'Déposé · Cliquez pour voir ou retirer':(rule.required?'Document obligatoire':'Facultatif — renforce votre dossier')}</div>
+        </div>
+        <span class="doc-real-badge ${isOk?'ok':rule.required?'missing':'opt'}">${isOk?'✓ Fourni':rule.required?'Manquant':'Facultatif'}</span>
+        <div class="doc-real-actions">
+          ${isOk
+            ?`<button class="doc-action-btn doc-action-view" onclick="viewDoc('${uploaded.url}')">👁 Voir</button><button class="doc-action-btn doc-action-del" onclick="deleteDoc('${key}','${dossier.id}')">🗑 Retirer</button>`
+            :`<label class="doc-action-btn doc-action-add">↑ Déposer<input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="uploadDocFromEspace(event,'${key}','${dossier.id}')"></label>`
+          }
+        </div>
+      </div>`;
+    });
+  });
+  el.innerHTML=html;
+  if(pg)pg.textContent=`${totalOk}/${totalReq} obligatoires fournis`;
+}
+
+function viewDoc(url){if(!url){alert('Lien indisponible.');return;}window.open(url,'_blank');}
+
+async function deleteDoc(key,dossierId){
+  if(!confirm('Retirer ce document ?'))return;
+  const s=getSession();if(!s)return;
+  try{
+    const res=await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}&select=docs_fournis`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+    const rows=await res.json();
+    const newDocs=(rows[0]?.docs_fournis||[]).filter(d=>d.key!==key);
+    await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'},body:JSON.stringify({docs_fournis:newDocs})});
+    await loadDossier(s);
+  }catch(e){alert('Erreur : '+e.message);}
+}
+
+async function uploadDocFromEspace(event,key,dossierId){
+  const file=event.target.files[0];if(!file)return;
+  if(file.size>10*1024*1024){alert('Fichier trop volumineux (max 10 Mo).');return;}
+  const s=getSession();if(!s)return;
+  const ext=file.name.split('.').pop();
+  const path=`dossiers/${dossierId}/${key}_${Date.now()}.${ext}`;
+  try{
+    const up=await fetch(`${SB_URL}/storage/v1/object/documents/${path}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':file.type,'x-upsert':'true'},body:file});
+    if(!up.ok)throw new Error('Erreur upload');
+    const url=`${SB_URL}/storage/v1/object/public/documents/${path}`;
+    const res=await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}&select=docs_fournis`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+    const rows=await res.json();
+    const existing=rows[0]?.docs_fournis||[];
+    const newDocs=[...existing.filter(d=>d.key!==key),{key,url,path,name:file.name}];
+    await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'},body:JSON.stringify({docs_fournis:newDocs})});
+    await loadDossier(s);
+  }catch(e){alert('Erreur lors du dépôt : '+e.message);}
 }
 
 function renderAccueilAlert(d){
