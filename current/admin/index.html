@@ -815,6 +815,59 @@
         </div>
       </a>
 
+
+
+      <!-- MODULE : DEMANDES & INCIDENTS LOCATAIRES -->
+      <a class="module-card" href="admin-demandes-incidents.html">
+        <div class="module-top">
+          <div class="module-icon">🛠️</div>
+          <div class="module-badges"><span class="mbadge mbadge-active">Actif</span><span class="mbadge mbadge-new">Priorité</span></div>
+        </div>
+        <div class="module-name">Demandes <em>& incidents</em></div>
+        <div class="module-desc">Pilotez les tickets locataires : incidents techniques, demandes administratives, urgences logement et suivi des interventions.</div>
+        <div class="module-features">
+          <span class="mfeat">Qualification urgence · catégorie · bien</span>
+          <span class="mfeat">Assignation gestionnaire / technicien</span>
+          <span class="mfeat">Statuts reçu · en cours · planifié · terminé</span>
+          <span class="mfeat">Historique échanges locataire</span>
+        </div>
+        <div class="module-foot"><span class="module-link">Ouvrir le module →</span><span class="module-shortcut"><span class="key">G</span> puis <span class="key">I</span></span></div>
+      </a>
+
+      <!-- MODULE : PARTENAIRES & SERVICES -->
+      <a class="module-card" href="admin-partenaires-services.html">
+        <div class="module-top">
+          <div class="module-icon">🤝</div>
+          <div class="module-badges"><span class="mbadge mbadge-active">Actif</span><span class="mbadge mbadge-new">Nouveau</span></div>
+        </div>
+        <div class="module-name">Partenaires <em>& services</em></div>
+        <div class="module-desc">Gérez les partenaires sénégalais proposés aux locataires : internet, eau, électricité, déménagement, ménage, banque et ameublement.</div>
+        <div class="module-features">
+          <span class="mfeat">CRUD partenaires et catégories</span>
+          <span class="mfeat">Activation / mise en avant par statut locataire</span>
+          <span class="mfeat">Suivi clics et demandes entrantes</span>
+          <span class="mfeat">Offres adaptées au marché sénégalais</span>
+        </div>
+        <div class="module-foot"><span class="module-link">Ouvrir le module →</span><span class="module-shortcut"><span class="key">G</span> puis <span class="key">P</span></span></div>
+      </a>
+
+      <!-- MODULE : CRM LOCATAIRES -->
+      <a class="module-card" href="admin-crm-locataires.html">
+        <div class="module-top">
+          <div class="module-icon">👤</div>
+          <div class="module-badges"><span class="mbadge mbadge-active">Actif</span></div>
+        </div>
+        <div class="module-name">CRM <em>locataires</em></div>
+        <div class="module-desc">Exploitez les préférences locataires : budget, quartiers favoris, type de bien recherché, notifications et complétude du dossier.</div>
+        <div class="module-features">
+          <span class="mfeat">Préférences logement et matching</span>
+          <span class="mfeat">Segmentation prospects / locataires</span>
+          <span class="mfeat">Alertes opportunités compatibles</span>
+          <span class="mfeat">Vue dossier + interactions</span>
+        </div>
+        <div class="module-foot"><span class="module-link">Ouvrir le module →</span><span class="module-shortcut"><span class="key">G</span> puis <span class="key">C</span></span></div>
+      </a>
+
       <!-- MODULE 7 : RÉSERVATIONS (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
@@ -1138,6 +1191,9 @@ document.addEventListener("keydown", e => {
     if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
     if(e.key==="o"||e.key==="O") location.href="admin-marketing-operations.html";
     if(e.key==="f"||e.key==="F") openFaqManager();
+    if(e.key==="i"||e.key==="I") location.href="admin-demandes-incidents.html";
+    if(e.key==="p"||e.key==="P") location.href="admin-partenaires-services.html";
+    if(e.key==="c"||e.key==="C") location.href="admin-crm-locataires.html";
   }
 });
 
