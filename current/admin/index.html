@@ -1507,7 +1507,11 @@ function exportFaqJson(){
       <div class="af-info-grid">
         <div class="af-info-card">
           <div class="af-info-card-label">Modèle utilisé</div>
-          <div class="af-info-card-val">Claude Sonnet 4<br><span style="font-size:.72rem;color:rgba(248,244,238,.3)">via Anthropic API</span></div>
+          <div class="af-info-card-val">
+            <input type="text" id="afModelInput" value="claude-sonnet-4-5" style="width:100%;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.2);border-radius:8px;color:rgba(248,244,238,.85);font-family:'DM Sans',sans-serif;font-size:.8rem"/>
+            <div style="font-size:.66rem;color:rgba(248,244,238,.25);margin-top:4px">Modifiable ici · sauvegardé dans Supabase</div>
+            <button onclick="saveAfModel()" style="margin-top:6px;font-size:.7rem;background:transparent;border:1px solid rgba(191,150,80,.2);border-radius:999px;padding:4px 12px;color:rgba(191,150,80,.7);cursor:pointer;font-family:'DM Sans',sans-serif">Enregistrer →</button>
+          </div>
         </div>
         <div class="af-info-card">
           <div class="af-info-card-label">Posture</div>
@@ -1613,6 +1617,11 @@ function openAfPanel(e){
   document.getElementById("afOverlay").classList.add("open");
   document.body.style.overflow="hidden";
   document.getElementById("afPromptDisplay").textContent = AF_SYSTEM_PROMPT;
+  // Charger le modèle depuis Supabase
+  fetch(`${SB}/rest/v1/config?key=eq.af_model&select=value&limit=1`, { headers: h() })
+    .then(r=>r.json()).then(cfg=>{
+      if(cfg?.[0]?.value) document.getElementById("afModelInput").value = cfg[0].value;
+    }).catch(()=>{});
 }
 function closeAfPanel(){
   document.getElementById("afOverlay").classList.remove("open");
@@ -1685,6 +1694,16 @@ async function lancerAnalyseAF(){
   result.classList.remove("visible");
 
   try {
+    // Récupère le modèle depuis Supabase (table config), sinon alias stable Anthropic
+    let modelId = "claude-sonnet-4-5";
+    try {
+      const cfgResp = await fetch(`${SB}/rest/v1/config?key=eq.af_model&select=value&limit=1`, { headers: h() });
+      if(cfgResp.ok) {
+        const cfg = await cfgResp.json();
+        if(cfg?.[0]?.value) modelId = cfg[0].value;
+      }
+    } catch(_) { /* fallback silencieux */ }
+
     const resp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -1694,7 +1713,7 @@ async function lancerAnalyseAF(){
         "anthropic-dangerous-direct-browser-access": "true"
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5",
+        model: modelId,
         max_tokens: 1200,
         system: AF_SYSTEM_PROMPT,
         messages: [{ role: "user", content: userMsg }]
@@ -1765,6 +1784,22 @@ function saveAfToHistory(){ renderAfHistory(); }
 function copyAfResult(){
   const txt = document.getElementById("afResultBody").textContent;
   navigator.clipboard.writeText(txt).then(()=>alert("Synthèse copiée dans le presse-papier."));
+}
+
+async function saveAfModel(){
+  const val = document.getElementById("afModelInput").value.trim();
+  if(!val) return;
+  try {
+    // Upsert dans table config
+    await fetch(`${SB}/rest/v1/config`, {
+      method: "POST",
+      headers: h({"Prefer":"resolution=merge-duplicates,return=minimal"}),
+      body: JSON.stringify({ key: "af_model", value: val })
+    });
+    const btn = event.target;
+    btn.textContent = "✓ Enregistré";
+    setTimeout(()=>btn.textContent="Enregistrer →", 2000);
+  } catch(_) { alert("Erreur lors de la sauvegarde. Vérifiez que la table config existe dans Supabase."); }
 }
 
 function copyAfPrompt(){
