@@ -72,6 +72,18 @@
     .reason-list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
     .empty{padding:32px;color:var(--muted);text-align:center}
     .footer-note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    /* ── DOCUMENTS ADMIN ── */
+    .doc-admin-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(191,150,80,.14);background:rgba(255,255,255,.02);transition:.18s}
+    .doc-admin-item:hover{border-color:rgba(191,150,80,.28);background:rgba(255,255,255,.04)}
+    .doc-admin-icon{font-size:1.1rem;flex-shrink:0;width:26px;text-align:center}
+    .doc-admin-info{flex:1;min-width:0}
+    .doc-admin-name{font-size:.82rem;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+    .doc-admin-meta{font-size:.68rem;color:var(--muted)}
+    .doc-admin-btn{padding:5px 10px;font-size:.7rem;cursor:pointer;border-radius:6px;border:1px solid rgba(191,150,80,.2);background:transparent;color:rgba(248,244,238,.55);font-family:Arial,sans-serif;transition:.18s;white-space:nowrap;flex-shrink:0}
+    .doc-admin-btn:hover{border-color:var(--or);color:var(--or)}
+    .doc-admin-analyse{border-color:rgba(74,158,255,.25);color:#53b7ff}
+    .doc-admin-analyse:hover{background:rgba(74,158,255,.08)}
     .detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .history-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
     .history-item:last-child{border-bottom:none}
@@ -373,6 +385,16 @@
             <div class="title">Motifs de scoring</div>
             <ul class="reason-list" id="reasonList"></ul>
           </div>
+
+          <!-- ══ DOCUMENTS DÉPOSÉS ══ -->
+          <div class="section" id="docsSection" style="display:none">
+            <div class="title" style="display:flex;align-items:center;justify-content:space-between">
+              <span>Documents déposés</span>
+              <span id="docsCount" style="font-size:11px;color:rgba(248,244,238,.35);text-transform:none;letter-spacing:0;font-weight:400"></span>
+            </div>
+            <div id="docsList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px"></div>
+          </div>
+          <!-- ══ FIN DOCUMENTS ══ -->
 
           <div class="section">
             <div class="title">Historique</div>
@@ -772,6 +794,7 @@
 
       renderHistory(row.id);
       prepareAfContext(row);
+      renderDocsAdmin(row);
     }
 
     async function patchDossier(currentId, payload){
@@ -1245,6 +1268,113 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         showSuccess("Synthèse enregistrée dans le commentaire interne.");
       } catch(e){ alert("Erreur : " + e.message); }
     }
-    // ══ FIN KÀDDU SHIELD ══════════════════════════════════════
+    // ══ DOCUMENTS ADMIN ══════════════════════════════════════
+    function renderDocsAdmin(row){
+      const docs = Array.isArray(row.docs_fournis) ? row.docs_fournis : [];
+      const section = document.getElementById('docsSection');
+      const list    = document.getElementById('docsList');
+      const count   = document.getElementById('docsCount');
+
+      if(!docs.length){
+        section.style.display = 'none';
+        return;
+      }
+      section.style.display = 'block';
+      count.textContent = `${docs.length} fichier${docs.length>1?'s':''} déposé${docs.length>1?'s':''}`;
+
+      const DOC_ICONS = {
+        cni:'🪪', contrat:'📋', fiches_paie:'💰', releve:'🏦',
+        avis_impo:'📄', registre:'🏢', bilan:'📊', contrat_client:'📋',
+        certif_scol:'🎓', lettre:'✉️', contrats_interim:'📋',
+        pension:'📄', justif_ressources:'💼', justif_situation:'📄',
+      };
+
+      list.innerHTML = docs.map((doc, i) => {
+        const docId = doc.key ? doc.key.split('_').slice(1).join('_') : '';
+        const icon  = DOC_ICONS[docId] || '📎';
+        const name  = doc.name || `Document ${i+1}`;
+        const ext   = name.split('.').pop().toUpperCase();
+        return `<div class="doc-admin-item">
+          <div class="doc-admin-icon">${icon}</div>
+          <div class="doc-admin-info">
+            <div class="doc-admin-name">${name}</div>
+            <div class="doc-admin-meta">${ext} · ${doc.key||''}</div>
+          </div>
+          <button class="doc-admin-btn" onclick="window.open('${doc.url}','_blank')">Ouvrir</button>
+          <button class="doc-admin-btn doc-admin-analyse" onclick="analyserDocIA('${doc.url}','${name}')">Analyser IA</button>
+        </div>`;
+      }).join('');
+    }
+
+    async function analyserDocIA(url, name){
+      const apiKey = document.getElementById('afKey')?.value?.trim();
+      if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
+
+      // Fetch du document en base64
+      let base64Data, mediaType;
+      try{
+        const r = await fetch(url);
+        if(!r.ok) throw new Error('Impossible de récupérer le document');
+        const blob = await r.blob();
+        mediaType = blob.type || 'application/pdf';
+        base64Data = await new Promise((res,rej)=>{
+          const reader = new FileReader();
+          reader.onload = ()=> res(reader.result.split(',')[1]);
+          reader.onerror = rej;
+          reader.readAsDataURL(blob);
+        });
+      }catch(e){ alert('Impossible de charger le document : '+e.message); return; }
+
+      // Requête Claude avec le document
+      const isImage = mediaType.startsWith('image/');
+      const content = isImage
+        ? [
+            {type:'image', source:{type:'base64', media_type:mediaType, data:base64Data}},
+            {type:'text', text:`Analyse ce document locatif (${name}) pour l'agence immobilière Kàddu. Identifie : 1) Le type de document. 2) Les informations clés (nom, montants, dates, employeur). 3) Les incohérences visuelles ou typographiques. 4) Tout signal méritant vérification. Reste factuel et non accusatoire.`}
+          ]
+        : [
+            {type:'document', source:{type:'base64', media_type:'application/pdf', data:base64Data}},
+            {type:'text', text:`Analyse ce document locatif (${name}) pour l'agence immobilière Kàddu. Identifie : 1) Le type de document. 2) Les informations clés (nom, montants, dates, employeur). 3) Les incohérences ou données manquantes. 4) Tout signal méritant vérification. Reste factuel et non accusatoire.`}
+          ];
+
+      const vigEl = document.getElementById('afVigBadge');
+      const resultWrap = document.getElementById('afResultWrap');
+      const loader = document.getElementById('afLoaderRow');
+      const btn = document.getElementById('afAnalyseBtn');
+
+      btn.disabled = true;
+      loader.classList.add('visible');
+      resultWrap.classList.remove('visible');
+
+      // Scroll vers la section analyse
+      document.getElementById('afSection')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+      try{
+        let modelId = 'claude-sonnet-4-5';
+        try{
+          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`,{headers:getAuthHeaders()});
+          if(cfgR.ok){const cfg=await cfgR.json();if(cfg?.[0]?.value)modelId=cfg[0].value;}
+        }catch(_){}
+
+        const resp = await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:modelId, max_tokens:1000, messages:[{role:'user', content}]})
+        });
+        if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`Erreur API (${resp.status})`);}
+        const data = await resp.json();
+        const text = data.content?.map(c=>c.text||'').join('')||'';
+
+        vigEl.textContent='Analyse document';vigEl.className='af-vig af-vig-mid';
+        document.getElementById('afResultBody').innerHTML=renderAfMd(`## Analyse — ${name}\n\n${text}`);
+        resultWrap.classList.add('visible');
+      }catch(err){
+        alert('Erreur : '+err.message);
+      }finally{
+        btn.disabled=false;
+        loader.classList.remove('visible');
+      }
+    }
+    // ══ FIN DOCUMENTS ADMIN ══════════════════════════════════
 </body>
 </html>
