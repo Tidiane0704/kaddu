@@ -555,9 +555,9 @@ async function uploadDocFromEspace(event,key,dossierId){
   const ext=file.name.split('.').pop();
   const path=`dossiers/${dossierId}/${key}_${Date.now()}.${ext}`;
   try{
-    const up=await fetch(`${SB_URL}/storage/v1/object/documents/${path}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':file.type,'x-upsert':'true'},body:file});
+    const up=await fetch(`${SB_URL}/storage/v1/object/documents-dossiers/${path}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':file.type,'x-upsert':'true'},body:file});
     if(!up.ok)throw new Error('Erreur upload');
-    const url=`${SB_URL}/storage/v1/object/public/documents/${path}`;
+    const url=`${SB_URL}/storage/v1/object/public/documents-dossiers/${path}`;
     const res=await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}&select=docs_fournis`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
     const rows=await res.json();
     const existing=rows[0]?.docs_fournis||[];
