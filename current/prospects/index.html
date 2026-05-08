@@ -598,6 +598,185 @@
   .if-title{font-size:.86rem;font-weight:600;color:var(--blanc);margin-bottom:1px}
   .if-desc{font-size:.76rem;color:var(--muted);line-height:1.5}
 
+
+
+  /* ════════ VISITE IMMERSIVE V4 — SIGNATURE PRODUIT ════════ */
+  .immersive-v4-section{
+    padding:64px 0;
+    overflow:hidden;
+  }
+  .immersive-v4-shell{
+    position:relative;
+    border:1px solid var(--bl-bdr);
+    border-radius:var(--radius-lg);
+    background:
+      radial-gradient(ellipse 70% 55% at 20% 20%,rgba(59,158,245,.13),transparent 62%),
+      linear-gradient(155deg,rgba(9,21,37,.72),rgba(5,13,25,.94));
+    padding:46px 48px 38px;
+    overflow:hidden;
+    box-shadow:var(--shadow),0 20px 80px rgba(59,158,245,.08);
+  }
+  .immersive-v4-shell::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(59,158,245,.025) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.025) 1px,transparent 1px);
+    background-size:46px 46px;
+    opacity:.8;
+  }
+  .immersive-v4-top{
+    position:relative;z-index:1;
+    display:grid;grid-template-columns:minmax(360px,.92fr) 1.08fr;
+    gap:60px;align-items:center;
+  }
+  .immersive-v4-copy{max-width:540px}
+  .immersive-v4-copy .eyebrow{margin-bottom:18px}
+  .immersive-v4-copy h2{font-size:clamp(2.05rem,3.6vw,3.25rem);margin-bottom:20px}
+  .immersive-v4-copy p{color:var(--muted);font-size:.98rem;line-height:1.82;max-width:520px;text-align:justify}
+  .immersive-v4-proof{
+    margin-top:22px;display:flex;flex-wrap:wrap;gap:9px;
+  }
+  .iv4-proof-pill{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 13px;border-radius:999px;
+    background:rgba(59,158,245,.08);border:1px solid var(--bl-bdr);
+    color:rgba(240,237,232,.68);font-size:.76rem;
+  }
+  .iv4-proof-pill i{color:var(--bll);font-size:1rem}
+
+  .immersive-device-area{
+    min-height:560px;position:relative;display:flex;justify-content:center;align-items:center;
+    perspective:1000px;
+  }
+  .immersive-device-glow{
+    position:absolute;width:390px;height:250px;bottom:16px;left:50%;transform:translateX(-50%);
+    background:radial-gradient(ellipse,rgba(59,158,245,.25),transparent 70%);
+    filter:blur(18px);opacity:.8;
+  }
+  .immersive-phone-v4{
+    position:relative;width:286px;height:575px;border-radius:42px;
+    background:linear-gradient(170deg,#0d1e35,#06111f);
+    border:2px solid rgba(114,191,255,.25);
+    box-shadow:0 34px 96px rgba(0,0,0,.55),0 0 0 8px rgba(255,255,255,.025),0 0 70px rgba(59,158,245,.13);
+    overflow:hidden;transform:rotate(-7deg);animation:iv4Float 7s ease-in-out infinite;
+  }
+  @keyframes iv4Float{0%,100%{transform:rotate(-7deg) translateY(0)}50%{transform:rotate(-7deg) translateY(-10px)}}
+  .immersive-phone-v4::before{
+    content:"";position:absolute;top:13px;left:50%;transform:translateX(-50%);
+    width:82px;height:15px;border-radius:999px;background:#06101c;border:1px solid rgba(114,191,255,.14);z-index:5;
+  }
+  .iv4-phone-screen{
+    position:absolute;inset:30px 14px 18px;border-radius:30px;overflow:hidden;
+    background:linear-gradient(160deg,#07172b,#081d37 55%,#051120);
+    border:1px solid rgba(59,158,245,.14);
+  }
+  .iv4-grid{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(rgba(59,158,245,.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(59,158,245,.06) 1px,transparent 1px);
+    background-size:28px 28px;animation:iv4Grid 14s linear infinite alternate;
+  }
+  @keyframes iv4Grid{from{background-position:0 0}to{background-position:56px 28px}}
+  .iv4-hud{
+    position:absolute;top:18px;left:14px;right:14px;z-index:7;
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+  }
+  .iv4-hud span{
+    display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;
+    background:rgba(6,15,28,.75);border:1px solid rgba(59,158,245,.18);
+    color:var(--bll);font-size:.58rem;letter-spacing:.06em;
+  }
+  .iv4-hud i{font-size:.85rem;color:var(--bl)}
+  .iv4-room{
+    position:absolute;left:50%;top:49%;width:190px;height:140px;z-index:3;
+    transform:translate(-50%,-50%) rotateX(58deg) rotateZ(-32deg);
+    transform-style:preserve-3d;transition:.45s ease;
+  }
+  .iv4-room-base{
+    position:absolute;inset:0;border-radius:8px;
+    background:
+      linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.035)),
+      linear-gradient(90deg,rgba(59,158,245,.20),rgba(59,158,245,.04));
+    border:1px solid rgba(114,191,255,.28);
+    box-shadow:0 24px 50px rgba(0,0,0,.38),0 0 24px rgba(59,158,245,.12);
+  }
+  .iv4-room-wall{
+    position:absolute;background:rgba(240,237,232,.10);border:1px solid rgba(240,237,232,.10);
+    box-shadow:inset 0 0 20px rgba(59,158,245,.07);
+  }
+  .iv4-wall-a{left:0;top:0;width:100%;height:12px;transform:translateZ(42px);}
+  .iv4-wall-b{right:0;top:0;width:12px;height:100%;transform:translateZ(42px);}
+  .iv4-furniture{position:absolute;border-radius:6px;background:rgba(240,237,232,.18);border:1px solid rgba(240,237,232,.13);transform:translateZ(46px)}
+  .iv4-sofa{left:28px;top:60px;width:54px;height:22px;background:rgba(59,158,245,.18)}
+  .iv4-bed{right:28px;top:34px;width:52px;height:38px;background:rgba(240,237,232,.18)}
+  .iv4-table{left:86px;bottom:28px;width:36px;height:24px;background:rgba(191,150,80,.17)}
+  .iv4-hotspot{
+    position:absolute;width:24px;height:24px;border-radius:50%;z-index:8;
+    background:rgba(59,158,245,.18);border:2px solid var(--bl);
+    box-shadow:0 0 0 7px rgba(59,158,245,.08),0 0 22px rgba(59,158,245,.55);
+    animation:iv4Pulse 2.4s ease-in-out infinite;transition:.25s ease;
+  }
+  @keyframes iv4Pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+  .iv4-hotspot.hs1{top:178px;left:72px}.iv4-hotspot.hs2{top:247px;right:72px}.iv4-hotspot.hs3{bottom:166px;left:112px}.iv4-hotspot.hs4{bottom:110px;right:56px}
+  .immersive-phone-v4[data-mode="rotate"] .iv4-room{transform:translate(-50%,-50%) rotateX(58deg) rotateZ(-12deg)}
+  .immersive-phone-v4[data-mode="hotspots"] .iv4-hotspot{background:rgba(255,90,90,.16);border-color:#ff6b6b;box-shadow:0 0 0 7px rgba(255,90,90,.08),0 0 22px rgba(255,90,90,.45)}
+  .immersive-phone-v4[data-mode="quartier"] .iv4-room-base{background:linear-gradient(135deg,rgba(0,200,117,.15),rgba(59,158,245,.06))}
+  .iv4-controls{
+    position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:7;
+    display:flex;gap:9px;
+  }
+  .iv4-control{
+    width:36px;height:36px;border-radius:50%;border:1px solid rgba(114,191,255,.20);
+    background:rgba(6,15,28,.72);color:var(--bll);display:flex;align-items:center;justify-content:center;
+  }
+  .iv4-floating-card{
+    position:absolute;z-index:8;width:210px;padding:18px 20px;border-radius:18px;
+    background:rgba(6,15,28,.86);border:1px solid rgba(59,158,245,.19);
+    box-shadow:0 16px 42px rgba(0,0,0,.34);backdrop-filter:blur(14px);
+  }
+  .iv4-available{left:2px;top:138px}
+  .iv4-available .label{display:flex;align-items:center;gap:7px;color:var(--green);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+  .iv4-available .label::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(0,200,117,.65)}
+  .iv4-available strong{font-size:.88rem;color:var(--blanc);display:block;margin-bottom:2px}
+  .iv4-available small{color:var(--dim);font-size:.72rem}
+  .iv4-live-card{
+    left:50%;bottom:0;transform:translateX(-50%);width:360px;display:flex;align-items:flex-start;gap:13px;
+  }
+  .iv4-live-card .live-icon{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(59,158,245,.10);border:1px solid var(--bl-bdr);color:var(--bll);font-size:1.15rem;flex-shrink:0}
+  .iv4-live-card strong{display:block;color:var(--blanc);font-size:.86rem;margin-bottom:2px}
+  .iv4-live-card span{display:block;color:var(--muted);font-size:.74rem;line-height:1.45}
+
+  .iv4-feature-grid{
+    position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px;
+  }
+  .iv4-feature-card{
+    text-align:left;padding:24px 26px;border-radius:24px;cursor:pointer;
+    background:rgba(9,21,37,.48);border:1px solid var(--bl-bdr);color:var(--blanc);
+    display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:flex-start;transition:.28s ease;
+    font-family:'DM Sans',sans-serif;
+  }
+  .iv4-feature-card:hover,.iv4-feature-card.active{transform:translateY(-4px);border-color:rgba(59,158,245,.45);background:rgba(59,158,245,.08);box-shadow:0 14px 44px rgba(59,158,245,.10)}
+  .iv4-feature-icon{
+    width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+    background:rgba(59,158,245,.10);border:1px solid var(--bl-bdr);color:var(--bll);font-size:1.45rem;
+  }
+  .iv4-feature-card h3{font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;margin:2px 0 7px;line-height:1.35}
+  .iv4-feature-card p{font-size:.82rem;color:var(--muted);line-height:1.65;text-align:left}
+  .iv4-trust-line{
+    position:relative;z-index:1;margin-top:18px;padding:17px 20px;border-radius:18px;
+    border:1px solid rgba(59,158,245,.14);background:rgba(9,21,37,.42);
+    display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.82rem;
+  }
+  .iv4-trust-line i{color:var(--green);font-size:1.2rem}
+
+  @media(max-width:1100px){
+    .immersive-v4-top{grid-template-columns:1fr;gap:28px}.immersive-v4-copy{max-width:none}.immersive-device-area{min-height:520px}.iv4-feature-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:760px){
+    .immersive-v4-shell{padding:30px 18px}.immersive-phone-v4{width:245px;height:500px}.iv4-floating-card{position:relative;left:auto;top:auto;bottom:auto;transform:none;width:100%;margin-top:12px}.iv4-live-card{width:100%;}.immersive-device-area{display:block;min-height:auto}.immersive-device-glow{display:none}.immersive-phone-v4{margin:0 auto 14px;transform:none;animation:none}.iv4-room{width:160px;height:120px}.iv4-feature-card{grid-template-columns:1fr}.iv4-feature-icon{margin-bottom:6px}
+  }
+
   /* ════════ KÀDDU SCORE ════════ */
   .score-section{
     background:rgba(9,20,34,.55);
@@ -956,6 +1135,107 @@
   .foot-legal a{font-size:.72rem;color:rgba(240,237,232,.28);transition:.2s}
   .foot-legal a:hover{color:var(--bll)}
 
+
+
+  /* ════════ MATCHING PREMIUM V3 — profils colorés + résultat fluide ════════ */
+  .matching-premium-v3{padding:64px 0;position:relative;overflow:hidden}
+  .matching-premium-v3 .matching-head{text-align:center;max-width:760px;margin:0 auto 38px}
+  .matching-premium-v3 .matching-head .eyebrow{justify-content:center}
+  .matching-premium-v3 .matching-head h2{font-size:clamp(2rem,3.6vw,3.55rem);line-height:1.04;margin-bottom:14px}
+  .matching-premium-v3 .matching-head p{color:var(--muted);font-size:.98rem;line-height:1.76;max-width:680px;margin:0 auto;text-align:center}
+
+  .profile-premium-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+  .profile-premium-card{
+    --accent:var(--bl);--accent-rgb:59,158,245;
+    position:relative;min-height:430px;border-radius:28px;padding:26px 24px;
+    background:linear-gradient(180deg,rgba(var(--accent-rgb),.13),rgba(9,21,37,.52) 60%,rgba(7,15,28,.72));
+    border:1px solid rgba(var(--accent-rgb),.42);
+    box-shadow:0 24px 58px rgba(0,0,0,.26),0 0 42px rgba(var(--accent-rgb),.08);
+    overflow:hidden;cursor:pointer;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease,background .25s ease;
+  }
+  .profile-premium-card::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 16% 16%,rgba(var(--accent-rgb),.22),transparent 33%),
+      linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+      linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px);
+    background-size:auto,38px 38px,38px 38px;opacity:.72;
+  }
+  .profile-premium-card:hover,.profile-premium-card.sel{transform:translateY(-5px);border-color:rgba(var(--accent-rgb),.72);box-shadow:0 26px 70px rgba(0,0,0,.32),0 0 55px rgba(var(--accent-rgb),.17)}
+  .profile-premium-card.diaspora{--accent:#3B9EF5;--accent-rgb:59,158,245}
+  .profile-premium-card.business{--accent:#A855F7;--accent-rgb:168,85,247}
+  .profile-premium-card.family{--accent:#10D08A;--accent-rgb:16,208,138}
+  .profile-premium-card.travel{--accent:#F6A51A;--accent-rgb:246,165,26}
+
+  .profile-premium-inner{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+  .profile-premium-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+  .profile-premium-icon{
+    width:58px;height:58px;border-radius:18px;background:rgba(var(--accent-rgb),.13);
+    border:1px solid rgba(var(--accent-rgb),.28);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-size:1.55rem;
+    box-shadow:0 0 24px rgba(var(--accent-rgb),.08);
+  }
+  .profile-premium-check{
+    width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    color:var(--accent);border:1px solid rgba(var(--accent-rgb),.38);background:rgba(var(--accent-rgb),.1);
+    opacity:0;transform:scale(.88);transition:.2s ease;font-size:1rem;
+  }
+  .profile-premium-card.sel .profile-premium-check{opacity:1;transform:scale(1)}
+  .profile-premium-label{font-size:.67rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:16px}
+  .profile-premium-card h3{font-size:1.45rem;line-height:1.08;margin-bottom:14px;min-height:56px}
+  .profile-premium-card p{font-size:.82rem;color:var(--muted);line-height:1.68;text-align:left;margin-bottom:22px}
+  .profile-premium-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+  .profile-premium-tags span{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.048);border:1px solid rgba(255,255,255,.075);color:rgba(240,237,232,.68);font-size:.70rem}
+  .profile-premium-tags i{color:var(--accent);font-size:.9rem}
+  .profile-premium-live{margin-top:20px;font-size:.74rem;color:rgba(240,237,232,.55);display:flex;align-items:center;gap:8px}
+  .profile-premium-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px rgba(var(--accent-rgb),.65)}
+
+  .match-premium-result{
+    --accent:#3B9EF5;--accent-rgb:59,158,245;
+    margin-top:24px;position:relative;border-radius:30px;padding:34px 34px 30px;
+    background:linear-gradient(135deg,rgba(var(--accent-rgb),.12),rgba(9,21,37,.74) 54%,rgba(var(--accent-rgb),.055));
+    border:1px solid rgba(var(--accent-rgb),.52);box-shadow:0 26px 70px rgba(0,0,0,.28),0 0 45px rgba(var(--accent-rgb),.12);
+    transition:background .25s ease,border-color .25s ease,box-shadow .25s ease;
+  }
+  .match-premium-result::before{
+    content:"";position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+    width:44px;height:44px;border-radius:50%;background:linear-gradient(180deg,rgba(var(--accent-rgb),.20),rgba(9,21,37,.95));
+    border:1px solid rgba(var(--accent-rgb),.52);box-shadow:0 0 28px rgba(var(--accent-rgb),.16);
+  }
+  .match-premium-arrow{position:absolute;top:-3px;left:50%;transform:translateX(-50%);color:var(--accent);font-size:1rem;z-index:2}
+  .match-premium-main{display:grid;grid-template-columns:1.05fr 1.2fr;gap:34px;align-items:center}
+  .match-premium-title-row{display:flex;gap:20px;align-items:flex-start}
+  .match-premium-icon{width:70px;height:70px;border-radius:18px;display:flex;align-items:center;justify-content:center;color:var(--accent);background:rgba(var(--accent-rgb),.13);border:1px solid rgba(var(--accent-rgb),.32);font-size:1.9rem;flex-shrink:0}
+  .match-premium-label{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px}
+  .match-premium-title{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:300;margin-bottom:10px}
+  .match-premium-desc{color:var(--muted);font-size:.88rem;line-height:1.7;text-align:left;max-width:430px}
+  .match-premium-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .match-premium-stat{padding:18px 14px;border-radius:16px;background:rgba(7,15,28,.56);border:1px solid rgba(var(--accent-rgb),.22);min-height:102px}
+  .match-premium-stat i{display:block;color:var(--accent);font-size:1.25rem;margin-bottom:12px}
+  .match-premium-stat strong{display:block;font-size:1.03rem;color:var(--blanc);line-height:1.2;margin-bottom:6px}
+  .match-premium-stat span{font-size:.68rem;color:var(--muted);line-height:1.4}
+  .match-premium-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:28px;padding-top:22px;border-top:1px solid rgba(var(--accent-rgb),.24)}
+  .match-premium-neighborhoods{display:flex;flex-wrap:wrap;gap:8px}
+  .match-premium-neighborhoods span{padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:.72rem;color:rgba(240,237,232,.7)}
+  .match-premium-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  .match-premium-actions .btn-blue{background:var(--bl);color:#06111e}
+  .match-premium-actions .btn-ghost-bl{color:var(--accent);border-color:rgba(var(--accent-rgb),.35);background:rgba(var(--accent-rgb),.06)}
+
+  @media(max-width:1100px){
+    .profile-premium-grid{grid-template-columns:repeat(2,1fr)}
+    .match-premium-main{grid-template-columns:1fr}
+    .match-premium-stats{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:760px){
+    .profile-premium-grid{grid-template-columns:1fr}
+    .profile-premium-card{min-height:auto}
+    .match-premium-result{padding:28px 20px 24px}
+    .match-premium-title-row{flex-direction:column}
+    .match-premium-stats{grid-template-columns:1fr 1fr}
+    .match-premium-bottom{align-items:flex-start;flex-direction:column}
+    .match-premium-actions{justify-content:flex-start}
+  }
+
   /* ════════ RESPONSIVE ════════ */
   @media(max-width:1100px){
     .hero-grid{grid-template-columns:1fr;gap:36px;min-height:auto}
@@ -988,10 +1268,143 @@
     .footer-grid{grid-template-columns:1fr}
   }
 
+
+  /* ════════ FIABILITÉ DU DOSSIER — PREMIUM RESTORED V5 ════════ */
+  .score-section.score-premium-v5{
+    background:rgba(9,20,34,.55);
+    border-top:1px solid var(--bl-bdr);
+    border-bottom:1px solid var(--bl-bdr);
+    padding:64px 0;
+    overflow:hidden;
+  }
+  .score-premium-v5 .score-v5-head{
+    max-width:720px;
+    margin-bottom:34px;
+  }
+  .score-premium-v5 .score-v5-head h2{
+    font-size:clamp(2rem,3.4vw,3.15rem);
+    max-width:620px;
+  }
+  .score-premium-v5 .score-v5-head p{
+    color:var(--muted);
+    font-size:.98rem;
+    line-height:1.78;
+    margin-top:14px;
+    max-width:680px;
+  }
+  .score-v5-layout{
+    display:grid;
+    grid-template-columns:.92fr 1.18fr;
+    gap:26px;
+    align-items:stretch;
+  }
+  .score-v5-passport{
+    min-height:470px;
+    border:1px solid var(--bl-bds);
+    border-radius:32px;
+    background:linear-gradient(160deg,rgba(59,158,245,.13),rgba(7,18,33,.92));
+    overflow:hidden;
+    box-shadow:0 28px 70px rgba(0,0,0,.34),0 0 55px rgba(59,158,245,.10);
+    display:grid;
+    grid-template-columns:44% 56%;
+    position:relative;
+  }
+  .score-v5-passport::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 22% 24%,rgba(59,158,245,.18),transparent 36%),
+      linear-gradient(90deg,rgba(59,158,245,.08),transparent 45%);
+  }
+  .score-v5-seal{
+    position:relative;
+    padding:32px 28px;
+    border-right:1px solid rgba(59,158,245,.16);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-width:0;
+  }
+  .score-v5-mark{
+    width:150px;height:150px;border-radius:50%;
+    border:1px solid rgba(114,191,255,.25);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-size:3.4rem;color:var(--blanc);
+    margin:12px auto 0;
+    background:rgba(4,14,28,.35);
+    box-shadow:inset 0 0 42px rgba(59,158,245,.10),0 0 30px rgba(59,158,245,.08);
+  }
+  .score-v5-active{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:8px}
+  .score-v5-active::before{content:"✓ ";}
+  .score-v5-date{font-size:.76rem;color:var(--dim);line-height:1.5}
+  .score-v5-data{position:relative;padding:28px 26px;min-width:0;overflow:hidden}
+  .score-v5-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:24px}
+  .score-v5-title{font-family:'Playfair Display',serif;font-size:1.35rem;line-height:1.35;font-weight:300;min-width:0}
+  .score-v5-title em{color:var(--bll);font-style:italic;display:block;margin-top:3px}
+  .score-v5-live{display:flex;align-items:center;gap:6px;color:var(--green);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;font-weight:700;line-height:1.35;white-space:normal;text-align:right;max-width:120px}
+  .score-v5-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(0,200,117,.35);animation:pulse-dot 2s infinite;flex:0 0 auto}
+  .score-v5-list{display:flex;flex-direction:column;gap:0}
+  .score-v5-line{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid rgba(59,158,245,.09)}
+  .score-v5-line:last-child{border-bottom:none}
+  .score-v5-mini-icon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(114,191,255,.20);background:rgba(59,158,245,.10);color:var(--bll);font-size:1.05rem}
+  .score-v5-mini-icon.money{color:#F6B94B;border-color:rgba(246,185,75,.22);background:rgba(246,185,75,.08)}
+  .score-v5-mini-icon.work{color:#B57CFF;border-color:rgba(181,124,255,.22);background:rgba(181,124,255,.08)}
+  .score-v5-mini-icon.home{color:#FF7BA4;border-color:rgba(255,123,164,.22);background:rgba(255,123,164,.08)}
+  .score-v5-line strong{display:block;font-size:.86rem;color:var(--blanc);font-weight:700;line-height:1.35}
+  .score-v5-line span{display:block;font-size:.70rem;color:var(--dim);line-height:1.45;margin-top:3px}
+  .score-v5-status{font-size:.68rem;color:var(--green);border:1px solid rgba(0,200,117,.20);background:rgba(0,200,117,.08);border-radius:999px;padding:6px 10px;white-space:nowrap;font-weight:700}
+  .score-v5-right{
+    border:1px solid var(--bl-bdr);
+    border-radius:32px;
+    background:rgba(9,21,37,.46);
+    padding:32px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-width:0;
+  }
+  .score-v5-right-label{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--bl);margin-bottom:14px}
+  .score-v5-right h3{font-size:clamp(1.55rem,2.4vw,2.05rem);line-height:1.08;margin-bottom:14px}
+  .score-v5-right > p{font-size:.92rem;line-height:1.7;color:var(--muted);max-width:560px;margin-bottom:22px}
+  .score-v5-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .score-v5-study{
+    border:1px solid var(--bl-bdr);
+    border-radius:20px;
+    background:rgba(9,21,37,.64);
+    padding:18px;
+    min-height:172px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    transition:.22s ease;
+  }
+  .score-v5-study:hover{border-color:rgba(59,158,245,.38);transform:translateY(-2px);background:rgba(59,158,245,.06)}
+  .score-v5-study i{font-size:1.25rem;color:var(--bll);margin-bottom:12px;display:inline-flex}
+  .score-v5-study.money i{color:#F6B94B}.score-v5-study.work i{color:#B57CFF}.score-v5-study.home i{color:#FF7BA4}
+  .score-v5-study h4{font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:8px;line-height:1.35}
+  .score-v5-study p{font-size:.73rem;line-height:1.55;color:var(--muted);text-align:left}
+  .score-v5-bar{height:4px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin:12px 0 10px}
+  .score-v5-bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--bl),var(--bll))}
+  .score-v5-pill{align-self:flex-start;font-size:.65rem;color:var(--bll);border:1px solid var(--bl-bdr);background:rgba(59,158,245,.10);border-radius:999px;padding:5px 10px}
+  @media(max-width:1100px){
+    .score-v5-layout{grid-template-columns:1fr}
+    .score-v5-passport{grid-template-columns:1fr}
+    .score-v5-seal{border-right:none;border-bottom:1px solid rgba(59,158,245,.16);min-height:250px}
+    .score-v5-mark{width:120px;height:120px;font-size:2.8rem}
+  }
+  @media(max-width:760px){
+    .score-v5-cards{grid-template-columns:1fr}
+    .score-v5-right{padding:24px}
+    .score-v5-passport{min-height:auto}
+    .score-v5-line{grid-template-columns:34px minmax(0,1fr)}
+    .score-v5-status{grid-column:2;margin-top:4px;justify-self:start}
+  }
+
+
   /* scroll reveal */
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
   .reveal.visible{opacity:1;transform:translateY(0)}
   </style>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
 
@@ -1121,105 +1534,122 @@
 </div>
 
 <!-- ════════════════════════════
-     MATCHING INTELLIGENT
+     MATCHING PREMIUM V3
 ════════════════════════════ -->
-<section class="matching-section reveal">
+<section class="matching-premium-v3 reveal" id="matching-locataire">
   <div class="container">
-    <div style="max-width:640px">
-      <span class="eyebrow">Votre situation</span>
-      <h2>Parce qu’un étudiant, une famille<br>et un expatrié ne cherchent pas<br><em>le même Dakar</em>.</h2>
-      <p style="color:var(--muted);font-size:.96rem;margin-top:12px;line-height:1.7">
-        Un séjour de quelques semaines, une installation durable ou un retour au pays ne demandent pas le même accompagnement. Kàddu adapte les biens, les quartiers et le parcours à votre réalité.
+    <div class="matching-head">
+      <span class="eyebrow">Parcours locataire</span>
+      <h2>Dites-nous <em>qui vous êtes</em></h2>
+      <p>
+        Chaque parcours est adapté à votre situation. Sélectionnez celle qui vous correspond pour découvrir des biens vraiment faits pour vous.
       </p>
     </div>
 
-    <div class="profiles-grid">
-      <div class="profile-match-card sel" data-profile="diaspora" onclick="selectProfile(this)">
-        <div class="pm-top">
-          <div class="pm-emoji">🌍</div>
-          <div class="pm-check">✓</div>
+    <div class="profile-premium-grid">
+      <article class="profile-premium-card diaspora" data-profile="diaspora" onclick="selectProfile(this)">
+        <div class="profile-premium-inner">
+          <div class="profile-premium-top">
+            <div class="profile-premium-icon"><i class="ph ph-globe-hemisphere-east"></i></div>
+            <div class="profile-premium-check"><i class="ph ph-check"></i></div>
+          </div>
+          <div class="profile-premium-label">Diaspora & Expat</div>
+          <h3>Je cherche depuis l’étranger</h3>
+          <p>Je ne peux pas me déplacer pour visiter. J’ai besoin de tout faire à distance, de la visite à la signature.</p>
+          <div class="profile-premium-tags">
+            <span><i class="ph ph-arrows-clockwise"></i>Visite 360°</span>
+            <span><i class="ph ph-signature"></i>Signature digitale</span>
+            <span><i class="ph ph-credit-card"></i>Paiement international</span>
+            <span><i class="ph ph-key"></i>Remise par délégué</span>
+          </div>
+          <div class="profile-premium-live">12 biens compatibles actuellement</div>
         </div>
-        <div class="pm-label">Diaspora & Expat</div>
-        <div class="pm-title">Je cherche depuis l'étranger</div>
-        <div class="pm-desc">Je ne peux pas me déplacer pour visiter. J'ai besoin de tout faire à distance, de la visite à la signature.</div>
-        <div class="pm-tags">
-          <span class="pm-tag">🌀 Visite 360°</span>
-          <span class="pm-tag">✍️ Signature digitale</span>
-          <span class="pm-tag">💳 Paiement international</span>
-          <span class="pm-tag">🔑 Remise par délégué</span>
-        </div>
-      </div>
+      </article>
 
-      <div class="profile-match-card" data-profile="business" onclick="selectProfile(this)">
-        <div class="pm-top">
-          <div class="pm-emoji">💼</div>
-          <div class="pm-check">✓</div>
+      <article class="profile-premium-card business" data-profile="business" onclick="selectProfile(this)">
+        <div class="profile-premium-inner">
+          <div class="profile-premium-top">
+            <div class="profile-premium-icon"><i class="ph ph-briefcase"></i></div>
+            <div class="profile-premium-check"><i class="ph ph-check"></i></div>
+          </div>
+          <div class="profile-premium-label">Mission Pro & Business</div>
+          <h3>Je viens travailler à Dakar</h3>
+          <p>Mission de quelques semaines à quelques mois. Il me faut un meublé opérationnel dès le premier soir, bien connecté.</p>
+          <div class="profile-premium-tags">
+            <span><i class="ph ph-bed"></i>Meublé complet</span>
+            <span><i class="ph ph-wifi-high"></i>Fibre haut débit</span>
+            <span><i class="ph ph-map-pin"></i>Almadies · VDN</span>
+            <span><i class="ph ph-receipt"></i>Facturation</span>
+          </div>
+          <div class="profile-premium-live">8 meublés disponibles</div>
         </div>
-        <div class="pm-label">Mission Pro & Business</div>
-        <div class="pm-title">Je viens travailler à Dakar</div>
-        <div class="pm-desc">Mission de quelques semaines à quelques mois. Il me faut un meublé opérationnel dès le premier soir, bien connecté.</div>
-        <div class="pm-tags">
-          <span class="pm-tag">🛋️ Meublé complet</span>
-          <span class="pm-tag">📶 Fibre haut débit</span>
-          <span class="pm-tag">📍 Almadies · VDN · Plateau</span>
-          <span class="pm-tag">📄 Facturation entreprise</span>
-        </div>
-      </div>
+      </article>
 
-      <div class="profile-match-card" data-profile="famille" onclick="selectProfile(this)">
-        <div class="pm-top">
-          <div class="pm-emoji">🏠</div>
-          <div class="pm-check">✓</div>
+      <article class="profile-premium-card family" data-profile="famille" onclick="selectProfile(this)">
+        <div class="profile-premium-inner">
+          <div class="profile-premium-top">
+            <div class="profile-premium-icon"><i class="ph ph-house-line"></i></div>
+            <div class="profile-premium-check"><i class="ph ph-check"></i></div>
+          </div>
+          <div class="profile-premium-label">Famille & Résidents</div>
+          <h3>Je m’installe durablement</h3>
+          <p>Bail longue durée, quartier calme, immeuble sécurisé. Je cherche un vrai chez-moi stable.</p>
+          <div class="profile-premium-tags">
+            <span><i class="ph ph-buildings"></i>Non meublé</span>
+            <span><i class="ph ph-calendar-check"></i>Bail long terme</span>
+            <span><i class="ph ph-shield-check"></i>Sécurisé</span>
+            <span><i class="ph ph-graduation-cap"></i>Proche écoles</span>
+          </div>
+          <div class="profile-premium-live">16 appartements disponibles</div>
         </div>
-        <div class="pm-label">Famille & Résidents</div>
-        <div class="pm-title">Je m'installe durablement</div>
-        <div class="pm-desc">Bail longue durée, quartier calme, immeuble sécurisé. Je cherche un chez-moi stable, pas un logement de passage.</div>
-        <div class="pm-tags">
-          <span class="pm-tag">🏢 Non meublé</span>
-          <span class="pm-tag">📅 Bail long terme</span>
-          <span class="pm-tag">🔒 Sécurisé</span>
-          <span class="pm-tag">🏫 Proche écoles</span>
-        </div>
-      </div>
+      </article>
 
-      <div class="profile-match-card" data-profile="tourisme" onclick="selectProfile(this)">
-        <div class="pm-top">
-          <div class="pm-emoji">✈️</div>
-          <div class="pm-check">✓</div>
+      <article class="profile-premium-card travel sel" data-profile="tourisme" onclick="selectProfile(this)">
+        <div class="profile-premium-inner">
+          <div class="profile-premium-top">
+            <div class="profile-premium-icon"><i class="ph ph-airplane-tilt"></i></div>
+            <div class="profile-premium-check"><i class="ph ph-check"></i></div>
+          </div>
+          <div class="profile-premium-label">Voyage & Découverte</div>
+          <h3>Je visite Dakar quelques jours</h3>
+          <p>Séjour court. Je veux un appartement premium plutôt qu’un hôtel, avec autonomie et confort.</p>
+          <div class="profile-premium-tags">
+            <span><i class="ph ph-sparkle"></i>Premium</span>
+            <span><i class="ph ph-bed"></i>Courte durée</span>
+            <span><i class="ph ph-waves"></i>Vue mer possible</span>
+            <span><i class="ph ph-package"></i>Tout équipé</span>
+          </div>
+          <div class="profile-premium-live">5 biens premium disponibles</div>
         </div>
-        <div class="pm-label">Voyage & Découverte</div>
-        <div class="pm-title">Je visite Dakar quelques jours</div>
-        <div class="pm-desc">Séjour court, je veux un appartement premium plutôt qu'un hôtel. Confort, localisation, autonomie totale.</div>
-        <div class="pm-tags">
-          <span class="pm-tag">🌟 Premium</span>
-          <span class="pm-tag">🛏️ Courte durée</span>
-          <span class="pm-tag">🌊 Vue mer possible</span>
-          <span class="pm-tag">📦 Tout équipé</span>
-        </div>
-      </div>
+      </article>
     </div>
 
-    <!-- Match result dynamique -->
-    <div class="match-result show" id="matchResult">
-      <div class="match-result-head">
-        <div class="match-result-icon" id="matchIcon">🌍</div>
-        <div>
-          <div class="match-result-label">Kàddu vous recommande</div>
-          <div class="match-result-title" id="matchTitle">Appartements meublés · Parcours 100% à distance</div>
+    <div class="match-premium-result" id="matchResult" style="--accent:#F6A51A;--accent-rgb:246,165,26">
+      <div class="match-premium-arrow"><i class="ph ph-caret-down"></i></div>
+      <div class="match-premium-main">
+        <div class="match-premium-title-row">
+          <div class="match-premium-icon" id="matchIcon"><i class="ph ph-airplane-tilt"></i></div>
+          <div>
+            <div class="match-premium-label">Résultats pour</div>
+            <div class="match-premium-title" id="matchTitle">Voyage & Découverte</div>
+            <p class="match-premium-desc" id="matchDesc">Des biens premium pour découvrir Dakar avec plus d’espace, d’autonomie et de confort qu’un séjour classique.</p>
+          </div>
+        </div>
+        <div class="match-premium-stats" id="matchRows">
+          <div class="match-premium-stat"><i class="ph ph-sparkle"></i><strong>5</strong><span>biens premium</span></div>
+          <div class="match-premium-stat"><i class="ph ph-bed"></i><strong>Courte</strong><span>durée</span></div>
+          <div class="match-premium-stat"><i class="ph ph-waves"></i><strong>Vue mer</strong><span>possible</span></div>
+          <div class="match-premium-stat"><i class="ph ph-package"></i><strong>Tout</strong><span>équipé</span></div>
         </div>
       </div>
-      <div class="match-result-rows" id="matchRows">
-        <div class="match-r-chip"><strong>Types de biens</strong>Meublés · F2 à F4 · Équipés haut débit</div>
-        <div class="match-r-chip"><strong>Quartiers recommandés</strong>Almadies · Sipres VDN · Mermoz · Point E</div>
-        <div class="match-r-chip"><strong>Points forts Kàddu</strong>Visite 360° · Clés par délégué · Stripe/Virement</div>
-      </div>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <a class="btn btn-blue" href="/#biens">Voir les biens correspondants →</a>
-        <a class="btn btn-ghost-bl" href="/tunnel/dossier-v2-step1.html">Préparer mon dossier</a>
-      </div>
-      <div class="micro-cta-row">
-        <a class="btn-micro" href="/#biens">Voir mes biens compatibles →</a>
-        <span class="micro-note">Résultats filtrés selon votre profil</span>
+      <div class="match-premium-bottom">
+        <div class="match-premium-neighborhoods" id="matchNeighborhoods">
+          <span>Ngor</span><span>Ouakam</span><span>Almadies</span><span>Plateau</span>
+        </div>
+        <div class="match-premium-actions">
+          <a class="btn btn-blue" href="/#biens">Voir les biens correspondants →</a>
+          <a class="btn btn-ghost-bl" href="/tunnel/dossier-v2-step1.html">Préparer mon dossier</a>
+        </div>
       </div>
     </div>
   </div>
@@ -1428,123 +1858,106 @@
 </section>
 
 <!-- ════════════════════════════
-     VISITE IMMERSIVE — WOW MOMENT
+     VISITE IMMERSIVE — WOW MOMENT V4
 ════════════════════════════ -->
-<section class="immersive-section reveal" id="visites">
+<section class="immersive-v4-section reveal" id="visites">
   <div class="container">
-    <div class="immersive-inner">
+    <div class="immersive-v4-shell">
+      <div class="immersive-v4-top">
 
-      <!-- Phone mockup with 360° viewer -->
-      <div class="phone-mockup-wrap">
-        <!-- Floating info card — top left -->
-        <div class="phone-float-card" style="top:40px;left:-10px">
-          <div class="pfc-top">
-            <div class="pfc-dot" style="background:#00C875;animation:pulse-dot 2s infinite"></div>
-            <div class="pfc-label" style="color:rgba(0,200,117,.7)">Disponible</div>
+        <div class="immersive-device-area">
+          <div class="immersive-device-glow"></div>
+
+          <div class="iv4-floating-card iv4-available">
+            <div class="label">Disponible</div>
+            <strong>Le Petit Bantukay</strong>
+            <small>Sipres VDN 2 · Dakar</small>
           </div>
-          <div class="pfc-value">Le Petit Bantukay</div>
-          <div style="font-size:.68rem;color:var(--dim);margin-top:2px">Sipres VDN 2 · Dakar</div>
-        </div>
 
-        <!-- Floating info card — bottom right -->
-        <div class="phone-float-card" style="bottom:52px;right:-12px;text-align:right">
-          <div class="pfc-top" style="justify-content:flex-end">
-            <div class="pfc-label" style="color:var(--bl)">Surface</div>
-            <div class="pfc-dot" style="background:var(--bl)"></div>
-          </div>
-          <div class="pfc-value">72 m²</div>
-          <div style="font-size:.68rem;color:var(--dim);margin-top:2px">3 pièces · Climatisé</div>
-        </div>
-
-        <div class="phone-frame">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="viewer-bg">
-              <div class="viewer-room"></div>
-              <div class="viewer-floor"></div>
-
-              <!-- HUD -->
-              <div class="viewer-hud">
-                <div class="viewer-badge">📍 Salon principal</div>
-                <div class="viewer-360-btn">🌀 360°</div>
+          <div class="immersive-phone-v4" id="immersivePhoneV4" data-mode="rotate">
+            <div class="iv4-phone-screen">
+              <div class="iv4-grid"></div>
+              <div class="iv4-hud">
+                <span><i class="ph ph-map-pin"></i> Salon principal</span>
+                <span><i class="ph ph-arrows-clockwise"></i> 360°</span>
               </div>
-
-              <!-- Furniture silhouettes -->
-              <div class="viewer-sofa"></div>
-              <div class="viewer-table"></div>
-
-              <!-- Hotspots -->
-              <div class="hotspot" style="top:38%;left:22%">
-                <div class="hotspot-label">Climatisation</div>
+              <div class="iv4-room">
+                <div class="iv4-room-base"></div>
+                <div class="iv4-room-wall iv4-wall-a"></div>
+                <div class="iv4-room-wall iv4-wall-b"></div>
+                <div class="iv4-furniture iv4-sofa"></div>
+                <div class="iv4-furniture iv4-bed"></div>
+                <div class="iv4-furniture iv4-table"></div>
               </div>
-              <div class="hotspot" style="top:55%;right:24%">
-                <div class="hotspot-label">WiFi Fibre</div>
+              <div class="iv4-hotspot hs1"></div>
+              <div class="iv4-hotspot hs2"></div>
+              <div class="iv4-hotspot hs3"></div>
+              <div class="iv4-hotspot hs4"></div>
+              <div class="iv4-controls">
+                <div class="iv4-control"><i class="ph ph-arrows-out"></i></div>
+                <div class="iv4-control"><i class="ph ph-cube"></i></div>
+                <div class="iv4-control"><i class="ph ph-compass"></i></div>
               </div>
-              <div class="hotspot" style="top:25%;left:50%;transform:translateX(-50%)">
-                <div class="hotspot-label">Vue dégagée</div>
-              </div>
-
-              <!-- Nav dots -->
-              <div class="viewer-nav">
-                <button class="viewer-dot active" onclick="switchRoom(0,this)"></button>
-                <button class="viewer-dot" onclick="switchRoom(1,this)"></button>
-                <button class="viewer-dot" onclick="switchRoom(2,this)"></button>
-                <button class="viewer-dot" onclick="switchRoom(3,this)"></button>
-              </div>
-
-              <!-- Room label -->
-              <div id="roomLabel" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:.63rem;color:var(--dim);letter-spacing:.1em;white-space:nowrap">Salon · 1/4 pièces</div>
             </div>
+          </div>
+
+          <div class="iv4-floating-card iv4-live-card">
+            <div class="live-icon"><i class="ph ph-cube"></i></div>
+            <div>
+              <strong id="iv4LiveTitle">42 visites immersives disponibles actuellement</strong>
+              <span id="iv4LiveText">sur des biens à Dakar et alentours.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="immersive-v4-copy">
+          <span class="eyebrow">Visites immersives 360°</span>
+          <h2>Visitez votre futur logement<br>avant même<br><em>d’arriver à Dakar</em>.</h2>
+          <p id="iv4CopyText1">
+            Le 360° permet de réellement comprendre un bien avant de le visiter.
+          </p>
+          <p id="iv4CopyText2" style="margin-top:14px">
+            Pièces, circulation, lumière, environnement : vous avancez avec une vision claire, même à distance.
+          </p>
+          <div class="immersive-v4-proof">
+            <span class="iv4-proof-pill"><i class="ph ph-check-circle"></i> Biens contrôlés</span>
+            <span class="iv4-proof-pill"><i class="ph ph-device-mobile-camera"></i> Visite mobile</span>
+            <span class="iv4-proof-pill"><i class="ph ph-map-trifold"></i> Quartier compris</span>
+          </div>
+          <div style="margin-top:26px">
+            <a class="btn btn-blue btn-lg" href="/#biens">Explorer les biens en 360° →</a>
           </div>
         </div>
       </div>
 
-      <!-- Copy -->
-      <div class="immersive-copy">
-        <span class="eyebrow">Visites immersives 360°</span>
-        <h2>Visitez votre futur logement<br>avant même<br><em>d’arriver</em>.</h2>
-        <p style="color:var(--muted);font-size:.96rem;margin-top:14px;margin-bottom:0;line-height:1.75;max-width:460px">
-          Les photos montrent un appartement. Le 360° permet de vraiment s’y projeter. Explorez les pièces, repérez les détails importants et avancez avec une vision claire du bien, où que vous soyez.
-        </p>
-        <div class="immersive-features">
-          <div class="if-row">
-            <div class="if-icon">🌀</div>
-            <div class="if-body">
-              <div class="if-title">Rotation complète pièce par pièce</div>
-              <div class="if-desc">Salon, chambres, cuisine, espaces communs : vous visualisez le bien dans son ensemble, sans dépendre de quelques photos choisies.</div>
-            </div>
+      <div class="iv4-feature-grid">
+        <button class="iv4-feature-card active" type="button" data-mode="rotate" onclick="setImmersiveMode(this)">
+          <div class="iv4-feature-icon"><i class="ph ph-spiral"></i></div>
+          <div>
+            <h3>Rotation complète</h3>
+            <p>Explorez chaque pièce librement, sans dépendre d’angles choisis à l’avance.</p>
           </div>
-          <div class="if-row">
-            <div class="if-icon">📍</div>
-            <div class="if-body">
-              <div class="if-title">Hotspots interactifs</div>
-              <div class="if-desc">Certains points de la visite affichent des informations utiles : équipement, dimensions, état général ou élément à retenir.</div>
-            </div>
+        </button>
+        <button class="iv4-feature-card" type="button" data-mode="hotspots" onclick="setImmersiveMode(this)">
+          <div class="iv4-feature-icon"><i class="ph ph-map-pin"></i></div>
+          <div>
+            <h3>Hotspots interactifs</h3>
+            <p>Équipements, détails importants et informations utiles intégrés directement dans la visite.</p>
           </div>
-          <div class="if-row">
-            <div class="if-icon">🗺️</div>
-            <div class="if-body">
-              <div class="if-title">Quartier + vue satellite</div>
-              <div class="if-desc">Accès, commerces, écoles, transports : vous comprenez aussi l’environnement du bien avant de vous engager.</div>
-            </div>
+        </button>
+        <button class="iv4-feature-card" type="button" data-mode="quartier" onclick="setImmersiveMode(this)">
+          <div class="iv4-feature-icon"><i class="ph ph-map-trifold"></i></div>
+          <div>
+            <h3>Quartier & environnement</h3>
+            <p>Commerces, accès, écoles et environnement visibles avant même votre arrivée.</p>
           </div>
-          <div class="if-row">
-            <div class="if-icon">📸</div>
-            <div class="if-body">
-              <div class="if-title">Photos réelles · Prises lors du contrôle Kàddu</div>
-              <div class="if-desc">Photos récentes, prises lors du contrôle Kàddu, pour montrer le bien tel qu’il est réellement.</div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:24px">
-          <a class="btn btn-blue btn-lg" href="/#biens">Explorer les biens en 360° →</a>
-        </div>
-        <div class="micro-cta-row">
-          <a class="btn-micro" href="/#biens">Tester une visite 360° →</a>
-          <span class="micro-note">Sans inscription · Immédiat</span>
-        </div>
+        </button>
       </div>
 
+      <div class="iv4-trust-line">
+        <i class="ph ph-shield-check"></i>
+        <span>Les informations affichées sont fournies par les propriétaires et vérifiées par l’équipe Kàddu.</span>
+      </div>
     </div>
   </div>
 </section>
@@ -1552,139 +1965,101 @@
 <!-- ════════════════════════════
      KÀDDU SCORE — VISUEL
 ════════════════════════════ -->
-<section class="score-section reveal" id="score">
+<section class="score-section score-premium-v5 reveal" id="score">
   <div class="container">
-    <div style="max-width:600px">
+    <div class="score-v5-head">
       <span class="eyebrow">Fiabilité du dossier</span>
       <h2>Un bon dossier mérite<br><em>d’être bien présenté</em>.</h2>
-      <p style="color:var(--muted);font-size:.96rem;margin-top:14px;line-height:1.75">
+      <p>
         Votre dossier ne se résume pas à quelques pièces jointes. Kàddu le rend lisible, cohérent et rassurant pour aider le propriétaire à décider plus vite.
       </p>
     </div>
 
-    <div class="score-grid">
-      <!-- Score card -->
-      <div class="score-card-wrap">
-        <div class="score-card">
-          <div class="score-card-head">
-            <div class="score-card-title">Passeport Locatif · Analyse Kàddu</div>
-            <div class="score-badge-live">Mis à jour en temps réel</div>
-          </div>
-          <div class="score-rows">
-            <div class="score-row">
-              <div class="score-row-icon sr-green">🪪</div>
-              <div class="score-row-body">
-                <div class="score-row-label">Identité</div>
-                <div class="score-row-sub">CNI / Passeport · Cohérence vérifiée</div>
-              </div>
-              <div class="score-row-status srs-green">✓ Vérifié</div>
-            </div>
-            <div class="score-row">
-              <div class="score-row-icon sr-green">💰</div>
-              <div class="score-row-body">
-                <div class="score-row-label">Revenus</div>
-                <div class="score-row-sub">Justificatifs analysés · Taux d'effort calculé</div>
-              </div>
-              <div class="score-row-status srs-green">✓ Cohérents</div>
-            </div>
-            <div class="score-row">
-              <div class="score-row-icon sr-green">📍</div>
-              <div class="score-row-body">
-                <div class="score-row-label">Historique locatif</div>
-                <div class="score-row-sub">Situation actuelle · Cohérence du parcours</div>
-              </div>
-              <div class="score-row-status srs-green">✓ Stable</div>
-            </div>
-            <div class="score-row">
-              <div class="score-row-icon sr-amber">🤝</div>
-              <div class="score-row-body">
-                <div class="score-row-label">Garant</div>
-                <div class="score-row-sub">Non fourni · Fortement recommandé</div>
-              </div>
-              <div class="score-row-status srs-amber">⚠ Conseillé</div>
-            </div>
-          </div>
-          <div class="score-ring-wrap">
-            <div class="score-ring" style="--score-pct:78%">
-              <div class="score-ring-val">78</div>
-            </div>
-            <div class="score-ring-body">
-              <div class="score-ring-label">Profil solide</div>
-              <div class="score-ring-desc">Votre dossier est bien positionné. Ajoutez un garant pour atteindre le niveau "Prioritaire".</div>
-            </div>
+    <div class="score-v5-layout">
+      <div class="score-v5-passport">
+        <div class="score-v5-seal">
+          <div class="score-v5-mark">K</div>
+          <div>
+            <div class="score-v5-active">Dossier actif</div>
+            <div class="score-v5-date">Dernière mise à jour :<br>aujourd’hui à 09:42</div>
           </div>
         </div>
 
-        <!-- Score levels legend -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-          <div style="padding:10px 12px;border:1px solid rgba(59,158,245,.18);border-radius:12px;text-align:center;background:var(--bl-bg)">
-            <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bl);margin-bottom:4px">Standard</div>
-            <div style="font-size:1.1rem;font-family:'Playfair Display',serif;color:var(--bl)">0 – 59</div>
+        <div class="score-v5-data">
+          <div class="score-v5-title-row">
+            <div class="score-v5-title">Passeport<br>Locatif <em>Analyse Kàddu</em></div>
+            <div class="score-v5-live">Mis à jour en temps réel</div>
           </div>
-          <div style="padding:10px 12px;border:1px solid rgba(245,158,11,.2);border-radius:12px;text-align:center;background:rgba(245,158,11,.05)">
-            <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,158,11,.8);margin-bottom:4px">Solide</div>
-            <div style="font-size:1.1rem;font-family:'Playfair Display',serif;color:rgba(245,158,11,.9)">60 – 79</div>
-          </div>
-          <div style="padding:10px 12px;border:1px solid rgba(0,200,117,.2);border-radius:12px;text-align:center;background:rgba(0,200,117,.05)">
-            <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,200,117,.85);margin-bottom:4px">Prioritaire</div>
-            <div style="font-size:1.1rem;font-family:'Playfair Display',serif;color:rgba(0,200,117,.95)">80 – 100</div>
+
+          <div class="score-v5-list">
+            <div class="score-v5-line">
+              <div class="score-v5-mini-icon"><i class="ph ph-identification-card"></i></div>
+              <div><strong>Identité vérifiée</strong><span>CNI / Passeport validé</span></div>
+              <div class="score-v5-status">✓ Vérifié</div>
+            </div>
+            <div class="score-v5-line">
+              <div class="score-v5-mini-icon money"><i class="ph ph-money"></i></div>
+              <div><strong>Revenus cohérents</strong><span>Justificatifs analysés</span></div>
+              <div class="score-v5-status">✓ Cohérents</div>
+            </div>
+            <div class="score-v5-line">
+              <div class="score-v5-mini-icon work"><i class="ph ph-briefcase"></i></div>
+              <div><strong>Situation professionnelle</strong><span>Statut et activité confirmés</span></div>
+              <div class="score-v5-status">✓ Confirmée</div>
+            </div>
+            <div class="score-v5-line">
+              <div class="score-v5-mini-icon home"><i class="ph ph-house-line"></i></div>
+              <div><strong>Historique locatif</strong><span>Expériences renseignées</span></div>
+              <div class="score-v5-status">✓ Renseigné</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Score builder -->
-      <div>
-        <div style="font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--bl);margin-bottom:6px">Comment renforcer votre dossier</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;margin-bottom:20px">Chaque pièce utile renforce la confiance.</div>
-        <div class="score-builder">
-          <p class="sb-intro">Le Passeport Locatif met en valeur les éléments solides de votre situation. Il vous aide aussi à identifier ce qui peut rassurer davantage un propriétaire.</p>
-          <div class="sb-item" onclick="animateSb(this,100)">
-            <div class="sb-item-head">
-              <div class="sb-item-label">🪪 Identité vérifiée</div>
-              <div class="sb-item-tag sb-tag-required">Requis</div>
+      <div class="score-v5-right">
+        <div class="score-v5-right-label">Comment renforcer votre dossier</div>
+        <h3>Chaque élément étudié rassure un propriétaire.</h3>
+        <p>
+          Le Passeport Locatif met en valeur les éléments solides de votre situation et vous aide à identifier ce qui peut rassurer davantage.
+        </p>
+
+        <div class="score-v5-cards">
+          <div class="score-v5-study">
+            <div>
+              <i class="ph ph-identification-card"></i>
+              <h4>Identité vérifiée</h4>
+              <p>Base indispensable pour transmettre une candidature sérieuse.</p>
+              <div class="score-v5-bar"><span style="width:100%"></span></div>
             </div>
-            <div class="sb-bar-wrap"><div class="sb-bar" style="width:100%;background:linear-gradient(90deg,var(--bl),var(--bll))"></div></div>
-            <div class="sb-desc">Base indispensable. Sans identité vérifiée, aucune candidature n'est transmise.</div>
+            <div class="score-v5-pill">Élément étudié</div>
           </div>
-          <div class="sb-item" onclick="animateSb(this,85)">
-            <div class="sb-item-head">
-              <div class="sb-item-label">💰 Revenus cohérents</div>
-              <div class="sb-item-tag sb-tag-required">Requis</div>
+          <div class="score-v5-study money">
+            <div>
+              <i class="ph ph-money"></i>
+              <h4>Revenus cohérents</h4>
+              <p>Salaire, freelance, retraite ou revenus diaspora : tout justificatif clair est valorisé.</p>
+              <div class="score-v5-bar"><span style="width:86%"></span></div>
             </div>
-            <div class="sb-bar-wrap"><div class="sb-bar" style="width:85%;background:linear-gradient(90deg,var(--bl),var(--bll))"></div></div>
-            <div class="sb-desc">Salaire, freelance, retraite, diaspora — tout type de revenu est analysé si justifié.</div>
+            <div class="score-v5-pill">Élément étudié</div>
           </div>
-          <div class="sb-item" onclick="animateSb(this,72)">
-            <div class="sb-item-head">
-              <div class="sb-item-label">📍 Historique locatif</div>
-              <div class="sb-item-tag sb-tag-boost">+Score</div>
+          <div class="score-v5-study work">
+            <div>
+              <i class="ph ph-briefcase"></i>
+              <h4>Situation claire</h4>
+              <p>Un statut professionnel lisible aide le propriétaire à se projeter.</p>
+              <div class="score-v5-bar"><span style="width:78%"></span></div>
             </div>
-            <div class="sb-bar-wrap"><div class="sb-bar" style="width:72%;background:linear-gradient(90deg,var(--bld),var(--bl))"></div></div>
-            <div class="sb-desc">Quittances passées, ancien bail, attestation hébergeur. Prouve la stabilité.</div>
+            <div class="score-v5-pill">Élément étudié</div>
           </div>
-          <div class="sb-item" onclick="animateSb(this,60)">
-            <div class="sb-item-head">
-              <div class="sb-item-label">🤝 Garant</div>
-              <div class="sb-item-tag sb-tag-opt">Optionnel</div>
+          <div class="score-v5-study home">
+            <div>
+              <i class="ph ph-house-line"></i>
+              <h4>Historique locatif</h4>
+              <p>Vos précédentes expériences locatives parlent aussi pour vous.</p>
+              <div class="score-v5-bar"><span style="width:72%"></span></div>
             </div>
-            <div class="sb-bar-wrap"><div class="sb-bar" style="width:60%;background:linear-gradient(90deg,rgba(245,158,11,.6),rgba(245,158,11,.9))"></div></div>
-            <div class="sb-desc">Non obligatoire mais très impactant. Un garant sénégalais ou international est accepté.</div>
+            <div class="score-v5-pill">Élément étudié</div>
           </div>
-          <div class="sb-item" onclick="animateSb(this,40)">
-            <div class="sb-item-head">
-              <div class="sb-item-label">✍️ Lettre de motivation</div>
-              <div class="sb-item-tag sb-tag-opt">Optionnel</div>
-            </div>
-            <div class="sb-bar-wrap"><div class="sb-bar" style="width:40%;background:linear-gradient(90deg,rgba(59,158,245,.3),rgba(59,158,245,.6))"></div></div>
-            <div class="sb-desc">Fortement recommandée pour les profils diaspora, freelance ou situations atypiques.</div>
-          </div>
-        </div>
-        <div style="margin-top:24px">
-          <a class="btn btn-blue btn-lg" href="/tunnel/dossier-v2-step1.html">Créer mon Passeport Locatif →</a>
-        </div>
-        <div class="micro-cta-row">
-          <a class="btn-micro" href="/tunnel/dossier-v2-step1.html">Voir mon score potentiel →</a>
-          <span class="micro-note">Estimation gratuite · 3 min</span>
         </div>
       </div>
     </div>
@@ -1902,51 +2277,48 @@ document.querySelectorAll('.who-card').forEach(card=>{
 /* ── Profile matching ── */
 const MATCH_DATA = {
   diaspora:{
-    icon:'🌍',title:'Appartements meublés · Parcours 100% à distance',
-    rows:[
-      {label:'Types de biens',val:'Meublés · F2 à F4 · Équipés WiFi fibre'},
-      {label:'Quartiers recommandés',val:'Almadies · Sipres VDN · Mermoz · Point E'},
-      {label:'Points forts Kàddu',val:'Visite 360° · Clés par délégué · Stripe / Virement'},
-    ]
+    accent:'#3B9EF5', rgb:'59,158,245', icon:'ph-globe-hemisphere-east', title:'Diaspora & Expat',
+    desc:'Des biens vérifiés, visitables à distance, avec un accompagnement complet jusqu’à la remise des clés.',
+    stats:[['ph-arrows-clockwise','360°','visite à distance'],['ph-credit-card','International','paiement accepté'],['ph-key','Clés','par délégué'],['ph-map-pin','Almadies','VDN · Mermoz']],
+    neighborhoods:['Almadies','VDN','Mermoz','Point E']
   },
   business:{
-    icon:'💼',title:'Meublés professionnels · Internet garanti · Disponibles vite',
-    rows:[
-      {label:'Types de biens',val:'Meublés courts / moyen terme · WiFi fibre obligatoire'},
-      {label:'Quartiers recommandés',val:'Almadies · VDN · Plateau · Fann'},
-      {label:'Points forts Kàddu',val:'Réponse 48h · Facturation entreprise · Check-in flexible'},
-    ]
+    accent:'#A855F7', rgb:'168,85,247', icon:'ph-briefcase', title:'Mission Pro & Business',
+    desc:'Des meublés prêts rapidement, bien connectés et adaptés aux séjours professionnels à Dakar.',
+    stats:[['ph-bed','8','meublés disponibles'],['ph-wifi-high','Fibre','haut débit'],['ph-map-pin','VDN','Almadies · Plateau'],['ph-receipt','Facture','entreprise']],
+    neighborhoods:['Almadies','VDN','Plateau','Fann']
   },
   famille:{
-    icon:'🏠',title:'Baux longue durée · Quartiers familiaux · Sécurité vérifiée',
-    rows:[
-      {label:'Types de biens',val:'Non meublés · F3 à F5 · Immeubles sécurisés'},
-      {label:'Quartiers recommandés',val:'Parcelles · HLM · Sicap · Dieuppeul · Grand Yoff'},
-      {label:'Points forts Kàddu',val:'Dossier sérieux traité · Wave / OM · Caution équitable'},
-    ]
+    accent:'#10D08A', rgb:'16,208,138', icon:'ph-house-line', title:'Famille & Résidents',
+    desc:'Des appartements pensés pour une installation durable, dans des quartiers calmes et sécurisés.',
+    stats:[['ph-buildings','16','appartements'],['ph-calendar-check','Long','terme'],['ph-shield-check','Sécurisé','immeuble'],['ph-graduation-cap','Écoles','à proximité']],
+    neighborhoods:['Parcelles','HLM','Sicap','Grand Yoff']
   },
   tourisme:{
-    icon:'✈️',title:'Appartements premium · Courte durée · Expérience hôtel+',
-    rows:[
-      {label:'Types de biens',val:'Meublés premium · Coups de cœur · Vue mer possible'},
-      {label:'Quartiers recommandés',val:'Almadies · Ngor · Ouakam · Plateau'},
-      {label:'Points forts Kàddu',val:'Équipé jour J · Linge fourni · Conciergerie Kàddu'},
-    ]
-  },
+    accent:'#F6A51A', rgb:'246,165,26', icon:'ph-airplane-tilt', title:'Voyage & Découverte',
+    desc:'Des biens premium pour découvrir Dakar avec plus d’espace, d’autonomie et de confort qu’un séjour classique.',
+    stats:[['ph-sparkle','5','biens premium'],['ph-bed','Courte','durée'],['ph-waves','Vue mer','possible'],['ph-package','Tout','équipé']],
+    neighborhoods:['Ngor','Ouakam','Almadies','Plateau']
+  }
 };
 
 function selectProfile(el){
-  document.querySelectorAll('.profile-match-card').forEach(c=>c.classList.remove('sel'));
+  document.querySelectorAll('.profile-premium-card').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');
   const profile=el.dataset.profile;
   const d=MATCH_DATA[profile];if(!d)return;
-  document.getElementById('matchIcon').textContent=d.icon;
-  document.getElementById('matchTitle').textContent=d.title;
-  document.getElementById('matchRows').innerHTML=d.rows.map(r=>`<div class="match-r-chip"><strong>${r.label}</strong>${r.val}</div>`).join('');
   const res=document.getElementById('matchResult');
-  res.classList.remove('show');
-  void res.offsetWidth;
-  res.classList.add('show');
+  if(!res)return;
+  res.style.setProperty('--accent', d.accent);
+  res.style.setProperty('--accent-rgb', d.rgb);
+  document.getElementById('matchIcon').innerHTML=`<i class="ph ${d.icon}"></i>`;
+  document.getElementById('matchTitle').textContent=d.title;
+  document.getElementById('matchDesc').textContent=d.desc;
+  document.getElementById('matchRows').innerHTML=d.stats.map(s=>`<div class="match-premium-stat"><i class="ph ${s[0]}"></i><strong>${s[1]}</strong><span>${s[2]}</span></div>`).join('');
+  document.getElementById('matchNeighborhoods').innerHTML=d.neighborhoods.map(n=>`<span>${n}</span>`).join('');
+  res.animate([{opacity:.72,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});
+  const y=res.getBoundingClientRect().top + window.scrollY - 120;
+  window.scrollTo({top:y,behavior:'smooth'});
 }
 
 /* ── Budget simulation ── */
@@ -2103,6 +2475,46 @@ function toggleFaq(id){
 }
 
 loadFaqFromSupabase();
+
+
+/* ── Visite immersive V4 interactive ── */
+const IMMERSIVE_V4_DATA = {
+  rotate:{
+    liveTitle:'42 visites immersives disponibles actuellement',
+    liveText:'sur des biens à Dakar et alentours.',
+    text1:'Le 360° permet de réellement comprendre un bien avant de le visiter.',
+    text2:'Pièces, circulation, lumière, environnement : vous avancez avec une vision claire, même à distance.'
+  },
+  hotspots:{
+    liveTitle:'12 informations utiles affichées dans cette visite',
+    liveText:'équipements, dimensions, points d’attention et détails de confort.',
+    text1:'Les hotspots rendent la visite plus lisible : chaque point important peut être expliqué directement dans la pièce.',
+    text2:'Vous ne regardez pas seulement des images : vous comprenez les détails qui comptent avant de candidater.'
+  },
+  quartier:{
+    liveTitle:'Quartier, accès et environnement associés au bien',
+    liveText:'commerces, écoles, transports et repères utiles avant de vous engager.',
+    text1:'La visite ne s’arrête pas aux murs de l’appartement. Elle aide aussi à comprendre l’environnement réel du bien.',
+    text2:'Vous pouvez mieux évaluer le quartier, les accès et les services autour du logement, même depuis l’étranger.'
+  }
+};
+function setImmersiveMode(btn){
+  const mode = btn.dataset.mode || 'rotate';
+  document.querySelectorAll('.iv4-feature-card').forEach(el=>el.classList.remove('active'));
+  btn.classList.add('active');
+  const phone = document.getElementById('immersivePhoneV4');
+  if(phone) phone.setAttribute('data-mode', mode);
+  const d = IMMERSIVE_V4_DATA[mode] || IMMERSIVE_V4_DATA.rotate;
+  const lt = document.getElementById('iv4LiveTitle');
+  const lx = document.getElementById('iv4LiveText');
+  const t1 = document.getElementById('iv4CopyText1');
+  const t2 = document.getElementById('iv4CopyText2');
+  if(lt) lt.textContent = d.liveTitle;
+  if(lx) lx.textContent = d.liveText;
+  if(t1) t1.textContent = d.text1;
+  if(t2) t2.textContent = d.text2;
+}
+
 /* ── Scroll reveal ── */
 (function(){
   const els=document.querySelectorAll('.reveal');
