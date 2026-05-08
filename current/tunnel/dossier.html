@@ -250,6 +250,63 @@
 
     /* BG */
     body{background-image:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(191,150,80,.06) 0%,transparent 60%)}
+
+    /* ── ÉTAPE DOCUMENTS ── */
+    .doc-section{margin-bottom:28px}
+    .doc-section-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+    .doc-section-sub{font-size:.8rem;color:var(--muted);margin-bottom:14px;line-height:1.5}
+    .doc-list{display:flex;flex-direction:column;gap:10px}
+    .doc-item{
+      border:1.5px dashed rgba(191,150,80,.25);border-radius:12px;
+      padding:14px 16px;background:rgba(11,32,57,.5);
+      transition:.2s;position:relative;
+    }
+    .doc-item.uploaded{border-color:var(--green);border-style:solid;background:rgba(0,200,117,.04)}
+    .doc-item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}
+    .doc-item-label{font-size:.88rem;font-weight:500;color:var(--blanc);line-height:1.3}
+    .doc-item-label span.req{font-size:.65rem;padding:2px 7px;border-radius:999px;background:rgba(191,150,80,.14);color:var(--or);border:1px solid rgba(191,150,80,.3);margin-left:8px;vertical-align:middle;font-weight:400}
+    .doc-item-label span.opt{font-size:.65rem;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.06);color:rgba(248,244,238,.4);border:1px solid rgba(255,255,255,.1);margin-left:8px;vertical-align:middle;font-weight:400}
+    .doc-item-hint{font-size:.76rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
+    .doc-upload-zone{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .doc-upload-btn{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:9px 16px;border:1px solid rgba(191,150,80,.35);border-radius:8px;
+      background:rgba(191,150,80,.07);color:var(--or);
+      font-size:.78rem;font-family:'DM Sans',sans-serif;cursor:pointer;transition:.2s;
+      white-space:nowrap;
+    }
+    .doc-upload-btn:hover{background:rgba(191,150,80,.14);border-color:var(--or)}
+    .doc-upload-btn input[type=file]{display:none}
+    .doc-file-name{font-size:.76rem;color:var(--green);display:none;align-items:center;gap:6px}
+    .doc-file-name.visible{display:flex}
+    .doc-progress{height:2px;background:rgba(191,150,80,.15);border-radius:999px;margin-top:8px;display:none}
+    .doc-progress-bar{height:100%;background:var(--or);border-radius:999px;width:0;transition:width .4s}
+    .doc-progress.visible{display:block}
+    .doc-status-ok{position:absolute;top:12px;right:14px;font-size:.68rem;color:var(--green);display:none}
+    .doc-item.uploaded .doc-status-ok{display:block}
+    .doc-confidentialite{
+      margin:24px 0;padding:16px 18px;
+      border:1px solid rgba(74,158,255,.18);border-radius:12px;
+      background:rgba(74,158,255,.04);
+      display:flex;align-items:flex-start;gap:14px;
+    }
+    .doc-conf-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+    .doc-conf-title{font-size:.82rem;font-weight:500;color:var(--blue);margin-bottom:4px}
+    .doc-conf-text{font-size:.78rem;color:var(--muted);line-height:1.6}
+    .doc-person-header{
+      font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+      color:rgba(248,244,238,.5);padding:10px 0 8px;
+      border-bottom:1px solid rgba(191,150,80,.1);margin-bottom:14px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .doc-person-avatar{
+      width:26px;height:26px;border-radius:50%;
+      background:rgba(191,150,80,.15);border:1px solid rgba(191,150,80,.3);
+      display:flex;align-items:center;justify-content:center;
+      font-size:.72rem;color:var(--or);font-weight:600;
+    }
   </style>
 </head>
 <body>
@@ -311,7 +368,12 @@
         <div class="step-line pending" id="line2"></div>
         <div class="step-item" onclick="goStep(3)">
           <div class="step-circle pending" id="sc3">3</div>
-          <div class="step-label pending-lbl" id="sl3">Informations<br>garants</div>
+          <div class="step-label pending-lbl" id="sl3">Pièces<br>justificatives</div>
+        </div>
+        <div class="step-line pending" id="line3"></div>
+        <div class="step-item" onclick="goStep(4)">
+          <div class="step-circle pending" id="sc4">4</div>
+          <div class="step-label pending-lbl" id="sl4">Informations<br>garants</div>
         </div>
       </div>
 
@@ -488,9 +550,34 @@
       </div>
 
       <!-- ═══════════════════════════════
-           ÉTAPE 3 — GARANTS
+           ÉTAPE 3 — DOCUMENTS
       ═══════════════════════════════ -->
       <div class="form-section" id="section-3">
+        <h1 class="section-title">Vos pièces <em>justificatives</em></h1>
+        <p class="section-sub">Chaque document est protégé et chiffré. Ils ne seront transmis au propriétaire qu'en cas d'acceptation de votre candidature.</p>
+
+        <!-- Message de confidentialité -->
+        <div class="doc-confidentialite">
+          <div class="doc-conf-icon">🔒</div>
+          <div>
+            <div class="doc-conf-title">Vos documents sont protégés</div>
+            <div class="doc-conf-text">Tous les fichiers sont chiffrés et stockés de manière sécurisée. Kàddu ne les communique jamais à des tiers. Ils ne seront partagés avec le propriétaire <strong>qu'en cas d'acceptation définitive</strong> de votre candidature. Vous pouvez retirer vos documents à tout moment depuis votre espace locataire.</div>
+          </div>
+        </div>
+
+        <!-- Zone dynamique générée par JS -->
+        <div id="docs-container"></div>
+
+        <div class="form-nav">
+          <button class="btn btn-ghost" onclick="prevStep(3)">← Retour</button>
+          <button class="btn btn-primary btn-lg" onclick="nextStep(3)">Valider et continuer →</button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           ÉTAPE 4 — GARANTS (ex-3)
+      ═══════════════════════════════ -->
+      <div class="form-section" id="section-4">
         <h1 class="section-title">Boostez votre <em>dossier</em></h1>
         <p class="section-sub">Un dossier locatif avec un garant a davantage de chances d'être accepté par un propriétaire. Ajoutez un garant pour renforcer votre candidature.</p>
 
@@ -553,7 +640,7 @@
         <button class="add-btn" id="add-gar-btn" onclick="showGarType()" style="display:none"><div class="plus">+</div> J'ai déjà un garant et souhaite l'ajouter à mon dossier</button>
 
         <div class="form-nav">
-          <button class="btn btn-ghost" onclick="prevStep(3)">← Retour</button>
+          <button class="btn btn-ghost" onclick="prevStep(4)">← Retour</button>
           <button class="btn btn-primary btn-lg" onclick="submitDossier(this)">
             <span>Postuler pour ce logement</span>
             <div class="spinner" id="spinner-submit"></div>
@@ -715,13 +802,14 @@ function goStep(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function renderStepper(){
-  for(let i=1;i<=3;i++){
+  for(let i=1;i<=4;i++){
     const c=document.getElementById('sc'+i);
     const l=document.getElementById('sl'+i);
+    if(!c)continue;
     if(i<currentStep){c.className='step-circle done';c.textContent='✓';l.className='step-label done-lbl';}
     else if(i===currentStep){c.className='step-circle active';c.textContent=i;l.className='step-label active-lbl';}
     else{c.className='step-circle pending';c.textContent=i;l.className='step-label pending-lbl';}
-    if(i<3){const line=document.getElementById('line'+i);line.className='step-line '+(i<currentStep?'done':'pending');}
+    if(i<4){const line=document.getElementById('line'+i);if(line)line.className='step-line '+(i<currentStep?'done':'pending');}
   }
 }
 
@@ -731,6 +819,16 @@ function nextStep(from){
   }
   if(from===2){
     if(!locataires.length){showAlert('Veuillez ajouter au moins un locataire.','warn');return;}
+    // Générer les blocs documents selon les locataires
+    buildDocsUI();
+  }
+  if(from===3){
+    // Vérifier documents obligatoires
+    const missing = checkRequiredDocs();
+    if(missing.length){
+      showAlert('Documents obligatoires manquants : ' + missing.join(', '),'warn');
+      return;
+    }
   }
   currentStep=from+1;
   renderStepper();
@@ -740,6 +838,213 @@ function nextStep(from){
   clearAlert();
 }
 function prevStep(from){goStep(from-1);}
+
+// ══ LOGIQUE DOCUMENTS ════════════════════════════════════════
+
+// Définition des documents par situation professionnelle
+const DOC_RULES = {
+  cdi: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport, CNI ou titre de séjour en cours de validité',  required:true },
+    { id:'contrat',    label:'Contrat de travail',             hint:'Contrat CDI signé des deux parties',                       required:true },
+    { id:'fiches_paie',label:'3 dernières fiches de paie',     hint:'Les 3 bulletins de salaire les plus récents',              required:true },
+    { id:'releve',     label:'Relevé bancaire (3 mois)',       hint:'Extrait de compte des 3 derniers mois',                    required:false },
+    { id:'avis_impo',  label:'Dernier avis d\'imposition',     hint:'Avis d\'imposition ou équivalent local',                   required:false },
+  ],
+  cdd: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport, CNI ou titre de séjour en cours de validité',  required:true },
+    { id:'contrat',    label:'Contrat de travail CDD',         hint:'Contrat CDD en cours, avec date de fin visible',           required:true },
+    { id:'fiches_paie',label:'3 dernières fiches de paie',     hint:'Les 3 bulletins de salaire les plus récents',              required:true },
+    { id:'releve',     label:'Relevé bancaire (3 mois)',       hint:'Extrait de compte des 3 derniers mois',                    required:true },
+  ],
+  independant: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport, CNI ou titre de séjour en cours de validité',  required:true },
+    { id:'registre',   label:'Registre de commerce ou NINEA',  hint:'RCCM, NINEA ou équivalent officiel',                       required:true },
+    { id:'releve',     label:'Relevé bancaire (6 mois)',       hint:'Extrait de compte des 6 derniers mois',                    required:true },
+    { id:'bilan',      label:'Bilan ou déclaration fiscale',   hint:'Dernier bilan comptable ou déclaration de revenus',        required:false },
+    { id:'contrat_client',label:'Contrat client ou bon de commande', hint:'Preuve d\'activité en cours',                       required:false },
+  ],
+  etudiant: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport ou CNI en cours de validité',                    required:true },
+    { id:'certif_scol',label:'Certificat de scolarité',        hint:'Certificat d\'inscription en cours d\'année',              required:true },
+    { id:'releve',     label:'Relevé bancaire ou bourse',      hint:'Justificatif de revenus ou allocation d\'études',          required:false },
+    { id:'lettre',     label:'Lettre de motivation locative',  hint:'Courte lettre présentant votre projet de location',        required:false },
+  ],
+  interimaire: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport, CNI ou titre de séjour en cours de validité',  required:true },
+    { id:'contrats_interim',label:'Contrats de mission (3 derniers)', hint:'Les 3 derniers contrats de mission signés',         required:true },
+    { id:'fiches_paie',label:'3 dernières fiches de paie',     hint:'Bulletins de salaire des missions récentes',               required:true },
+    { id:'releve',     label:'Relevé bancaire (3 mois)',       hint:'Extrait de compte des 3 derniers mois',                    required:false },
+  ],
+  retraite: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport ou CNI en cours de validité',                    required:true },
+    { id:'pension',    label:'Titre de pension ou retraite',   hint:'Attestation de pension ou avis de versement',              required:true },
+    { id:'releve',     label:'Relevé bancaire (3 mois)',       hint:'Extrait de compte des 3 derniers mois',                    required:false },
+  ],
+  sans_emploi: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport ou CNI en cours de validité',                    required:true },
+    { id:'releve',     label:'Relevé bancaire (6 mois)',       hint:'Extrait de compte des 6 derniers mois',                    required:true },
+    { id:'justif_ressources', label:'Justificatif de ressources', hint:'Tout document attestant de revenus (aide, rente, investissement…)', required:false },
+  ],
+  autre: [
+    { id:'cni',        label:'Pièce d\'identité',              hint:'Passeport ou CNI en cours de validité',                    required:true },
+    { id:'releve',     label:'Relevé bancaire (3 mois)',       hint:'Extrait de compte des 3 derniers mois',                    required:true },
+    { id:'justif_situation', label:'Justificatif de situation', hint:'Tout document décrivant votre situation actuelle',        required:false },
+  ],
+};
+
+// Stockage des uploads { locataireIdx_docId : { file, url, status } }
+let uploadedDocs = {};
+
+function buildDocsUI(){
+  const container = document.getElementById('docs-container');
+  if(!locataires.length){ container.innerHTML = ''; return; }
+
+  let html = '';
+  locataires.forEach((loc, idx) => {
+    const situation = loc.situation || 'autre';
+    const rules = DOC_RULES[situation] || DOC_RULES['autre'];
+    const initiale = (loc.prenom || '?')[0].toUpperCase();
+    const nom = `${loc.prenom || ''} ${loc.nom || ''}`.trim();
+
+    html += `<div class="doc-section">
+      <div class="doc-person-header">
+        <div class="doc-person-avatar">${initiale}</div>
+        Documents de ${nom}
+        <span style="font-size:.72rem;color:rgba(248,244,238,.3);text-transform:none;letter-spacing:0;margin-left:4px">· ${situationLabel(situation)}</span>
+      </div>
+      <div class="doc-list">`;
+
+    rules.forEach(rule => {
+      const key = `${idx}_${rule.id}`;
+      html += `
+        <div class="doc-item" id="docitem-${key}">
+          <div class="doc-status-ok">✓ Déposé</div>
+          <div class="doc-item-head">
+            <div class="doc-item-label">
+              ${rule.label}
+              <span class="${rule.required ? 'req' : 'opt'}">${rule.required ? 'Obligatoire' : 'Facultatif'}</span>
+            </div>
+          </div>
+          <div class="doc-item-hint">${rule.hint}</div>
+          <div class="doc-upload-zone">
+            <label class="doc-upload-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Choisir un fichier
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleDocUpload(event,'${key}','${loc.prenom||''}')">
+            </label>
+            <div class="doc-file-name" id="docname-${key}">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="docnameTxt-${key}"></span>
+            </div>
+          </div>
+          <div class="doc-progress" id="docprog-${key}">
+            <div class="doc-progress-bar" id="docbar-${key}"></div>
+          </div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function situationLabel(s){
+  const map = {cdi:'Salarié CDI',cdd:'Salarié CDD',independant:'Indépendant',etudiant:'Étudiant',interimaire:'Intérimaire',retraite:'Retraité',sans_emploi:'Sans emploi',autre:'Autre'};
+  return map[s] || s;
+}
+
+async function handleDocUpload(event, key, prenomLoc){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  // Vérif taille (max 10 Mo)
+  if(file.size > 10 * 1024 * 1024){
+    showAlert('Ce fichier dépasse 10 Mo. Veuillez compresser ou scanner en qualité réduite.', 'warn');
+    return;
+  }
+
+  // UI — démarrage upload
+  const progWrap = document.getElementById('docprog-' + key);
+  const progBar  = document.getElementById('docbar-' + key);
+  const nameEl   = document.getElementById('docname-' + key);
+  const nameTxt  = document.getElementById('docnameTxt-' + key);
+  const item     = document.getElementById('docitem-' + key);
+
+  progWrap.classList.add('visible');
+  progBar.style.width = '0%';
+  nameEl.classList.remove('visible');
+  item.classList.remove('uploaded');
+
+  // Animation progress simulée pendant upload
+  let prog = 0;
+  const tick = setInterval(() => {
+    prog = Math.min(prog + Math.random() * 18, 88);
+    progBar.style.width = prog + '%';
+  }, 120);
+
+  try {
+    // Upload vers Supabase Storage — bucket "documents"
+    const ext    = file.name.split('.').pop();
+    const path   = `dossiers/tmp/${key}_${Date.now()}.${ext}`;
+    const res    = await fetch(`${SB_URL}/storage/v1/object/documents-dossiers/${path}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': file.type,
+        'x-upsert': 'true',
+      },
+      body: file,
+    });
+
+    clearInterval(tick);
+
+    if(!res.ok){
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || err.message || 'Erreur upload');
+    }
+
+    progBar.style.width = '100%';
+    const publicUrl = `${SB_URL}/storage/v1/object/public/documents-dossiers/${path}`;
+    uploadedDocs[key] = { file, url: publicUrl, path, name: file.name };
+
+    // UI — succès
+    setTimeout(() => {
+      progWrap.classList.remove('visible');
+      nameTxt.textContent = file.name;
+      nameEl.classList.add('visible');
+      item.classList.add('uploaded');
+    }, 300);
+
+  } catch(err) {
+    clearInterval(tick);
+    progWrap.classList.remove('visible');
+    showAlert('Erreur lors du dépôt de "' + file.name + '" : ' + err.message, 'error');
+  }
+}
+
+function checkRequiredDocs(){
+  const missing = [];
+  locataires.forEach((loc, idx) => {
+    const situation = loc.situation || 'autre';
+    const rules = DOC_RULES[situation] || DOC_RULES['autre'];
+    rules.filter(r => r.required).forEach(rule => {
+      const key = `${idx}_${rule.id}`;
+      if(!uploadedDocs[key]){
+        missing.push(`${loc.prenom || 'Locataire'} — ${rule.label}`);
+      }
+    });
+  });
+  return missing;
+}
+
+function getDocsPayload(){
+  return Object.entries(uploadedDocs).map(([key, doc]) => ({
+    key, url: doc.url, path: doc.path, name: doc.name
+  }));
+}
+// ══ FIN LOGIQUE DOCUMENTS ════════════════════════════════════
 
 // ── CHOICE HELPERS ───────────────────────────────────────────
 function selectCompo(card,type){
@@ -955,7 +1260,7 @@ async function submitDossier(btn){
       garants,
       no_garant: noGarant,
     }),
-    docs_fournis: [],
+    docs_fournis: getDocsPayload(),
   };
 
   try{
