@@ -80,14 +80,120 @@
     @media (max-width:1320px){.toolbar{grid-template-columns:1fr 1fr 1fr}.stats{grid-template-columns:1fr 1fr 1fr}.layout{grid-template-columns:1fr}}
     @media (max-width:900px){.toolbar{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
     @media (max-width:760px){.toolbar{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.hero{display:block}.hero h1{font-size:38px}.grid{grid-template-columns:1fr}}
+
+    /* ── AUTH OVERLAY ── */
+    #authOverlay{
+      position:fixed;inset:0;z-index:9999;
+      background:var(--nbl);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .auth-box{
+      width:100%;max-width:420px;padding:40px 32px;
+      background:#0b2039;border:1px solid var(--bdr);
+    }
+    .auth-box h2{
+      font-family:Georgia,serif;font-size:32px;font-weight:400;
+      margin:0 0 6px;color:var(--txt)
+    }
+    .auth-box h2 em{font-style:italic;color:var(--or)}
+    .auth-sub{color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.6}
+    .auth-label{display:block;font-size:12px;color:var(--or);text-transform:uppercase;
+      letter-spacing:.12em;margin-bottom:8px;margin-top:16px}
+    .auth-input{
+      width:100%;padding:14px;background:rgba(255,255,255,.04);
+      border:1px solid var(--bdr);color:var(--txt);font-size:16px
+    }
+    .auth-input:focus{outline:none;border-color:var(--or)}
+    .auth-btn{
+      width:100%;margin-top:24px;padding:15px;
+      background:var(--or);color:#111;border:none;
+      font-weight:700;font-size:16px;cursor:pointer
+    }
+    .auth-btn:disabled{opacity:.5;cursor:not-allowed}
+    .auth-error{
+      display:none;margin-top:14px;padding:10px 12px;
+      border:1px solid rgba(255,107,107,.30);
+      background:rgba(255,107,107,.07);
+      color:#ffb3b3;font-size:13px
+    }
+    .auth-loading{display:none;margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
+    .auth-badge{
+      display:inline-block;padding:5px 10px;
+      border:1px solid var(--bdr);font-size:11px;
+      letter-spacing:.1em;text-transform:uppercase;
+      color:var(--or);margin-bottom:20px
+    }
+
+    /* ══ ANTIFRAUDE INLINE ══ */
+    .af-section{border:1px solid rgba(191,150,80,.22);background:rgba(191,150,80,.04);padding:14px 16px;margin-bottom:14px}
+    .af-section .title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--or);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+    .af-btn-analyse{
+      padding:10px 18px;background:var(--or);color:#111;border:none;
+      font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.06em;
+      display:inline-flex;align-items:center;gap:7px;transition:.18s;
+    }
+    .af-btn-analyse:hover{background:#DDB96E}
+    .af-btn-analyse:disabled{opacity:.45;cursor:not-allowed}
+    .af-btn-sm{
+      padding:6px 13px;background:transparent;border:1px solid rgba(191,150,80,.3);
+      color:rgba(248,244,238,.55);font-size:12px;cursor:pointer;transition:.18s;font-family:Arial,sans-serif;
+    }
+    .af-btn-sm:hover{border-color:var(--or);color:var(--or)}
+    .af-context-wrap{margin-top:12px;display:none}
+    .af-context-wrap.open{display:block}
+    .af-context-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(191,150,80,.6);margin-bottom:6px}
+    .af-context-ta{
+      width:100%;min-height:110px;padding:10px 12px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.2);
+      color:rgba(248,244,238,.85);font-size:13px;resize:vertical;line-height:1.6;
+      font-family:Arial,sans-serif;
+    }
+    .af-context-ta:focus{outline:none;border-color:var(--or)}
+    .af-loader-row{display:none;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:rgba(248,244,238,.4)}
+    .af-loader-row.visible{display:flex}
+    .af-spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(191,150,80,.2);border-top-color:var(--or);animation:spin .7s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .af-result-wrap{margin-top:12px;border:1px solid rgba(191,150,80,.14);background:rgba(7,24,43,.5);display:none}
+    .af-result-wrap.visible{display:block}
+    .af-result-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(191,150,80,.1);background:rgba(7,14,28,.4)}
+    .af-result-title{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--or)}
+    .af-vig{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+    .af-vig-low{background:rgba(0,200,117,.12);color:#77ffbe;border:1px solid rgba(0,200,117,.28)}
+    .af-vig-mid{background:rgba(245,166,35,.12);color:#ffd180;border:1px solid rgba(245,166,35,.28)}
+    .af-vig-high{background:rgba(255,107,107,.1);color:#ffb3b3;border:1px solid rgba(255,107,107,.22)}
+    .af-result-body{padding:14px;font-size:13px;color:rgba(248,244,238,.75);line-height:1.8}
+    .af-result-body h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--or);margin:12px 0 6px;font-family:Georgia,serif;font-weight:400}
+    .af-result-body strong{color:rgba(248,244,238,.95)}
+    .af-result-body hr{border:none;border-top:1px solid rgba(191,150,80,.1);margin:10px 0}
+    .af-result-body p{margin-bottom:8px}
+    .af-result-body ul{list-style:none;padding:0;margin:0}
+    .af-result-body li{padding:4px 0;border-bottom:1px solid rgba(191,150,80,.06);display:flex;gap:8px;align-items:flex-start}
+    .af-result-body li:last-child{border-bottom:none}
+    .af-ok{color:#77ffbe;flex-shrink:0}
+    .af-warn{color:#ffb347;flex-shrink:0}
+    .af-section-coh{background:rgba(0,200,117,.03);border:1px solid rgba(0,200,117,.1);padding:8px 12px;margin:6px 0;border-radius:4px}
+    .af-section-att{background:rgba(255,179,71,.03);border:1px solid rgba(255,179,71,.12);padding:8px 12px;margin:6px 0;border-radius:4px}
+    .af-section-reco{background:rgba(191,150,80,.05);border:1px solid rgba(191,150,80,.16);padding:8px 12px;margin:6px 0;border-radius:4px}
+    .af-result-foot{padding:8px 14px;border-top:1px solid rgba(191,150,80,.08);display:flex;gap:8px;background:rgba(7,14,28,.3)}
+    .af-apikey-hint{font-size:11px;color:rgba(248,244,238,.28);margin-top:8px}
+    .af-apikey-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .af-apikey-input{
+      flex:1;padding:8px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.2);
+      color:rgba(248,244,238,.75);font-size:12px;font-family:Arial,sans-serif;
+    }
+    .af-apikey-input:focus{outline:none;border-color:var(--or)}
+    .af-taux{font-size:12px;color:rgba(248,244,238,.35);margin-left:auto}
+    .af-taux.warn{color:#ffd180} .af-taux.danger{color:#ffb3b3}
   </style>
 </head>
 <body>
   <nav>
     <div class="brand">Kàddu Admin</div>
     <div class="nav-actions">
+      <a class="btn-ghost" href="dashboard-kaddu-kpi-secured.html">📊 KPI</a>
       <button class="btn-ghost" id="clearFiltersBtn">Réinitialiser</button>
       <button class="btn" id="refreshBtn">Rafraîchir</button>
+      <button class="btn-ghost" id="logoutBtn">Déconnexion</button>
     </div>
   </nav>
 
@@ -273,6 +379,52 @@
             <div id="historyList" class="muted">Chargement…</div>
           </div>
 
+          <!-- ══ VÉRIFICATION DOSSIER (ANTIFRAUDE) ══ -->
+          <div class="af-section" id="afSection">
+            <div class="title">
+              <span>🛡 Vérification du dossier</span>
+              <span id="afTaux" class="af-taux"></span>
+            </div>
+
+            <!-- Clé API (admin seulement, session uniquement) -->
+            <div class="af-apikey-row">
+              <input type="password" class="af-apikey-input" id="afKey" placeholder="Clé API Anthropic (sk-ant-…)" />
+              <button class="af-btn-sm" onclick="toggleAfContext()">Ajuster le contexte ↓</button>
+            </div>
+            <div class="af-apikey-hint">Clé stockée en session uniquement · jamais envoyée à Supabase</div>
+
+            <!-- Zone contexte ajustable par l'admin -->
+            <div class="af-context-wrap" id="afContextWrap">
+              <div class="af-context-label" style="margin-top:12px">Contexte transmis au moteur — modifiable</div>
+              <textarea class="af-context-ta" id="afContextTa" placeholder="Le contexte sera généré automatiquement depuis les données du dossier…"></textarea>
+            </div>
+
+            <!-- CTA -->
+            <div style="display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap">
+              <button class="af-btn-analyse" id="afAnalyseBtn" onclick="lancerAnalyseDossier()">
+                Analyser ce dossier →
+              </button>
+              <div class="af-loader-row" id="afLoaderRow">
+                <div class="af-spinner"></div>
+                <span>Analyse en cours…</span>
+              </div>
+            </div>
+
+            <!-- Résultat -->
+            <div class="af-result-wrap" id="afResultWrap">
+              <div class="af-result-head">
+                <div class="af-result-title">Synthèse Kàddu Shield</div>
+                <div class="af-vig" id="afVigBadge">—</div>
+              </div>
+              <div class="af-result-body" id="afResultBody"></div>
+              <div class="af-result-foot">
+                <button class="af-btn-sm" onclick="copyAfResult()">Copier</button>
+                <button class="af-btn-sm" onclick="saveAfComment()">Enregistrer en commentaire</button>
+              </div>
+            </div>
+          </div>
+          <!-- ══ FIN VÉRIFICATION ══ -->
+
           <div class="detail-actions">
             <a href="#" class="btn-wa" id="waLink" target="_blank" rel="noopener noreferrer">Contacter sur WhatsApp</a>
           </div>
@@ -287,7 +439,7 @@
 
   <script>
     const SUPABASE_URL = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcm1ibmFwZHBrdWdrd25iaGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NTU0MTEsImV4cCI6MjA5MjAzMTQxMX0.fmAdLGTGVnqOxLzkHiRtc3GcUoU1OkaiSQZ5MzZkdAE";
+    const SUPABASE_ANON_KEY = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
 
     let allRows = [];
     let filteredRows = [];
@@ -370,7 +522,10 @@
         nopalukay: "Nopalukay",
         suxalikay: "Suxalikay"
       };
-      return map[bien] || bien || "—";
+      if(!bien) return "—";
+      const norm = bien.toLowerCase().replace(/le petit /i,'').replace(/[^a-z]/g,'');
+      if(map[norm]) return map[norm];
+      return bien;
     }
 
     function eventLabel(type){
@@ -396,50 +551,28 @@
 
     async function fetchDossiers(){
       const endpoint = SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rental_dossiers?select=*&order=created_at.desc";
-      const res = await fetch(endpoint, {
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + SUPABASE_ANON_KEY
-        }
-      });
-
+      const res = await fetch(endpoint, { headers: getAuthHeaders() });
       const text = await res.text();
       let data = [];
       try { data = text ? JSON.parse(text) : []; } catch(e) { data = []; }
-
-      if(!res.ok){
-        throw new Error(typeof data === "string" ? data : JSON.stringify(data));
-      }
+      if(!res.ok) throw new Error(typeof data === "string" ? data : JSON.stringify(data));
       return Array.isArray(data) ? data : [];
     }
 
     async function fetchDossierEvents(dossierId){
       const endpoint = SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/dossier_events?dossier_id=eq." + dossierId + "&select=*&order=created_at.desc";
-      const res = await fetch(endpoint, {
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + SUPABASE_ANON_KEY
-        }
-      });
-
+      const res = await fetch(endpoint, { headers: getAuthHeaders() });
       const text = await res.text();
       let data = [];
       try { data = text ? JSON.parse(text) : []; } catch(e) { data = []; }
-
-      if(!res.ok){
-        throw new Error(typeof data === "string" ? data : JSON.stringify(data));
-      }
+      if(!res.ok) throw new Error(typeof data === "string" ? data : JSON.stringify(data));
       return Array.isArray(data) ? data : [];
     }
 
     async function createDossierEvent({ dossierId, eventType, oldValue, newValue, comment }){
       const res = await fetch(SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/dossier_events", {
         method: "POST",
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           dossier_id: dossierId,
           event_type: eventType,
@@ -471,7 +604,8 @@
         ].join(" ").toLowerCase();
 
         const okSearch = !q || hay.includes(q);
-        const okBien = !bien || row.bien === bien;
+        const bienNorm = (b) => (b||'').toLowerCase().replace(/le petit /i,'').replace(/[^a-z]/g,'');
+        const okBien = !bien || bienNorm(row.bien) === bienNorm(bien);
         const okStatus = !status || row.status === status;
         const rowMetier = row.status_metier || "nouveau";
         const okMetier = !metier || rowMetier === metier;
@@ -637,6 +771,7 @@
         : "#";
 
       renderHistory(row.id);
+      prepareAfContext(row);
     }
 
     async function patchDossier(currentId, payload){
@@ -644,12 +779,7 @@
         SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rental_dossiers?id=eq." + currentId,
         {
           method: "PATCH",
-          headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-            "Content-Type": "application/json",
-            "Prefer": "return=representation"
-          },
+          headers: {...getAuthHeaders(), "Prefer": "return=representation"},
           body: JSON.stringify(payload)
         }
       );
@@ -816,7 +946,305 @@
       try { await markAsRented(); } catch(e){ alert(e.message); }
     });
 
-    init();
-  </script>
+    // ── SUPABASE AUTH ──────────────────────────────────────────
+    let currentSession = null;
+
+    function getAuthHeaders(){
+      const token = currentSession?.access_token || SUPABASE_ANON_KEY;
+      return {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/json"
+      };
+    }
+
+    async function supabaseSignIn(email, password){
+      const res = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=password", {
+        method: "POST",
+        headers: { "apikey": SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error_description || data.msg || "Identifiants incorrects.");
+      return data;
+    }
+
+    function persistSession(session){
+      try {
+        localStorage.setItem("kaddu_admin_session", JSON.stringify({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+          expires_at: Date.now() + (session.expires_in || 3600) * 1000
+        }));
+      } catch(e){}
+    }
+
+    function loadSession(){
+      try {
+        const raw = localStorage.getItem("kaddu_admin_session");
+        if(!raw) return null;
+        const s = JSON.parse(raw);
+        if(s.expires_at && Date.now() > s.expires_at - 60000) return null;
+        return s;
+      } catch(e){ return null; }
+    }
+
+    function clearSession(){ localStorage.removeItem("kaddu_admin_session"); currentSession = null; }
+
+    function showApp(){ document.getElementById("authOverlay").style.display = "none"; }
+
+    function initAuth(){
+      const logoutBtn = document.getElementById("logoutBtn");
+      if(logoutBtn) logoutBtn.addEventListener("click", () => { clearSession(); location.reload(); });
+
+      const saved = loadSession();
+      if(saved && saved.access_token){ currentSession = saved; showApp(); init(); return; }
+
+      const authBtn = document.getElementById("authBtn");
+      const authError = document.getElementById("authError");
+      const authLoading = document.getElementById("authLoading");
+
+      authBtn.addEventListener("click", async () => {
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value;
+        if(!email || !password){
+          authError.textContent = "Merci de renseigner l'email et le mot de passe.";
+          authError.style.display = "block"; return;
+        }
+        authBtn.disabled = true; authError.style.display = "none"; authLoading.style.display = "block";
+        try {
+          const session = await supabaseSignIn(email, password);
+          currentSession = session; persistSession(session); showApp(); init();
+        } catch(e){
+          authError.textContent = e.message || "Connexion impossible.";
+          authError.style.display = "block";
+        } finally { authBtn.disabled = false; authLoading.style.display = "none"; }
+      });
+
+      [document.getElementById("authEmail"), document.getElementById("authPassword")]
+        .forEach(el => el && el.addEventListener("keydown", e => { if(e.key === "Enter") authBtn.click(); }));
+    }
+
+    document.addEventListener("DOMContentLoaded", initAuth);
+    // ───────────────────────────────────────────────────────────
+
+    // ══ KÀDDU SHIELD — VÉRIFICATION DOSSIER ══════════════════
+    const AF_SYSTEM_PROMPT = `Tu es l'assistant de vérification de la plateforme Kàddu, une agence immobilière premium opérant au Sénégal.
+
+Ton rôle est d'analyser les dossiers locatifs soumis par les candidats et d'identifier toute incohérence, anomalie ou élément qui mérite une attention particulière avant qu'un conseiller Kàddu statue.
+
+Tu n'es pas un juge. Tu es un assistant de préparation : tu aides les conseillers à lire vite, voir clair, et agir avec confiance.
+
+Tu travailles dans un contexte africain (Sénégal, diaspora francophone). Tu connais les réalités locales : structures de revenus informels, documents administratifs sénégalais, pratiques locatives dakaroises, profils diaspora.
+
+PÉRIMÈTRE D'ANALYSE
+IDENTITÉ — Cohérence entre les pièces, concordance nom/prénom, validité documents
+SOLVABILITÉ — Cohérence revenus/justificatifs, taux d'effort (seuil vigilance : >35%), incohérences fiches de paie/contrats
+DOCUMENTS — Lisibilité, complétude, cohérences typographiques, dates cohérentes
+PROFIL GLOBAL — Cohérence profil/bien visé, signaux de tension, éléments manquants
+
+FORMAT DE RÉPONSE
+## SYNTHÈSE DU DOSSIER
+[2-3 phrases neutres et factuelles]
+
+## POINTS DE COHÉRENCE
+✓ [élément] — [observation]
+
+## POINTS D'ATTENTION
+⚠ [élément] — [observation non accusatoire]
+
+## RECOMMANDATION
+[Dossier prêt à instruire / Demander : liste / Appeler pour clarifier : point / Mettre en attente]
+
+## NIVEAU DE VIGILANCE
+[Faible / Modéré / Élevé] — [justification courte]
+
+RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours laisser la décision au conseiller. Revenus informels et Wave/OM sont valides. Diaspora avec pièces étrangères = traitement neutre.`;
+
+    let _afCurrentRow = null;
+
+    // Appelé à chaque sélection de dossier — prépare le contexte automatiquement
+    function prepareAfContext(row){
+      _afCurrentRow = row;
+
+      // Taux d'effort
+      const rev = parseFloat(row.revenu_mensuel) || 0;
+      const loyer = extractLoyer(row.bien);
+      const taux = rev && loyer ? Math.round((loyer / rev) * 100) : null;
+      const tauxEl = document.getElementById("afTaux");
+      if(taux !== null){
+        tauxEl.textContent = `Taux d'effort : ${taux}%`;
+        tauxEl.className = "af-taux" + (taux > 35 ? (taux > 45 ? " danger" : " warn") : "");
+      } else {
+        tauxEl.textContent = "";
+      }
+
+      // Construire le contexte automatique
+      const ctx = buildContext(row, taux);
+      document.getElementById("afContextTa").value = ctx;
+
+      // Reset résultat précédent
+      document.getElementById("afResultWrap").classList.remove("visible");
+    }
+
+    function extractLoyer(bien){
+      // Valeurs de référence Kàddu — à ajuster selon vos biens réels
+      const map = { bantukay: 350000, nopalukay: 420000, suxalikay: 280000 };
+      if(!bien) return 0;
+      const norm = bien.toLowerCase().replace(/le petit /i,"").replace(/[^a-z]/g,"");
+      return map[norm] || 0;
+    }
+
+    function buildContext(row, taux){
+      const lines = [];
+      lines.push(`DOSSIER : ${row.nom || "—"}`);
+      lines.push(`Bien visé : ${bienLabel(row.bien)}`);
+      if(row.date_entree) lines.push(`Date d'entrée souhaitée : ${row.date_entree}`);
+      if(row.duree) lines.push(`Durée : ${row.duree}`);
+      lines.push("");
+      lines.push("IDENTITÉ");
+      if(row.nationalite) lines.push(`Nationalité : ${row.nationalite}`);
+      if(row.pays_residence) lines.push(`Pays de résidence : ${row.pays_residence}`);
+      if(row.id_type) lines.push(`Pièce d'identité : ${row.id_type}${row.id_number ? " n°" + row.id_number : ""}${row.date_expiration_piece ? " · exp. " + row.date_expiration_piece : ""}`);
+      if(row.otp_verified !== undefined) lines.push(`OTP vérifié : ${row.otp_verified ? "Oui" : "Non"}`);
+      lines.push("");
+      lines.push("SOLVABILITÉ");
+      if(row.situation) lines.push(`Situation professionnelle : ${row.situation}`);
+      if(row.employeur) lines.push(`Employeur / société : ${row.employeur}`);
+      if(row.revenu_mensuel) lines.push(`Revenus déclarés : ${Number(row.revenu_mensuel).toLocaleString("fr-FR")} XOF/mois`);
+      if(taux !== null) lines.push(`Taux d'effort calculé : ${taux}%${taux > 35 ? " ⚠ au-dessus du seuil de 35%" : ""}`);
+      if(row.logement_actuel) lines.push(`Logement actuel : ${row.logement_actuel}`);
+      if(row.nb_occupants) lines.push(`Nombre d'occupants prévus : ${row.nb_occupants}`);
+      if(row.garant) lines.push(`Garant : ${row.garant}${row.identite_garant ? " (" + row.identite_garant + ")" : ""}`);
+      lines.push("");
+      lines.push("DOCUMENTS");
+      if(row.transmission) lines.push(`Mode de transmission : ${row.transmission}`);
+      if(row.iban) lines.push(`IBAN / RIB : ${row.iban}`);
+      if(row.bailleur_nom) lines.push(`Ancien bailleur : ${row.bailleur_nom}${row.bailleur_contact ? " · " + row.bailleur_contact : ""}`);
+      lines.push("");
+      lines.push("SCORING AUTOMATIQUE");
+      lines.push(`Score calculé par le système : ${row.score ?? "—"}/100`);
+      lines.push(`Statut de risque : ${statusLabel(row.status)}`);
+      if(row.reasons && row.reasons.length){
+        lines.push(`Motifs pénalisants détectés : ${row.reasons.join(", ")}`);
+      }
+      if(row.raison_depart) lines.push(`Raison du départ déclarée : ${row.raison_depart}`);
+      if(row.decision_comment) lines.push(`\nCommentaire interne existant : ${row.decision_comment}`);
+      return lines.filter(Boolean).join("\n");
+    }
+
+    function toggleAfContext(){
+      document.getElementById("afContextWrap").classList.toggle("open");
+    }
+
+    async function lancerAnalyseDossier(){
+      const apiKey = document.getElementById("afKey").value.trim();
+      if(!apiKey){ alert("Clé API Anthropic requise.\nCollez votre clé sk-ant-… dans le champ au-dessus."); return; }
+      const context = document.getElementById("afContextTa").value.trim();
+      if(!context){ alert("Le contexte du dossier est vide."); return; }
+
+      const btn = document.getElementById("afAnalyseBtn");
+      const loader = document.getElementById("afLoaderRow");
+      const result = document.getElementById("afResultWrap");
+
+      btn.disabled = true;
+      loader.classList.add("visible");
+      result.classList.remove("visible");
+
+      try {
+        // Récupérer le modèle depuis Supabase config si disponible
+        let modelId = "claude-sonnet-4-5";
+        try {
+          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`, { headers: getAuthHeaders() });
+          if(cfgR.ok){ const cfg = await cfgR.json(); if(cfg?.[0]?.value) modelId = cfg[0].value; }
+        } catch(_){}
+
+        const resp = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true"
+          },
+          body: JSON.stringify({
+            model: modelId,
+            max_tokens: 1200,
+            system: AF_SYSTEM_PROMPT,
+            messages: [{ role: "user", content: `Analyse ce dossier locataire :\n\n${context}` }]
+          })
+        });
+
+        if(!resp.ok){
+          const err = await resp.json().catch(()=>({}));
+          throw new Error(err?.error?.message || `Erreur API (${resp.status})`);
+        }
+
+        const data = await resp.json();
+        const text = data.content?.map(c => c.text || "").join("") || "";
+
+        // Badge vigilance
+        const vigEl = document.getElementById("afVigBadge");
+        if(/niveau.*élevé|vigilance.*élevé/i.test(text)){
+          vigEl.textContent = "Vigilance élevée"; vigEl.className = "af-vig af-vig-high";
+        } else if(/niveau.*modér|vigilance.*modér/i.test(text)){
+          vigEl.textContent = "Vigilance modérée"; vigEl.className = "af-vig af-vig-mid";
+        } else {
+          vigEl.textContent = "Vigilance faible"; vigEl.className = "af-vig af-vig-low";
+        }
+
+        document.getElementById("afResultBody").innerHTML = renderAfMd(text);
+        result.classList.add("visible");
+
+      } catch(err){
+        alert("Erreur lors de l'analyse :\n" + err.message);
+      } finally {
+        btn.disabled = false;
+        loader.classList.remove("visible");
+      }
+    }
+
+    function renderAfMd(text){
+      let html = text
+        .replace(/^### (.+)$/gm,"<h2>$1</h2>")
+        .replace(/^## (.+)$/gm,"<h2>$1</h2>")
+        .replace(/^# (.+)$/gm,"<h2>$1</h2>")
+        .replace(/^---+$/gm,"<hr>")
+        .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+        .replace(/^✓ (.+)$/gm,'<li><span class="af-ok">✓</span><span>$1</span></li>')
+        .replace(/^[⚠△] (.+)$/gm,'<li><span class="af-warn">⚠</span><span>$1</span></li>')
+        .replace(/^— (.+)$/gm,'<li><span style="color:var(--or);flex-shrink:0">·</span><span>$1</span></li>')
+        .replace(/\n\n/g,"</p><p>").replace(/\n/g,"<br>");
+      html = html
+        .replace(/(POINTS DE COHÉRENCE.*?)(?=POINTS D'ATTENTION|RECOMMANDATION|NIVEAU|$)/si,'<div class="af-section-coh">$1</div>')
+        .replace(/(POINTS D'ATTENTION.*?)(?=RECOMMANDATION|NIVEAU|$)/si,'<div class="af-section-att">$1</div>')
+        .replace(/(RECOMMANDATION.*?)(?=NIVEAU|$)/si,'<div class="af-section-reco">$1</div>');
+      return "<p>" + html + "</p>";
+    }
+
+    function copyAfResult(){
+      const txt = document.getElementById("afResultBody").innerText;
+      navigator.clipboard.writeText(txt).then(() => alert("Synthèse copiée."));
+    }
+
+    async function saveAfComment(){
+      if(!selectedId) return;
+      const synthese = document.getElementById("afResultBody").innerText;
+      if(!synthese) return;
+      const existing = document.getElementById("decisionCommentInput").value.trim();
+      const newComment = existing
+        ? existing + "\n\n--- Synthèse Kàddu Shield ---\n" + synthese.slice(0, 800)
+        : "--- Synthèse Kàddu Shield ---\n" + synthese.slice(0, 800);
+      document.getElementById("decisionCommentInput").value = newComment;
+      // Sauvegarder en base
+      try {
+        await patchDossier(selectedId, {
+          decision_comment: newComment,
+          updated_at: new Date().toISOString()
+        });
+        showSuccess("Synthèse enregistrée dans le commentaire interne.");
+      } catch(e){ alert("Erreur : " + e.message); }
+    }
+    // ══ FIN KÀDDU SHIELD ══════════════════════════════════════
 </body>
 </html>
