@@ -408,6 +408,164 @@
     .fq-empty{
       text-align:center;padding:32px;color:rgba(248,244,238,.3);font-size:.84rem
     }
+
+    /* ══ ANTIFRAUDE PANEL ═══════════════════════════════════════ */
+    .af-overlay{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(4,8,18,.88);backdrop-filter:blur(8px);
+      display:none;align-items:flex-start;justify-content:center;
+      padding:24px 16px;overflow-y:auto;
+    }
+    .af-overlay.open{display:flex}
+    .af-panel{
+      width:100%;max-width:960px;
+      background:linear-gradient(160deg,rgba(12,20,38,.98),rgba(7,14,28,.98));
+      border:1px solid rgba(191,150,80,.22);border-radius:24px;
+      overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5);
+      margin:auto;
+    }
+    .af-panel-head{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:22px 28px;border-bottom:1px solid rgba(191,150,80,.12);
+      background:rgba(7,15,28,.7);
+    }
+    .af-panel-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:300}
+    .af-panel-title em{font-style:italic;color:var(--or)}
+    .af-close{
+      width:34px;height:34px;border-radius:50%;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+      color:rgba(248,244,238,.5);font-size:1rem;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;
+    }
+    .af-close:hover{background:rgba(255,107,107,.15);border-color:rgba(255,107,107,.3);color:#ffb3b3}
+    .af-body{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
+
+    /* Tabs */
+    .af-tabs{display:flex;gap:4px;border-bottom:1px solid rgba(191,150,80,.1);padding:0 28px;background:rgba(7,14,28,.4)}
+    .af-tab{
+      padding:12px 18px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+      color:rgba(248,244,238,.35);cursor:pointer;border-bottom:2px solid transparent;
+      transition:.18s;font-weight:500;
+    }
+    .af-tab:hover{color:rgba(248,244,238,.65)}
+    .af-tab.active{color:var(--or);border-bottom-color:var(--or)}
+    .af-tab-pane{display:none;padding:24px 28px}
+    .af-tab-pane.active{display:block}
+
+    /* Zone de saisie dossier */
+    .af-input-zone{
+      background:rgba(255,255,255,.025);border:1px solid rgba(191,150,80,.15);
+      border-radius:14px;padding:18px;
+    }
+    .af-input-label{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(191,150,80,.65);margin-bottom:8px}
+    .af-textarea{
+      width:100%;min-height:140px;padding:12px 14px;
+      background:rgba(255,255,255,.03);border:1px solid rgba(191,150,80,.18);
+      color:rgba(248,244,238,.85);font-family:'DM Sans',sans-serif;font-size:.88rem;
+      border-radius:10px;transition:.2s;resize:vertical;line-height:1.6;
+    }
+    .af-textarea:focus{outline:none;border-color:rgba(191,150,80,.45);background:rgba(255,255,255,.05)}
+    .af-textarea::placeholder{color:rgba(248,244,238,.2)}
+
+    .af-fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    @media(max-width:600px){.af-fields-grid{grid-template-columns:1fr}}
+    .af-field label{display:block;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(191,150,80,.65);margin-bottom:6px}
+    .af-field input,.af-field select{
+      width:100%;padding:10px 13px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.18);
+      color:rgba(248,244,238,.85);font-family:'DM Sans',sans-serif;font-size:.88rem;
+      border-radius:10px;transition:.2s;
+    }
+    .af-field input:focus,.af-field select:focus{outline:none;border-color:rgba(191,150,80,.45)}
+    .af-field select option{background:#0b1e35;color:var(--txt)}
+
+    .af-cta-row{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap}
+    .af-btn{
+      padding:10px 22px;border-radius:999px;font-size:.78rem;font-weight:600;
+      letter-spacing:.08em;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;
+      border:1px solid;display:inline-flex;align-items:center;gap:7px;
+    }
+    .af-btn-primary{background:var(--or);color:#0a0a0a;border-color:var(--or)}
+    .af-btn-primary:hover{background:var(--orl)}
+    .af-btn-primary:disabled{opacity:.45;cursor:not-allowed}
+    .af-btn-ghost{background:transparent;color:rgba(248,244,238,.5);border-color:rgba(191,150,80,.2)}
+    .af-btn-ghost:hover{border-color:var(--or);color:var(--or)}
+
+    /* Résultat */
+    .af-result{
+      border:1px solid rgba(191,150,80,.14);border-radius:14px;
+      background:rgba(7,24,43,.4);overflow:hidden;display:none;
+    }
+    .af-result.visible{display:block}
+    .af-result-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 18px;border-bottom:1px solid rgba(191,150,80,.08);
+      background:rgba(7,14,28,.5);
+    }
+    .af-result-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or)}
+    .af-vigilance{
+      font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+      padding:3px 10px;border-radius:999px;
+    }
+    .af-vig-low{background:rgba(0,200,117,.12);color:#77ffbe;border:1px solid rgba(0,200,117,.28)}
+    .af-vig-mid{background:rgba(191,150,80,.14);color:var(--or);border:1px solid rgba(191,150,80,.3)}
+    .af-vig-high{background:rgba(255,107,107,.1);color:#ff9a9a;border:1px solid rgba(255,107,107,.22)}
+    .af-result-body{padding:18px;font-size:.86rem;color:rgba(248,244,238,.72);line-height:1.8;white-space:pre-wrap}
+
+    /* Loader */
+    .af-loader{
+      display:none;align-items:center;gap:12px;
+      padding:14px 18px;font-size:.82rem;color:rgba(248,244,238,.4);
+    }
+    .af-loader.visible{display:flex}
+    .af-spinner{
+      width:18px;height:18px;border-radius:50%;
+      border:2px solid rgba(191,150,80,.2);border-top-color:var(--or);
+      animation:spin .7s linear infinite;flex-shrink:0;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Historique */
+    .af-history-list{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto}
+    .af-history-list::-webkit-scrollbar{width:4px}
+    .af-history-list::-webkit-scrollbar-thumb{background:rgba(191,150,80,.2);border-radius:2px}
+    .af-hist-item{
+      border:1px solid rgba(191,150,80,.12);border-radius:12px;
+      background:rgba(7,24,43,.3);padding:12px 16px;cursor:pointer;transition:.18s;
+    }
+    .af-hist-item:hover{border-color:rgba(191,150,80,.28);background:rgba(7,24,43,.55)}
+    .af-hist-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+    .af-hist-name{font-size:.88rem;color:rgba(248,244,238,.8);font-weight:500}
+    .af-hist-date{font-size:.7rem;color:rgba(248,244,238,.3)}
+    .af-hist-preview{font-size:.76rem;color:rgba(248,244,238,.35);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+    /* Prompt viewer */
+    .af-prompt-block{
+      background:rgba(255,255,255,.025);border:1px solid rgba(191,150,80,.12);
+      border-radius:12px;padding:16px;
+    }
+    .af-prompt-label{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(191,150,80,.5);margin-bottom:10px}
+    .af-prompt-text{
+      font-family:'DM Sans',sans-serif;font-size:.78rem;color:rgba(248,244,238,.45);
+      line-height:1.7;white-space:pre-wrap;max-height:200px;overflow-y:auto;
+    }
+    .af-prompt-text::-webkit-scrollbar{width:3px}
+    .af-prompt-text::-webkit-scrollbar-thumb{background:rgba(191,150,80,.2);border-radius:2px}
+    .af-copy-prompt{
+      margin-top:10px;font-size:.72rem;background:transparent;border:1px solid rgba(191,150,80,.2);
+      border-radius:999px;padding:5px 14px;color:rgba(248,244,238,.4);cursor:pointer;
+      font-family:'DM Sans',sans-serif;transition:.18s;
+    }
+    .af-copy-prompt:hover{border-color:var(--or);color:var(--or)}
+
+    .af-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+    @media(max-width:600px){.af-info-grid{grid-template-columns:1fr}}
+    .af-info-card{
+      border:1px solid rgba(191,150,80,.1);border-radius:12px;
+      background:rgba(7,24,43,.3);padding:14px 16px;
+    }
+    .af-info-card-label{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:5px}
+    .af-info-card-val{font-size:.84rem;color:rgba(248,244,238,.65);line-height:1.6}
   </style>
 </head>
 <body>
@@ -634,6 +792,29 @@
         </div>
       </a>
 
+      <!-- MODULE : VÉRIFICATION DOSSIERS (antifraude) -->
+      <a class="module-card" href="#" onclick="openAfPanel(event)">
+        <div class="module-top">
+          <div class="module-icon">🛡️</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+            <span class="mbadge mbadge-new">IA</span>
+          </div>
+        </div>
+        <div class="module-name">Vérification <em>dossiers</em></div>
+        <div class="module-desc">Analysez la cohérence d'un dossier locataire avant instruction. L'assistant identifie les points d'attention et formule une recommandation pour le conseiller.</div>
+        <div class="module-features">
+          <span class="mfeat">Analyse de cohérence globale</span>
+          <span class="mfeat">Vérification revenus & documents</span>
+          <span class="mfeat">Contexte sénégalais & diaspora</span>
+          <span class="mfeat">Recommandation conseiller en clair</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Analyser un dossier →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">V</span></span>
+        </div>
+      </a>
+
       <!-- MODULE 7 : RÉSERVATIONS (à venir) -->
       <div class="module-card soon">
         <div class="module-top">
@@ -742,6 +923,7 @@
             <div class="shortcut-pill"><span class="key">G</span><span class="key">K</span> KPIs</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">M</span> Marché</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">O</span> Marketing</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">V</span> Vérification</div>
             <div class="shortcut-pill"><span class="key">?</span> Aide</div>
           </div>
         </div>
@@ -1225,6 +1407,382 @@ function exportFaqJson(){
   a.download=`faq-locataires-${new Date().toISOString().slice(0,10)}.json`;a.click();
 }
 
+<!-- ══ ANTIFRAUDE OVERLAY ══ -->
+<div class="af-overlay" id="afOverlay">
+  <div class="af-panel" id="afPanel">
+
+    <div class="af-panel-head">
+      <div>
+        <div class="af-panel-title">Vérification <em>dossiers</em></div>
+        <div style="font-size:.72rem;color:rgba(248,244,238,.3);margin-top:3px">Analyse de cohérence · Réservé aux conseillers Kàddu</div>
+      </div>
+      <button class="af-close" onclick="closeAfPanel()">✕</button>
+    </div>
+
+    <div class="af-tabs">
+      <div class="af-tab active" onclick="switchAfTab('analyse',this)">Analyser un dossier</div>
+      <div class="af-tab" onclick="switchAfTab('history',this)">Historique</div>
+      <div class="af-tab" onclick="switchAfTab('prompt',this)">Configuration</div>
+    </div>
+
+    <!-- TAB : ANALYSE -->
+    <div class="af-tab-pane active" id="afTab-analyse">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+        <div class="af-field">
+          <label>Nom du candidat</label>
+          <input type="text" id="afCandidatNom" placeholder="Ex : Fatou Diallo"/>
+        </div>
+        <div class="af-field">
+          <label>Bien visé</label>
+          <input type="text" id="afBienVise" placeholder="Ex : Appt T3 Almadies 450 000 XOF"/>
+        </div>
+      </div>
+
+      <div class="af-input-zone" style="margin-bottom:14px">
+        <div class="af-input-label">Résumé du dossier à analyser</div>
+        <textarea class="af-textarea" id="afDossierText" placeholder="Collez ici les informations du dossier : situation professionnelle, revenus déclarés, documents transmis, observations particulières, incohérences repérées manuellement…&#10;&#10;Exemple :&#10;Candidat salarié CDI, déclare 850 000 XOF/mois. Fiche de paie reçue mais employeur inconnu sur LinkedIn. Loyer demandé : 450 000 XOF. Dossier complet, pièce d'identité lisible. Candidature diaspora depuis Paris."></textarea>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px">
+        <div class="af-field">
+          <label>Profil</label>
+          <select id="afProfil">
+            <option value="">— Sélectionner —</option>
+            <option value="Salarié secteur formel">Salarié secteur formel</option>
+            <option value="Indépendant / auto-entrepreneur">Indépendant / auto-entrepreneur</option>
+            <option value="Diaspora / expat">Diaspora / expat</option>
+            <option value="Mission professionnelle">Mission professionnelle</option>
+            <option value="Retraité">Retraité</option>
+            <option value="Non précisé">Non précisé</option>
+          </select>
+        </div>
+        <div class="af-field">
+          <label>Revenus nets déclarés (XOF)</label>
+          <input type="number" id="afRevenus" placeholder="Ex : 850000"/>
+        </div>
+        <div class="af-field">
+          <label>Loyer mensuel (XOF)</label>
+          <input type="number" id="afLoyer" placeholder="Ex : 450000"/>
+        </div>
+      </div>
+
+      <div class="af-cta-row">
+        <button class="af-btn af-btn-primary" id="afAnalyseBtn" onclick="lancerAnalyseAF()">Analyser le dossier →</button>
+        <button class="af-btn af-btn-ghost" onclick="resetAfForm()">Réinitialiser</button>
+        <span id="afTauxEffort" style="font-size:.78rem;color:rgba(248,244,238,.35);margin-left:auto"></span>
+      </div>
+
+      <div class="af-loader" id="afLoader">
+        <div class="af-spinner"></div>
+        <span>Analyse en cours — quelques secondes…</span>
+      </div>
+
+      <div class="af-result" id="afResult">
+        <div class="af-result-head">
+          <div class="af-result-title">Synthèse du dossier</div>
+          <div id="afVigBadge" class="af-vigilance af-vig-low">—</div>
+        </div>
+        <div class="af-result-body" id="afResultBody"></div>
+        <div style="padding:12px 18px;border-top:1px solid rgba(191,150,80,.08);display:flex;gap:8px;flex-wrap:wrap;background:rgba(7,14,28,.3)">
+          <button class="af-btn af-btn-ghost" style="font-size:.72rem;padding:6px 14px" onclick="copyAfResult()">Copier la synthèse</button>
+          <button class="af-btn af-btn-ghost" style="font-size:.72rem;padding:6px 14px" onclick="saveAfToHistory()">Enregistrer dans l'historique</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB : HISTORIQUE -->
+    <div class="af-tab-pane" id="afTab-history">
+      <div style="font-size:.78rem;color:rgba(248,244,238,.3);margin-bottom:14px">Analyses effectuées lors de cette session. Non persistées en base.</div>
+      <div class="af-history-list" id="afHistoryList">
+        <div style="text-align:center;padding:32px;color:rgba(248,244,238,.25);font-size:.84rem">Aucune analyse effectuée pour l'instant.</div>
+      </div>
+    </div>
+
+    <!-- TAB : CONFIGURATION / PROMPT -->
+    <div class="af-tab-pane" id="afTab-prompt">
+
+      <div class="af-info-grid">
+        <div class="af-info-card">
+          <div class="af-info-card-label">Modèle utilisé</div>
+          <div class="af-info-card-val">Claude Sonnet 4<br><span style="font-size:.72rem;color:rgba(248,244,238,.3)">via Anthropic API</span></div>
+        </div>
+        <div class="af-info-card">
+          <div class="af-info-card-label">Posture</div>
+          <div class="af-info-card-val">Assistant de préparation<br><span style="font-size:.72rem;color:rgba(248,244,238,.3)">Décision finale : conseiller humain</span></div>
+        </div>
+        <div class="af-info-card">
+          <div class="af-info-card-label">Contexte</div>
+          <div class="af-info-card-val">Marché locatif sénégalais<br><span style="font-size:.72rem;color:rgba(248,244,238,.3)">Revenus formels & informels, diaspora</span></div>
+        </div>
+        <div class="af-info-card">
+          <div class="af-info-card-label">Clé API</div>
+          <div class="af-info-card-val">
+            <input type="password" id="afApiKey" placeholder="sk-ant-…" style="width:100%;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.2);border-radius:8px;color:rgba(248,244,238,.7);font-family:'DM Sans',sans-serif;font-size:.8rem"/>
+            <div style="font-size:.66rem;color:rgba(248,244,238,.25);margin-top:4px">Stockée en session uniquement, jamais envoyée à Supabase</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="af-prompt-block">
+        <div class="af-prompt-label">Prompt système actif</div>
+        <div class="af-prompt-text" id="afPromptDisplay"></div>
+        <button class="af-copy-prompt" onclick="copyAfPrompt()">Copier le prompt →</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══ ANTIFRAUDE ════════════════════════════════════
+const AF_SYSTEM_PROMPT = `Tu es l'assistant de vérification de la plateforme Kàddu, une agence immobilière premium opérant au Sénégal.
+
+Ton rôle est d'analyser les dossiers locatifs soumis par les candidats et d'identifier toute incohérence, anomalie ou élément qui mérite une attention particulière avant qu'un conseiller Kàddu statue.
+
+Tu n'es pas un juge. Tu es un assistant de préparation : tu aides les conseillers à lire vite, voir clair, et agir avec confiance.
+
+Tu travailles dans un contexte africain (Sénégal, diaspora francophone). Tu connais les réalités locales : structures de revenus informels, documents administratifs sénégalais, pratiques locatives dakaroises, profils diaspora.
+
+---
+
+PÉRIMÈTRE D'ANALYSE
+
+IDENTITÉ
+— Cohérence entre les pièces d'identité (CNI, passeport, titre de séjour)
+— Concordance nom / prénom sur l'ensemble des documents
+— Validité et lisibilité des documents transmis
+
+SOLVABILITÉ & REVENUS
+— Cohérence entre le niveau de revenus déclarés et les justificatifs transmis
+— Calcul du taux d'effort (loyer / revenus nets) — seuil de vigilance : au-delà de 35%
+— Incohérences entre fiches de paie, contrats de travail et relevés bancaires
+— Revenus informels ou atypiques : les identifier sans les disqualifier automatiquement
+
+DOCUMENTS TRANSMIS
+— Lisibilité et complétude des pièces
+— Cohérences typographiques et visuelles sur les documents édités
+— Présence des mentions obligatoires sur les bulletins de salaire et contrats
+— Dates cohérentes (embauche, établissement du document, période concernée)
+
+PROFIL GLOBAL
+— Cohérence entre le profil déclaré et le bien visé
+— Signaux de tension ou d'urgence inhabituels dans la candidature
+— Éléments manquants sans explication
+
+---
+
+FORMAT DE RÉPONSE
+
+Pour chaque dossier analysé, tu produis une synthèse structurée :
+
+SYNTHÈSE DU DOSSIER
+[2-3 phrases décrivant le profil de manière neutre et factuelle]
+
+POINTS DE COHÉRENCE
+✓ [élément] — [observation courte]
+
+POINTS D'ATTENTION
+⚠ [élément] — [observation courte et non accusatoire]
+
+RECOMMANDATION POUR LE CONSEILLER
+Une recommandation parmi : Dossier prêt à instruire / Demander les pièces complémentaires suivantes : [liste] / Appeler le candidat pour clarifier : [point précis] / Mettre en attente pour vérification approfondie
+
+NIVEAU DE VIGILANCE
+Indiquer : Faible / Modéré / Élevé
+Justifier en une phrase courte et factuelle.
+
+---
+
+RÈGLES ABSOLUES
+— Ne jamais formuler de verdict définitif
+— Ne jamais écrire qu'un document est "faux" ou qu'un candidat est "fraudeur"
+— Toujours laisser la décision finale au conseiller Kàddu
+— Ton factuel, calme, professionnel — jamais alarmiste
+— Les revenus informels sont fréquents et légitimes : ne pas les pénaliser par défaut
+— Les virements Wave / Orange Money sont des preuves de revenus valides
+— La diaspora peut avoir des pièces étrangères : les traiter avec la même rigueur, sans méfiance a priori`;
+
+let afHistory = [];
+
+function openAfPanel(e){
+  if(e) e.preventDefault();
+  document.getElementById("afOverlay").classList.add("open");
+  document.body.style.overflow="hidden";
+  document.getElementById("afPromptDisplay").textContent = AF_SYSTEM_PROMPT;
+}
+function closeAfPanel(){
+  document.getElementById("afOverlay").classList.remove("open");
+  document.body.style.overflow="";
+}
+
+function switchAfTab(name, el){
+  document.querySelectorAll(".af-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".af-tab-pane").forEach(p=>p.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("afTab-"+name).classList.add("active");
+}
+
+// Taux d'effort en temps réel
+["afRevenus","afLoyer"].forEach(id=>{
+  document.getElementById(id)?.addEventListener("input", updateTauxEffort);
+});
+function updateTauxEffort(){
+  const rev = parseFloat(document.getElementById("afRevenus").value)||0;
+  const loy = parseFloat(document.getElementById("afLoyer").value)||0;
+  const el = document.getElementById("afTauxEffort");
+  if(!rev||!loy){el.textContent="";return;}
+  const taux = Math.round((loy/rev)*100);
+  const color = taux>35?"#ff9a9a":taux>28?"var(--or)":"#77ffbe";
+  el.innerHTML = `Taux d'effort : <span style="color:${color};font-weight:600">${taux}%</span>`;
+}
+
+function resetAfForm(){
+  ["afCandidatNom","afBienVise","afDossierText","afRevenus","afLoyer"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value="";
+  });
+  document.getElementById("afProfil").value="";
+  document.getElementById("afTauxEffort").textContent="";
+  document.getElementById("afResult").classList.remove("visible");
+  document.getElementById("afLoader").classList.remove("visible");
+}
+
+function getAfApiKey(){
+  const stored = document.getElementById("afApiKey")?.value?.trim();
+  return stored || "";
+}
+
+async function lancerAnalyseAF(){
+  const dossier = document.getElementById("afDossierText").value.trim();
+  if(!dossier){ alert("Veuillez renseigner les informations du dossier."); return; }
+
+  const apiKey = getAfApiKey();
+  if(!apiKey){ alert("Clé API Anthropic requise.\nRenseignez-la dans l'onglet Configuration."); return; }
+
+  const nom = document.getElementById("afCandidatNom").value.trim() || "Candidat";
+  const bien = document.getElementById("afBienVise").value.trim();
+  const profil = document.getElementById("afProfil").value;
+  const revenus = document.getElementById("afRevenus").value;
+  const loyer = document.getElementById("afLoyer").value;
+
+  let userMsg = `Analyse ce dossier locataire :\n\nCandidat : ${nom}`;
+  if(bien) userMsg += `\nBien visé : ${bien}`;
+  if(profil) userMsg += `\nProfil : ${profil}`;
+  if(revenus) userMsg += `\nRevenus déclarés : ${parseInt(revenus).toLocaleString("fr-FR")} XOF/mois`;
+  if(loyer) userMsg += `\nLoyer mensuel : ${parseInt(loyer).toLocaleString("fr-FR")} XOF`;
+  if(revenus && loyer) userMsg += `\nTaux d'effort calculé : ${Math.round((parseFloat(loyer)/parseFloat(revenus))*100)}%`;
+  userMsg += `\n\n---\n\n${dossier}`;
+
+  const btn = document.getElementById("afAnalyseBtn");
+  const loader = document.getElementById("afLoader");
+  const result = document.getElementById("afResult");
+
+  btn.disabled = true;
+  loader.classList.add("visible");
+  result.classList.remove("visible");
+
+  try {
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1200,
+        system: AF_SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userMsg }]
+      })
+    });
+
+    if(!resp.ok){
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(err?.error?.message || `Erreur API (${resp.status})`);
+    }
+
+    const data = await resp.json();
+    const text = data.content?.map(c=>c.text||"").join("") || "";
+
+    // Détecter niveau de vigilance
+    const vigEl = document.getElementById("afVigBadge");
+    if(/niveau.*élevé|vigilance.*élevé/i.test(text)){
+      vigEl.textContent="Vigilance élevée";vigEl.className="af-vigilance af-vig-high";
+    } else if(/niveau.*modér|vigilance.*modér/i.test(text)){
+      vigEl.textContent="Vigilance modérée";vigEl.className="af-vigilance af-vig-mid";
+    } else {
+      vigEl.textContent="Vigilance faible";vigEl.className="af-vigilance af-vig-low";
+    }
+
+    document.getElementById("afResultBody").textContent = text;
+    result.classList.add("visible");
+
+    // Auto-save to session history
+    afHistory.unshift({ nom, bien, date: new Date(), result: text, vigEl: vigEl.textContent });
+    renderAfHistory();
+
+  } catch(err){
+    alert("Erreur lors de l'analyse :\n" + err.message);
+  } finally {
+    btn.disabled = false;
+    loader.classList.remove("visible");
+  }
+}
+
+function renderAfHistory(){
+  const el = document.getElementById("afHistoryList");
+  if(!afHistory.length){
+    el.innerHTML=`<div style="text-align:center;padding:32px;color:rgba(248,244,238,.25);font-size:.84rem">Aucune analyse effectuée pour l'instant.</div>`;
+    return;
+  }
+  el.innerHTML = afHistory.map((h,i)=>`
+    <div class="af-hist-item" onclick="loadAfHistItem(${i})">
+      <div class="af-hist-head">
+        <div class="af-hist-name">${h.nom}${h.bien?" · "+h.bien:""}</div>
+        <div class="af-hist-date">${h.date.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</div>
+      </div>
+      <div class="af-hist-preview">${h.result}</div>
+    </div>`).join("");
+}
+
+function loadAfHistItem(i){
+  const h = afHistory[i];
+  if(!h) return;
+  document.getElementById("afCandidatNom").value = h.nom;
+  document.getElementById("afBienVise").value = h.bien||"";
+  document.getElementById("afResultBody").textContent = h.result;
+  document.getElementById("afResult").classList.add("visible");
+  switchAfTab("analyse", document.querySelector(".af-tab"));
+}
+
+function saveAfToHistory(){ renderAfHistory(); }
+
+function copyAfResult(){
+  const txt = document.getElementById("afResultBody").textContent;
+  navigator.clipboard.writeText(txt).then(()=>alert("Synthèse copiée dans le presse-papier."));
+}
+
+function copyAfPrompt(){
+  navigator.clipboard.writeText(AF_SYSTEM_PROMPT).then(()=>alert("Prompt copié."));
+}
+
+document.getElementById("afOverlay").addEventListener("click", e=>{
+  if(e.target===document.getElementById("afOverlay")) closeAfPanel();
+});
+
+// Raccourci G+V
+document.addEventListener("keydown", e => {
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
+  if(typeof gPressed !== "undefined" && gPressed && (e.key==="v"||e.key==="V")) openAfPanel();
+});
+</script>
+
+<!-- ══ FAQ MANAGER SCRIPT ══ -->
+<script>
 // Close on overlay click
 document.getElementById("faqOverlay").addEventListener("click",e=>{
   if(e.target===document.getElementById("faqOverlay")) closeFaqManager();
