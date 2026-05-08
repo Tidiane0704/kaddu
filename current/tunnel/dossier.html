@@ -307,6 +307,101 @@
       display:flex;align-items:center;justify-content:center;
       font-size:.72rem;color:var(--or);font-weight:600;
     }
+
+    /* ── ÉTAPE 5 RÉCAPITULATIF ── */
+    .recap-bloc{
+      border:1px solid var(--bdr);border-radius:14px;
+      background:rgba(11,32,57,.5);margin-bottom:16px;overflow:hidden;
+    }
+    .recap-bloc-head{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 18px;border-bottom:1px solid rgba(191,150,80,.08);
+      background:rgba(7,24,43,.4);
+    }
+    .recap-bloc-title{
+      font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--or);font-weight:500;
+    }
+    .recap-edit-btn{
+      font-size:.7rem;padding:5px 12px;border-radius:999px;
+      border:1px solid rgba(191,150,80,.25);background:transparent;
+      color:rgba(248,244,238,.5);cursor:pointer;font-family:'DM Sans',sans-serif;
+      transition:.18s;
+    }
+    .recap-edit-btn:hover{border-color:var(--or);color:var(--or)}
+    .recap-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:0;
+      padding:14px 18px;
+    }
+    @media(max-width:600px){.recap-grid{grid-template-columns:1fr}}
+    .recap-item{padding:7px 0;border-bottom:1px solid rgba(191,150,80,.06);font-size:.84rem}
+    .recap-item:nth-child(odd):last-child{grid-column:span 2}
+    .recap-key{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(248,244,238,.35);margin-bottom:2px}
+    .recap-val{color:var(--blanc);font-weight:500}
+    .recap-val.missing{color:rgba(248,244,238,.25);font-style:italic}
+    .recap-person{
+      display:flex;align-items:flex-start;gap:12px;
+      padding:12px 18px;border-bottom:1px solid rgba(191,150,80,.06);
+    }
+    .recap-person:last-child{border-bottom:none}
+    .recap-person-avatar{
+      width:32px;height:32px;border-radius:50%;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;font-weight:600;
+    }
+    .recap-person-avatar.loc{background:rgba(191,150,80,.15);border:1px solid rgba(191,150,80,.3);color:var(--or)}
+    .recap-person-avatar.gar{background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.25);color:var(--blue)}
+    .recap-person-name{font-size:.9rem;font-weight:500;color:var(--blanc);margin-bottom:2px}
+    .recap-person-meta{font-size:.74rem;color:var(--muted)}
+    .recap-person-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+    .recap-tag{
+      font-size:.62rem;padding:2px 8px;border-radius:999px;
+      background:rgba(191,150,80,.1);border:1px solid rgba(191,150,80,.2);
+      color:rgba(191,150,80,.8);
+    }
+    .recap-doc-item{
+      display:flex;align-items:center;gap:10px;
+      padding:8px 18px;border-bottom:1px solid rgba(191,150,80,.06);font-size:.82rem;
+    }
+    .recap-doc-item:last-child{border-bottom:none}
+    .recap-doc-ok{color:var(--green);font-size:.72rem;margin-left:auto;flex-shrink:0}
+    .recap-doc-person{
+      font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+      color:rgba(248,244,238,.3);padding:8px 18px 4px;
+    }
+    .recap-empty{padding:14px 18px;font-size:.82rem;color:rgba(248,244,238,.3);font-style:italic}
+    .recap-engagement{
+      display:flex;align-items:flex-start;gap:14px;
+      padding:16px 18px;border-radius:12px;
+      background:rgba(0,200,117,.04);border:1px solid rgba(0,200,117,.12);
+      margin-top:8px;
+    }
+    .recap-eng-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+    .recap-eng-title{font-size:.84rem;font-weight:500;color:var(--green);margin-bottom:3px}
+    .recap-eng-text{font-size:.76rem;color:var(--muted);line-height:1.6}
+
+    /* ── VALIDATION INLINE ── */
+    .field-error{
+      font-size:.74rem;color:#ff8a8a;margin-top:5px;
+      display:none;align-items:center;gap:5px;
+    }
+    .field-error.visible{display:flex}
+    .field-error::before{content:'↑';font-size:.8rem}
+    .form-input.error,.form-select.error{
+      border-color:rgba(255,107,107,.6)!important;
+      background:rgba(255,107,107,.04)!important;
+    }
+    .choice-grid.error-group{
+      outline:2px solid rgba(255,107,107,.35);outline-offset:4px;border-radius:8px;
+    }
+    .step-error-banner{
+      display:none;align-items:flex-start;gap:10px;
+      padding:12px 16px;border-radius:10px;margin-bottom:16px;
+      background:rgba(255,107,107,.07);border:1px solid rgba(255,107,107,.2);
+      color:#ffb3b3;font-size:.82rem;line-height:1.5;
+    }
+    .step-error-banner.visible{display:flex}
+    .step-error-banner::before{content:'⚠';flex-shrink:0;font-size:1rem}
   </style>
 </head>
 <body>
@@ -375,6 +470,11 @@
           <div class="step-circle pending" id="sc4">4</div>
           <div class="step-label pending-lbl" id="sl4">Informations<br>garants</div>
         </div>
+        <div class="step-line pending" id="line4"></div>
+        <div class="step-item" onclick="goStep(5)">
+          <div class="step-circle pending" id="sc5">5</div>
+          <div class="step-label pending-lbl" id="sl5">Confirmation</div>
+        </div>
       </div>
 
       <div id="alert-global"></div>
@@ -386,10 +486,12 @@
         <h1 class="section-title">Déposez votre <em>dossier</em></h1>
         <p class="section-sub">Quelques informations suffisent pour qualifier votre projet. Votre dossier sera ensuite analysé par Kàddu avant transmission au propriétaire.</p>
 
+        <div class="step-error-banner" id="err-step1">Veuillez compléter les champs obligatoires avant de continuer.</div>
+
         <!-- Composition -->
         <div class="form-group">
           <label class="form-label">Qui occupera le logement ?</label>
-          <div class="choice-grid choice-grid-4">
+          <div class="choice-grid choice-grid-4" id="grid-compo">
             <div class="choice-card selected" onclick="selectCompo(this,'seul')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="17" r="9"/><path class="gold" d="M18 55c1-15 8-24 14-24s13 9 14 24H18z"/><path class="beige" d="M32 30c3.5 0 6.6-1.2 8.6-3.1C38.2 31.5 35.3 34 32 34s-6.2-2.5-8.6-7.1C25.4 28.8 28.5 30 32 30z"/></svg></span><span class="choice-label">Locataire seul(e)</span></div>
             <div class="choice-card" onclick="selectCompo(this,'couple')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="24" cy="18" r="8"/><circle class="beige" cx="42" cy="21" r="7"/><path class="gold" d="M12 55c.8-14 6.5-23 12-23s11.2 9 12 23H12z"/><path class="beige" d="M32 55c.6-12 5-20 10-20s9.4 8 10 20H32z"/></svg></span><span class="choice-label">Couple (sans enfants)</span></div>
             <div class="choice-card" onclick="selectCompo(this,'famille')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="22" cy="18" r="8"/><circle class="beige" cx="43" cy="18" r="8"/><circle class="gold" cx="32" cy="34" r="6"/><path class="gold" d="M10 55c.8-13 6-22 12-22s11.2 9 12 22H10z"/><path class="beige" d="M30 55c.8-13 6-22 13-22s11.2 9 12 22H30z"/><path class="gold" d="M24 58c.5-9 4-15 8-15s7.5 6 8 15H24z"/></svg></span><span class="choice-label">Famille</span></div>
@@ -410,24 +512,26 @@
         <div class="form-group">
           <label class="form-label">Quand souhaitez-vous emménager ?</label>
           <p class="form-hint" style="margin-bottom:12px">Merci de prévoir une date hors week-end, afin qu'un agent Kàddu soit disponible le jour de l'emménagement.</p>
-          <div class="choice-grid choice-grid-4">
+          <div class="choice-grid choice-grid-4" id="grid-emmenagement">
             <div class="choice-card" onclick="selectChoice(this,'emmenagement','semaine')"><span class="kicon"><svg viewBox="0 0 64 64"><circle class="gold" cx="32" cy="32" r="25"/><path d="M32 14v32M20 35l12 12 12-12" class="stroke" style="stroke:#07182B;stroke-width:3.6"/></svg></span><span class="choice-label">Moins d'une semaine</span></div>
             <div class="choice-card" onclick="selectChoice(this,'emmenagement','deux-semaines')"><span class="kicon"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="25" fill="none" stroke="#DDB96E" stroke-width="3"/><path d="M20 32h23M35 23l9 9-9 9" class="stroke"/></svg></span><span class="choice-label">Une à deux semaines</span></div>
             <div class="choice-card" onclick="selectChoice(this,'emmenagement','mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path d="M48 26a18 18 0 1 0-5 17" class="stroke"/><path d="M47 43h8v-8" class="stroke"/><circle class="gold" cx="32" cy="32" r="4"/></svg></span><span class="choice-label">D'ici un mois</span></div>
             <div class="choice-card" onclick="selectChoice(this,'emmenagement','plus-mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path d="M47 26a18 18 0 1 0-5 17" class="stroke"/><path d="M47 43h8v-8M48 16v10M43 21h10" class="stroke"/><circle class="gold" cx="32" cy="32" r="4"/></svg></span><span class="choice-label">Plus d'un mois</span></div>
           </div>
+          <div class="field-error" id="err-emmenagement">Veuillez sélectionner une date d'emménagement</div>
         </div>
 
         <!-- Durée -->
         <div class="form-group">
           <label class="form-label">Durée envisagée</label>
           <p class="form-hint" style="margin-bottom:12px">Votre réponse ne constitue pas un engagement : cette estimation nous permet d'en savoir plus sur votre projet.</p>
-          <div class="choice-grid choice-grid-4">
+          <div class="choice-grid choice-grid-4" id="grid-duree">
             <div class="choice-card" onclick="selectChoice(this,'duree','6mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">Moins de 6 mois</span></div>
             <div class="choice-card" onclick="selectChoice(this,'duree','6-12mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">6 à 12 mois</span></div>
             <div class="choice-card" onclick="selectChoice(this,'duree','12-36mois')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">12 à 36 mois</span></div>
             <div class="choice-card" onclick="selectChoice(this,'duree','3ans')"><span class="kicon"><svg viewBox="0 0 64 64"><path class="gold" d="M10 31 32 12l22 19v22H40V38H24v15H10V31z"/><path class="beige" d="M20 30 32 20l12 10v5H20v-5z"/></svg></span><span class="choice-label">Plus de 3 ans</span></div>
           </div>
+          <div class="field-error" id="err-duree">Veuillez sélectionner une durée de séjour envisagée</div>
         </div>
 
         <!-- Ville précédente -->
@@ -472,17 +576,35 @@
           </div>
 
           <div class="form-row">
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Prénom</label><input class="form-input" id="loc-prenom" placeholder="Prénom"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom</label><input class="form-input" id="loc-nom" placeholder="Nom"></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Prénom <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-prenom" placeholder="Prénom"><div class="field-error" id="err-loc-prenom">Prénom obligatoire</div></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nom <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-nom" placeholder="Nom"><div class="field-error" id="err-loc-nom">Nom obligatoire</div></div>
           </div>
           <div class="form-row" style="margin-top:16px">
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email</label><input class="form-input" id="loc-email" type="email" placeholder="email@exemple.com"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone</label><input class="form-input" id="loc-tel" placeholder="+221 77 000 00 00"></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Date de naissance <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-ddn" type="date"><div class="field-error" id="err-loc-ddn">Date de naissance obligatoire</div></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nationalité <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-nationalite" placeholder="Ex : Sénégalaise, Française…"><div class="field-error" id="err-loc-nationalite">Nationalité obligatoire</div></div>
+          </div>
+          <div class="form-row" style="margin-top:16px">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Type de pièce d'identité <span style="color:rgba(191,150,80,.7)">*</span></label>
+              <select class="form-select" id="loc-id-type">
+                <option value="">Sélectionner…</option>
+                <option value="cni">Carte nationale d'identité</option>
+                <option value="passeport">Passeport</option>
+                <option value="titre_sejour">Titre de séjour</option>
+                <option value="autre">Autre</option>
+              </select>
+              <div class="field-error" id="err-loc-id-type">Type de pièce obligatoire</div>
+            </div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de pièce <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-id-numero" placeholder="Ex : 1234567890"><div class="field-error" id="err-loc-id-numero">Numéro de pièce obligatoire</div></div>
+          </div>
+          <div class="form-row" style="margin-top:16px">
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-email" type="email" placeholder="email@exemple.com"><div class="field-error" id="err-loc-email">Email obligatoire</div></div>
+            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-tel" placeholder="+221 77 000 00 00"><div class="field-error" id="err-loc-tel">Téléphone obligatoire</div></div>
           </div>
 
           <!-- Situation pro -->
           <div class="form-group" style="margin-top:16px">
-            <label class="form-label">Situation professionnelle</label>
+            <label class="form-label">Situation professionnelle <span style="color:rgba(191,150,80,.7)">*</span></label>
             <select class="form-select" id="loc-situation" onchange="updateProFields('loc')">
               <option value="">Sélectionner…</option>
               <option value="cdi">Salarié(e) en CDI</option>
@@ -494,6 +616,7 @@
               <option value="sans_emploi">Sans emploi</option>
               <option value="autre">Autre</option>
             </select>
+            <div class="field-error" id="err-loc-situation">Situation professionnelle obligatoire</div>
           </div>
 
           <!-- Champs dynamiques CDI/CDD/Indépendant/Intérimaire/Autre -->
@@ -641,13 +764,72 @@
 
         <div class="form-nav">
           <button class="btn btn-ghost" onclick="prevStep(4)">← Retour</button>
-          <button class="btn btn-primary btn-lg" onclick="submitDossier(this)">
-            <span>Postuler pour ce logement</span>
+          <button class="btn btn-primary btn-lg" onclick="nextStep(4)">Vérifier mon dossier →</button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════
+           ÉTAPE 5 — RÉCAPITULATIF & CONFIRMATION
+      ═══════════════════════════════ -->
+      <div class="form-section" id="section-5">
+        <h1 class="section-title">Vérifiez votre <em>dossier</em></h1>
+        <p class="section-sub">Prenez le temps de vérifier chaque information avant d'envoyer. Vous pouvez modifier chaque section en cliquant sur "Modifier".</p>
+
+        <!-- Bloc 1 — Projet -->
+        <div class="recap-bloc" id="recap-projet">
+          <div class="recap-bloc-head">
+            <div class="recap-bloc-title">Votre projet</div>
+            <button class="recap-edit-btn" onclick="goStep(1)">Modifier</button>
+          </div>
+          <div class="recap-grid" id="recap-projet-content"></div>
+        </div>
+
+        <!-- Bloc 2 — Locataires -->
+        <div class="recap-bloc" id="recap-locataires">
+          <div class="recap-bloc-head">
+            <div class="recap-bloc-title">Locataires sur le bail</div>
+            <button class="recap-edit-btn" onclick="goStep(2)">Modifier</button>
+          </div>
+          <div id="recap-locataires-content"></div>
+        </div>
+
+        <!-- Bloc 3 — Documents -->
+        <div class="recap-bloc" id="recap-docs">
+          <div class="recap-bloc-head">
+            <div class="recap-bloc-title">Documents déposés</div>
+            <button class="recap-edit-btn" onclick="goStep(3)">Modifier</button>
+          </div>
+          <div id="recap-docs-content"></div>
+        </div>
+
+        <!-- Bloc 4 — Garants -->
+        <div class="recap-bloc" id="recap-garants">
+          <div class="recap-bloc-head">
+            <div class="recap-bloc-title">Garants</div>
+            <button class="recap-edit-btn" onclick="goStep(4)">Modifier</button>
+          </div>
+          <div id="recap-garants-content"></div>
+        </div>
+
+        <!-- Engagement & CTA -->
+        <div class="recap-engagement">
+          <div class="recap-eng-icon">🔒</div>
+          <div>
+            <div class="recap-eng-title">Votre dossier est confidentiel</div>
+            <div class="recap-eng-text">Il ne sera transmis au propriétaire qu'en cas d'acceptation définitive de votre candidature par Kàddu. Vos documents sont protégés et chiffrés.</div>
+          </div>
+        </div>
+
+        <div class="form-nav" style="margin-top:24px">
+          <button class="btn btn-ghost" onclick="prevStep(5)">← Retour</button>
+          <button class="btn btn-primary btn-lg" id="final-submit-btn" onclick="submitDossier(this)">
+            <span>Envoyer ma candidature</span>
             <div class="spinner" id="spinner-submit"></div>
           </button>
         </div>
-        <p style="text-align:center;font-size:.76rem;color:rgba(248,244,238,.3);margin-top:12px;cursor:pointer" onclick="submitDossier(document.querySelector('#section-3 .btn-primary'))">Je souhaite postuler à un autre logement</p>
+        <p style="text-align:center;font-size:.76rem;color:rgba(248,244,238,.3);margin-top:12px">En envoyant, vous confirmez que toutes les informations sont exactes.</p>
       </div>
+
     </div>
 
     <!-- RIGHT PANEL — Bien / Carousel -->
@@ -802,34 +984,82 @@ function goStep(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function renderStepper(){
-  for(let i=1;i<=4;i++){
+  for(let i=1;i<=5;i++){
     const c=document.getElementById('sc'+i);
     const l=document.getElementById('sl'+i);
     if(!c)continue;
     if(i<currentStep){c.className='step-circle done';c.textContent='✓';l.className='step-label done-lbl';}
     else if(i===currentStep){c.className='step-circle active';c.textContent=i;l.className='step-label active-lbl';}
     else{c.className='step-circle pending';c.textContent=i;l.className='step-label pending-lbl';}
-    if(i<4){const line=document.getElementById('line'+i);if(line)line.className='step-line '+(i<currentStep?'done':'pending');}
+    if(i<5){const line=document.getElementById('line'+i);if(line)line.className='step-line '+(i<currentStep?'done':'pending');}
   }
 }
 
+function fieldErr(id, show){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.toggle('visible', show);
+}
+function inputErr(id, show){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.toggle('error', show);
+}
+function clearAllErrors(){
+  document.querySelectorAll('.field-error').forEach(e=>e.classList.remove('visible'));
+  document.querySelectorAll('.form-input.error,.form-select.error').forEach(e=>e.classList.remove('error'));
+  document.querySelectorAll('.choice-grid.error-group').forEach(e=>e.classList.remove('error-group'));
+  document.querySelectorAll('.step-error-banner').forEach(e=>e.classList.remove('visible'));
+}
+
 function nextStep(from){
+  clearAllErrors();
+  let hasError = false;
+
   if(from===1){
-    if(!choices.emmenagement||!choices.duree){showAlert('Veuillez sélectionner la date d\'emménagement et la durée souhaitée.','warn');return;}
-  }
-  if(from===2){
-    if(!locataires.length){showAlert('Veuillez ajouter au moins un locataire.','warn');return;}
-    // Générer les blocs documents selon les locataires
-    buildDocsUI();
-  }
-  if(from===3){
-    // Vérifier documents obligatoires
-    const missing = checkRequiredDocs();
-    if(missing.length){
-      showAlert('Documents obligatoires manquants : ' + missing.join(', '),'warn');
+    if(!choices.emmenagement){
+      fieldErr('err-emmenagement',true);
+      document.getElementById('grid-emmenagement')?.classList.add('error-group');
+      hasError=true;
+    }
+    if(!choices.duree){
+      fieldErr('err-duree',true);
+      document.getElementById('grid-duree')?.classList.add('error-group');
+      hasError=true;
+    }
+    if(hasError){
+      document.getElementById('err-step1').classList.add('visible');
+      document.getElementById('grid-emmenagement')?.scrollIntoView({behavior:'smooth',block:'center'});
       return;
     }
   }
+
+  if(from===2){
+    if(!locataires.length){
+      showAlert('Veuillez ajouter au moins un locataire avant de continuer.','warn');
+      return;
+    }
+    buildDocsUI();
+  }
+
+  if(from===3){
+    const missing = checkRequiredDocs();
+    if(missing.length){
+      // Highlight les items manquants
+      missing.forEach(m => {
+        const key = m.key;
+        const item = document.getElementById('docitem-'+key);
+        if(item) item.style.borderColor='rgba(255,107,107,.5)';
+      });
+      showAlert('Documents obligatoires manquants : ' + missing.map(m=>m.label).join(', '),'warn');
+      return;
+    }
+  }
+
+  if(from===4){
+    buildRecap();
+  }
+
   currentStep=from+1;
   renderStepper();
   document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
@@ -1015,6 +1245,7 @@ async function handleDocUpload(event, key, prenomLoc){
       nameTxt.textContent = file.name;
       nameEl.classList.add('visible');
       item.classList.add('uploaded');
+    if(item.style.borderColor) item.style.borderColor='';
     }, 300);
 
   } catch(err) {
@@ -1032,7 +1263,7 @@ function checkRequiredDocs(){
     rules.filter(r => r.required).forEach(rule => {
       const key = `${idx}_${rule.id}`;
       if(!uploadedDocs[key]){
-        missing.push(`${loc.prenom || 'Locataire'} — ${rule.label}`);
+        missing.push({ key, label:`${loc.prenom||'Locataire'} — ${rule.label}` });
       }
     });
   });
@@ -1096,20 +1327,53 @@ function addLocataire(){
   document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function clearLocForm(){
-  ['loc-prenom','loc-nom','loc-email','loc-tel','loc-poste','loc-societe','loc-infos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['loc-prenom','loc-nom','loc-ddn','loc-nationalite','loc-id-numero','loc-email','loc-tel','loc-poste','loc-societe','loc-infos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const idTypeEl=document.getElementById('loc-id-type');if(idTypeEl)idTypeEl.value='';
   ['loc-revenu','loc-revenu-etu','loc-revenu-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
   document.getElementById('loc-situation').value='';
   ['loc-fields-standard','loc-fields-cdi','loc-fields-cdd','loc-fields-etudiant','loc-fields-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
 }
 function saveLoc(){
-  const prenom=document.getElementById('loc-prenom').value.trim();
-  const nom=document.getElementById('loc-nom').value.trim();
-  if(!prenom||!nom){showAlert('Prénom et nom sont obligatoires.','warn');return;}
+  // Nettoyer les erreurs précédentes
+  ['loc-prenom','loc-nom','loc-ddn','loc-nationalite','loc-id-type','loc-id-numero','loc-email','loc-tel','loc-situation'].forEach(id=>{
+    inputErr(id,false); fieldErr('err-'+id,false);
+  });
+
+  const prenom = document.getElementById('loc-prenom').value.trim();
+  const nom    = document.getElementById('loc-nom').value.trim();
+  const ddn    = document.getElementById('loc-ddn').value;
+  const nat    = document.getElementById('loc-nationalite').value.trim();
+  const idType = document.getElementById('loc-id-type').value;
+  const idNum  = document.getElementById('loc-id-numero').value.trim();
+  const email  = document.getElementById('loc-email').value.trim();
+  const tel    = document.getElementById('loc-tel').value.trim();
+  const sit    = document.getElementById('loc-situation').value;
+
+  let hasErr = false;
+  function reqField(val, inputId, errId){
+    if(!val){ inputErr(inputId,true); fieldErr(errId,true); hasErr=true; }
+  }
+
+  reqField(prenom,  'loc-prenom',    'err-loc-prenom');
+  reqField(nom,     'loc-nom',       'err-loc-nom');
+  reqField(ddn,     'loc-ddn',       'err-loc-ddn');
+  reqField(nat,     'loc-nationalite','err-loc-nationalite');
+  reqField(idType,  'loc-id-type',   'err-loc-id-type');
+  reqField(idNum,   'loc-id-numero', 'err-loc-id-numero');
+  reqField(email,   'loc-email',     'err-loc-email');
+  reqField(tel,     'loc-tel',       'err-loc-tel');
+  reqField(sit,     'loc-situation', 'err-loc-situation');
+
+  if(hasErr){
+    // Scroller vers la première erreur
+    const firstErr = document.querySelector('#loc-form .form-input.error, #loc-form .form-select.error');
+    if(firstErr) firstErr.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
   const loc={
-    prenom,nom,
-    email:document.getElementById('loc-email').value.trim(),
-    tel:document.getElementById('loc-tel').value.trim(),
-    situation:document.getElementById('loc-situation').value,
+    prenom,nom,ddn,nationalite:nat,id_type:idType,id_numero:idNum,
+    email,tel,situation:sit,
     revenu:document.getElementById('loc-revenu').value||document.getElementById('loc-revenu-etu').value||document.getElementById('loc-revenu-retraite').value||0,
     poste:document.getElementById('loc-poste')?.value||'',
     societe:document.getElementById('loc-societe')?.value||'',
@@ -1126,6 +1390,10 @@ function editLoc(i){
   const l=locataires[i];
   document.getElementById('loc-prenom').value=l.prenom;
   document.getElementById('loc-nom').value=l.nom;
+  document.getElementById('loc-ddn').value=l.ddn||'';
+  document.getElementById('loc-nationalite').value=l.nationalite||'';
+  document.getElementById('loc-id-type').value=l.id_type||'';
+  document.getElementById('loc-id-numero').value=l.id_numero||'';
   document.getElementById('loc-email').value=l.email;
   document.getElementById('loc-tel').value=l.tel;
   document.getElementById('loc-situation').value=l.situation;
@@ -1222,7 +1490,100 @@ function confirmNoGarant(){
   showAlert('Dossier sans garant. Vous pouvez quand même postuler.','info');
 }
 
-// ── SUBMIT ───────────────────────────────────────────────────
+// ══ RÉCAPITULATIF ÉTAPE 5 ════════════════════════════════════
+function buildRecap(){
+  const COMPO_LABELS={seul:'Locataire seul(e)',couple:'Couple (sans enfants)',famille:'Famille',colocation:'Colocation'};
+  const EMMEN_LABELS={'semaine':'Moins d\'une semaine','deux-semaines':'Une à deux semaines','mois':'D\'ici un mois','plus-mois':'Plus d\'un mois'};
+  const DUREE_LABELS={'6mois':'Moins de 6 mois','6-12mois':'6 à 12 mois','12-36mois':'12 à 36 mois','3ans':'Plus de 3 ans'};
+  const SIT_LABELS={cdi:'Salarié CDI',cdd:'Salarié CDD',independant:'Indépendant',etudiant:'Étudiant',interimaire:'Intérimaire',retraite:'Retraité',sans_emploi:'Sans emploi',autre:'Autre'};
+  const ID_LABELS={cni:'CNI',passeport:'Passeport',titre_sejour:'Titre de séjour',autre:'Autre'};
+
+  // ── PROJET ──
+  const projItems = [
+    {k:'Composition',v:COMPO_LABELS[compoType]||compoType},
+    {k:'Emménagement',v:EMMEN_LABELS[choices.emmenagement]||choices.emmenagement||'—'},
+    {k:'Durée souhaitée',v:DUREE_LABELS[choices.duree]||choices.duree||'—'},
+    {k:'Ville précédente',v:document.getElementById('ville-precedente')?.value||'—'},
+  ];
+  document.getElementById('recap-projet-content').innerHTML = projItems.map(i=>`
+    <div class="recap-item">
+      <div class="recap-key">${i.k}</div>
+      <div class="recap-val ${i.v==='—'?'missing':''}">${i.v}</div>
+    </div>`).join('');
+
+  // ── LOCATAIRES ──
+  let locHtml = '';
+  if(!locataires.length){
+    locHtml = '<div class="recap-empty">Aucun locataire renseigné</div>';
+  } else {
+    locataires.forEach(l => {
+      const tags = [];
+      if(l.situation) tags.push(SIT_LABELS[l.situation]||l.situation);
+      if(l.revenu && Number(l.revenu)>0) tags.push(Number(l.revenu).toLocaleString('fr-FR')+' F CFA/mois');
+      if(l.societe) tags.push(l.societe);
+      if(l.nationalite) tags.push(l.nationalite);
+      if(l.id_type) tags.push(ID_LABELS[l.id_type]||l.id_type);
+      locHtml += `<div class="recap-person">
+        <div class="recap-person-avatar loc">${l.prenom[0].toUpperCase()}</div>
+        <div style="flex:1">
+          <div class="recap-person-name">${l.prenom} ${l.nom.toUpperCase()}</div>
+          <div class="recap-person-meta">${l.email||''}${l.tel?' · '+l.tel:''}</div>
+          ${l.ddn?`<div class="recap-person-meta">Né(e) le ${l.ddn}</div>`:''}
+          <div class="recap-person-tags">${tags.map(t=>`<span class="recap-tag">${t}</span>`).join('')}</div>
+        </div>
+      </div>`;
+    });
+  }
+  document.getElementById('recap-locataires-content').innerHTML = locHtml;
+
+  // ── DOCUMENTS ──
+  let docHtml = '';
+  const docsEntries = Object.entries(uploadedDocs);
+  if(!docsEntries.length){
+    docHtml = '<div class="recap-empty">Aucun document déposé</div>';
+  } else {
+    let lastLocIdx = null;
+    docsEntries.forEach(([key, doc]) => {
+      const parts = key.split('_');
+      const locIdx = parseInt(parts[0]);
+      const loc = locataires[locIdx];
+      if(locIdx !== lastLocIdx){
+        lastLocIdx = locIdx;
+        if(loc) docHtml += `<div class="recap-doc-person">${loc.prenom} ${loc.nom}</div>`;
+      }
+      const rules = DOC_RULES[loc?.situation]||DOC_RULES['autre'];
+      const rule = rules.find(r=>r.id===parts.slice(1).join('_'));
+      docHtml += `<div class="recap-doc-item">
+        <span style="font-size:1rem">${rule?.id==='cni'?'🪪':rule?.id==='fiches_paie'?'💰':rule?.id==='releve'?'🏦':'📄'}</span>
+        <span style="flex:1;color:rgba(248,244,238,.75)">${rule?.label||key}</span>
+        <span class="recap-doc-ok">✓ ${doc.name||'Déposé'}</span>
+      </div>`;
+    });
+  }
+  document.getElementById('recap-docs-content').innerHTML = docHtml;
+
+  // ── GARANTS ──
+  let garHtml = '';
+  if(!garants.length){
+    garHtml = `<div class="recap-empty">Dossier sans garant${noGarant?' (confirmé)':''}</div>`;
+  } else {
+    garants.forEach(g => {
+      garHtml += `<div class="recap-person">
+        <div class="recap-person-avatar gar">${g.prenom[0].toUpperCase()}</div>
+        <div style="flex:1">
+          <div class="recap-person-name">${g.prenom} ${g.nom.toUpperCase()}</div>
+          <div class="recap-person-meta">Garant(e) · ${g.type||''}</div>
+          <div class="recap-person-tags">
+            ${g.situation?`<span class="recap-tag">${SIT_LABELS[g.situation]||g.situation}</span>`:''}
+            ${g.revenu&&Number(g.revenu)>0?`<span class="recap-tag">${Number(g.revenu).toLocaleString('fr-FR')} F CFA/mois</span>`:''}
+          </div>
+        </div>
+      </div>`;
+    });
+  }
+  document.getElementById('recap-garants-content').innerHTML = garHtml;
+}
+// ══ FIN RÉCAPITULATIF ═════════════════════════════════════════
 async function submitDossier(btn){
   clearAlert();
   btn.disabled=true;
