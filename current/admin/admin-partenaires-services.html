@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu Admin · Partenaires & Services</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --or:#BF9650;--orl:#DDB96E;--ord:#8B6520;
+      --nbl:#07182B;--card:#0b2039;
+      --txt:#F8F4EE;--muted:rgba(248,244,238,.56);
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.32);
+      --green:#00C875;--red:#ff6b6b;--blue:#4A9EFF;--orange:#F59E0B;
+      --bg:#060d18;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px}
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:#060d18;color:var(--txt);
+      min-height:100vh;-webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    body::before{
+      content:"";position:fixed;inset:0;z-index:-1;
+      background:
+        radial-gradient(ellipse 70% 55% at 12% 0%, rgba(191,150,80,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 92% 82%, rgba(74,158,255,.06) 0%, transparent 52%),
+        linear-gradient(180deg,#060d18 0%,#08152a 100%);
+    }
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font-family:'DM Sans',sans-serif}
+
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(6,13,24,.92);backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--bdr);
+      height:64px;padding:0 32px;
+      display:flex;align-items:center;justify-content:space-between;gap:20px
+    }
+    .top-brand{display:flex;align-items:center;gap:12px}
+    .top-mark{
+      width:36px;height:36px;border-radius:10px;
+      background:linear-gradient(145deg,rgba(191,150,80,.2),rgba(191,150,80,.05));
+      border:1px solid var(--bds);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:1rem;color:var(--or)
+    }
+    .top-name{font-size:.88rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+    .top-badge{
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:3px 8px;border-radius:999px;
+      background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or)
+    }
+    .top-right{display:flex;align-items:center;gap:10px}
+    .top-link{
+      padding:8px 14px;border:1px solid var(--bdr);border-radius:999px;
+      background:transparent;color:rgba(248,244,238,.56);
+      font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+      transition:.2s;
+    }
+    .top-link:hover{border-color:var(--or);color:var(--or)}
+
+    .main{max-width:1320px;margin:0 auto;padding:40px 32px 70px}
+
+    .hero{
+      display:grid;grid-template-columns:1.2fr .8fr;gap:22px;
+      margin-bottom:28px;align-items:stretch;
+    }
+    .hero-card{
+      border:1px solid var(--bdr);border-radius:24px;
+      background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      padding:28px;position:relative;overflow:hidden;
+    }
+    .hero-card::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(circle at 15% 0%,rgba(191,150,80,.10),transparent 35%);
+    }
+    .eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1.05;margin-bottom:12px}
+    .hero-title em{font-style:italic;color:var(--or)}
+    .hero-sub{font-size:.94rem;color:var(--muted);line-height:1.75;max-width:650px}
+
+    .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+    .qbtn{
+      border:1px solid rgba(191,150,80,.18);border-radius:14px;
+      background:rgba(7,24,43,.45);padding:14px;
+      display:flex;align-items:center;gap:12px;color:rgba(248,244,238,.75);
+      cursor:pointer;transition:.2s;text-align:left;
+    }
+    .qbtn:hover{border-color:var(--bds);background:rgba(191,150,80,.06);transform:translateY(-1px)}
+    .qbtn i{font-size:1.3rem;color:var(--or)}
+    .qbtn strong{display:block;font-size:.84rem}
+    .qbtn span{display:block;font-size:.7rem;color:rgba(248,244,238,.36);margin-top:2px}
+
+    .ops-card{
+      border:1px solid var(--bdr);border-radius:24px;
+      background:linear-gradient(160deg,rgba(7,24,43,.72),rgba(7,15,26,.6));
+      padding:24px;
+    }
+    .ops-title{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300;margin-bottom:14px}
+    .ops-line{
+      display:flex;justify-content:space-between;align-items:center;
+      border-bottom:1px solid rgba(191,150,80,.08);
+      padding:11px 0;font-size:.84rem;
+    }
+    .ops-line:last-child{border-bottom:none}
+    .ops-k{color:rgba(248,244,238,.46)}
+    .ops-v{font-weight:600;color:var(--txt)}
+    .ops-v.green{color:var(--green)}
+    .ops-v.gold{color:var(--or)}
+
+    .stats-grid{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;
+    }
+    .stat-card{
+      border:1px solid var(--bdr);border-radius:18px;
+      background:rgba(7,24,43,.42);padding:18px;
+    }
+    .stat-k{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+    .stat-v{font-family:'Playfair Display',serif;font-size:2rem;font-weight:300;line-height:1}
+    .stat-meta{font-size:.72rem;color:rgba(248,244,238,.34);margin-top:8px}
+
+    .section-label{
+      font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(248,244,238,.32);margin:28px 0 16px;
+      display:flex;align-items:center;gap:12px
+    }
+    .section-label::after{content:"";flex:1;height:1px;background:rgba(191,150,80,.1)}
+
+    .toolbar{
+      display:flex;gap:10px;align-items:center;justify-content:space-between;
+      border:1px solid var(--bdr);border-radius:18px;
+      padding:12px;background:rgba(7,24,43,.34);margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .input,.select{
+      padding:10px 12px;border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(191,150,80,.16);
+      color:rgba(248,244,238,.78);
+      font-size:.82rem;outline:none;
+    }
+    .input{min-width:220px}
+    .select option{background:#0b2039;color:var(--txt)}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--bdr);border-radius:999px;
+      padding:10px 16px;background:transparent;color:rgba(248,244,238,.56);
+      cursor:pointer;transition:.2s;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    }
+    .btn:hover{border-color:var(--or);color:var(--or)}
+    .btn-primary{background:var(--or);border-color:var(--or);color:#0a0a0a}
+    .btn-primary:hover{background:var(--orl);color:#0a0a0a}
+    .btn-green{background:rgba(0,200,117,.12);border-color:rgba(0,200,117,.26);color:#77ffbe}
+    .btn-red{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.18);color:#ff9a9a}
+    .btn-sm{padding:7px 11px;font-size:.68rem}
+
+    .content-grid{display:grid;grid-template-columns:1fr 380px;gap:16px;align-items:start}
+
+    .table-card{
+      border:1px solid var(--bdr);border-radius:20px;overflow:hidden;
+      background:rgba(7,24,43,.36);
+    }
+    table{width:100%;border-collapse:collapse}
+    th{
+      text-align:left;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+      color:rgba(248,244,238,.32);font-weight:500;
+      padding:14px 16px;border-bottom:1px solid rgba(191,150,80,.10);
+      background:rgba(7,15,26,.5)
+    }
+    td{
+      padding:14px 16px;border-bottom:1px solid rgba(191,150,80,.07);
+      font-size:.84rem;vertical-align:middle;color:rgba(248,244,238,.72)
+    }
+    tr:hover td{background:rgba(255,255,255,.02)}
+    tr:last-child td{border-bottom:none}
+    .partner-main{display:flex;align-items:center;gap:12px}
+    .partner-logo{
+      width:42px;height:42px;border-radius:14px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(191,150,80,.10);border:1px solid rgba(191,150,80,.22);
+      font-size:1.15rem;color:var(--or)
+    }
+    .partner-name{font-weight:700;color:var(--txt);margin-bottom:2px}
+    .partner-desc{font-size:.72rem;color:rgba(248,244,238,.34);max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pill{
+      display:inline-flex;align-items:center;gap:5px;
+      font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      padding:4px 9px;border-radius:999px;
+      border:1px solid rgba(191,150,80,.18);color:rgba(248,244,238,.55)
+    }
+    .pill.active{background:rgba(0,200,117,.10);border-color:rgba(0,200,117,.24);color:#77ffbe}
+    .pill.pause{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.22);color:#ffd08a}
+    .pill.off{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.18);color:#ff9a9a}
+    .pill.blue{background:rgba(74,158,255,.08);border-color:rgba(74,158,255,.20);color:#9dcaff}
+    .pill.gold{background:rgba(191,150,80,.10);border-color:rgba(191,150,80,.22);color:var(--or)}
+
+    .side-panel{
+      border:1px solid var(--bdr);border-radius:20px;
+      background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      overflow:hidden;position:sticky;top:82px;
+    }
+    .side-head{
+      padding:18px;border-bottom:1px solid rgba(191,150,80,.10);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .side-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:300}
+    .side-body{padding:18px}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:6px}
+    .field input,.field textarea,.field select{
+      width:100%;padding:11px 12px;border-radius:10px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(191,150,80,.16);
+      color:rgba(248,244,238,.82);
+      outline:none;font-size:.86rem;transition:.18s;
+    }
+    .field textarea{min-height:90px;resize:vertical;line-height:1.55}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--or);background:rgba(191,150,80,.05)}
+    .field select option{background:#0b2039;color:var(--txt)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .check{
+      display:flex;align-items:center;gap:8px;font-size:.78rem;color:rgba(248,244,238,.58);
+      padding:8px;border:1px solid rgba(191,150,80,.10);border-radius:10px;background:rgba(255,255,255,.02);
+      cursor:pointer;
+    }
+    .check input{accent-color:var(--or)}
+
+    .leads-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .lead-card{
+      border:1px solid var(--bdr);border-radius:18px;
+      background:rgba(7,24,43,.36);padding:16px;
+    }
+    .lead-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .lead-name{font-weight:700;color:var(--txt)}
+    .lead-meta{font-size:.76rem;color:rgba(248,244,238,.36);line-height:1.55;margin-top:4px}
+    .lead-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+    .targeting-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .target-card{
+      border:1px solid var(--bdr);border-radius:18px;background:rgba(7,24,43,.36);
+      padding:16px;
+    }
+    .target-icon{width:44px;height:44px;border-radius:14px;border:1px solid rgba(191,150,80,.22);background:rgba(191,150,80,.08);display:flex;align-items:center;justify-content:center;color:var(--or);font-size:1.25rem;margin-bottom:12px}
+    .target-title{font-weight:700;margin-bottom:6px}
+    .target-copy{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:12px}
+    .target-tags{display:flex;flex-wrap:wrap;gap:6px}
+
+    .toast{
+      position:fixed;right:24px;bottom:24px;z-index:300;
+      border:1px solid rgba(0,200,117,.26);background:rgba(0,200,117,.10);
+      color:#77ffbe;border-radius:14px;padding:12px 16px;
+      font-size:.84rem;box-shadow:0 20px 60px rgba(0,0,0,.35);
+      display:none;
+    }
+
+    @media(max-width:1100px){
+      .hero,.content-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .targeting-grid{grid-template-columns:repeat(2,1fr)}
+      .side-panel{position:static}
+    }
+    @media(max-width:700px){
+      .main{padding:24px 18px 50px}.topbar{padding:0 18px}
+      .stats-grid,.leads-grid,.targeting-grid,.quick-actions{grid-template-columns:1fr}
+      table{min-width:900px}.table-card{overflow-x:auto}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="top-brand">
+      <div class="top-mark">K</div>
+      <div class="top-name">Kàddu</div>
+      <div class="top-badge">Partenaires & Services</div>
+    </div>
+    <div class="top-right">
+      <a class="top-link" href="/admin/">← Hub admin</a>
+      <a class="top-link" href="/espace-locataire/partenaires.html" target="_blank">Voir côté locataire</a>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Écosystème résidentiel</div>
+        <h1 class="hero-title">Pilotez les <em>partenaires</em> Kàddu.</h1>
+        <p class="hero-sub">
+          Activez les services utiles aux locataires : internet, eau, électricité, déménagement, ménage,
+          assurance, paiement et ameublement. L’objectif : transformer Kàddu en hub d’installation premium à Dakar.
+        </p>
+        <div class="quick-actions">
+          <button class="qbtn" onclick="resetPartnerForm()">
+            <i class="ph ph-plus-circle"></i>
+            <div><strong>Ajouter un partenaire</strong><span>Créer une offre service</span></div>
+          </button>
+          <button class="qbtn" onclick="scrollToLeads()">
+            <i class="ph ph-handshake"></i>
+            <div><strong>Suivre les leads</strong><span>Demandes envoyées aux partenaires</span></div>
+          </button>
+          <button class="qbtn" onclick="exportPartners()">
+            <i class="ph ph-download-simple"></i>
+            <div><strong>Exporter JSON</strong><span>Sauvegarde locale des partenaires</span></div>
+          </button>
+          <button class="qbtn" onclick="seedDemo()">
+            <i class="ph ph-magic-wand"></i>
+            <div><strong>Charger la démo Sénégal</strong><span>Orange · Wave · SEN’EAU · ménage</span></div>
+          </button>
+        </div>
+      </div>
+
+      <aside class="ops-card">
+        <div class="ops-title">Lecture rapide</div>
+        <div class="ops-line"><span class="ops-k">Service prioritaire</span><span class="ops-v gold" id="opsTop">Internet fibre</span></div>
+        <div class="ops-line"><span class="ops-k">Meilleur canal</span><span class="ops-v green">WhatsApp</span></div>
+        <div class="ops-line"><span class="ops-k">Ciblage recommandé</span><span class="ops-v">Bail signé</span></div>
+        <div class="ops-line"><span class="ops-k">Prochaine action</span><span class="ops-v gold">Valider 3 partenaires</span></div>
+      </aside>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card"><div class="stat-k">Partenaires actifs</div><div class="stat-v" id="stActive">—</div><div class="stat-meta">affichés côté locataire</div></div>
+      <div class="stat-card"><div class="stat-k">Leads ce mois</div><div class="stat-v" id="stLeads">—</div><div class="stat-meta">demandes transmises</div></div>
+      <div class="stat-card"><div class="stat-k">Conversions</div><div class="stat-v" id="stConv">—</div><div class="stat-meta">demandes finalisées</div></div>
+      <div class="stat-card"><div class="stat-k">Revenus estimés</div><div class="stat-v" id="stRevenue">—</div><div class="stat-meta">commissions potentielles</div></div>
+      <div class="stat-card"><div class="stat-k">Catégories</div><div class="stat-v" id="stCats">—</div><div class="stat-meta">services couverts</div></div>
+    </section>
+
+    <div class="section-label">Gestion des partenaires</div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <input class="input" id="searchInput" placeholder="Rechercher un partenaire…" oninput="renderPartners()">
+        <select class="select" id="catFilter" onchange="renderPartners()">
+          <option value="">Toutes catégories</option>
+        </select>
+        <select class="select" id="statusFilter" onchange="renderPartners()">
+          <option value="">Tous statuts</option>
+          <option value="active">Actif</option>
+          <option value="pause">En pause</option>
+          <option value="off">Désactivé</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="resetPartnerForm()"><i class="ph ph-plus"></i> Nouveau partenaire</button>
+    </div>
+
+    <section class="content-grid">
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Partenaire</th>
+              <th>Catégorie</th>
+              <th>Statut</th>
+              <th>Ciblage</th>
+              <th>Leads</th>
+              <th>Conversion</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="partnersBody"></tbody>
+        </table>
+      </div>
+
+      <aside class="side-panel">
+        <div class="side-head">
+          <div class="side-title" id="formTitle">Nouveau <em>partenaire</em></div>
+          <button class="btn btn-sm" onclick="resetPartnerForm()">Réinitialiser</button>
+        </div>
+        <div class="side-body">
+          <input type="hidden" id="partnerId">
+          <div class="grid-2">
+            <div class="field"><label>Nom</label><input id="pName" placeholder="Ex : Orange Fibre"></div>
+            <div class="field"><label>Icône</label><input id="pIcon" placeholder="🌐"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>Catégorie</label><select id="pCat"></select></div>
+            <div class="field"><label>Statut</label>
+              <select id="pStatus">
+                <option value="active">Actif</option>
+                <option value="pause">En pause</option>
+                <option value="off">Désactivé</option>
+              </select>
+            </div>
+          </div>
+          <div class="field"><label>Description courte</label><textarea id="pDesc" placeholder="Description affichée côté locataire…"></textarea></div>
+          <div class="grid-2">
+            <div class="field"><label>CTA</label><input id="pCta" placeholder="Installer mon internet"></div>
+            <div class="field"><label>Commission estimée CFA</label><input id="pCommission" type="number" placeholder="0"></div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>WhatsApp</label><input id="pWa" placeholder="+221770000000"></div>
+            <div class="field"><label>URL</label><input id="pUrl" placeholder="https://…"></div>
+          </div>
+          <div class="field"><label>Quartiers couverts</label><input id="pZones" placeholder="Almadies, Ngor, VDN, Plateau"></div>
+
+          <div class="field">
+            <label>Ciblage affichage</label>
+            <div class="checks">
+              <label class="check"><input type="checkbox" value="candidat"> Candidat</label>
+              <label class="check"><input type="checkbox" value="bail_signe"> Bail signé</label>
+              <label class="check"><input type="checkbox" value="installe"> Installé</label>
+              <label class="check"><input type="checkbox" value="diaspora"> Diaspora</label>
+              <label class="check"><input type="checkbox" value="meuble"> Meublé</label>
+              <label class="check"><input type="checkbox" value="non_meuble"> Non meublé</label>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+            <button class="btn btn-primary" onclick="savePartner()"><i class="ph ph-floppy-disk"></i> Enregistrer</button>
+            <button class="btn btn-red" onclick="deletePartner()"><i class="ph ph-trash"></i> Supprimer</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="section-label">Moteur de ciblage recommandé</div>
+    <section class="targeting-grid">
+      <div class="target-card">
+        <div class="target-icon"><i class="ph ph-wifi-high"></i></div>
+        <div class="target-title">Internet & fibre</div>
+        <div class="target-copy">À pousser dès que le locataire est accepté ou après signature du bail.</div>
+        <div class="target-tags"><span class="pill blue">Bail signé</span><span class="pill gold">Tous biens</span></div>
+      </div>
+      <div class="target-card">
+        <div class="target-icon"><i class="ph ph-truck"></i></div>
+        <div class="target-title">Déménagement</div>
+        <div class="target-copy">Pertinent surtout pour les non meublés et les installations longues durées.</div>
+        <div class="target-tags"><span class="pill blue">Non meublé</span><span class="pill gold">Famille</span></div>
+      </div>
+      <div class="target-card">
+        <div class="target-icon"><i class="ph ph-broom"></i></div>
+        <div class="target-title">Ménage & installation</div>
+        <div class="target-copy">Très utile pour diaspora, meublés premium et emménagement rapide.</div>
+        <div class="target-tags"><span class="pill blue">Diaspora</span><span class="pill gold">Meublé</span></div>
+      </div>
+      <div class="target-card">
+        <div class="target-icon"><i class="ph ph-wallet"></i></div>
+        <div class="target-title">Paiement mobile</div>
+        <div class="target-copy">À afficher sur les échéances, dépôt de garantie et loyers récurrents.</div>
+        <div class="target-tags"><span class="pill blue">Installé</span><span class="pill gold">Wave / OM</span></div>
+      </div>
+    </section>
+
+    <div class="section-label" id="leadsSection">Suivi des demandes partenaires</div>
+    <section class="leads-grid" id="leadsGrid"></section>
+  </main>
+
+  <div class="toast" id="toast">Enregistré.</div>
+
+<script>
+const CATEGORIES = [
+  {id:'internet', label:'Internet & fibre', icon:'🌐'},
+  {id:'energie', label:'Électricité / SENELEC', icon:'⚡'},
+  {id:'eau', label:'Eau / SEN’EAU', icon:'💧'},
+  {id:'paiement', label:'Paiement / Mobile Money', icon:'💳'},
+  {id:'demenagement', label:'Déménagement', icon:'🚚'},
+  {id:'nettoyage', label:'Nettoyage & ménage', icon:'🧹'},
+  {id:'securite', label:'Sécurité / dépannage', icon:'🛡️'},
+  {id:'ameublement', label:'Ameublement', icon:'🛋️'},
+  {id:'assurance', label:'Assurance habitation', icon:'📄'}
+];
+
+let partners = [
+  {id:'p1',name:'Orange Fibre Dakar',icon:'🌐',cat:'internet',status:'active',desc:'Installation fibre et box internet pour les locataires Kàddu.',cta:'Installer mon internet',wa:'+221770000000',url:'#',commission:8000,zones:'Almadies, Ngor, VDN, Plateau',targeting:['bail_signe','installe','diaspora','meuble','non_meuble'],leads:18,converted:9},
+  {id:'p2',name:'SENELEC Assistance',icon:'⚡',cat:'energie',status:'active',desc:'Aide ouverture compteur, suivi raccordement et accompagnement administratif.',cta:'Ouvrir mon compteur',wa:'+221770000001',url:'#',commission:5000,zones:'Dakar, Grand Dakar, Plateau',targeting:['bail_signe','installe','non_meuble'],leads:11,converted:5},
+  {id:'p3',name:'SEN’EAU Facilitation',icon:'💧',cat:'eau',status:'active',desc:'Assistance ouverture ou transfert abonnement eau.',cta:'Ouvrir mon abonnement eau',wa:'+221770000002',url:'#',commission:4000,zones:'Dakar',targeting:['bail_signe','installe','non_meuble'],leads:7,converted:3},
+  {id:'p4',name:'Déménagement Dakar Pro',icon:'🚚',cat:'demenagement',status:'pause',desc:'Déménagement local à Dakar avec devis rapide.',cta:'Organiser mon déménagement',wa:'+221770000003',url:'#',commission:12000,zones:'Dakar, Rufisque, Diamniadio',targeting:['bail_signe','non_meuble','famille'],leads:14,converted:6},
+  {id:'p5',name:'Kàddu Clean Premium',icon:'🧹',cat:'nettoyage',status:'active',desc:'Ménage d’installation, grand nettoyage, canapé, climatisation.',cta:'Réserver un ménage',wa:'+221770000004',url:'#',commission:10000,zones:'Dakar',targeting:['bail_signe','installe','diaspora','meuble'],leads:21,converted:13},
+  {id:'p6',name:'Wave Paiement Loyer',icon:'💳',cat:'paiement',status:'active',desc:'Paiement loyer et dépôt de garantie via mobile money.',cta:'Payer avec Wave',wa:'+221770000005',url:'#',commission:2500,zones:'Sénégal',targeting:['candidat','bail_signe','installe'],leads:26,converted:19}
+];
+
+let leads = [
+  {id:'l1',locataire:'Aïssatou Diop',service:'Internet fibre',partner:'Orange Fibre Dakar',date:'Aujourd’hui',status:'contacte',amount:8000},
+  {id:'l2',locataire:'Mamadou Fall',service:'Ménage installation',partner:'Kàddu Clean Premium',date:'Hier',status:'converti',amount:10000},
+  {id:'l3',locataire:'Fatou Ndiaye',service:'Déménagement',partner:'Déménagement Dakar Pro',date:'3 mai',status:'rdv',amount:12000},
+  {id:'l4',locataire:'Cheikh Ba',service:'Paiement dépôt garantie',partner:'Wave Paiement Loyer',date:'2 mai',status:'converti',amount:2500}
+];
+
+function init(){
+  const catFilter = document.getElementById('catFilter');
+  const pCat = document.getElementById('pCat');
+  CATEGORIES.forEach(c=>{
+    catFilter.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.icon} ${c.label}</option>`);
+    pCat.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.icon} ${c.label}</option>`);
+  });
+  renderPartners();
+  renderLeads();
+  resetPartnerForm();
+}
+function catObj(id){return CATEGORIES.find(c=>c.id===id)||{label:id,icon:'•'}}
+
+function renderPartners(){
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const cat = document.getElementById('catFilter').value;
+  const st = document.getElementById('statusFilter').value;
+  const rows = partners.filter(p=>{
+    return (!search || (p.name+p.desc+p.zones).toLowerCase().includes(search))
+      && (!cat || p.cat===cat)
+      && (!st || p.status===st);
+  });
+  document.getElementById('partnersBody').innerHTML = rows.map(p=>{
+    const c = catObj(p.cat);
+    const conv = p.leads ? Math.round((p.converted/p.leads)*100) : 0;
+    return `<tr>
+      <td>
+        <div class="partner-main">
+          <div class="partner-logo">${p.icon||c.icon}</div>
+          <div>
+            <div class="partner-name">${p.name}</div>
+            <div class="partner-desc">${p.desc}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="pill gold">${c.icon} ${c.label}</span></td>
+      <td><span class="pill ${p.status}">${statusLabel(p.status)}</span></td>
+      <td>${(p.targeting||[]).slice(0,3).map(t=>`<span class="pill blue">${targetLabel(t)}</span>`).join(' ')}</td>
+      <td>${p.leads||0}</td>
+      <td>${conv}%</td>
+      <td>
+        <button class="btn btn-sm" onclick="editPartner('${p.id}')">Modifier</button>
+        <button class="btn btn-sm btn-green" onclick="sendTestLead('${p.id}')">Lead test</button>
+      </td>
+    </tr>`
+  }).join('') || `<tr><td colspan="7" style="text-align:center;color:rgba(248,244,238,.32);padding:26px">Aucun partenaire trouvé.</td></tr>`;
+  updateStats();
+}
+
+function statusLabel(s){return s==='active'?'Actif':s==='pause'?'En pause':'Désactivé'}
+function targetLabel(t){
+  return ({
+    candidat:'Candidat',bail_signe:'Bail signé',installe:'Installé',diaspora:'Diaspora',meuble:'Meublé',non_meuble:'Non meublé',famille:'Famille'
+  })[t]||t;
+}
+
+function updateStats(){
+  const active = partners.filter(p=>p.status==='active').length;
+  const leadsTotal = partners.reduce((a,p)=>a+(p.leads||0),0);
+  const convTotal = partners.reduce((a,p)=>a+(p.converted||0),0);
+  const rev = partners.reduce((a,p)=>a+((p.converted||0)*(Number(p.commission)||0)),0);
+  const cats = new Set(partners.map(p=>p.cat)).size;
+  document.getElementById('stActive').textContent = active;
+  document.getElementById('stLeads').textContent = leadsTotal;
+  document.getElementById('stConv').textContent = convTotal;
+  document.getElementById('stRevenue').textContent = rev.toLocaleString('fr-FR');
+  document.getElementById('stCats').textContent = cats;
+  const top = [...partners].sort((a,b)=>(b.leads||0)-(a.leads||0))[0];
+  if(top) document.getElementById('opsTop').textContent = catObj(top.cat).label;
+}
+
+function resetPartnerForm(){
+  document.getElementById('formTitle').innerHTML = 'Nouveau <em>partenaire</em>';
+  ['partnerId','pName','pIcon','pDesc','pCta','pCommission','pWa','pUrl','pZones'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pCat').value='internet';
+  document.getElementById('pStatus').value='active';
+  document.querySelectorAll('.check input').forEach(cb=>cb.checked=false);
+  document.querySelector('.side-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function editPartner(id){
+  const p = partners.find(x=>x.id===id); if(!p) return;
+  document.getElementById('formTitle').innerHTML = 'Modifier <em>partenaire</em>';
+  document.getElementById('partnerId').value=p.id;
+  document.getElementById('pName').value=p.name||'';
+  document.getElementById('pIcon').value=p.icon||'';
+  document.getElementById('pCat').value=p.cat||'internet';
+  document.getElementById('pStatus').value=p.status||'active';
+  document.getElementById('pDesc').value=p.desc||'';
+  document.getElementById('pCta').value=p.cta||'';
+  document.getElementById('pCommission').value=p.commission||0;
+  document.getElementById('pWa').value=p.wa||'';
+  document.getElementById('pUrl').value=p.url||'';
+  document.getElementById('pZones').value=p.zones||'';
+  document.querySelectorAll('.check input').forEach(cb=>cb.checked=(p.targeting||[]).includes(cb.value));
+  document.querySelector('.side-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function savePartner(){
+  const id = document.getElementById('partnerId').value || ('p'+Date.now());
+  const existing = partners.find(p=>p.id===id);
+  const targeting = [...document.querySelectorAll('.check input:checked')].map(cb=>cb.value);
+  const p = {
+    id,
+    name:document.getElementById('pName').value.trim() || 'Nouveau partenaire',
+    icon:document.getElementById('pIcon').value.trim() || catObj(document.getElementById('pCat').value).icon,
+    cat:document.getElementById('pCat').value,
+    status:document.getElementById('pStatus').value,
+    desc:document.getElementById('pDesc').value.trim(),
+    cta:document.getElementById('pCta').value.trim(),
+    commission:Number(document.getElementById('pCommission').value||0),
+    wa:document.getElementById('pWa').value.trim(),
+    url:document.getElementById('pUrl').value.trim(),
+    zones:document.getElementById('pZones').value.trim(),
+    targeting,
+    leads:existing?.leads||0,
+    converted:existing?.converted||0
+  };
+  if(existing) partners = partners.map(x=>x.id===id?p:x);
+  else partners.unshift(p);
+  renderPartners();
+  showToast('Partenaire enregistré.');
+}
+
+function deletePartner(){
+  const id = document.getElementById('partnerId').value;
+  if(!id){ resetPartnerForm(); return; }
+  if(!confirm('Supprimer ce partenaire ?')) return;
+  partners = partners.filter(p=>p.id!==id);
+  resetPartnerForm(); renderPartners(); showToast('Partenaire supprimé.');
+}
+
+function sendTestLead(id){
+  const p = partners.find(x=>x.id===id); if(!p) return;
+  p.leads = (p.leads||0)+1;
+  leads.unshift({id:'l'+Date.now(),locataire:'Lead test Kàddu',service:catObj(p.cat).label,partner:p.name,date:'Maintenant',status:'envoye',amount:p.commission||0});
+  renderPartners(); renderLeads(); showToast('Lead test ajouté.');
+}
+
+function renderLeads(){
+  document.getElementById('leadsGrid').innerHTML = leads.map(l=>`
+    <article class="lead-card">
+      <div class="lead-top">
+        <div>
+          <div class="lead-name">${l.locataire}</div>
+          <div class="lead-meta">${l.service}<br>${l.partner} · ${l.date}</div>
+        </div>
+        <span class="pill ${leadClass(l.status)}">${leadLabel(l.status)}</span>
+      </div>
+      <div class="lead-meta">Commission estimée : <strong style="color:var(--or)">${Number(l.amount||0).toLocaleString('fr-FR')} F CFA</strong></div>
+      <div class="lead-actions">
+        <button class="btn btn-sm btn-green" onclick="advanceLead('${l.id}')">Avancer statut</button>
+        <button class="btn btn-sm" onclick="showToast('WhatsApp partenaire ouvert.')">WhatsApp</button>
+      </div>
+    </article>
+  `).join('');
+}
+function leadClass(s){return s==='converti'?'active':s==='rdv'?'pause':'blue'}
+function leadLabel(s){return ({envoye:'Envoyé',contacte:'Contacté',rdv:'RDV fixé',converti:'Converti',annule:'Annulé'})[s]||s}
+function advanceLead(id){
+  const order=['envoye','contacte','rdv','converti'];
+  const l=leads.find(x=>x.id===id); if(!l) return;
+  const idx=order.indexOf(l.status);
+  l.status = order[Math.min(idx+1,order.length-1)];
+  if(l.status==='converti'){
+    const p=partners.find(p=>p.name===l.partner);
+    if(p) p.converted=(p.converted||0)+1;
+  }
+  renderLeads(); renderPartners(); showToast('Statut mis à jour.');
+}
+
+function scrollToLeads(){document.getElementById('leadsSection').scrollIntoView({behavior:'smooth'})}
+
+function exportPartners(){
+  const blob = new Blob([JSON.stringify({partners,leads},null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='kaddu-partenaires-services.json';
+  a.click();
+}
+
+function seedDemo(){
+  // déjà préchargé, mais permet de réinitialiser proprement
+  location.reload();
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block';
+  setTimeout(()=>t.style.display='none',2200);
+}
+
+init();
+</script>
+</body>
+</html>
