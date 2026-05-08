@@ -1426,7 +1426,7 @@
     </div>
     <div class="nav-cta">
       <a id="nav-login-btn" class="btn btn-outline" href="/auth/">Connexion</a>
-      <a class="btn btn-blue" href="/current/tunnel/dossier.html">Mon dossier →</a>
+      <a class="btn btn-blue" href="/tunnel/dossier.html">Mon dossier →</a>
     </div>
   </div>
 </nav>
@@ -1648,7 +1648,7 @@
         </div>
         <div class="match-premium-actions">
           <a class="btn btn-blue" id="matchCtaBiens" href="/?profil=tourisme#biens">Voir les biens correspondants →</a>
-          <a class="btn btn-ghost-bl" id="matchCtaDossier" href="/current/tunnel/dossier.html?profil=tourisme&source=matching">Préparer mon dossier</a>
+          <a class="btn btn-ghost-bl" id="matchCtaDossier" href="/tunnel/dossier.html?profil=tourisme&source=matching">Préparer mon dossier</a>
         </div>
       </div>
     </div>
@@ -1717,7 +1717,7 @@
             <span class="sim-cta-note" id="simNote"></span>
           </div>
           <div class="micro-cta-row" style="border-top:1px solid rgba(59,158,245,.1);margin-top:16px;padding-top:16px">
-            <a class="btn-micro" href="/current/tunnel/dossier.html?source=simulation">Préparer mon dossier maintenant →</a>
+            <a class="btn-micro" href="/tunnel/dossier.html?source=simulation">Préparer mon dossier maintenant →</a>
             <span class="micro-note">Passeport Locatif · 10 min</span>
           </div>
         </div>
@@ -1818,7 +1818,7 @@
           </div>
         </div>
         <div style="margin-top:20px;text-align:center">
-          <a class="btn btn-blue btn-lg" href="/current/tunnel/dossier.html?source=passeport">Créer mon Passeport Locatif →</a>
+          <a class="btn btn-blue btn-lg" href="/tunnel/dossier.html?source=passeport">Créer mon Passeport Locatif →</a>
         </div>
       </div>
 
@@ -2180,7 +2180,7 @@
         <h2>Votre prochain chez-vous<br>est à <em>un passeport d'ici</em>.</h2>
         <p>Préparez un dossier clair, consultez des biens vérifiés et avancez avec un parcours simple, même à distance.</p>
         <div class="cta-box-btns">
-          <a class="btn btn-blue btn-lg" href="/current/tunnel/dossier.html?source=cta-final">Créer mon Passeport Locatif →</a>
+          <a class="btn btn-blue btn-lg" href="/tunnel/dossier.html?source=cta-final">Créer mon Passeport Locatif →</a>
           <a class="btn btn-outline btn-lg" href="/?source=cta-final#biens">Explorer les biens disponibles</a>
         </div>
         <div class="cta-box-note">Gratuit · 10 minutes · Utilisable sur tous les biens Kàddu</div>
@@ -2206,7 +2206,7 @@
         <div class="foot-col-title">Locataires</div>
         <div class="foot-links">
           <a href="/#biens">Biens disponibles</a>
-          <a href="/current/tunnel/dossier.html?source=footer-passeport">Mon Passeport Locatif</a>
+          <a href="/tunnel/dossier.html?source=footer-passeport">Mon Passeport Locatif</a>
           <a href="#comment">Comment ça marche</a>
           <a href="#garanties">Mes garanties</a>
           <a href="#faq">FAQ</a>
@@ -2331,7 +2331,7 @@ function selectProfile(el){
   const ctaBiens=document.getElementById('matchCtaBiens');
   const ctaDossier=document.getElementById('matchCtaDossier');
   if(ctaBiens) ctaBiens.href=r.biens;
-  if(ctaDossier) ctaDossier.href='/current/tunnel/dossier.html'+r.dossier;
+  if(ctaDossier) ctaDossier.href='/tunnel/dossier.html'+r.dossier;
   res.animate([{opacity:.72,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});
   const y=res.getBoundingClientRect().top + window.scrollY - 120;
   window.scrollTo({top:y,behavior:'smooth'});
