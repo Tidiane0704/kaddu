@@ -882,6 +882,7 @@
     }
 
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
@@ -1478,8 +1479,8 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
 
 <script>
-const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL = window.KADDU_SUPABASE.url;
+const SB_KEY = window.KADDU_SUPABASE.anonKey;
 const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
@@ -1610,9 +1611,14 @@ function initPhoneInput(id, required){
 function getSmartPhone(id){
   const el=document.getElementById(id);
   const iti=PHONE_INPUTS[id];
-  const raw=(el?.value||'').trim();
+  let raw=(el?.value||'').trim();
   if(!iti) return {raw, valid:!!raw, e164:raw, country:'', dialCode:''};
   const country=iti.getSelectedCountryData()||{};
+  // Nettoyer le 0 initial si le candidat l'a saisi (convention internationale)
+  if(raw.startsWith('0') && raw.length > 1){
+    const cleaned = raw.slice(1);
+    try{ iti.setNumber('+' + (country.dialCode||'') + cleaned); raw = cleaned; if(el) el.value = cleaned; }catch(_){}
+  }
   let valid=false, e164=raw;
   try{ valid=raw?iti.isValidNumber():false; e164=raw?iti.getNumber():''; }catch(_){ valid=false; }
   return {raw, valid, e164, country:country.iso2?.toUpperCase()||'', dialCode:country.dialCode?('+'+country.dialCode):''};
