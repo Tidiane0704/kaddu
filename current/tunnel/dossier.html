@@ -882,7 +882,6 @@
     }
 
   </style>
-  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
@@ -1475,11 +1474,12 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
 
 <script>
-const SB_URL = window.KADDU_SUPABASE.url;
-const SB_KEY = window.KADDU_SUPABASE.anonKey;
+const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
+const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
@@ -1599,7 +1599,7 @@ function initPhoneInput(id, required){
     formatAsYouType:true,
     autoPlaceholder:'aggressive',
     strictMode:true,
-    utilsScript:'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js'
+    loadUtils: () => Promise.resolve()
   });
   PHONE_INPUTS[id]=iti;
   const check=()=>validatePhone(id,required);
@@ -1610,27 +1610,12 @@ function initPhoneInput(id, required){
 function getSmartPhone(id){
   const el=document.getElementById(id);
   const iti=PHONE_INPUTS[id];
-  let raw=(el?.value||'').trim();
+  const raw=(el?.value||'').trim();
   if(!iti) return {raw, valid:!!raw, e164:raw, country:'', dialCode:''};
   const country=iti.getSelectedCountryData()||{};
-  // Nettoyer le 0 initial (convention internationale)
-  if(raw.startsWith('0') && raw.length > 1){
-    const cleaned = raw.slice(1);
-    try{ iti.setNumber('+' + (country.dialCode||'') + cleaned); raw = cleaned; if(el) el.value = cleaned; }catch(_){}
-  }
-  const digits = raw.replace(/\D/g,'');
-  // Validation par longueur selon pays — règles clés marchés Kàddu
-  const lengthRules = {
-    SN:9, FR:9, CI:10, ML:8, GN:9, GM:7, MR:8,
-    MA:9, DZ:9, TN:8, CM:9, BF:8, BJ:8, TG:8,
-    NE:8, NG:10, GH:10, GA:9, CG:9, CD:9,
-    US:10, CA:10, GB:10, BE:9, CH:9, ES:9, IT:10, DE:10, PT:9,
-  };
-  const iso = country.iso2?.toUpperCase()||'';
-  const expected = lengthRules[iso];
-  const valid = expected ? digits.length === expected : (digits.length >= 7 && digits.length <= 12);
-  const e164 = raw ? ('+' + (country.dialCode||'') + digits) : '';
-  return {raw, valid, e164, country:iso, dialCode:country.dialCode?('+'+country.dialCode):''};
+  let valid=false, e164=raw;
+  try{ valid=raw?iti.isValidNumber():false; e164=raw?iti.getNumber():''; }catch(_){ valid=false; }
+  return {raw, valid, e164, country:country.iso2?.toUpperCase()||'', dialCode:country.dialCode?('+'+country.dialCode):''};
 }
 function validatePhone(id, required=true){
   const p=getSmartPhone(id);
@@ -3133,6 +3118,127 @@ function showAlert(msg,type){
   document.getElementById('alert-global').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function clearAlert(){document.getElementById('alert-global').innerHTML='';}
+
+
+// ══ PATCH TÉLÉPHONE — NORMALISATION INTELLIGENTE ═════════════
+// France : +33 + 762366752 est valide. 0762366752 est toléré puis normalisé.
+const KADDU_PHONE_RULES_PATCH = {
+  FR: { dial:'+33', min:9, max:9, nationalPrefix:'0', example:'7 62 36 67 52', country:'France' },
+  SN: { dial:'+221', min:9, max:9, nationalPrefix:'', example:'77 000 00 00', country:'Sénégal' },
+  CI: { dial:'+225', min:10, max:10, nationalPrefix:'', example:'07 00 00 00 00', country:"Côte d’Ivoire" },
+  ML: { dial:'+223', min:8, max:8, nationalPrefix:'', example:'70 00 00 00', country:'Mali' },
+  GN: { dial:'+224', min:9, max:9, nationalPrefix:'', example:'620 00 00 00', country:'Guinée' },
+  MA: { dial:'+212', min:9, max:9, nationalPrefix:'0', example:'6 00 00 00 00', country:'Maroc' },
+  US: { dial:'+1', min:10, max:10, nationalPrefix:'', example:'202 555 0123', country:'États-Unis / Canada' },
+  CA: { dial:'+1', min:10, max:10, nationalPrefix:'', example:'514 555 0123', country:'Canada' }
+};
+
+function kadduOnlyDigits(v){ return String(v || '').replace(/\D/g,''); }
+
+function kadduGetCurrentPhoneCountry(){
+  const c = document.getElementById('loc-tel-country') || document.querySelector('[data-phone-country]');
+  if(c && (c.value || c.dataset.country)) return String(c.value || c.dataset.country).toUpperCase();
+  const d = document.getElementById('loc-tel-dial') || document.querySelector('[data-phone-dial]');
+  const dial = d ? String(d.value || d.textContent || '').trim() : '';
+  const found = Object.entries(KADDU_PHONE_RULES_PATCH).find(([_,r]) => r.dial === dial);
+  return found ? found[0] : 'SN';
+}
+
+function kadduNormalizeLocalPhone(country, rawLocal){
+  const rule = KADDU_PHONE_RULES_PATCH[country] || KADDU_PHONE_RULES_PATCH.SN;
+  let local = kadduOnlyDigits(rawLocal);
+  const dialDigits = kadduOnlyDigits(rule.dial);
+
+  if(local.startsWith('00' + dialDigits)){
+    local = local.slice(('00' + dialDigits).length);
+  } else if(local.startsWith(dialDigits) && local.length > rule.max){
+    local = local.slice(dialDigits.length);
+  }
+
+  if(rule.nationalPrefix && local.startsWith(rule.nationalPrefix) && local.length === rule.max + rule.nationalPrefix.length){
+    local = local.slice(rule.nationalPrefix.length);
+  }
+
+  return local;
+}
+
+function kadduValidatePhoneValue(country, rawLocal){
+  const rule = KADDU_PHONE_RULES_PATCH[country] || KADDU_PHONE_RULES_PATCH.SN;
+  const local = kadduNormalizeLocalPhone(country, rawLocal);
+  const ok = local.length >= rule.min && local.length <= rule.max;
+  return {
+    ok, country, dial: rule.dial, local,
+    e164: ok ? rule.dial + local : '',
+    message: ok ? '' : `Le numéro ne semble pas cohérent avec l’indicatif ${rule.dial}. Pour ${rule.country}, indiquez ${rule.min === rule.max ? rule.min : rule.min + ' à ' + rule.max} chiffres après l’indicatif. Exemple : ${rule.example}.`
+  };
+}
+
+function kadduPatchPhoneUI(){
+  const input = document.getElementById('loc-tel');
+  if(!input) return null;
+
+  const country = kadduGetCurrentPhoneCountry();
+  const result = kadduValidatePhoneValue(country, input.value);
+
+  if(result.local && result.local !== kadduOnlyDigits(input.value)){
+    input.value = result.local;
+  }
+
+  const e164 = document.getElementById('loc-tel-e164');
+  if(e164) e164.value = result.e164;
+
+  const dial = document.getElementById('loc-tel-dial');
+  if(dial && 'value' in dial) dial.value = result.dial;
+
+  const err = document.getElementById('err-loc-tel');
+  if(err){
+    if(result.ok || !input.value.trim()){
+      err.classList.remove('visible');
+      err.textContent = 'Téléphone obligatoire';
+    }else{
+      err.classList.add('visible');
+      err.textContent = result.message;
+    }
+  }
+
+  input.classList.toggle('error', !!input.value.trim() && !result.ok);
+  input.dataset.e164 = result.e164;
+  input.dataset.local = result.local;
+  input.dataset.phoneValid = result.ok ? 'true' : 'false';
+  return result;
+}
+
+if(typeof validatePhone === 'function'){
+  validatePhone = function(){ const r = kadduPatchPhoneUI(); return r ? r.ok : true; };
+}
+
+if(typeof normalizePhone === 'function'){
+  normalizePhone = function(country, raw){
+    return kadduValidatePhoneValue(country || kadduGetCurrentPhoneCountry(), raw || document.getElementById('loc-tel')?.value || '');
+  };
+}
+
+if(typeof saveLoc === 'function'){
+  const __oldSaveLocPhonePatch = saveLoc;
+  saveLoc = function(){
+    const input = document.getElementById('loc-tel');
+    if(input){
+      const r = kadduPatchPhoneUI();
+      if(r && r.ok){
+        input.value = r.local;
+        input.classList.remove('error');
+        const err = document.getElementById('err-loc-tel');
+        if(err) err.classList.remove('visible');
+      }
+    }
+    return __oldSaveLocPhonePatch.apply(this, arguments);
+  };
+}
+
+document.addEventListener('input', e => { if(e.target?.id === 'loc-tel') kadduPatchPhoneUI(); });
+document.addEventListener('change', e => { if(['loc-tel','loc-tel-country','loc-tel-dial'].includes(e.target?.id)) kadduPatchPhoneUI(); });
+setTimeout(kadduPatchPhoneUI, 700);
+
 </script>
 </body>
 </html>
