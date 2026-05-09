@@ -2738,14 +2738,29 @@ async function handleDocUpload(event, key, prenomLoc){
 
   try {
     // Upload vers Supabase Storage — bucket "documents"
-    const ext    = file.name.split('.').pop();
-    const path   = `dossiers/tmp/${key}_${Date.now()}.${ext}`;
-    const res    = await fetch(`${SB_URL}/storage/v1/object/documents-dossiers/${path}`, {
+    const ext = file.name.split('.').pop();
+
+    // Upload sécurisé : l'utilisateur doit être connecté à son espace locataire.
+    const uploadSession = (typeof getActiveSession === 'function' ? getActiveSession() : (getSession() || session));
+    if(!uploadSession || !uploadSession.access_token || !uploadSession.user?.id){
+      throw new Error('SESSION_LOCATAIRE_ABSENTE');
+    }
+
+    // Le dossier brouillon doit exister avant de stocker un document.
+    // Cela permet un chemin compatible avec les policies Supabase : dossiers/{dossier_id}/...
+    if(!activeDossierId && typeof saveRemoteDraft === 'function'){
+      await saveRemoteDraft(3);
+    }
+
+    const ownerFolder = activeDossierId || uploadSession.user.id;
+    const path = `dossiers/${ownerFolder}/${key}_${Date.now()}.${ext}`;
+
+    const res = await fetch(`${SB_URL}/storage/v1/object/documents-dossiers/${path}`, {
       method: 'POST',
       headers: {
         'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + SB_KEY,
-        'Content-Type': file.type,
+        'Authorization': 'Bearer ' + uploadSession.access_token,
+        'Content-Type': file.type || 'application/octet-stream',
         'x-upsert': 'true',
       },
       body: file,
@@ -2755,6 +2770,7 @@ async function handleDocUpload(event, key, prenomLoc){
 
     if(!res.ok){
       const err = await res.json().catch(() => ({}));
+      console.error('SUPABASE_STORAGE_RESPONSE', {status:res.status, err, path});
       throw new Error(err.error || err.message || 'Erreur upload');
     }
 
