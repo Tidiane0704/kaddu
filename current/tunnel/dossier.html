@@ -1071,6 +1071,52 @@
     /* ── REPRISE DOSSIER SUPABASE ── */
     .resume-banner{display:none;margin:0 0 20px;border:1px solid rgba(74,158,255,.18);background:rgba(74,158,255,.06);border-radius:14px;padding:13px 15px;color:rgba(248,244,238,.70);font-size:.82rem;line-height:1.55}
     .resume-banner.visible{display:block}.resume-banner strong{color:var(--blue)}
+  
+    /* ── PATCH ENRÔLEMENT EMAIL CONFIRMATION + MOT DE PASSE ── */
+    .enroll-inline-error.info{
+      display:block;
+      border-color:rgba(74,158,255,.22);
+      background:rgba(74,158,255,.07);
+      color:#9dcaff;
+    }
+    .enroll-inline-error.success{
+      display:block;
+      border-color:rgba(0,200,117,.24);
+      background:rgba(0,200,117,.08);
+      color:#77ffbe;
+    }
+    .password-eye-wrap{position:relative}
+    .password-eye-wrap .form-input{padding-right:46px}
+    .password-eye-btn{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:none;
+      background:transparent;
+      color:rgba(248,244,238,.42);
+      cursor:pointer;
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.18s;
+    }
+    .password-eye-btn:hover{
+      color:var(--or);
+      background:rgba(191,150,80,.08);
+    }
+    .enroll-confirm-actions{
+      display:none;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .enroll-confirm-actions.visible{display:flex}
+
   </style>
 </head>
 <body>
@@ -1660,15 +1706,25 @@
     <div class="enroll-password-row">
       <div class="form-group">
         <label class="form-label">Mot de passe</label>
-        <input class="form-input" id="enroll-password" type="password" placeholder="8 caractères minimum">
+        <div class="password-eye-wrap">
+          <input class="form-input" id="enroll-password" type="password" placeholder="8 caractères minimum">
+          <button class="password-eye-btn" type="button" onclick="togglePasswordVisibility('enroll-password', this)" aria-label="Afficher le mot de passe">👁</button>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Confirmer</label>
-        <input class="form-input" id="enroll-password2" type="password" placeholder="Répéter le mot de passe">
+        <div class="password-eye-wrap">
+          <input class="form-input" id="enroll-password2" type="password" placeholder="Répéter le mot de passe">
+          <button class="password-eye-btn" type="button" onclick="togglePasswordVisibility('enroll-password2', this)" aria-label="Afficher le mot de passe">👁</button>
+        </div>
       </div>
     </div>
 
     <div class="enroll-inline-error" id="enroll-error"></div>
+
+    <div class="enroll-confirm-actions" id="enroll-confirm-actions">
+      <button class="btn btn-ghost" type="button" onclick="checkEmailConfirmedAndContinue()">J’ai confirmé mon email</button>
+    </div>
 
     <div class="enroll-actions">
       <button class="btn btn-ghost" type="button" onclick="closeEnrollmentModal()">Plus tard</button>
@@ -2210,6 +2266,7 @@ function showEnrollError(msg){
   const err = document.getElementById('enroll-error');
   if(err){
     err.textContent = msg;
+    err.classList.remove('info','success');
     err.classList.add('visible');
   }
 }
@@ -2257,6 +2314,94 @@ async function upsertTenantProfileFromLoc(user, accessToken, loc){
     });
   }catch(e){
     console.warn('PROFILE_UPSERT_FAILED', e);
+  }
+}
+
+
+// ══ PATCH ENRÔLEMENT — CONFIRMATION EMAIL + AFFICHER MOT DE PASSE ══
+let enrollPendingCredentials = null;
+let enrollConfirmPollTimer = null;
+
+function togglePasswordVisibility(inputId, btn){
+  const input = document.getElementById(inputId);
+  if(!input) return;
+  const visible = input.type === 'text';
+  input.type = visible ? 'password' : 'text';
+  if(btn) btn.textContent = visible ? '👁' : '🙈';
+}
+
+function showEnrollInfo(msg, kind='info'){
+  const err = document.getElementById('enroll-error');
+  if(err){
+    err.textContent = msg;
+    err.classList.remove('visible','info','success');
+    err.classList.add(kind === 'success' ? 'success' : 'info');
+  }
+}
+
+function showEnrollError(msg){
+  const err = document.getElementById('enroll-error');
+  if(err){
+    err.textContent = msg;
+    err.classList.remove('info','success');
+    err.classList.add('visible');
+  }
+}
+
+async function signInTenantAfterConfirmation(email, password){
+  const res = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','apikey':SB_KEY},
+    body:JSON.stringify({email,password})
+  });
+  const data = await res.json();
+  if(!res.ok){
+    return {ok:false, data};
+  }
+  const stored = storeKadduSession(data,'locataire');
+  if(stored){
+    const s = getSession();
+    const loc = locataires?.[0] || {};
+    await upsertTenantProfileFromLoc(s.user, s.access_token, loc);
+    await saveRemoteDraft(2);
+    closeEnrollmentModal();
+    updateEnrollmentState && updateEnrollmentState();
+    showAlert('Votre espace locataire est activé. Vous pouvez continuer votre dossier.','success');
+    if(typeof nextStep === 'function'){
+      // continuer vers l’étape documents si l’utilisateur était bloqué ici
+      setTimeout(()=>nextStep(2), 350);
+    }
+    return {ok:true, data};
+  }
+  return {ok:false, data};
+}
+
+function startEmailConfirmationPolling(email, password){
+  clearInterval(enrollConfirmPollTimer);
+  enrollPendingCredentials = {email, password};
+  const actions = document.getElementById('enroll-confirm-actions');
+  if(actions) actions.classList.add('visible');
+
+  enrollConfirmPollTimer = setInterval(async ()=>{
+    if(!enrollPendingCredentials) return;
+    const r = await signInTenantAfterConfirmation(enrollPendingCredentials.email, enrollPendingCredentials.password);
+    if(r.ok){
+      clearInterval(enrollConfirmPollTimer);
+      enrollConfirmPollTimer = null;
+      enrollPendingCredentials = null;
+    }
+  }, 5000);
+}
+
+async function checkEmailConfirmedAndContinue(){
+  if(!enrollPendingCredentials){
+    showEnrollInfo('Après confirmation de votre email, reconnectez-vous à votre espace locataire pour continuer.', 'info');
+    return;
+  }
+  showEnrollInfo('Vérification de l’activation de votre espace…', 'info');
+  const r = await signInTenantAfterConfirmation(enrollPendingCredentials.email, enrollPendingCredentials.password);
+  if(!r.ok){
+    showEnrollInfo('Email pas encore confirmé. Cliquez sur le lien reçu par email, puis réessayez.', 'info');
   }
 }
 
@@ -2332,8 +2477,9 @@ async function createTenantSpace(){
       return true;
     }
 
-    // Cas Supabase email confirmation activée : user créé mais pas de session.
-    showEnrollError("Votre espace a été créé. Confirmez votre email pour l’activer, puis connectez-vous à l’espace locataire.");
+    // Cas Supabase email confirmation activée : user créé mais pas encore de session.
+    showEnrollInfo("Votre espace a été créé. Confirmez votre email depuis le lien reçu. Cette page continuera automatiquement dès l’activation.", "info");
+    startEmailConfirmationPolling(email, password);
     console.warn('TENANT_SIGNUP_NO_SESSION', data);
     return false;
 
