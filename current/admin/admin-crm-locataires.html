@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu Admin · CRM Locataires</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    :root{
+      --or:#BF9650;--orl:#DDB96E;--ord:#8B6520;
+      --nbl:#07182B;--card:#0b2039;
+      --txt:#F8F4EE;--muted:rgba(248,244,238,.56);
+      --bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.32);
+      --green:#00C875;--red:#ff6b6b;--blue:#4A9EFF;--orange:#F59E0B;
+      --bg:#060d18;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;background:#060d18;color:var(--txt);
+      font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;
+    }
+    body::before{
+      content:"";position:fixed;inset:0;z-index:-1;
+      background:
+        radial-gradient(ellipse 70% 55% at 12% 0%, rgba(191,150,80,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 92% 82%, rgba(74,158,255,.06) 0%, transparent 52%),
+        linear-gradient(180deg,#060d18 0%,#08152a 100%);
+    }
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font-family:'DM Sans',sans-serif}
+
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(6,13,24,.92);backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--bdr);
+      height:64px;padding:0 32px;
+      display:flex;align-items:center;justify-content:space-between;gap:20px
+    }
+    .top-brand{display:flex;align-items:center;gap:12px}
+    .top-mark{
+      width:36px;height:36px;border-radius:10px;
+      background:linear-gradient(145deg,rgba(191,150,80,.2),rgba(191,150,80,.05));
+      border:1px solid var(--bds);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Playfair Display',serif;font-size:1rem;color:var(--or)
+    }
+    .top-name{font-size:.88rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+    .top-badge{
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      padding:3px 8px;border-radius:999px;
+      background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or)
+    }
+    .top-right{display:flex;align-items:center;gap:10px}
+    .top-link{
+      padding:8px 14px;border:1px solid var(--bdr);border-radius:999px;
+      background:transparent;color:rgba(248,244,238,.56);
+      font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+      transition:.2s;
+    }
+    .top-link:hover{border-color:var(--or);color:var(--or)}
+
+    .main{max-width:1360px;margin:0 auto;padding:40px 32px 70px}
+
+    .hero{
+      display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:24px
+    }
+    .hero-card,.side-card,.panel,.tenant-card{
+      border:1px solid var(--bdr);
+      background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+      border-radius:24px;
+      overflow:hidden;
+    }
+    .hero-card{padding:28px;position:relative}
+    .hero-card::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(circle at 12% 0%,rgba(191,150,80,.10),transparent 34%);
+    }
+    .eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:12px}
+    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1.05;margin-bottom:12px}
+    .hero-title em{font-style:italic;color:var(--or)}
+    .hero-sub{font-size:.94rem;color:var(--muted);line-height:1.75;max-width:660px}
+
+    .side-card{padding:22px}
+    .side-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:300;margin-bottom:14px}
+    .side-line{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid rgba(191,150,80,.08);font-size:.84rem}
+    .side-line:last-child{border-bottom:none}
+    .muted{color:rgba(248,244,238,.42)}
+    .gold{color:var(--or)}.green{color:var(--green)}.blue{color:var(--blue)}.orange{color:var(--orange)}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+    .stat-card{
+      border:1px solid var(--bdr);border-radius:18px;
+      background:rgba(7,24,43,.42);padding:18px;
+    }
+    .stat-k{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:8px}
+    .stat-v{font-family:'Playfair Display',serif;font-size:2rem;font-weight:300;line-height:1}
+    .stat-meta{font-size:.72rem;color:rgba(248,244,238,.34);margin-top:8px}
+
+    .section-label{
+      font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(248,244,238,.32);margin:28px 0 16px;
+      display:flex;align-items:center;gap:12px
+    }
+    .section-label::after{content:"";flex:1;height:1px;background:rgba(191,150,80,.1)}
+
+    .toolbar{
+      display:flex;gap:10px;align-items:center;justify-content:space-between;
+      border:1px solid var(--bdr);border-radius:18px;
+      padding:12px;background:rgba(7,24,43,.34);margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .input,.select{
+      padding:10px 12px;border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(191,150,80,.16);
+      color:rgba(248,244,238,.78);
+      font-size:.82rem;outline:none;
+    }
+    .input{min-width:230px}
+    .select option{background:#0b2039;color:var(--txt)}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid var(--bdr);border-radius:999px;
+      padding:10px 16px;background:transparent;color:rgba(248,244,238,.56);
+      cursor:pointer;transition:.2s;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    }
+    .btn:hover{border-color:var(--or);color:var(--or)}
+    .btn-primary{background:var(--or);border-color:var(--or);color:#0a0a0a}
+    .btn-primary:hover{background:var(--orl);color:#0a0a0a}
+    .btn-green{background:rgba(0,200,117,.12);border-color:rgba(0,200,117,.26);color:#77ffbe}
+    .btn-red{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.18);color:#ff9a9a}
+    .btn-sm{padding:7px 11px;font-size:.68rem}
+
+    .crm-grid{display:grid;grid-template-columns:1fr 420px;gap:16px;align-items:start}
+    .tenant-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .tenant-card{padding:16px;cursor:pointer;transition:.2s;position:relative}
+    .tenant-card:hover,.tenant-card.active{border-color:var(--bds);transform:translateY(-1px);box-shadow:0 16px 40px rgba(0,0,0,.18)}
+    .tenant-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+    .tenant-main{display:flex;gap:12px;align-items:center}
+    .avatar{
+      width:46px;height:46px;border-radius:16px;flex-shrink:0;
+      background:rgba(191,150,80,.10);border:1px solid rgba(191,150,80,.22);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--or);font-weight:700;font-size:1rem;
+    }
+    .tenant-name{font-weight:700;color:var(--txt);margin-bottom:3px}
+    .tenant-meta{font-size:.72rem;color:rgba(248,244,238,.36);line-height:1.5}
+    .pill{
+      display:inline-flex;align-items:center;gap:5px;
+      font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      padding:4px 9px;border-radius:999px;
+      border:1px solid rgba(191,150,80,.18);color:rgba(248,244,238,.55)
+    }
+    .pill.active{background:rgba(0,200,117,.10);border-color:rgba(0,200,117,.24);color:#77ffbe}
+    .pill.warn{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.22);color:#ffd08a}
+    .pill.blue{background:rgba(74,158,255,.08);border-color:rgba(74,158,255,.20);color:#9dcaff}
+    .pill.red{background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.18);color:#ff9a9a}
+    .pill.gold{background:rgba(191,150,80,.10);border-color:rgba(191,150,80,.22);color:var(--or)}
+
+    .tenant-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .mini{
+      border:1px solid rgba(191,150,80,.08);border-radius:12px;padding:10px;
+      background:rgba(255,255,255,.02);text-align:center;
+    }
+    .mini strong{display:block;font-size:.95rem;color:var(--txt)}
+    .mini span{display:block;font-size:.62rem;color:rgba(248,244,238,.32);margin-top:3px}
+    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+
+    .profile-panel{position:sticky;top:82px}
+    .panel-head{padding:18px;border-bottom:1px solid rgba(191,150,80,.10);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .panel-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300}
+    .panel-title em{font-style:italic;color:var(--or)}
+    .panel-body{padding:18px}
+    .profile-head{display:flex;gap:14px;align-items:center;margin-bottom:16px}
+    .big-avatar{width:64px;height:64px;border-radius:20px;background:rgba(191,150,80,.12);border:1px solid rgba(191,150,80,.26);display:flex;align-items:center;justify-content:center;color:var(--or);font-weight:700;font-size:1.4rem}
+    .profile-name{font-size:1.05rem;font-weight:700;margin-bottom:3px}
+    .profile-sub{font-size:.76rem;color:rgba(248,244,238,.38);line-height:1.55}
+
+    .progress-wrap{margin:16px 0}
+    .progress-head{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(248,244,238,.42);margin-bottom:7px}
+    .progress{height:8px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+    .progress-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--or),var(--green));width:0}
+
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+    .info{
+      border:1px solid rgba(191,150,80,.08);border-radius:12px;padding:10px;
+      background:rgba(255,255,255,.02);
+    }
+    .info-k{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(248,244,238,.30);margin-bottom:4px}
+    .info-v{font-size:.86rem;color:rgba(248,244,238,.78)}
+
+    .panel-section{border-top:1px solid rgba(191,150,80,.09);padding-top:16px;margin-top:16px}
+    .panel-label{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:10px}
+    .timeline{display:flex;flex-direction:column;gap:10px}
+    .tl-item{display:flex;gap:10px;font-size:.78rem;color:rgba(248,244,238,.58)}
+    .tl-dot{width:9px;height:9px;border-radius:50%;background:var(--or);margin-top:5px;flex-shrink:0}
+    .tl-copy strong{color:var(--txt);font-weight:600}
+    .tl-copy span{display:block;font-size:.68rem;color:rgba(248,244,238,.30);margin-top:2px}
+
+    .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+    .small-action{
+      border:1px solid rgba(191,150,80,.12);border-radius:12px;
+      background:rgba(7,24,43,.36);padding:10px;
+      display:flex;gap:8px;align-items:center;cursor:pointer;transition:.18s;
+      color:rgba(248,244,238,.62);font-size:.74rem;
+    }
+    .small-action:hover{border-color:var(--or);color:var(--or)}
+    .small-action i{font-size:1rem;color:var(--or)}
+
+    .segment-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+    .segment-card{
+      border:1px solid var(--bdr);border-radius:18px;background:rgba(7,24,43,.36);
+      padding:16px;
+    }
+    .segment-icon{width:42px;height:42px;border-radius:14px;border:1px solid rgba(191,150,80,.22);background:rgba(191,150,80,.08);display:flex;align-items:center;justify-content:center;color:var(--or);font-size:1.2rem;margin-bottom:10px}
+    .segment-title{font-weight:700;margin-bottom:6px}
+    .segment-copy{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:12px}
+
+    .toast{
+      position:fixed;right:24px;bottom:24px;z-index:300;
+      border:1px solid rgba(0,200,117,.26);background:rgba(0,200,117,.10);
+      color:#77ffbe;border-radius:14px;padding:12px 16px;
+      font-size:.84rem;box-shadow:0 20px 60px rgba(0,0,0,.35);
+      display:none;
+    }
+
+    @media(max-width:1100px){
+      .hero,.crm-grid{grid-template-columns:1fr}
+      .profile-panel{position:static}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .tenant-list{grid-template-columns:1fr}
+      .segment-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:700px){
+      .main{padding:24px 18px 50px}.topbar{padding:0 18px}
+      .stats-grid,.segment-grid,.info-grid,.action-grid{grid-template-columns:1fr}
+      .top-link:nth-child(2){display:none}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="top-brand">
+      <div class="top-mark">K</div>
+      <div class="top-name">Kàddu</div>
+      <div class="top-badge">CRM Locataires</div>
+    </div>
+    <div class="top-right">
+      <a class="top-link" href="/admin/">← Hub admin</a>
+      <a class="top-link" href="/espace-locataire/preferences.html" target="_blank">Voir préférences</a>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Relation locataire & matching</div>
+        <h1 class="hero-title">Pilotez les <em>préférences</em> locataires.</h1>
+        <p class="hero-sub">
+          Centralisez les profils, préférences de logement, complétude dossier, acceptation des notifications
+          et opportunités de relance. Ce module prépare le futur moteur CRM et matching intelligent Kàddu.
+        </p>
+      </div>
+
+      <aside class="side-card">
+        <div class="side-title">Priorités du jour</div>
+        <div class="side-line"><span class="muted">Dossiers à compléter</span><span class="gold" id="todoDocs">—</span></div>
+        <div class="side-line"><span class="muted">Profils chauds</span><span class="green" id="hotProfiles">—</span></div>
+        <div class="side-line"><span class="muted">À relancer WhatsApp</span><span class="blue" id="waFollow">—</span></div>
+        <div class="side-line"><span class="muted">Alertes budget</span><span class="orange" id="budgetAlerts">—</span></div>
+      </aside>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card"><div class="stat-k">Locataires CRM</div><div class="stat-v" id="stTenants">—</div><div class="stat-meta">profils connus</div></div>
+      <div class="stat-card"><div class="stat-k">Dossiers solides</div><div class="stat-v" id="stStrong">—</div><div class="stat-meta">≥ 80% complétude</div></div>
+      <div class="stat-card"><div class="stat-k">WhatsApp OK</div><div class="stat-v" id="stWa">—</div><div class="stat-meta">notifications acceptées</div></div>
+      <div class="stat-card"><div class="stat-k">Budget moyen</div><div class="stat-v" id="stBudget">—</div><div class="stat-meta">CFA / mois</div></div>
+      <div class="stat-card"><div class="stat-k">Diaspora</div><div class="stat-v" id="stDiaspora">—</div><div class="stat-meta">profils à distance</div></div>
+    </section>
+
+    <div class="section-label">Segments CRM utiles</div>
+    <section class="segment-grid">
+      <article class="segment-card">
+        <div class="segment-icon"><i class="ph ph-airplane-tilt"></i></div>
+        <div class="segment-title">Diaspora active</div>
+        <div class="segment-copy">Profils à distance, forte attente de visite 360°, signature digitale et paiement international.</div>
+        <span class="pill blue" id="segDiaspora">— profils</span>
+      </article>
+      <article class="segment-card">
+        <div class="segment-icon"><i class="ph ph-warning-circle"></i></div>
+        <div class="segment-title">Dossiers incomplets</div>
+        <div class="segment-copy">Locataires à relancer avant transmission propriétaire.</div>
+        <span class="pill warn" id="segIncomplete">— profils</span>
+      </article>
+      <article class="segment-card">
+        <div class="segment-icon"><i class="ph ph-house-line"></i></div>
+        <div class="segment-title">Recherche non meublée</div>
+        <div class="segment-copy">Profils compatibles avec baux longs, déménagement, SENELEC, SEN’EAU.</div>
+        <span class="pill gold" id="segUnfurnished">— profils</span>
+      </article>
+      <article class="segment-card">
+        <div class="segment-icon"><i class="ph ph-bell-ringing"></i></div>
+        <div class="segment-title">Relance opportunités</div>
+        <div class="segment-copy">Locataires ouverts aux alertes de biens similaires.</div>
+        <span class="pill active" id="segAlerts">— profils</span>
+      </article>
+    </section>
+
+    <div class="section-label">Base locataires</div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <input class="input" id="searchInput" placeholder="Rechercher nom, quartier, email…" oninput="renderTenants()">
+        <select class="select" id="statusFilter" onchange="renderTenants()">
+          <option value="">Tous statuts</option>
+          <option value="candidat">Candidat</option>
+          <option value="analyse">En analyse</option>
+          <option value="accepte">Accepté</option>
+          <option value="installe">Installé</option>
+        </select>
+        <select class="select" id="typeFilter" onchange="renderTenants()">
+          <option value="">Tous types</option>
+          <option value="meuble">Meublé</option>
+          <option value="non_meuble">Non meublé</option>
+        </select>
+        <select class="select" id="segmentFilter" onchange="renderTenants()">
+          <option value="">Tous segments</option>
+          <option value="diaspora">Diaspora</option>
+          <option value="incomplet">Dossier incomplet</option>
+          <option value="hot">Profil chaud</option>
+          <option value="wa">WhatsApp accepté</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="exportCRM()"><i class="ph ph-download-simple"></i> Export JSON</button>
+    </div>
+
+    <section class="crm-grid">
+      <div class="tenant-list" id="tenantList"></div>
+
+      <aside class="panel profile-panel">
+        <div class="panel-head">
+          <div class="panel-title">Fiche <em>locataire</em></div>
+          <button class="btn btn-sm" onclick="showToast('Synchronisation Supabase à connecter.')">Sync</button>
+        </div>
+        <div class="panel-body" id="profilePanel"></div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Action effectuée.</div>
+
+<script>
+let tenants = [
+  {
+    id:'t1', prenom:'Aïssatou', nom:'Diop', email:'aissatou@example.com', tel:'+221 77 100 20 30',
+    status:'analyse', profile:'Diaspora', city:'Paris', type:'meuble', budget:950000,
+    quartiers:['Almadies','Ngor','VDN'], duration:'3 à 6 mois', moveIn:'Moins de 2 semaines',
+    completion:86, confidence:'Dossier solide', whatsapp:true, emailNotif:true, alerts:true,
+    needs:['Visite 360°','Paiement international','Signature digitale'], last:'Dossier complété hier', next:'Proposer biens meublés Almadies',
+    timeline:[
+      ['Dossier créé','Il y a 5 jours'],
+      ['Pièce identité vérifiée','Il y a 3 jours'],
+      ['Revenus diaspora ajoutés','Hier'],
+      ['À transmettre propriétaire','Action conseillée']
+    ]
+  },
+  {
+    id:'t2', prenom:'Mamadou', nom:'Fall', email:'m.fall@example.com', tel:'+221 78 222 33 44',
+    status:'candidat', profile:'Famille', city:'Dakar', type:'non_meuble', budget:650000,
+    quartiers:['Mermoz','VDN','Point E'], duration:'Plus de 12 mois', moveIn:'D’ici un mois',
+    completion:58, confidence:'À compléter', whatsapp:true, emailNotif:false, alerts:true,
+    needs:['Non meublé','Proche écoles','Parking'], last:'Documents revenus manquants', next:'Relancer justificatifs revenus',
+    timeline:[
+      ['Profil créé','Il y a 8 jours'],
+      ['Préférences logement renseignées','Il y a 7 jours'],
+      ['Documents incomplets','Depuis 4 jours']
+    ]
+  },
+  {
+    id:'t3', prenom:'Fatou', nom:'Ndiaye', email:'fatou.ndiaye@example.com', tel:'+221 77 555 12 12',
+    status:'accepte', profile:'Mission Pro', city:'Dakar', type:'meuble', budget:1200000,
+    quartiers:['Plateau','Almadies'], duration:'1 à 3 mois', moveIn:'Cette semaine',
+    completion:94, confidence:'Profil rassurant', whatsapp:true, emailNotif:true, alerts:false,
+    needs:['Facturation entreprise','Fibre','Meublé complet'], last:'Candidature acceptée', next:'Activer partenaires internet + ménage',
+    timeline:[
+      ['Dossier reçu','Il y a 6 jours'],
+      ['Analyse Kàddu validée','Il y a 4 jours'],
+      ['Accepté propriétaire','Hier'],
+      ['Préparer installation','Maintenant']
+    ]
+  },
+  {
+    id:'t4', prenom:'Cheikh', nom:'Ba', email:'cheikh.ba@example.com', tel:'+221 76 888 44 11',
+    status:'installe', profile:'Résident', city:'Dakar', type:'non_meuble', budget:500000,
+    quartiers:['SIPRES','Liberté 6','Sacré-Cœur'], duration:'Plus de 3 ans', moveIn:'Installé',
+    completion:100, confidence:'Dossier vérifié', whatsapp:false, emailNotif:true, alerts:false,
+    needs:['Paiement loyer','Quittance','Incident logement'], last:'Loyer payé', next:'Suivi satisfaction locataire',
+    timeline:[
+      ['Bail signé','Il y a 2 mois'],
+      ['État des lieux réalisé','Il y a 2 mois'],
+      ['Premier paiement reçu','Il y a 1 mois'],
+      ['Quittance disponible','Hier']
+    ]
+  },
+  {
+    id:'t5', prenom:'Adja', nom:'Sarr', email:'adja.sarr@example.com', tel:'+221 70 111 22 33',
+    status:'candidat', profile:'Étudiante', city:'Thiès', type:'meuble', budget:350000,
+    quartiers:['Point E','Mermoz','Ouakam'], duration:'6 à 12 mois', moveIn:'Plus d’un mois',
+    completion:42, confidence:'Dossier incomplet', whatsapp:true, emailNotif:true, alerts:true,
+    needs:['Garant','Proche écoles','Budget serré'], last:'Garant non renseigné', next:'Demander garant ou pièce complémentaire',
+    timeline:[
+      ['Profil créé','Il y a 2 jours'],
+      ['Préférences ajoutées','Hier'],
+      ['Garant manquant','À relancer']
+    ]
+  }
+];
+
+let selectedId = 't1';
+
+function init(){
+  renderTenants();
+  renderProfile(selectedId);
+  updateStats();
+}
+function statusLabel(s){return ({candidat:'Candidat',analyse:'En analyse',accepte:'Accepté',installe:'Installé'})[s]||s}
+function statusClass(s){return ({candidat:'blue',analyse:'warn',accepte:'active',installe:'gold'})[s]||'blue'}
+function initials(t){return (t.prenom?.[0]||'')+(t.nom?.[0]||'')}
+function cfa(n){return Number(n||0).toLocaleString('fr-FR')+' F CFA'}
+
+function renderTenants(){
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const st = document.getElementById('statusFilter').value;
+  const type = document.getElementById('typeFilter').value;
+  const seg = document.getElementById('segmentFilter').value;
+
+  const rows = tenants.filter(t=>{
+    const hay = [t.prenom,t.nom,t.email,t.tel,t.city,...t.quartiers,t.profile].join(' ').toLowerCase();
+    return (!q || hay.includes(q))
+      && (!st || t.status===st)
+      && (!type || t.type===type)
+      && (!seg || matchSegment(t,seg));
+  });
+
+  document.getElementById('tenantList').innerHTML = rows.map(t=>`
+    <article class="tenant-card ${t.id===selectedId?'active':''}" onclick="selectTenant('${t.id}')">
+      <div class="tenant-top">
+        <div class="tenant-main">
+          <div class="avatar">${initials(t)}</div>
+          <div>
+            <div class="tenant-name">${t.prenom} ${t.nom}</div>
+            <div class="tenant-meta">${t.profile} · ${t.city}<br>${t.email}</div>
+          </div>
+        </div>
+        <span class="pill ${statusClass(t.status)}">${statusLabel(t.status)}</span>
+      </div>
+
+      <div class="tenant-kpis">
+        <div class="mini"><strong>${t.completion}%</strong><span>dossier</span></div>
+        <div class="mini"><strong>${cfa(t.budget).replace(' F CFA','')}</strong><span>budget</span></div>
+        <div class="mini"><strong>${t.whatsapp?'Oui':'Non'}</strong><span>WhatsApp</span></div>
+      </div>
+
+      <div class="tags">
+        <span class="pill blue">${t.type==='meuble'?'Meublé':'Non meublé'}</span>
+        ${t.alerts?'<span class="pill active">Alertes OK</span>':''}
+        ${t.completion<70?'<span class="pill warn">À compléter</span>':''}
+      </div>
+    </article>
+  `).join('') || `<div class="panel" style="padding:24px;color:rgba(248,244,238,.34)">Aucun profil trouvé.</div>`;
+}
+
+function matchSegment(t,seg){
+  if(seg==='diaspora') return t.profile.toLowerCase().includes('diaspora') || t.city.toLowerCase()!=='dakar';
+  if(seg==='incomplet') return t.completion<70;
+  if(seg==='hot') return t.completion>=80 && ['analyse','accepte'].includes(t.status);
+  if(seg==='wa') return t.whatsapp;
+  return true;
+}
+function selectTenant(id){selectedId=id;renderTenants();renderProfile(id)}
+
+function renderProfile(id){
+  const t = tenants.find(x=>x.id===id) || tenants[0];
+  const panel = document.getElementById('profilePanel');
+  panel.innerHTML = `
+    <div class="profile-head">
+      <div class="big-avatar">${initials(t)}</div>
+      <div>
+        <div class="profile-name">${t.prenom} ${t.nom}</div>
+        <div class="profile-sub">${t.profile} · ${statusLabel(t.status)}<br>${t.tel}</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-head"><span>Complétude dossier</span><strong>${t.completion}%</strong></div>
+      <div class="progress"><div class="progress-bar" style="width:${t.completion}%"></div></div>
+    </div>
+
+    <div class="tags">
+      <span class="pill ${t.completion>=80?'active':t.completion>=60?'warn':'red'}">${t.confidence}</span>
+      <span class="pill blue">${t.whatsapp?'WhatsApp accepté':'WhatsApp non accepté'}</span>
+    </div>
+
+    <div class="info-grid">
+      <div class="info"><div class="info-k">Budget</div><div class="info-v">${cfa(t.budget)}</div></div>
+      <div class="info"><div class="info-k">Type</div><div class="info-v">${t.type==='meuble'?'Meublé':'Non meublé'}</div></div>
+      <div class="info"><div class="info-k">Durée</div><div class="info-v">${t.duration}</div></div>
+      <div class="info"><div class="info-k">Entrée</div><div class="info-v">${t.moveIn}</div></div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Quartiers recherchés</div>
+      <div class="tags">${t.quartiers.map(q=>`<span class="pill gold">${q}</span>`).join('')}</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Besoins détectés</div>
+      <div class="tags">${t.needs.map(n=>`<span class="pill blue">${n}</span>`).join('')}</div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Prochaine action recommandée</div>
+      <div style="font-size:.86rem;line-height:1.6;color:rgba(248,244,238,.72)">${t.next}</div>
+      <div class="action-grid">
+        <button class="small-action" onclick="showToast('WhatsApp à connecter.')"><i class="ph ph-whatsapp-logo"></i> WhatsApp</button>
+        <button class="small-action" onclick="showToast('Email à connecter.')"><i class="ph ph-envelope-simple"></i> Email</button>
+        <button class="small-action" onclick="showToast('Biens compatibles à connecter.')"><i class="ph ph-house-line"></i> Biens</button>
+        <button class="small-action" onclick="showToast('Note CRM ajoutée.')"><i class="ph ph-note-pencil"></i> Note</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Historique relation</div>
+      <div class="timeline">
+        ${t.timeline.map(item=>`
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-copy"><strong>${item[0]}</strong><span>${item[1]}</span></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function updateStats(){
+  const total = tenants.length;
+  const strong = tenants.filter(t=>t.completion>=80).length;
+  const wa = tenants.filter(t=>t.whatsapp).length;
+  const avgBudget = Math.round(tenants.reduce((a,t)=>a+t.budget,0)/Math.max(1,total));
+  const diaspora = tenants.filter(t=>matchSegment(t,'diaspora')).length;
+
+  document.getElementById('stTenants').textContent=total;
+  document.getElementById('stStrong').textContent=strong;
+  document.getElementById('stWa').textContent=wa;
+  document.getElementById('stBudget').textContent=Math.round(avgBudget/1000)+'K';
+  document.getElementById('stDiaspora').textContent=diaspora;
+
+  document.getElementById('todoDocs').textContent=tenants.filter(t=>t.completion<70).length;
+  document.getElementById('hotProfiles').textContent=tenants.filter(t=>t.completion>=80 && ['analyse','accepte'].includes(t.status)).length;
+  document.getElementById('waFollow').textContent=wa;
+  document.getElementById('budgetAlerts').textContent=tenants.filter(t=>t.budget<450000).length;
+
+  document.getElementById('segDiaspora').textContent=diaspora+' profils';
+  document.getElementById('segIncomplete').textContent=tenants.filter(t=>t.completion<70).length+' profils';
+  document.getElementById('segUnfurnished').textContent=tenants.filter(t=>t.type==='non_meuble').length+' profils';
+  document.getElementById('segAlerts').textContent=tenants.filter(t=>t.alerts).length+' profils';
+}
+
+function exportCRM(){
+  const blob = new Blob([JSON.stringify(tenants,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='kaddu-crm-locataires.json';
+  a.click();
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  setTimeout(()=>t.style.display='none',2200);
+}
+init();
+</script>
+</body>
+</html>
