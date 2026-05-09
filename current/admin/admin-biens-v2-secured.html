@@ -212,6 +212,7 @@
     @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.fg2,.fg3,.fg4{grid-template-columns:1fr}.biens-grid{grid-template-columns:1fr}}
     @media(max-width:640px){.nav-tabs{display:none}.drawer{max-width:100vw}.wrap{padding:14px 12px}}
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 
@@ -913,8 +914,8 @@ ON CONFLICT DO NOTHING;
 
 <script>
 // ══ CONFIG ════════════════════════════════════════
-const SB = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-const ANON = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+const SB = window.KADDU_SUPABASE.url;
+const ANON = window.KADDU_SUPABASE.anonKey;
 const BUCKET = "biens-photos";
 
 // ══ STATE ═════════════════════════════════════════
