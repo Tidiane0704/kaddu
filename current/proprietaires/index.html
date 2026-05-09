@@ -150,6 +150,15 @@
     }
     .offre-card.highlight:hover{transform:scale(1.02) translateY(-4px)}
 
+    /* Sélection active depuis le simulateur */
+    .offre-card.selected{
+      box-shadow:0 0 0 2px var(--or), 0 16px 48px rgba(191,150,80,.18);
+    }
+    .offre-card.highlight.selected{
+      box-shadow:0 0 0 2px var(--or), 0 0 60px rgba(191,150,80,.22), 0 16px 48px rgba(191,150,80,.2);
+    }
+    .sim-col{cursor:pointer}
+
     .badge-recommande{
       position:absolute;top:-14px;left:50%;transform:translateX(-50%);
       background:linear-gradient(135deg,var(--or),var(--orl));
@@ -502,7 +511,7 @@
     <div class="offres-grid">
 
       <!-- ESSENTIEL -->
-      <div class="offre-card">
+      <div class="offre-card" id="offre-essentiel" onclick="selectOffre('essentiel')">
         <div class="offre-label">Essentiel</div>
         <div class="offre-nom">Essentiel</div>
         <div class="offre-accroche">"Je t'apporte les bons locataires, tu gères le reste"</div>
@@ -528,7 +537,7 @@
       </div>
 
       <!-- PREMIUM -->
-      <div class="offre-card highlight">
+      <div class="offre-card highlight" id="offre-premium" onclick="selectOffre('premium')">
         <div class="badge-recommande">⭐ Recommandé</div>
         <div class="offre-label">Premium</div>
         <div class="offre-nom">Premium</div>
@@ -555,7 +564,7 @@
       </div>
 
       <!-- SIGNATURE -->
-      <div class="offre-card">
+      <div class="offre-card" id="offre-signature" onclick="selectOffre('signature')">
         <div class="offre-label">Signature</div>
         <div class="offre-nom">Signature</div>
         <div class="offre-accroche">"Tu ne t'occupes de rien"</div>
@@ -662,7 +671,7 @@
       <!-- Résultats côte à côte -->
       <div class="sim-results" id="simResults">
 
-        <div class="sim-col" id="col-essentiel">
+        <div class="sim-col" id="col-essentiel" onclick="selectOffre('essentiel')" title="Sélectionner Essentiel">
           <div class="sim-col-header">
             <span class="sim-col-name">Essentiel</span>
             <span class="sim-col-rate">8%</span>
@@ -695,7 +704,7 @@
           </div>
         </div>
 
-        <div class="sim-col active" id="col-premium">
+        <div class="sim-col active" id="col-premium" onclick="selectOffre('premium')" title="Sélectionner Premium">
           <div class="sim-col-header">
             <span class="sim-col-name">Premium ⭐</span>
             <span class="sim-col-rate">11%</span>
@@ -728,7 +737,7 @@
           </div>
         </div>
 
-        <div class="sim-col" id="col-signature">
+        <div class="sim-col" id="col-signature" onclick="selectOffre('signature')" title="Sélectionner Signature">
           <div class="sim-col-header">
             <span class="sim-col-name">Signature 👑</span>
             <span class="sim-col-rate">14%</span>
@@ -991,14 +1000,33 @@
     calcSim();
   });
 
-  function scrollToSim(offre){
-    document.getElementById('simulateur').scrollIntoView({behavior:'smooth',block:'start'});
-    setTimeout(()=>{
-      document.querySelectorAll('.sim-col').forEach(c=>c.classList.remove('active'));
-      const map = {essentiel:'col-essentiel',premium:'col-premium',signature:'col-signature'};
-      document.getElementById(map[offre])?.classList.add('active');
-    }, 600);
+  function selectOffre(offre){
+    const map = {essentiel:'col-essentiel', premium:'col-premium', signature:'col-signature'};
+    const offreMap = {essentiel:'offre-essentiel', premium:'offre-premium', signature:'offre-signature'};
+
+    // Sync colonne simulateur
+    document.querySelectorAll('.sim-col').forEach(c => c.classList.remove('active'));
+    document.getElementById(map[offre])?.classList.add('active');
+
+    // Sync carte offre en haut — .selected sans toucher à .highlight
+    document.querySelectorAll('.offre-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById(offreMap[offre])?.classList.add('selected');
+
+    // Scroll vers simulateur SEULEMENT si le clic vient d'une carte offre (pas d'une sim-col)
+    const fromSimCol = event?.target?.closest('.sim-col');
+    if(!fromSimCol){
+      document.getElementById('simulateur').scrollIntoView({behavior:'smooth', block:'start'});
+    } else {
+      // Clic depuis sim-col → scroll vers la carte offre en haut
+      document.getElementById(offreMap[offre])?.scrollIntoView({behavior:'smooth', block:'center'});
+    }
   }
+
+  // Compatibilité avec l'ancien nom au cas où
+  function scrollToSim(offre){ selectOffre(offre); }
+
+  // Sélection initiale : Premium actif par défaut
+  selectOffre('premium');
 
   // Toggle type meublé/non meublé
   document.getElementById('typeSelect').addEventListener('change', function(){
