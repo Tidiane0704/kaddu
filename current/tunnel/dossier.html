@@ -1613,14 +1613,24 @@ function getSmartPhone(id){
   let raw=(el?.value||'').trim();
   if(!iti) return {raw, valid:!!raw, e164:raw, country:'', dialCode:''};
   const country=iti.getSelectedCountryData()||{};
-  // Nettoyer le 0 initial si le candidat l'a saisi (convention internationale)
+  // Nettoyer le 0 initial (convention internationale)
   if(raw.startsWith('0') && raw.length > 1){
     const cleaned = raw.slice(1);
     try{ iti.setNumber('+' + (country.dialCode||'') + cleaned); raw = cleaned; if(el) el.value = cleaned; }catch(_){}
   }
-  let valid=false, e164=raw;
-  try{ valid=raw?iti.isValidNumber():false; e164=raw?iti.getNumber():''; }catch(_){ valid=false; }
-  return {raw, valid, e164, country:country.iso2?.toUpperCase()||'', dialCode:country.dialCode?('+'+country.dialCode):''};
+  const digits = raw.replace(/\D/g,'');
+  // Validation par longueur selon pays — règles clés marchés Kàddu
+  const lengthRules = {
+    SN:9, FR:9, CI:10, ML:8, GN:9, GM:7, MR:8,
+    MA:9, DZ:9, TN:8, CM:9, BF:8, BJ:8, TG:8,
+    NE:8, NG:10, GH:10, GA:9, CG:9, CD:9,
+    US:10, CA:10, GB:10, BE:9, CH:9, ES:9, IT:10, DE:10, PT:9,
+  };
+  const iso = country.iso2?.toUpperCase()||'';
+  const expected = lengthRules[iso];
+  const valid = expected ? digits.length === expected : (digits.length >= 7 && digits.length <= 12);
+  const e164 = raw ? ('+' + (country.dialCode||'') + digits) : '';
+  return {raw, valid, e164, country:iso, dialCode:country.dialCode?('+'+country.dialCode):''};
 }
 function validatePhone(id, required=true){
   const p=getSmartPhone(id);
