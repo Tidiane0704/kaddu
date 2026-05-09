@@ -456,7 +456,8 @@ function getSession(){
     return s;
   }catch{return null;}
 }
-window.addEventListener('beforeunload',()=>sessionStorage.removeItem('kaddu_jwt'));
+// Session conservée pendant la navigation espace locataire ↔ tunnel.
+// La déconnexion explicite reste gérée par logout().
 function logout(){sessionStorage.removeItem('kaddu_jwt');window.location.href='/auth/';}
 
 const session=getSession();
