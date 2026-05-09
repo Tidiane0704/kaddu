@@ -567,6 +567,7 @@
     .af-info-card-label{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:5px}
     .af-info-card-val{font-size:.84rem;color:rgba(248,244,238,.65);line-height:1.6}
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 
@@ -1069,8 +1070,8 @@
 
 <script>
 // ══ CONFIG ════════════════════════════════════════
-const SB   = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-const ANON = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+const SB = window.KADDU_SUPABASE.url;
+const ANON = window.KADDU_SUPABASE.anonKey;
 
 let session = null;
 
