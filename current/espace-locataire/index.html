@@ -213,7 +213,7 @@
       <div class="topbar-title" id="topbar-title">Bonjour, <em id="topName">—</em> 👋</div>
       <div style="display:flex;gap:10px">
         <a href="/biens/" class="btn btn-ghost">Chercher un bien</a>
-        <a href="/tunnel/dossier.html" class="btn btn-primary">+ Déposer mon dossier</a>
+        <a href="/tunnel/dossier.html" class="btn btn-primary" id="top-dossier-cta">+ Déposer mon dossier</a>
       </div>
     </div>
 
@@ -549,6 +549,14 @@ async function loadDossier(s){
 }
 
 function parseDossierMsg(d){try{return JSON.parse(d.message||'{}');}catch{return {};}}
+function dossierContinueUrl(d){return `/tunnel/dossier.html?resume=${encodeURIComponent(d.id)}`;}
+function isDraftDossier(d){return d && d.statut === 'brouillon';}
+function draftStepLabel(d){
+  const msg=parseDossierMsg(d);
+  const step=Number(msg.currentStep||1);
+  const labels={1:'Informations générales',2:'Informations locataires',3:'Pièces justificatives',4:'Garant',5:'Confirmation'};
+  return labels[step]||'Dossier en cours';
+}
 
 function renderDossier(d){
   updatePassportCockpitFromDossier(d);
@@ -659,19 +667,23 @@ async function uploadDocFromEspace(event,key,dossierId){
   const ext=file.name.split('.').pop();
   const path=`dossiers/${dossierId}/${key}_${Date.now()}.${ext}`;
   try{
-    const up=await fetch(`${SB_URL}/storage/v1/object/documents/${path}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':file.type,'x-upsert':'true'},body:file});
+    const up=await fetch(`${SB_URL}/storage/v1/object/documents-dossiers/${path}`,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':file.type,'x-upsert':'true'},body:file});
     if(!up.ok)throw new Error('Erreur upload');
-    const url=`${SB_URL}/storage/v1/object/public/documents/${path}`;
+    const url=`${SB_URL}/storage/v1/object/public/documents-dossiers/${path}`;
     const res=await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}&select=docs_fournis`,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
     const rows=await res.json();
     const existing=rows[0]?.docs_fournis||[];
     const newDocs=[...existing.filter(d=>d.key!==key),{key,url,path,name:file.name}];
     await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${dossierId}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'},body:JSON.stringify({docs_fournis:newDocs})});
     await loadDossier(s);
-  }catch(e){alert('Erreur lors du dépôt : '+e.message);}
+  }catch(e){console.error('ESPACE_UPLOAD_FAILED', e); alert('Chargement interrompu. Votre document n’a pas encore été enregistré. Réessayez ou changez de fichier.');}
 }
 
 function renderAccueilAlert(d){
+  if(isDraftDossier(d)){
+    document.getElementById('accueil-alert').innerHTML=`<div class="alert-banner info">ℹ️ Votre Passeport Locatif est en cours. <a href="${dossierContinueUrl(d)}">Continuer mon dossier →</a></div>`;
+    return;
+  }
   const statuts={en_attente:'Dossier reçu — en cours d\'analyse par notre équipe.',en_cours:'Votre dossier est en cours d\'étude.',accepte:'Félicitations ! Votre dossier a été accepté.',refuse:'Votre dossier n\'a pas été retenu pour ce bien.'};
   const types={en_attente:'warn',en_cours:'info',accepte:'success',refuse:'warn'};
   document.getElementById('accueil-alert').innerHTML=`<div class="alert-banner ${types[d.statut]||'info'}">${statuts[d.statut]||''}</div>`;
@@ -772,15 +784,23 @@ function updatePassportCockpitFromDossier(d){
     const rules=DOC_RULES[loc.situation]||DOC_RULES['autre'];
     rules.filter(r=>r.required).forEach(rule=>{totalReq++; if(docs.find(df=>df.key===`${idx}_${rule.id}`)) totalOk++;});
   });
-  const pct=totalReq?Math.round((totalOk/totalReq)*100):(locs.length?45:15);
-  let statusText=pct>=100?'Dossier solide':pct>=70?'Presque prêt':'À compléter';
-  let missing= totalReq?`${Math.max(totalReq-totalOk,0)} document(s) obligatoire(s) manquant(s)`:'Dossier à initialiser';
+  const basePct = locs.length ? 22 : 8;
+  const docPct = totalReq ? Math.round((totalOk/totalReq)*55) : 0;
+  const pct = isDraftDossier(d) ? Math.min(95, basePct + docPct + (msg.garants?.length ? 12 : 0)) : (totalReq?Math.round((totalOk/totalReq)*100):(locs.length?45:15));
+  let statusText = isDraftDossier(d) ? 'En cours' : (pct>=100?'Dossier solide':pct>=70?'Presque prêt':'À compléter');
+  let missing = totalReq ? `${Math.max(totalReq-totalOk,0)} document(s) obligatoire(s) manquant(s)` : (isDraftDossier(d)?draftStepLabel(d):'Dossier à initialiser');
+  const continueUrl = dossierContinueUrl(d);
+  const topCta = document.getElementById('top-dossier-cta');
+  if(topCta && isDraftDossier(d)){ topCta.href = continueUrl; topCta.textContent = 'Continuer mon dossier'; }
   const actions=[];
+  if(isDraftDossier(d)){
+    actions.push(`<div class="priority-item success"><div class="priority-icon"><i class="ph ph-arrow-circle-right ph-icon"></i></div><div class="priority-text"><strong>Continuer votre Passeport Locatif</strong><span>Reprenez à l’étape : ${draftStepLabel(d)}.</span><div style="margin-top:8px"><a class="btn btn-primary btn-sm" href="${continueUrl}">Continuer mon dossier</a></div></div></div>`);
+  }
   if(pct<100)actions.push(`<div class="priority-item"><div class="priority-icon"><i class="ph ph-upload-simple ph-icon"></i></div><div class="priority-text"><strong>Compléter vos documents</strong><span>${missing}. Cela augmente vos chances d’être étudié rapidement.</span></div></div>`);
   if(!(msg.garants||[]).length)actions.push(`<div class="priority-item"><div class="priority-icon"><i class="ph ph-user-plus ph-icon"></i></div><div class="priority-text"><strong>Ajouter un garant</strong><span>Un garant peut renforcer votre candidature auprès d’un propriétaire.</span></div></div>`);
-  actions.push(`<div class="priority-item success"><div class="priority-icon"><i class="ph ph-buildings ph-icon"></i></div><div class="priority-text"><strong>Postuler à un bien compatible</strong><span>Consultez les biens disponibles selon votre profil.</span></div></div>`);
-  const step=d.statut==='accepte'?5:d.statut==='en_cours'?2:d.statut==='transmis'?3:1;
-  const labelMap={en_attente:'Dossier reçu',en_cours:'Analyse Kàddu',transmis:'Transmis au propriétaire',accepte:'Accepté',refuse:'Non retenu'};
+  if(!isDraftDossier(d))actions.push(`<div class="priority-item success"><div class="priority-icon"><i class="ph ph-buildings ph-icon"></i></div><div class="priority-text"><strong>Postuler à un bien compatible</strong><span>Consultez les biens disponibles selon votre profil.</span></div></div>`);
+  const step = isDraftDossier(d) ? Math.min(Math.max(Number(msg.currentStep||2),1),5) : (d.statut==='accepte'?5:d.statut==='en_cours'?2:d.statut==='transmis'?3:1);
+  const labelMap={brouillon:'Passeport en cours',en_attente:'Dossier reçu',en_cours:'Analyse Kàddu',transmis:'Transmis au propriétaire',accepte:'Accepté',refuse:'Non retenu'};
   setPassportCockpit(pct,statusText,missing,actions.join(''),step,labelMap[d.statut]||'Dossier reçu');
 }
 
