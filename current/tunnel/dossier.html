@@ -881,6 +881,79 @@
       }
     }
 
+  
+    /* ── PATCH DOCUMENTS : ÉTAT UPLOAD CLAIR ── */
+    .doc-item.uploaded{
+      border-color:rgba(0,200,117,.42)!important;
+      border-style:solid!important;
+      background:linear-gradient(135deg,rgba(0,200,117,.07),rgba(11,32,57,.55))!important;
+    }
+    .doc-uploaded-summary{
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:10px;
+      padding:11px 12px;
+      border-radius:10px;
+      background:rgba(0,200,117,.08);
+      border:1px solid rgba(0,200,117,.18);
+    }
+    .doc-item.uploaded .doc-uploaded-summary{display:flex}
+    .doc-item.uploaded .doc-upload-zone{display:none}
+    .doc-uploaded-left{
+      min-width:0;
+      display:flex;
+      align-items:center;
+      gap:9px;
+      color:var(--green);
+      font-size:.78rem;
+      font-weight:600;
+    }
+    .doc-uploaded-left span:last-child{
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      color:rgba(248,244,238,.74);
+      font-weight:400;
+    }
+    .doc-uploaded-actions{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+    }
+    .doc-mini-btn{
+      border:1px solid rgba(191,150,80,.22);
+      background:rgba(191,150,80,.06);
+      color:var(--or);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:.68rem;
+      cursor:pointer;
+      transition:.2s;
+      font-family:'DM Sans',sans-serif;
+    }
+    .doc-mini-btn:hover{border-color:var(--or);background:rgba(191,150,80,.12)}
+    .doc-mini-btn.danger{
+      color:#ff9a9a;
+      border-color:rgba(255,84,84,.2);
+      background:rgba(255,84,84,.06);
+    }
+    .doc-error-box{
+      display:none;
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:rgba(255,84,84,.07);
+      border:1px solid rgba(255,84,84,.20);
+      color:#ff9a9a;
+      font-size:.76rem;
+      line-height:1.45;
+    }
+    .doc-error-box.visible{display:block}
+
   </style>
 </head>
 <body>
@@ -1224,11 +1297,11 @@
 
         <div class="ocr-panel" id="ocr-panel">
           <div class="ocr-head">
-            <div class="ocr-title">OCR intelligent Kàddu</div>
+            <div class="ocr-title">Lecture automatique du document</div>
             <div class="ocr-status" id="ocr-status">En attente d’un document</div>
           </div>
           <div class="ocr-grid" id="ocr-grid"></div>
-          <div class="ocr-chip" id="ocr-confidence">Analyse simulée côté navigateur · prêt à connecter à votre moteur OCR</div>
+          <div class="ocr-chip" id="ocr-confidence">Document reçu · nous préparons les informations utiles pour vous faire gagner du temps</div>
           <div class="ocr-actions">
             <button class="btn btn-ghost" onclick="dismissOcrSuggestion()">Ignorer</button>
             <button class="btn btn-primary" onclick="applyOcrSuggestion()">Préremplir les champs détectés</button>
@@ -1945,6 +2018,20 @@ function buildDocsUI(){
               <span id="docnameTxt-${key}"></span>
             </div>
           </div>
+          <div class="doc-uploaded-summary" id="docuploaded-${key}">
+            <div class="doc-uploaded-left">
+              <span>✓ Chargé</span>
+              <span id="docuploadedName-${key}">Document déposé</span>
+            </div>
+            <div class="doc-uploaded-actions">
+              <label class="doc-mini-btn">
+                Remplacer
+                <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleDocUpload(event,'${key}','${loc.prenom||''}')">
+              </label>
+              <button type="button" class="doc-mini-btn danger" onclick="removeUploadedDoc('${key}')">Supprimer</button>
+            </div>
+          </div>
+          <div class="doc-error-box" id="docerror-${key}"></div>
           <div class="doc-progress" id="docprog-${key}">
             <div class="doc-progress-bar" id="docbar-${key}"></div>
           </div>
@@ -2551,6 +2638,7 @@ function estimateOcrFromFilename(file, key){
   return guessed;
 }
 
+
 function showOcrSuggestion(s){
   lastOcrSuggestion = s;
   const panel = document.getElementById('ocr-panel');
@@ -2561,13 +2649,13 @@ function showOcrSuggestion(s){
 
   const rows = [
     ['Document', s.source],
-    ['Confiance OCR', Math.round((s.confidence || 0)*100) + '%'],
-    ['Prénom détecté', s.prenom || 'Non détecté'],
-    ['Nom détecté', s.nom || 'Non détecté'],
-    ['Date naissance', s.ddn || 'Non détectée'],
-    ['Nationalité', s.nationalite || 'Non détectée'],
-    ['Type pièce', s.id_type || 'Non détecté'],
-    ['Numéro pièce', s.id_numero || 'Non détecté']
+    ['Statut', 'Document bien reçu'],
+    ['Prénom détecté', s.prenom || 'À compléter si nécessaire'],
+    ['Nom détecté', s.nom || 'À compléter si nécessaire'],
+    ['Date de naissance', s.ddn || 'À compléter si nécessaire'],
+    ['Nationalité', s.nationalite || 'À compléter si nécessaire'],
+    ['Type de pièce', s.id_type || 'À confirmer'],
+    ['Numéro de pièce', s.id_numero || 'À compléter si nécessaire']
   ];
 
   grid.innerHTML = rows.map(([k,v]) => `
@@ -2577,11 +2665,12 @@ function showOcrSuggestion(s){
     </div>
   `).join('');
 
-  status.textContent = 'Champs détectés';
-  conf.textContent = `Confiance estimée : ${Math.round((s.confidence||0)*100)}% · vérification manuelle recommandée`;
+  status.textContent = 'Document reçu';
+  conf.textContent = 'Certaines informations peuvent être préremplies automatiquement. Vérifiez-les simplement avant l’envoi.';
   panel.classList.add('visible');
   panel.scrollIntoView({behavior:'smooth',block:'center'});
 }
+
 
 function applyOcrSuggestion(){
   const s = lastOcrSuggestion;
@@ -2612,7 +2701,7 @@ function applyOcrSuggestion(){
   dismissOcrSuggestion();
   updateDynamicScore();
   if(typeof scheduleDraftSave === 'function') scheduleDraftSave();
-  showAlert('Préremplissage effectué. Merci de vérifier les informations détectées avant l’envoi.', 'success');
+  showAlert('Informations préremplies. Vérifiez simplement les champs avant l’envoi.', 'success');
 }
 
 function dismissOcrSuggestion(){
@@ -3238,6 +3327,115 @@ if(typeof saveLoc === 'function'){
 document.addEventListener('input', e => { if(e.target?.id === 'loc-tel') kadduPatchPhoneUI(); });
 document.addEventListener('change', e => { if(['loc-tel','loc-tel-country','loc-tel-dial'].includes(e.target?.id)) kadduPatchPhoneUI(); });
 setTimeout(kadduPatchPhoneUI, 700);
+
+
+
+// ══ PATCH DOCUMENTS — VISIBILITÉ UPLOAD + ERREURS CLAIRES ═════
+function markDocAsUploaded(key, fileName){
+  const item = document.getElementById('docitem-' + key);
+  const name1 = document.getElementById('docnameTxt-' + key);
+  const nameBox = document.getElementById('docname-' + key);
+  const uploadedName = document.getElementById('docuploadedName-' + key);
+  const errorBox = document.getElementById('docerror-' + key);
+
+  if(item) item.classList.add('uploaded');
+  if(name1) name1.textContent = fileName || 'Document déposé';
+  if(nameBox) nameBox.classList.add('visible');
+  if(uploadedName) uploadedName.textContent = fileName || 'Document déposé';
+  if(errorBox){ errorBox.classList.remove('visible'); errorBox.textContent=''; }
+}
+
+function markDocUploadError(key, message){
+  const item = document.getElementById('docitem-' + key);
+  const errorBox = document.getElementById('docerror-' + key);
+  if(item) item.classList.remove('uploaded');
+  if(errorBox){
+    errorBox.textContent = message || "Le document n'a pas pu être chargé. Vérifiez le format, la taille ou réessayez.";
+    errorBox.classList.add('visible');
+  }
+}
+
+function removeUploadedDoc(key){
+  if(typeof uploadedDocs !== 'undefined' && uploadedDocs && uploadedDocs[key]) delete uploadedDocs[key];
+
+  const item = document.getElementById('docitem-' + key);
+  const nameBox = document.getElementById('docname-' + key);
+  const nameTxt = document.getElementById('docnameTxt-' + key);
+  const uploadedName = document.getElementById('docuploadedName-' + key);
+  const errorBox = document.getElementById('docerror-' + key);
+
+  if(item){
+    item.classList.remove('uploaded','ocr-done','ocr-analyzing');
+    item.style.borderColor='';
+  }
+  if(nameBox) nameBox.classList.remove('visible');
+  if(nameTxt) nameTxt.textContent='';
+  if(uploadedName) uploadedName.textContent='Document déposé';
+  if(errorBox){ errorBox.classList.remove('visible'); errorBox.textContent=''; }
+
+  if(typeof scheduleDraftSave === 'function') scheduleDraftSave();
+  if(typeof updateDynamicScore === 'function') updateDynamicScore();
+  if(typeof renderFloatingAssistant === 'function') renderFloatingAssistant();
+}
+
+function restoreUploadedDocsUI(){
+  if(typeof uploadedDocs === 'undefined' || !uploadedDocs) return;
+  Object.entries(uploadedDocs).forEach(([key, doc])=>{
+    markDocAsUploaded(key, doc && doc.name ? doc.name : 'Document déjà chargé');
+  });
+}
+
+const __oldBuildDocsUIPatch = typeof buildDocsUI === 'function' ? buildDocsUI : null;
+if(__oldBuildDocsUIPatch){
+  buildDocsUI = function(){
+    __oldBuildDocsUIPatch.apply(this, arguments);
+    setTimeout(restoreUploadedDocsUI, 60);
+  };
+}
+
+const __oldHandleDocUploadUXPatch = typeof handleDocUpload === 'function' ? handleDocUpload : null;
+if(__oldHandleDocUploadUXPatch){
+  handleDocUpload = async function(event, key, prenomLoc){
+    const file = event.target.files && event.target.files[0];
+    const errorBox = document.getElementById('docerror-' + key);
+    if(errorBox){ errorBox.classList.remove('visible'); errorBox.textContent=''; }
+
+    if(file){
+      const extOk = /\.(pdf|jpg|jpeg|png)$/i.test(file.name || '');
+      const typeOk = ['application/pdf','image/jpeg','image/png','image/jpg'].includes(file.type);
+      if(!typeOk && !extOk){
+        markDocUploadError(key, 'Format non accepté. Merci de charger un PDF, JPG ou PNG.');
+        return;
+      }
+      if(file.size > 10 * 1024 * 1024){
+        markDocUploadError(key, 'Ce fichier dépasse 10 Mo. Merci de compresser le document ou de charger une version plus légère.');
+        return;
+      }
+    }
+
+    try{
+      await __oldHandleDocUploadUXPatch.apply(this, arguments);
+
+      if(file && typeof uploadedDocs !== 'undefined' && uploadedDocs && uploadedDocs[key]){
+        markDocAsUploaded(key, uploadedDocs[key].name || file.name);
+      }else if(file){
+        setTimeout(()=>{
+          if(!(typeof uploadedDocs !== 'undefined' && uploadedDocs && uploadedDocs[key])){
+            markDocUploadError(key, "Le chargement n’a pas été confirmé. Vérifiez le bucket Supabase Storage 'documents-dossiers' et ses règles d'accès.");
+          }
+        }, 900);
+      }
+
+      if(typeof scheduleDraftSave === 'function') scheduleDraftSave();
+      if(typeof updateDynamicScore === 'function') updateDynamicScore();
+      if(typeof renderFloatingAssistant === 'function') renderFloatingAssistant();
+
+    }catch(e){
+      markDocUploadError(key, e && e.message ? e.message : "Erreur pendant le chargement du document.");
+    }
+  };
+}
+setTimeout(restoreUploadedDocsUI, 1000);
 
 </script>
 </body>
