@@ -954,6 +954,119 @@
     }
     .doc-error-box.visible{display:block}
 
+  
+    /* ── ENRÔLEMENT ESPACE LOCATAIRE — APRÈS IDENTITÉ ── */
+    .enroll-card{
+      margin:18px 0 22px;
+      border:1px solid rgba(74,158,255,.18);
+      border-radius:16px;
+      background:linear-gradient(135deg,rgba(74,158,255,.06),rgba(11,32,57,.58));
+      padding:16px 18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .enroll-card-left{display:flex;gap:12px;align-items:flex-start}
+    .enroll-icon{
+      width:38px;height:38px;border-radius:13px;
+      background:rgba(74,158,255,.10);
+      border:1px solid rgba(74,158,255,.22);
+      color:var(--blue);
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;font-weight:700;
+    }
+    .enroll-title{font-size:.92rem;font-weight:700;color:var(--blanc);margin-bottom:4px}
+    .enroll-text{font-size:.78rem;color:var(--muted);line-height:1.55;max-width:620px}
+    .enroll-state{
+      display:inline-flex;align-items:center;gap:6px;
+      margin-top:9px;
+      padding:5px 9px;border-radius:999px;
+      border:1px solid rgba(191,150,80,.18);
+      background:rgba(191,150,80,.07);
+      color:var(--or);
+      font-size:.68rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .enroll-state.ok{
+      border-color:rgba(0,200,117,.22);
+      background:rgba(0,200,117,.08);
+      color:var(--green);
+    }
+    .enroll-modal-overlay{
+      position:fixed;inset:0;z-index:2500;
+      background:rgba(3,8,15,.72);
+      backdrop-filter:blur(14px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+    }
+    .enroll-modal-overlay.open{display:flex}
+    .enroll-modal{
+      width:min(560px,100%);
+      border:1px solid rgba(191,150,80,.20);
+      border-radius:22px;
+      background:linear-gradient(160deg,rgba(11,32,57,.98),rgba(7,15,26,.98));
+      box-shadow:0 30px 90px rgba(0,0,0,.48);
+      padding:26px;
+      color:var(--blanc);
+    }
+    .enroll-modal-title{
+      font-family:'Playfair Display',serif;
+      font-size:1.7rem;
+      font-weight:300;
+      line-height:1.12;
+      margin-bottom:10px;
+    }
+    .enroll-modal-title em{color:var(--blue);font-style:italic}
+    .enroll-modal-sub{
+      color:var(--muted);
+      font-size:.9rem;
+      line-height:1.65;
+      margin-bottom:20px;
+    }
+    .enroll-benefits{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:16px 0 20px;
+    }
+    .enroll-benefit{
+      border:1px solid rgba(248,244,238,.07);
+      background:rgba(255,255,255,.025);
+      border-radius:12px;
+      padding:11px 12px;
+      font-size:.76rem;
+      color:rgba(248,244,238,.62);
+      line-height:1.45;
+    }
+    .enroll-benefit strong{display:block;color:var(--blanc);font-size:.8rem;margin-bottom:2px}
+    .enroll-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .enroll-inline-error{
+      display:none;
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,84,84,.20);
+      background:rgba(255,84,84,.07);
+      color:#ff9a9a;
+      font-size:.78rem;
+      line-height:1.45;
+    }
+    .enroll-inline-error.visible{display:block}
+    .enroll-password-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    @media(max-width:700px){
+      .enroll-card{flex-direction:column}
+      .enroll-benefits,.enroll-password-row{grid-template-columns:1fr}
+    }
+
   </style>
 </head>
 <body>
@@ -1272,6 +1385,22 @@
           </div>
         </div>
 
+
+        <div class="enroll-card" id="enroll-card">
+          <div class="enroll-card-left">
+            <div class="enroll-icon">K</div>
+            <div>
+              <div class="enroll-title">Votre espace locataire sera créé avant les documents.</div>
+              <div class="enroll-text">
+                Dès que le locataire principal est renseigné, Kàddu crée un espace sécurisé pour sauvegarder le dossier,
+                reprendre plus tard et protéger les pièces justificatives.
+              </div>
+              <div class="enroll-state" id="enroll-state">Espace à créer</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" type="button" onclick="openEnrollmentModal()">Créer maintenant</button>
+        </div>
+
         <div class="form-nav">
           <button class="btn btn-ghost" onclick="prevStep(2)">← Retour</button>
           <button class="btn btn-primary btn-lg" onclick="nextStep(2)">Valider et aller à l'étape suivante →</button>
@@ -1495,6 +1624,49 @@
         </div>
       </div>
     </aside>
+  </div>
+</div>
+
+
+
+<!-- Modal création espace locataire -->
+<div class="enroll-modal-overlay" id="modal-enroll">
+  <div class="enroll-modal">
+    <div class="enroll-modal-title">Créer votre <em>espace locataire</em>.</div>
+    <div class="enroll-modal-sub">
+      Votre dossier sera sauvegardé dans votre Passeport Locatif Kàddu. Vous pourrez reprendre plus tard,
+      suivre vos candidatures et déposer vos documents dans un espace sécurisé.
+    </div>
+
+    <div class="enroll-benefits">
+      <div class="enroll-benefit"><strong>Reprise plus tard</strong>Votre progression est conservée.</div>
+      <div class="enroll-benefit"><strong>Documents protégés</strong>Les pièces restent liées à votre espace.</div>
+      <div class="enroll-benefit"><strong>Candidatures rapides</strong>Le dossier devient réutilisable.</div>
+      <div class="enroll-benefit"><strong>Suivi Kàddu</strong>Vous accédez à votre tableau de bord.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email de connexion</label>
+      <input class="form-input" id="enroll-email" type="email" readonly>
+    </div>
+
+    <div class="enroll-password-row">
+      <div class="form-group">
+        <label class="form-label">Mot de passe</label>
+        <input class="form-input" id="enroll-password" type="password" placeholder="8 caractères minimum">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirmer</label>
+        <input class="form-input" id="enroll-password2" type="password" placeholder="Répéter le mot de passe">
+      </div>
+    </div>
+
+    <div class="enroll-inline-error" id="enroll-error"></div>
+
+    <div class="enroll-actions">
+      <button class="btn btn-ghost" type="button" onclick="closeEnrollmentModal()">Plus tard</button>
+      <button class="btn btn-primary" type="button" id="btn-enroll-create" onclick="createTenantSpace()">Créer mon espace</button>
+    </div>
   </div>
 </div>
 
@@ -1863,7 +2035,202 @@ function clearAllErrors(){
   document.querySelectorAll('.step-error-banner').forEach(e=>e.classList.remove('visible'));
 }
 
-function nextStep(from){
+
+// ══ ENRÔLEMENT ESPACE LOCATAIRE — APRÈS LOCATAIRE PRINCIPAL ═══
+function enrollmentSession(){
+  return getSession();
+}
+
+function updateEnrollmentState(){
+  const state = document.getElementById('enroll-state');
+  if(!state) return;
+  const s = enrollmentSession();
+  if(s && s.role === 'locataire'){
+    state.textContent = 'Espace locataire actif';
+    state.classList.add('ok');
+  }else{
+    state.textContent = locataires?.[0]?.email ? 'Prêt à créer' : 'Espace à créer';
+    state.classList.remove('ok');
+  }
+}
+
+function openEnrollmentModal(){
+  const loc = locataires?.[0];
+  if(!loc){
+    showAlert('Ajoutez d’abord le locataire principal avant de créer l’espace.','warn');
+    return;
+  }
+  document.getElementById('enroll-email').value = loc.email || '';
+  document.getElementById('enroll-password').value = '';
+  document.getElementById('enroll-password2').value = '';
+  const err = document.getElementById('enroll-error');
+  if(err){ err.classList.remove('visible'); err.textContent=''; }
+  document.getElementById('modal-enroll')?.classList.add('open');
+}
+
+function closeEnrollmentModal(){
+  document.getElementById('modal-enroll')?.classList.remove('open');
+}
+
+function showEnrollError(msg){
+  const err = document.getElementById('enroll-error');
+  if(err){
+    err.textContent = msg;
+    err.classList.add('visible');
+  }
+}
+
+function storeKadduSession(authData, role='locataire'){
+  if(!authData) return false;
+  const accessToken = authData.access_token || authData.session?.access_token;
+  const refreshToken = authData.refresh_token || authData.session?.refresh_token || '';
+  const user = authData.user || authData.session?.user;
+  const expiresIn = authData.expires_in || authData.session?.expires_in || 3600;
+  if(!accessToken || !user) return false;
+
+  sessionStorage.setItem('kaddu_jwt', JSON.stringify({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    user,
+    role,
+    expires: Date.now() + (expiresIn * 1000)
+  }));
+  return true;
+}
+
+async function upsertTenantProfileFromLoc(user, accessToken, loc){
+  try{
+    await fetch(`${SB_URL}/rest/v1/profils`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SB_KEY,
+        'Authorization':'Bearer '+accessToken,
+        'Prefer':'resolution=merge-duplicates,return=minimal'
+      },
+      body:JSON.stringify({
+        id:user.id,
+        role:'locataire',
+        prenom:loc.prenom || '',
+        nom:loc.nom || '',
+        email:loc.email || user.email || '',
+        telephone:loc.tel || loc.phone_e164 || '',
+        updated_at:new Date().toISOString()
+      })
+    });
+  }catch(e){
+    console.warn('PROFILE_UPSERT_FAILED', e);
+  }
+}
+
+async function createTenantSpace(){
+  const loc = locataires?.[0];
+  if(!loc){
+    showEnrollError('Ajoutez d’abord le locataire principal.');
+    return false;
+  }
+
+  const email = (loc.email || '').trim().toLowerCase();
+  const password = document.getElementById('enroll-password').value;
+  const password2 = document.getElementById('enroll-password2').value;
+
+  if(!email){
+    showEnrollError('Email manquant. Revenez sur la fiche locataire et renseignez une adresse email.');
+    return false;
+  }
+  if(password.length < 8){
+    showEnrollError('Le mot de passe doit contenir au moins 8 caractères.');
+    return false;
+  }
+  if(password !== password2){
+    showEnrollError('Les deux mots de passe ne correspondent pas.');
+    return false;
+  }
+
+  const btn = document.getElementById('btn-enroll-create');
+  btn.disabled = true;
+  btn.textContent = 'Création…';
+
+  try{
+    const res = await fetch(`${SB_URL}/auth/v1/signup`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SB_KEY
+      },
+      body:JSON.stringify({
+        email,
+        password,
+        data:{
+          role:'locataire',
+          prenom:loc.prenom || '',
+          nom:loc.nom || '',
+          telephone:loc.tel || loc.phone_e164 || ''
+        }
+      })
+    });
+
+    const data = await res.json();
+    if(!res.ok){
+      const msg = (data.msg || data.message || '').toLowerCase();
+      if(msg.includes('already') || msg.includes('registered') || msg.includes('exists')){
+        showEnrollError('Un espace existe déjà avec cet email. Connectez-vous depuis l’espace locataire, puis revenez compléter votre dossier.');
+      }else{
+        showEnrollError('La création de l’espace n’a pas abouti. Vérifiez l’email ou réessayez dans quelques instants.');
+      }
+      console.warn('TENANT_SIGNUP_FAILED', data);
+      return false;
+    }
+
+    const stored = storeKadduSession(data,'locataire');
+
+    if(stored){
+      const s = getSession();
+      await upsertTenantProfileFromLoc(s.user, s.access_token, loc);
+      closeEnrollmentModal();
+      updateEnrollmentState();
+      if(typeof scheduleDraftSave === 'function') scheduleDraftSave();
+      showAlert('Votre espace locataire est créé. Votre dossier est désormais sauvegardé dans votre Passeport Locatif Kàddu.','success');
+      return true;
+    }
+
+    // Cas Supabase email confirmation activée : user créé mais pas de session.
+    showEnrollError("Votre espace a été créé. Confirmez votre email pour l’activer, puis connectez-vous à l’espace locataire.");
+    console.warn('TENANT_SIGNUP_NO_SESSION', data);
+    return false;
+
+  }catch(e){
+    console.error('TENANT_SIGNUP_ERROR', e);
+    showEnrollError('La création de l’espace est momentanément indisponible. Merci de réessayer.');
+    return false;
+  }finally{
+    btn.disabled = false;
+    btn.textContent = 'Créer mon espace';
+  }
+}
+
+async function ensureTenantEnrollment(){
+  const s = enrollmentSession();
+  if(s && s.role === 'locataire') return true;
+
+  // Tant qu'il n'y a pas de session, on bloque avant les documents pour sécuriser uploads + reprise.
+  openEnrollmentModal();
+  showAlert('Créez votre espace locataire pour sauvegarder votre dossier et déposer vos documents en sécurité.','info');
+  return false;
+}
+
+// Synchronisation état après ajout/modification locataire
+const __oldSaveLocEnrollment = typeof saveLoc === 'function' ? saveLoc : null;
+if(__oldSaveLocEnrollment){
+  saveLoc = function(){
+    const r = __oldSaveLocEnrollment.apply(this, arguments);
+    updateEnrollmentState();
+    return r;
+  };
+}
+setTimeout(updateEnrollmentState, 900);
+
+async function nextStep(from){
   clearAllErrors();
   let hasError = false;
 
@@ -1890,6 +2257,10 @@ function nextStep(from){
       showAlert('Veuillez ajouter au moins un locataire avant de continuer.','warn');
       return;
     }
+
+    const enrolled = await ensureTenantEnrollment();
+    if(!enrolled) return;
+
     buildDocsUI();
   }
 
@@ -2068,6 +2439,8 @@ async function handleDocUpload(event, key, prenomLoc){
 
   progWrap.classList.add('visible');
   progBar.style.width = '0%';
+  if(nameTxt){ nameTxt.textContent = 'Analyse du document…'; }
+  if(nameEl){ nameEl.classList.add('visible'); }
   nameEl.classList.remove('visible');
   item.classList.remove('uploaded');
 
@@ -2118,7 +2491,8 @@ async function handleDocUpload(event, key, prenomLoc){
   } catch(err) {
     clearInterval(tick);
     progWrap.classList.remove('visible');
-    showAlert('Erreur lors du dépôt de "' + file.name + '" : ' + err.message, 'error');
+    console.error("SUPABASE_STORAGE_UPLOAD_FAILED", err);
+    showAlert('Chargement interrompu. Votre document n’a pas encore été enregistré. Réessayez ou changez de fichier.', 'error');
   }
 }
 
@@ -2466,7 +2840,8 @@ async function submitDossier(btn){
   // ── Résolution du locataire_id ───────────────────────────
   // Priorité 1 : session active (utilisateur connecté)
   // Priorité 2 : lookup par email du locataire saisi dans le formulaire
-  let locataireId = session?.user?.id || null;
+  const activeSession = getSession() || session;
+  let locataireId = activeSession?.user?.id || null;
   if(!locataireId && locataires[0]?.email){
     try{
       const r = await fetch(
@@ -2504,7 +2879,7 @@ async function submitDossier(btn){
       headers:{
         'Content-Type':'application/json',
         'apikey':SB_KEY,
-        'Authorization': session?'Bearer '+session.access_token:'Bearer '+SB_KEY,
+        'Authorization': activeSession?'Bearer '+activeSession.access_token:'Bearer '+SB_KEY,
         'Prefer':'return=minimal'
       },
       body:JSON.stringify(dossier)
@@ -3421,7 +3796,7 @@ if(__oldHandleDocUploadUXPatch){
       }else if(file){
         setTimeout(()=>{
           if(!(typeof uploadedDocs !== 'undefined' && uploadedDocs && uploadedDocs[key])){
-            markDocUploadError(key, "Le chargement n’a pas été confirmé. Vérifiez le bucket Supabase Storage 'documents-dossiers' et ses règles d'accès.");
+            markDocUploadError(key, "Chargement interrompu. Votre document n’a pas encore été enregistré. Réessayez ou changez de fichier.");
           }
         }, 900);
       }
@@ -3436,6 +3811,33 @@ if(__oldHandleDocUploadUXPatch){
   };
 }
 setTimeout(restoreUploadedDocsUI, 1000);
+
+
+
+// ══ PATCH FINAL UX ERREURS DOCUMENTS — ZÉRO MESSAGE TECHNIQUE ══
+(function(){
+  const oldMarkDocUploadError = typeof markDocUploadError === 'function' ? markDocUploadError : null;
+  if(oldMarkDocUploadError){
+    markDocUploadError = function(key, message){
+      const technical = /supabase|bucket|storage|documents-dossiers|policy|rls|apikey|authorization/i.test(String(message || ''));
+      const cleanMessage = technical
+        ? "Chargement interrompu. Votre document n’a pas encore été enregistré. Réessayez ou changez de fichier."
+        : (message || "Le document n’a pas pu être chargé pour le moment. Merci de réessayer dans quelques instants.");
+      return oldMarkDocUploadError(key, cleanMessage);
+    };
+  }
+
+  const oldShowAlert = typeof showAlert === 'function' ? showAlert : null;
+  if(oldShowAlert){
+    showAlert = function(msg, type){
+      const technical = /supabase|bucket|storage|documents-dossiers|policy|rls|apikey|authorization/i.test(String(msg || ''));
+      const cleanMessage = technical
+        ? "Chargement interrompu. Votre document n’a pas encore été enregistré. Réessayez ou changez de fichier."
+        : msg;
+      return oldShowAlert(cleanMessage, type);
+    };
+  }
+})();
 
 </script>
 </body>
