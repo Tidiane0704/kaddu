@@ -213,6 +213,7 @@
     .kdi svg .dark{fill:#07182B}
     .kdi-lg svg{width:100%;height:100%}
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 
@@ -557,8 +558,8 @@
 </div>
 
 <script>
-const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SB_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL = window.KADDU_SUPABASE.url;
+const SB_ANON = window.KADDU_SUPABASE.anonKey;
 const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
