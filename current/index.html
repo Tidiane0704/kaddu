@@ -237,6 +237,73 @@
       padding:26px;transition:.2s
     }
     .pain-card:hover{border-color:rgba(191,150,80,.28)}
+
+    /* État actif après 1er clic nav */
+    .pain-card.active-proprio{
+      border-color:rgba(191,150,80,.55);
+      background:linear-gradient(160deg,rgba(191,150,80,.09),rgba(7,24,43,.5));
+      box-shadow:0 0 0 1px rgba(191,150,80,.2), 0 16px 48px rgba(191,150,80,.1);
+      transform:translateY(-2px);
+    }
+    .pain-card.active-locataire{
+      border-color:rgba(83,183,255,.45);
+      background:linear-gradient(160deg,rgba(83,183,255,.07),rgba(7,24,43,.5));
+      box-shadow:0 0 0 1px rgba(83,183,255,.18), 0 16px 48px rgba(83,183,255,.08);
+      transform:translateY(-2px);
+    }
+
+    /* Propositions slidedown */
+    .pain-proposals{
+      overflow:hidden;
+      max-height:0;
+      opacity:0;
+      transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease, margin .35s ease;
+      margin-top:0;
+    }
+    .pain-proposals.open{
+      max-height:320px;
+      opacity:1;
+      margin-top:18px;
+    }
+    .pain-proposals-inner{
+      border-top:1px solid rgba(191,150,80,.12);
+      padding-top:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .pain-proposal{
+      display:flex;align-items:flex-start;gap:10px;
+      padding:10px 13px;border-radius:10px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(191,150,80,.1);
+      transition:.2s;
+    }
+    .pain-card.active-locataire .pain-proposal{
+      border-color:rgba(83,183,255,.12);
+      background:rgba(83,183,255,.04);
+    }
+    .pain-proposal-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+    .pain-proposal-text{font-size:.82rem;color:rgba(248,244,238,.75);line-height:1.55}
+    .pain-proposal-text strong{display:block;color:rgba(248,244,238,.95);font-size:.86rem;margin-bottom:2px}
+    .pain-cta-reveal{
+      display:inline-flex;align-items:center;gap:7px;
+      margin-top:4px;font-size:.76rem;font-weight:500;
+      letter-spacing:.08em;text-decoration:none;
+      transition:.2s;padding:0;background:none;border:none;cursor:pointer;
+    }
+    .pain-card.active-proprio .pain-cta-reveal{color:var(--or)}
+    .pain-card.active-proprio .pain-cta-reveal:hover{color:var(--orl);gap:11px}
+    .pain-card.active-locataire .pain-cta-reveal{color:#53b7ff}
+    .pain-card.active-locataire .pain-cta-reveal:hover{color:#7BBFFF;gap:11px}
+
+    /* Pulse sur le badge après activation */
+    .pain-badge.pulse{
+      border-color:var(--or);color:var(--or);
+      animation:badgePulse .6s ease forwards;
+    }
+    .pain-card.active-locataire .pain-badge.pulse{border-color:#53b7ff;color:#53b7ff}
+    @keyframes badgePulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
     .pain-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
     .pain-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--or)}
     .pain-badge{font-size:.66rem;padding:5px 10px;border-radius:999px;border:1px solid var(--bdr);color:rgba(248,244,238,.50)}
@@ -1120,7 +1187,27 @@
               <span>Peu de valeur ajoutée perçue</span>
             </div>
             <a href="/proprietaires/" class="pain-cta-link">Découvrir nos offres propriétaires →</a>
+
+            <!-- Propositions révélées au 1er clic -->
+            <div class="pain-proposals" id="proposals-proprio">
+              <div class="pain-proposals-inner">
+                <div class="pain-proposal">
+                  <span class="pain-proposal-icon">🛡️</span>
+                  <div class="pain-proposal-text"><strong>Dossiers vérifiés, locataires présélectionnés</strong>Kàddu qualifie chaque candidature avec un scoring antifraude et vous transmet uniquement les profils sérieux.</div>
+                </div>
+                <div class="pain-proposal">
+                  <span class="pain-proposal-icon">📊</span>
+                  <div class="pain-proposal-text"><strong>Reporting transparent, suivi en temps réel</strong>Un tableau de bord dédié pour suivre votre bien, vos revenus et les candidatures — sans relancer personne.</div>
+                </div>
+                <div class="pain-proposal">
+                  <span class="pain-proposal-icon">💰</span>
+                  <div class="pain-proposal-text"><strong>Commission simple, aucun frais caché</strong>Trois offres claires : 8%, 11% ou 14% — tout est simulable avant de s'engager.</div>
+                </div>
+                <a href="/proprietaires/" class="pain-cta-reveal" id="cta-proprio-reveal">Voir nos offres propriétaires →</a>
+              </div>
+            </div>
           </article>
+
           <article class="pain-card" id="locataires">
             <div class="pain-top">
               <div class="pain-label">Locataires</div>
@@ -1134,10 +1221,27 @@
               <span>Manque de confiance dans le processus</span>
             </div>
             <a href="/prospects/" class="pain-cta-link pain-cta-blue">Découvrir nos offres locataires →</a>
+
+            <!-- Propositions révélées au 1er clic -->
+            <div class="pain-proposals" id="proposals-locataire">
+              <div class="pain-proposals-inner">
+                <div class="pain-proposal">
+                  <span class="pain-proposal-icon">🎯</span>
+                  <div class="pain-proposal-text"><strong>Candidature en moins de 10 minutes</strong>Un tunnel digital guidé — identité, revenus, documents — tout se dépose en ligne, depuis n'importe où.</div>
+                </div>
+                <div class="pain-proposal">
+                  <span class="pain-proposal-icon">🌍</span>
+                  <div class="pain-proposal-text"><strong>Postulez à distance, même depuis la diaspora</strong>Visite 360°, dossier digital et paiement Wave/Orange Money : tout est pensé pour louer sans être à Dakar.</div>
+                </div>
+                <div class="pain-proposal">
+                  <span class="pain-proposal-icon">✅</span>
+                  <div class="pain-proposal-text"><strong>Votre dossier valorisé, pas juste transmis</strong>Un Passeport locatif structuré, qui met en avant vos atouts et augmente vos chances d'être retenu.</div>
+                </div>
+                <a href="/prospects/" class="pain-cta-reveal" id="cta-locataire-reveal">Voir comment ça marche →</a>
+              </div>
+            </div>
           </article>
         </div>
-      </div>
-    </section>
 
     <!-- ══ VALUE ══ -->
     <section class="section" id="confiance">
@@ -3325,41 +3429,88 @@
   })();
 
   // ══ DOUBLE-CLIC NAV — Propriétaires & Locataires ════════════════════════════
-  // 1er clic → scroll vers la section anchor sur la page d'accueil
-  // 2e clic (si déjà dans la section visible) → redirige vers la page dédiée
+  // 1er clic → scroll + illumine la card + révèle les propositions
+  // 2e clic (ou clic CTA reveal) → redirige vers la page dédiée
   (function initDoubleClickNav() {
-    function setupDoubleClick(linkId, anchorId, dedicatedUrl) {
+
+    function activateCard(cardId, activeClass, proposalsId, badgeEl) {
+      // Désactiver l'autre card
+      document.getElementById('proprietaires')?.classList.remove('active-proprio');
+      document.getElementById('locataires')?.classList.remove('active-locataire');
+      document.querySelectorAll('.pain-proposals').forEach(p => p.classList.remove('open'));
+      document.querySelectorAll('.pain-badge').forEach(b => b.classList.remove('pulse'));
+
+      // Activer cette card
+      const card = document.getElementById(cardId);
+      if(card) card.classList.add(activeClass);
+
+      // Ouvrir les propositions
+      const proposals = document.getElementById(proposalsId);
+      if(proposals) proposals.classList.add('open');
+
+      // Pulse sur le badge
+      if(badgeEl) { badgeEl.classList.remove('pulse'); void badgeEl.offsetWidth; badgeEl.classList.add('pulse'); }
+    }
+
+    function setupNav(linkId, cardId, activeClass, proposalsId, dedicatedUrl) {
       const link = document.getElementById(linkId);
       if (!link) return;
       let firstClickDone = false;
       let timer = null;
 
       link.addEventListener('click', function(e) {
-        const anchor = document.getElementById(anchorId);
-        if (!anchor) { window.location.href = dedicatedUrl; return; }
+        const card = document.getElementById(cardId);
+        if (!card) { window.location.href = dedicatedUrl; return; }
 
-        // Vérifie si la section anchor est déjà dans le viewport
-        const rect = anchor.getBoundingClientRect();
-        const inView = rect.top >= -80 && rect.top <= window.innerHeight * 0.55;
+        const rect = card.getBoundingClientRect();
+        const inView = rect.top >= -80 && rect.top <= window.innerHeight * 0.7;
+        const isActive = card.classList.contains(activeClass);
 
-        if (inView || firstClickDone) {
-          // 2e clic ou section déjà visible → page dédiée
+        if ((inView && isActive) || firstClickDone) {
+          // 2e clic ou card déjà visible et active → page dédiée
           e.preventDefault();
           window.location.href = dedicatedUrl;
         } else {
-          // 1er clic → scroll vers la section
+          // 1er clic → scroll + activation
           e.preventDefault();
-          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          const badge = card.querySelector('.pain-badge');
+          activateCard(cardId, activeClass, proposalsId, badge);
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
           firstClickDone = true;
           clearTimeout(timer);
-          // Reset après 4s si l'utilisateur ne reclique pas
-          timer = setTimeout(() => { firstClickDone = false; }, 4000);
+          timer = setTimeout(() => { firstClickDone = false; }, 5000);
         }
       });
+
+      // Clic sur le CTA reveal → redirect direct
+      const ctaReveal = document.getElementById('cta-' + (cardId === 'proprietaires' ? 'proprio' : 'locataire') + '-reveal');
+      if(ctaReveal) {
+        ctaReveal.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = dedicatedUrl;
+        });
+      }
     }
 
-    setupDoubleClick('nav-proprietaires', 'proprietaires', '/proprietaires/');
-    setupDoubleClick('nav-locataires',    'locataires',    '/prospects/');
+    setupNav('nav-proprietaires', 'proprietaires', 'active-proprio',   'proposals-proprio',   '/proprietaires/');
+    setupNav('nav-locataires',    'locataires',    'active-locataire', 'proposals-locataire', '/prospects/');
+
+    // Clic direct sur une pain-card → même effet que le 1er clic nav
+    document.getElementById('proprietaires')?.addEventListener('click', function(e) {
+      if(e.target.closest('a')) return; // laisser les liens fonctionner
+      const isActive = this.classList.contains('active-proprio');
+      if(isActive) { window.location.href = '/proprietaires/'; return; }
+      activateCard('proprietaires','active-proprio','proposals-proprio', this.querySelector('.pain-badge'));
+      this.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+    document.getElementById('locataires')?.addEventListener('click', function(e) {
+      if(e.target.closest('a')) return;
+      const isActive = this.classList.contains('active-locataire');
+      if(isActive) { window.location.href = '/prospects/'; return; }
+      activateCard('locataires','active-locataire','proposals-locataire', this.querySelector('.pain-badge'));
+      this.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+
   })();
   // ─────────────────────────────────────────────────────────────────────────────
   </script>
