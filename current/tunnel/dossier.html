@@ -1067,6 +1067,10 @@
       .enroll-benefits,.enroll-password-row{grid-template-columns:1fr}
     }
 
+  
+    /* ── REPRISE DOSSIER SUPABASE ── */
+    .resume-banner{display:none;margin:0 0 20px;border:1px solid rgba(74,158,255,.18);background:rgba(74,158,255,.06);border-radius:14px;padding:13px 15px;color:rgba(248,244,238,.70);font-size:.82rem;line-height:1.55}
+    .resume-banner.visible{display:block}.resume-banner strong{color:var(--blue)}
   </style>
 </head>
 <body>
@@ -1159,6 +1163,9 @@
       </div>
 
       <div id="alert-global"></div>
+      <div class="resume-banner" id="resume-banner">
+        <strong>Dossier retrouvé.</strong> Vous pouvez reprendre votre Passeport Locatif là où vous vous étiez arrêté.
+      </div>
 
       <div class="progress-card" id="dossier-progress-card">
         <div class="progress-card-head">
@@ -1744,6 +1751,7 @@ window.addEventListener('DOMContentLoaded', initSmartFields);
 const params = new URLSearchParams(location.search);
 const bienId = params.get('bien_id');
 const session = getSession();
+const resumeDossierId = params.get('resume') || params.get('dossier_id') || sessionStorage.getItem('kaddu_active_dossier_id') || localStorage.getItem('kaddu_active_dossier_id');
 
 
 // ── SPRINT 1 · CHAMPS INTELLIGENTS ──────────────────────────
@@ -2036,6 +2044,126 @@ function clearAllErrors(){
 }
 
 
+
+// ══ BROUILLON SUPABASE + REPRISE ESPACE LOCATAIRE ════════════
+let activeDossierId = resumeDossierId || null;
+let remoteDraftTimer = null;
+let isRestoringRemoteDraft = false;
+
+function getActiveSession(){ return getSession() || session; }
+function rememberActiveDossier(id){
+  if(!id) return;
+  activeDossierId = id;
+  sessionStorage.setItem('kaddu_active_dossier_id', id);
+  localStorage.setItem('kaddu_active_dossier_id', id);
+}
+function getRemoteDraftMessage(step){
+  return {
+    composition: compoType, counts,
+    emmenagement: choices.emmenagement, duree: choices.duree,
+    ville_precedente: document.getElementById('ville-precedente')?.value || '',
+    bailleur_precedent: document.getElementById('bailleur-precedent')?.value || '',
+    locataires, garants, no_garant: noGarant,
+    currentStep: step || currentStep || 1,
+    completion: typeof completionValue === 'function' ? completionValue() : 0,
+    draft_saved_at: new Date().toISOString()
+  };
+}
+async function saveRemoteDraft(step){
+  if(isRestoringRemoteDraft) return null;
+  const s = getActiveSession();
+  if(!s || s.role !== 'locataire' || !s.user?.id) return null;
+  const payload = {
+    locataire_id: s.user.id,
+    bien_id: bienId || null,
+    statut: 'brouillon',
+    message: JSON.stringify(getRemoteDraftMessage(step)),
+    docs_fournis: typeof getDocsPayload === 'function' ? getDocsPayload() : [],
+    updated_at: new Date().toISOString()
+  };
+  try{
+    let res;
+    if(activeDossierId){
+      res = await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${activeDossierId}`,{
+        method:'PATCH',
+        headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'},
+        body:JSON.stringify(payload)
+      });
+    }else{
+      res = await fetch(`${SB_URL}/rest/v1/dossiers`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=representation'},
+        body:JSON.stringify(payload)
+      });
+      if(res.ok){
+        const rows = await res.json();
+        if(rows?.[0]?.id) rememberActiveDossier(rows[0].id);
+      }
+    }
+    if(!res.ok){ console.warn('REMOTE_DRAFT_SAVE_FAILED', await res.text()); return null; }
+    return activeDossierId;
+  }catch(e){ console.warn('REMOTE_DRAFT_SAVE_ERROR', e); return null; }
+}
+function scheduleRemoteDraftSave(step){
+  clearTimeout(remoteDraftTimer);
+  remoteDraftTimer = setTimeout(()=>saveRemoteDraft(step || currentStep), 650);
+}
+function dossierToLocalDraft(row){
+  let msg = {};
+  try{ msg = JSON.parse(row.message || '{}'); }catch(_){}
+  return {
+    version: 3,
+    saved_at: row.updated_at || row.created_at || new Date().toISOString(),
+    currentStep: Number(msg.currentStep || 2),
+    compoType: msg.composition || 'seul',
+    counts: msg.counts || {adultes:0,enfants:0,coloc:0},
+    choices: {emmenagement: msg.emmenagement || '', duree: msg.duree || ''},
+    locataires: Array.isArray(msg.locataires) ? msg.locataires : [],
+    garants: Array.isArray(msg.garants) ? msg.garants : [],
+    noGarant: !!(msg.no_garant || msg.noGarant),
+    uploadedDocs: Object.fromEntries((Array.isArray(row.docs_fournis) ? row.docs_fournis : []).map(d => [d.key, d])),
+    fields: {ville_precedente: msg.ville_precedente || '', bailleur_precedent: msg.bailleur_precedent || ''}
+  };
+}
+async function restoreRemoteDraftIfNeeded(){
+  const s = getActiveSession();
+  if(!s || !resumeDossierId) return;
+  try{
+    const res = await fetch(`${SB_URL}/rest/v1/dossiers?id=eq.${resumeDossierId}&locataire_id=eq.${s.user.id}&select=*`,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    });
+    if(!res.ok) return;
+    const rows = await res.json();
+    const row = rows?.[0];
+    if(!row) return;
+    isRestoringRemoteDraft = true;
+    rememberActiveDossier(row.id);
+    const draft = dossierToLocalDraft(row);
+    if(typeof applyDraft === 'function') applyDraft(draft);
+    const targetStep = Math.min(Math.max(Number(draft.currentStep || 2), 2), 5);
+    currentStep = targetStep;
+    if(targetStep >= 3 && locataires.length && typeof buildDocsUI === 'function') buildDocsUI();
+    if(targetStep >= 5 && typeof buildRecap === 'function') buildRecap();
+    if(typeof renderStepper === 'function') renderStepper();
+    document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('section-'+targetStep)?.classList.add('active');
+    document.getElementById('resume-banner')?.classList.add('visible');
+    if(typeof updateCompletion === 'function') updateCompletion();
+    if(typeof updateDynamicScore === 'function') updateDynamicScore();
+    if(typeof renderFloatingAssistant === 'function') renderFloatingAssistant();
+    setTimeout(()=>{ isRestoringRemoteDraft = false; }, 400);
+  }catch(e){ console.warn('REMOTE_DRAFT_RESTORE_FAILED', e); isRestoringRemoteDraft = false; }
+}
+const __oldScheduleDraftSaveRemote = typeof scheduleDraftSave === 'function' ? scheduleDraftSave : null;
+if(__oldScheduleDraftSaveRemote){
+  scheduleDraftSave = function(){
+    const r = __oldScheduleDraftSaveRemote.apply(this, arguments);
+    scheduleRemoteDraftSave(currentStep);
+    return r;
+  };
+}
+setTimeout(restoreRemoteDraftIfNeeded, 1200);
+
 // ══ ENRÔLEMENT ESPACE LOCATAIRE — APRÈS LOCATAIRE PRINCIPAL ═══
 function enrollmentSession(){
   return getSession();
@@ -2187,6 +2315,7 @@ async function createTenantSpace(){
     if(stored){
       const s = getSession();
       await upsertTenantProfileFromLoc(s.user, s.access_token, loc);
+      await saveRemoteDraft(2);
       closeEnrollmentModal();
       updateEnrollmentState();
       if(typeof scheduleDraftSave === 'function') scheduleDraftSave();
@@ -2261,6 +2390,7 @@ async function nextStep(from){
     const enrolled = await ensureTenantEnrollment();
     if(!enrolled) return;
 
+    await saveRemoteDraft(3);
     buildDocsUI();
   }
 
@@ -2874,8 +3004,9 @@ async function submitDossier(btn){
   };
 
   try{
-    const res=await fetch(`${SB_URL}/rest/v1/dossiers`,{
-      method:'POST',
+    const submitUrl = activeDossierId ? `${SB_URL}/rest/v1/dossiers?id=eq.${activeDossierId}` : `${SB_URL}/rest/v1/dossiers`;
+    const res=await fetch(submitUrl,{
+      method: activeDossierId ? 'PATCH' : 'POST',
       headers:{
         'Content-Type':'application/json',
         'apikey':SB_KEY,
