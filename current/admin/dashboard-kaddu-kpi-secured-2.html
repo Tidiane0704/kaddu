@@ -110,6 +110,7 @@
     .auth-loading{display:none;margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
     .auth-badge{display:inline-block;padding:5px 10px;border:1px solid var(--bdr);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:20px}
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 
@@ -253,8 +254,8 @@
   </div>
 
   <script>
-    const SUPABASE_URL = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+    const SUPABASE_URL = window.KADDU_SUPABASE.url;
+    const SUPABASE_ANON_KEY = window.KADDU_SUPABASE.anonKey;
 
     let allRows = [];
     let filteredRows = [];
