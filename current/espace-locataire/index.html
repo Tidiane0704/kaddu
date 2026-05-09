@@ -449,20 +449,27 @@ const SB_KEY=window.KADDU_SUPABASE.anonKey;
 
 function getSession(){
   try{
-    const r=sessionStorage.getItem('kaddu_jwt');
+    const r=sessionStorage.getItem('kaddu_jwt') || localStorage.getItem('kaddu_jwt');
     if(!r)return null;
     const s=JSON.parse(r);
-    if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return null;}
+    if(Date.now()>s.expires){
+      sessionStorage.removeItem('kaddu_jwt');
+      localStorage.removeItem('kaddu_jwt');
+      return null;
+    }
+    // miroir entre onglets/pages pour éviter les pertes de session lors de la reprise tunnel
+    sessionStorage.setItem('kaddu_jwt', JSON.stringify(s));
+    localStorage.setItem('kaddu_jwt', JSON.stringify(s));
     return s;
   }catch{return null;}
 }
 // Session conservée pendant la navigation espace locataire ↔ tunnel.
 // La déconnexion explicite reste gérée par logout().
-function logout(){sessionStorage.removeItem('kaddu_jwt');window.location.href='/auth/';}
+function logout(){sessionStorage.removeItem('kaddu_jwt');localStorage.removeItem('kaddu_jwt');window.location.href='/auth/';}
 
 const session=getSession();
 if(!session||session.role!=='locataire'){
-  window.location.href='/auth/?tab=login';
+  window.location.href='/tunnel/dossier.html';
 }else{
   document.getElementById('guard').style.display='none';
   document.getElementById('app').style.display='grid';
