@@ -157,6 +157,7 @@
       } catch(e){}
     })();
   </script>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 
@@ -294,7 +295,7 @@
 <script>
 // ══ CONFIG ════════════════════════════════════════
 const SB   = "https://mjrmbnapdpkugkwnbhcz.supabase.co";
-const ANON = "sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw";
+const ANON = window.KADDU_SUPABASE.anonKey;
 
 // ══ STATE ═════════════════════════════════════════
 let allBiens = [];
