@@ -1475,7 +1475,6 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
 
 <script>
@@ -1600,7 +1599,7 @@ function initPhoneInput(id, required){
     formatAsYouType:true,
     autoPlaceholder:'aggressive',
     strictMode:true,
-    loadUtils: () => Promise.resolve()
+    utilsScript:'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js'
   });
   PHONE_INPUTS[id]=iti;
   const check=()=>validatePhone(id,required);
