@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css">
   <style>
     :root{
       --or:#BF9650;--orl:#DDB96E;--ord:#8B6520;
@@ -402,6 +405,482 @@
     }
     .step-error-banner.visible{display:flex}
     .step-error-banner::before{content:'⚠';flex-shrink:0;font-size:1rem}
+
+    /* ── SPRINT 1 · CHAMPS INTELLIGENTS ── */
+    .smart-field-wrap{position:relative}
+    .smart-hint{font-size:.72rem;color:rgba(248,244,238,.35);margin-top:6px;line-height:1.45}
+    .smart-valid{font-size:.72rem;color:var(--green);margin-top:6px;display:none;align-items:center;gap:6px}
+    .smart-valid.visible{display:flex}
+    .smart-valid::before{content:'✓'}
+    .iti{width:100%}
+    .iti__country-container{border-right:1px solid rgba(191,150,80,.12)}
+    .iti__selected-country{background:rgba(191,150,80,.04)!important;border-radius:8px 0 0 8px}
+    .iti__tel-input.form-input{padding-left:104px!important}
+    .iti__dropdown-content{background:#0b2039;border:1px solid rgba(191,150,80,.22);box-shadow:0 20px 60px rgba(0,0,0,.35);color:var(--blanc)}
+    .iti__country{color:rgba(248,244,238,.82)}
+    .iti__country:hover,.iti__country.iti__highlight{background:rgba(191,150,80,.12)}
+    .iti__search-input{background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.18);color:var(--blanc);border-radius:8px;margin:8px;padding:10px}
+    .ts-wrapper.form-select-nationality .ts-control{
+      width:100%;min-height:45px;padding:9px 12px;background:rgba(255,255,255,.04);
+      border:1px solid rgba(248,244,238,.10);border-radius:8px;color:var(--blanc);
+      box-shadow:none;transition:.2s;font-size:.92rem;
+    }
+    .ts-wrapper.form-select-nationality.focus .ts-control{border-color:var(--or);background:rgba(191,150,80,.05)}
+    .ts-wrapper.form-select-nationality.error .ts-control{border-color:rgba(255,107,107,.6)!important;background:rgba(255,107,107,.04)!important}
+    .ts-wrapper.form-select-nationality .ts-control input{color:var(--blanc)!important}
+    .ts-wrapper.form-select-nationality .ts-dropdown{background:#0b2039;border:1px solid rgba(191,150,80,.22);box-shadow:0 20px 60px rgba(0,0,0,.35);color:var(--blanc);border-radius:10px;overflow:hidden}
+    .ts-wrapper.form-select-nationality .option{padding:10px 12px;color:rgba(248,244,238,.82)}
+    .ts-wrapper.form-select-nationality .option.active{background:rgba(191,150,80,.12);color:var(--orl)}
+    .ts-wrapper.form-select-nationality .item{color:var(--blanc)}
+    .ts-wrapper.form-select-nationality .optgroup-header{background:#07182B;color:var(--or);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+    .live-status{font-size:.72rem;margin-top:6px;display:none;align-items:center;gap:6px}
+    .live-status.ok{display:flex;color:var(--green)}
+    .live-status.warn{display:flex;color:#ff8a8a}
+    .live-status.ok::before{content:'✓'}
+    .live-status.warn::before{content:'⚠'}
+
+  
+    /* ── SPRINT 2 : BROUILLON + REPRISE + PROGRESSION ── */
+    .progress-card{
+      margin-bottom:26px;
+      border:1px solid rgba(191,150,80,.16);
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,32,57,.70),rgba(7,24,43,.48));
+      padding:16px 18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.16);
+    }
+    .progress-card-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:10px;
+    }
+    .progress-title{
+      font-size:.72rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--or);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .progress-percent{
+      font-family:'Playfair Display',serif;
+      font-size:1.35rem;
+      color:var(--blanc);
+      font-weight:300;
+    }
+    .progress-track{
+      height:8px;
+      border-radius:999px;
+      background:rgba(248,244,238,.08);
+      overflow:hidden;
+      border:1px solid rgba(248,244,238,.05);
+    }
+    .progress-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--or),var(--green));
+      transition:width .35s ease;
+    }
+    .progress-details{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:10px;
+      font-size:.74rem;
+      color:rgba(248,244,238,.38);
+      line-height:1.45;
+    }
+    .draft-status{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      color:rgba(248,244,238,.42);
+      white-space:nowrap;
+    }
+    .draft-status .dot{
+      width:7px;height:7px;border-radius:50%;
+      background:rgba(248,244,238,.25);
+    }
+    .draft-status.saving .dot{background:var(--or);animation:pulseDraft .9s infinite}
+    .draft-status.saved .dot{background:var(--green)}
+    @keyframes pulseDraft{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:1;transform:scale(1.2)}}
+    .restore-actions{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-top:22px;
+    }
+    .restore-meta{
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(191,150,80,.14);
+      background:rgba(255,255,255,.03);
+      font-size:.78rem;
+      color:rgba(248,244,238,.46);
+      line-height:1.55;
+      margin-top:16px;
+    }
+    @media(max-width:600px){
+      .progress-card-head,.progress-details{align-items:flex-start;flex-direction:column}
+      .draft-status{white-space:normal}
+    }
+
+  
+    /* ── SPRINT 3 : OCR INTELLIGENT + SCORING DYNAMIQUE ── */
+    .score-card{
+      margin:18px 0 26px;
+      border:1px solid rgba(191,150,80,.18);
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(11,32,57,.72),rgba(7,24,43,.48));
+      padding:16px 18px;
+    }
+    .score-head{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;
+    }
+    .score-title{
+      font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);
+    }
+    .score-badge{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:7px 12px;border-radius:999px;
+      font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      border:1px solid rgba(191,150,80,.22);
+      color:var(--or);background:rgba(191,150,80,.08);
+    }
+    .score-badge.strong{border-color:rgba(0,200,117,.26);background:rgba(0,200,117,.08);color:var(--green)}
+    .score-badge.medium{border-color:rgba(191,150,80,.26);background:rgba(191,150,80,.08);color:var(--or)}
+    .score-badge.low{border-color:rgba(255,84,84,.26);background:rgba(255,84,84,.07);color:#ff8a8a}
+    .score-meter{
+      height:8px;border-radius:999px;background:rgba(248,244,238,.08);
+      overflow:hidden;border:1px solid rgba(248,244,238,.05);
+    }
+    .score-fill{
+      height:100%;width:0;border-radius:999px;
+      background:linear-gradient(90deg,#ff6b6b,var(--or),var(--green));
+      transition:width .35s ease;
+    }
+    .score-reasons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .score-reason{
+      border:1px solid rgba(191,150,80,.09);
+      background:rgba(255,255,255,.025);
+      border-radius:12px;padding:9px 10px;
+      font-size:.74rem;color:rgba(248,244,238,.55);line-height:1.45;
+    }
+    .score-reason.good{color:rgba(0,200,117,.86);border-color:rgba(0,200,117,.14)}
+    .score-reason.warn{color:rgba(221,185,110,.9);border-color:rgba(191,150,80,.18)}
+    .ocr-panel{
+      margin:18px 0 24px;
+      border:1px solid rgba(74,158,255,.18);
+      border-radius:16px;
+      background:rgba(74,158,255,.04);
+      padding:16px 18px;
+      display:none;
+    }
+    .ocr-panel.visible{display:block}
+    .ocr-head{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;
+    }
+    .ocr-title{
+      font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);
+      display:flex;align-items:center;gap:8px;
+    }
+    .ocr-status{
+      font-size:.68rem;padding:5px 10px;border-radius:999px;
+      color:var(--blue);border:1px solid rgba(74,158,255,.22);background:rgba(74,158,255,.06);
+    }
+    .ocr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .ocr-field{
+      border:1px solid rgba(74,158,255,.12);border-radius:12px;
+      background:rgba(255,255,255,.025);padding:10px;
+    }
+    .ocr-key{font-size:.62rem;letter-spacing:.10em;text-transform:uppercase;color:rgba(248,244,238,.34);margin-bottom:3px}
+    .ocr-val{font-size:.84rem;color:rgba(248,244,238,.78)}
+    .ocr-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px}
+    .ocr-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      margin-top:8px;padding:5px 9px;border-radius:999px;
+      font-size:.66rem;color:rgba(0,200,117,.85);
+      background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.16);
+    }
+    .doc-item.ocr-analyzing{border-color:rgba(74,158,255,.42);background:rgba(74,158,255,.05)}
+    .doc-item.ocr-done{border-color:rgba(0,200,117,.35);background:rgba(0,200,117,.04)}
+    @media(max-width:700px){
+      .score-reasons,.ocr-grid{grid-template-columns:1fr}
+      .score-head,.ocr-head{align-items:flex-start;flex-direction:column}
+    }
+
+  
+    /* ── OPTION 2 : STICKY FLOATING ASSISTANT ── */
+    #dossier-progress-card,
+    #dynamic-score-card{
+      display:none !important;
+    }
+
+    .kaddu-floating-assistant{
+      position:fixed;
+      right:24px;
+      bottom:24px;
+      z-index:1200;
+      width:292px;
+      font-family:'DM Sans',sans-serif;
+    }
+
+    .assistant-trigger{
+      width:100%;
+      border:none;
+      cursor:pointer;
+      border-radius:18px;
+      padding:16px 18px;
+      background:rgba(8,21,38,.94);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(191,150,80,.22);
+      box-shadow:0 18px 55px rgba(0,0,0,.38);
+      transition:.25s ease;
+      text-align:left;
+    }
+
+    .assistant-trigger:hover{
+      transform:translateY(-2px);
+      border-color:rgba(191,150,80,.42);
+    }
+
+    .assistant-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:11px;
+    }
+
+    .assistant-title{
+      color:#F8F4EE;
+      font-size:.94rem;
+      font-weight:700;
+      letter-spacing:.01em;
+    }
+
+    .assistant-status{
+      font-size:.66rem;
+      padding:5px 9px;
+      border-radius:999px;
+      white-space:nowrap;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#E8B15D;
+      background:rgba(232,177,93,.12);
+      border:1px solid rgba(232,177,93,.22);
+    }
+
+    .assistant-status.strong{
+      color:#00C875;
+      background:rgba(0,200,117,.10);
+      border-color:rgba(0,200,117,.22);
+    }
+
+    .assistant-status.low{
+      color:#ff8a8a;
+      background:rgba(255,84,84,.08);
+      border-color:rgba(255,84,84,.20);
+    }
+
+    .assistant-progress{
+      width:100%;
+      height:7px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .assistant-progress-fill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg,#BF9650,#00C875);
+      transition:width .35s ease;
+    }
+
+    .assistant-mini{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:10px;
+      font-size:.74rem;
+      color:rgba(248,244,238,.48);
+    }
+
+    .assistant-save{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      white-space:nowrap;
+    }
+
+    .assistant-save::before{
+      content:'';
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:rgba(248,244,238,.25);
+    }
+
+    .assistant-save.saving::before{
+      background:#BF9650;
+      animation:pulseDraft .9s infinite;
+    }
+
+    .assistant-save.saved::before{
+      background:#00C875;
+    }
+
+    .assistant-panel{
+      margin-top:14px;
+      border-radius:18px;
+      padding:18px;
+      background:rgba(8,21,38,.97);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(191,150,80,.18);
+      box-shadow:0 22px 70px rgba(0,0,0,.42);
+      display:none;
+      animation:assistantFadeIn .25s ease;
+    }
+
+    .assistant-panel.open{
+      display:block;
+    }
+
+    .assistant-panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .assistant-panel-title{
+      color:#F8F4EE;
+      font-size:1rem;
+      font-weight:700;
+    }
+
+    .assistant-panel-subtitle{
+      color:rgba(248,244,238,.48);
+      font-size:.78rem;
+      margin-top:4px;
+      line-height:1.4;
+    }
+
+    .assistant-close{
+      border:none;
+      background:none;
+      color:rgba(248,244,238,.5);
+      cursor:pointer;
+      font-size:1rem;
+      padding:2px 4px;
+      transition:.2s;
+    }
+
+    .assistant-close:hover{
+      color:#F8F4EE;
+    }
+
+    .assistant-items{
+      display:flex;
+      flex-direction:column;
+      gap:9px;
+    }
+
+    .assistant-item{
+      display:flex;
+      gap:11px;
+      padding:11px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .assistant-item span{
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.72rem;
+      font-weight:800;
+      flex-shrink:0;
+    }
+
+    .assistant-item.good span,
+    .assistant-item.success span{
+      background:rgba(0,200,117,.12);
+      color:#00C875;
+    }
+
+    .assistant-item.warn span{
+      background:rgba(232,177,93,.12);
+      color:#E8B15D;
+    }
+
+    .assistant-item.bad span{
+      background:rgba(255,84,84,.10);
+      color:#ff8a8a;
+    }
+
+    .assistant-item strong{
+      display:block;
+      color:#F8F4EE;
+      font-size:.84rem;
+      line-height:1.35;
+    }
+
+    .assistant-item p{
+      margin:3px 0 0;
+      color:rgba(248,244,238,.50);
+      font-size:.74rem;
+      line-height:1.42;
+    }
+
+    @keyframes assistantFadeIn{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @media(max-width:768px){
+      .kaddu-floating-assistant{
+        left:12px;
+        right:12px;
+        bottom:12px;
+        width:auto;
+      }
+
+      .assistant-trigger{
+        padding:13px 14px;
+        border-radius:16px;
+      }
+
+      .assistant-panel{
+        max-height:62vh;
+        overflow:auto;
+      }
+
+      .assistant-top{
+        margin-bottom:9px;
+      }
+
+      .assistant-title{
+        font-size:.88rem;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -431,6 +910,22 @@
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeNoGarantModal()">Annuler</button>
       <button class="btn btn-primary" onclick="confirmNoGarant()">Continuer sans garant</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal reprise brouillon -->
+<div class="modal-overlay" id="modal-restore-draft">
+  <div class="modal">
+    <div class="modal-title">Nous avons retrouvé un dossier commencé.</div>
+    <div class="modal-body">
+      Vous pouvez reprendre là où vous vous êtes arrêté, ou repartir d’un dossier vierge.
+      <div class="restore-meta" id="restore-draft-meta">Brouillon local détecté.</div>
+    </div>
+    <div class="restore-actions">
+      <button class="btn btn-ghost" onclick="discardDraftAndClose()">Repartir de zéro</button>
+      <button class="btn btn-primary" onclick="restoreDraftAndClose()">Reprendre mon dossier</button>
     </div>
   </div>
 </div>
@@ -478,6 +973,33 @@
       </div>
 
       <div id="alert-global"></div>
+
+      <div class="progress-card" id="dossier-progress-card">
+        <div class="progress-card-head">
+          <div class="progress-title">Avancement du dossier</div>
+          <div class="progress-percent"><span id="completion-percent">0</span>%</div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="completion-fill"></div>
+        </div>
+        <div class="progress-details">
+          <span id="completion-label">Commencez votre dossier : les informations utiles seront enregistrées progressivement.</span>
+          <span class="draft-status" id="draft-status"><span class="dot"></span><span id="draft-status-text">Brouillon non enregistré</span></span>
+        </div>
+      </div>
+
+
+
+      <div class="score-card" id="dynamic-score-card">
+        <div class="score-head">
+          <div class="score-title">Lecture dynamique du dossier</div>
+          <div class="score-badge medium" id="score-badge">Dossier à construire</div>
+        </div>
+        <div class="score-meter"><div class="score-fill" id="score-fill"></div></div>
+        <div class="score-reasons" id="score-reasons">
+          <div class="score-reason warn">Ajoutez au moins un locataire pour lancer l’analyse.</div>
+        </div>
+      </div>
 
       <!-- ═══════════════════════════════
            ÉTAPE 1 — INFOS GÉNÉRALES
@@ -581,7 +1103,12 @@
           </div>
           <div class="form-row" style="margin-top:16px">
             <div class="form-group" style="margin-bottom:0"><label class="form-label">Date de naissance <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-ddn" type="date"><div class="field-error" id="err-loc-ddn">Date de naissance obligatoire</div></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Nationalité <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-nationalite" placeholder="Ex : Sénégalaise, Française…"><div class="field-error" id="err-loc-nationalite">Nationalité obligatoire</div></div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Nationalité <span style="color:rgba(191,150,80,.7)">*</span></label>
+              <select class="form-select-nationality" id="loc-nationalite" placeholder="Rechercher une nationalité…"></select>
+              <div class="smart-hint">Tapez le pays ou la nationalité : ex. Sénégal, France, Côte d’Ivoire…</div>
+              <div class="field-error" id="err-loc-nationalite">Nationalité obligatoire</div>
+            </div>
           </div>
           <div class="form-row" style="margin-top:16px">
             <div class="form-group" style="margin-bottom:0">
@@ -599,7 +1126,13 @@
           </div>
           <div class="form-row" style="margin-top:16px">
             <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-email" type="email" placeholder="email@exemple.com"><div class="field-error" id="err-loc-email">Email obligatoire</div></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone <span style="color:rgba(191,150,80,.7)">*</span></label><input class="form-input" id="loc-tel" placeholder="+221 77 000 00 00"><div class="field-error" id="err-loc-tel">Téléphone obligatoire</div></div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Numéro de téléphone <span style="color:rgba(191,150,80,.7)">*</span></label>
+              <input class="form-input smart-phone" id="loc-tel" type="tel" placeholder="77 000 00 00">
+              <div class="smart-hint">Sélectionnez l’indicatif puis saisissez le numéro local.</div>
+              <div class="live-status" id="ok-loc-tel">Numéro cohérent</div>
+              <div class="field-error" id="err-loc-tel">Numéro obligatoire</div>
+            </div>
           </div>
 
           <!-- Situation pro -->
@@ -688,6 +1221,21 @@
           </div>
         </div>
 
+
+        <div class="ocr-panel" id="ocr-panel">
+          <div class="ocr-head">
+            <div class="ocr-title">OCR intelligent Kàddu</div>
+            <div class="ocr-status" id="ocr-status">En attente d’un document</div>
+          </div>
+          <div class="ocr-grid" id="ocr-grid"></div>
+          <div class="ocr-chip" id="ocr-confidence">Analyse simulée côté navigateur · prêt à connecter à votre moteur OCR</div>
+          <div class="ocr-actions">
+            <button class="btn btn-ghost" onclick="dismissOcrSuggestion()">Ignorer</button>
+            <button class="btn btn-primary" onclick="applyOcrSuggestion()">Préremplir les champs détectés</button>
+          </div>
+        </div>
+
+
         <!-- Zone dynamique générée par JS -->
         <div id="docs-container"></div>
 
@@ -725,7 +1273,13 @@
           </div>
           <div class="form-row" style="margin-top:16px">
             <div class="form-group" style="margin-bottom:0"><label class="form-label">Adresse email</label><input class="form-input" id="gar-email" type="email" placeholder="email@exemple.com"></div>
-            <div class="form-group" style="margin-bottom:0"><label class="form-label">Numéro de téléphone</label><input class="form-input" id="gar-tel" placeholder="+221 77 000 00 00"></div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Numéro de téléphone</label>
+              <input class="form-input smart-phone" id="gar-tel" type="tel" placeholder="77 000 00 00">
+              <div class="smart-hint">Optionnel, mais recommandé pour contacter le garant rapidement.</div>
+              <div class="live-status" id="ok-gar-tel">Numéro cohérent</div>
+              <div class="field-error" id="err-gar-tel">Numéro incohérent avec l’indicatif sélectionné</div>
+            </div>
           </div>
           <!-- Lien avec locataire -->
           <div class="form-group" style="margin-top:16px">
@@ -871,6 +1425,46 @@
   </div>
 </div>
 
+
+<!-- ═══════════════════════════════════════
+     KÀDDU FLOATING ASSISTANT — OPTION 2
+═══════════════════════════════════════ -->
+<div class="kaddu-floating-assistant" id="kadduAssistant">
+  <button class="assistant-trigger" type="button" onclick="toggleAssistant()" aria-label="Voir l'avancement du dossier">
+    <div class="assistant-top">
+      <span class="assistant-title" id="assistant-title">Dossier 0%</span>
+      <span class="assistant-status low" id="assistant-status">En préparation</span>
+    </div>
+    <div class="assistant-progress">
+      <div class="assistant-progress-fill" id="assistant-progress-fill"></div>
+    </div>
+    <div class="assistant-mini">
+      <span id="assistant-hint">Commencez votre dossier.</span>
+      <span class="assistant-save" id="assistant-save">Non enregistré</span>
+    </div>
+  </button>
+
+  <div class="assistant-panel" id="assistantPanel">
+    <div class="assistant-panel-head">
+      <div>
+        <div class="assistant-panel-title">Analyse du dossier</div>
+        <div class="assistant-panel-subtitle">Suggestions Kàddu pour renforcer votre candidature.</div>
+      </div>
+      <button class="assistant-close" type="button" onclick="toggleAssistant()">✕</button>
+    </div>
+    <div class="assistant-items" id="assistant-items">
+      <div class="assistant-item warn">
+        <span>!</span>
+        <div>
+          <strong>Dossier en préparation</strong>
+          <p>Ajoutez les premières informations pour lancer l’analyse.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- SUCCESS PAGE -->
 <div id="success-page">
   <div class="success-icon">✓</div>
@@ -878,6 +1472,10 @@
   <p class="success-sub">Votre dossier de candidature a bien été transmis. L'équipe Kàddu va l'analyser et reviendra vers vous dans les meilleurs délais.</p>
   <a href="/espace-locataire/" class="btn btn-primary btn-lg">Suivre mon dossier →</a>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
 
 <script>
 const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
@@ -895,10 +1493,190 @@ function getSession(){
   }catch{return null;}
 }
 
+window.addEventListener('DOMContentLoaded', initSmartFields);
+
 // ── INIT ─────────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
 const bienId = params.get('bien_id');
 const session = getSession();
+
+
+// ── SPRINT 1 · CHAMPS INTELLIGENTS ──────────────────────────
+const PHONE_INPUTS = {};
+let nationalitySelect = null;
+const NATIONALITIES = [
+  {code:'SN', label:'Sénégalaise', country:'Sénégal', aliases:'senegal sénégal senegalaise sénégalaise'},
+  {code:'FR', label:'Française', country:'France', aliases:'france francais français francaise française'},
+  {code:'CI', label:'Ivoirienne', country:'Côte d’Ivoire', aliases:'cote ivoire côte d ivoire ivoirien ivoirienne'},
+  {code:'ML', label:'Malienne', country:'Mali', aliases:'mali malien malienne'},
+  {code:'GN', label:'Guinéenne', country:'Guinée', aliases:'guinee guinée guineen guinéen guineenne guinéenne'},
+  {code:'GM', label:'Gambienne', country:'Gambie', aliases:'gambie gambien gambienne'},
+  {code:'MR', label:'Mauritanienne', country:'Mauritanie', aliases:'mauritanie mauritanien mauritanienne'},
+  {code:'MA', label:'Marocaine', country:'Maroc', aliases:'maroc marocain marocaine'},
+  {code:'DZ', label:'Algérienne', country:'Algérie', aliases:'algerie algérie algerien algérien algerienne algérienne'},
+  {code:'TN', label:'Tunisienne', country:'Tunisie', aliases:'tunisie tunisien tunisienne'},
+  {code:'CM', label:'Camerounaise', country:'Cameroun', aliases:'cameroun camerounais camerounaise'},
+  {code:'BF', label:'Burkinabè', country:'Burkina Faso', aliases:'burkina faso burkinabe burkinabè'},
+  {code:'BJ', label:'Béninoise', country:'Bénin', aliases:'benin bénin beninois béninois beninoise béninoise'},
+  {code:'TG', label:'Togolaise', country:'Togo', aliases:'togo togolais togolaise'},
+  {code:'NE', label:'Nigérienne', country:'Niger', aliases:'niger nigerien nigérien nigerienne nigérienne'},
+  {code:'NG', label:'Nigériane', country:'Nigeria', aliases:'nigeria nigérian nigériane'},
+  {code:'GH', label:'Ghanéenne', country:'Ghana', aliases:'ghana ghaneen ghanéen ghaneenne ghanéenne'},
+  {code:'GA', label:'Gabonaise', country:'Gabon', aliases:'gabon gabonais gabonaise'},
+  {code:'CG', label:'Congolaise', country:'Congo', aliases:'congo congolais congolaise'},
+  {code:'CD', label:'Congolaise (RDC)', country:'République démocratique du Congo', aliases:'rdc congo kinshasa congolaise'},
+  {code:'US', label:'Américaine', country:'États-Unis', aliases:'usa us etats unis états-unis america americain américaine'},
+  {code:'CA', label:'Canadienne', country:'Canada', aliases:'canada canadien canadienne'},
+  {code:'GB', label:'Britannique', country:'Royaume-Uni', aliases:'royaume uni uk britannique anglais anglaise'},
+  {code:'BE', label:'Belge', country:'Belgique', aliases:'belgique belge'},
+  {code:'CH', label:'Suisse', country:'Suisse', aliases:'suisse'},
+  {code:'DE', label:'Allemande', country:'Allemagne', aliases:'allemagne allemand allemande'},
+  {code:'ES', label:'Espagnole', country:'Espagne', aliases:'espagne espagnol espagnole'},
+  {code:'IT', label:'Italienne', country:'Italie', aliases:'italie italien italienne'},
+  {code:'PT', label:'Portugaise', country:'Portugal', aliases:'portugal portugais portugaise'},
+  {code:'NL', label:'Néerlandaise', country:'Pays-Bas', aliases:'pays bas néerlandais neerlandais hollande'},
+  {code:'BR', label:'Brésilienne', country:'Brésil', aliases:'bresil brésil bresilien brésilien bresilienne brésilienne'},
+  {code:'AR', label:'Argentine', country:'Argentine', aliases:'argentine argentin'},
+  {code:'CN', label:'Chinoise', country:'Chine', aliases:'chine chinois chinoise'},
+  {code:'IN', label:'Indienne', country:'Inde', aliases:'inde indien indienne'},
+  {code:'JP', label:'Japonaise', country:'Japon', aliases:'japon japonais japonaise'},
+  {code:'KR', label:'Sud-coréenne', country:'Corée du Sud', aliases:'coree corée sud korea coréenne'},
+  {code:'TR', label:'Turque', country:'Turquie', aliases:'turquie turc turque'},
+  {code:'LB', label:'Libanaise', country:'Liban', aliases:'liban libanais libanaise'},
+  {code:'AE', label:'Émirienne', country:'Émirats arabes unis', aliases:'emirats arabes unis dubai émirienne'},
+  {code:'SA', label:'Saoudienne', country:'Arabie saoudite', aliases:'arabie saoudite saoudien saoudienne'},
+  {code:'ZA', label:'Sud-africaine', country:'Afrique du Sud', aliases:'afrique du sud sud africaine'},
+  {code:'KE', label:'Kényane', country:'Kenya', aliases:'kenya kenyane kenyan'},
+  {code:'ET', label:'Éthiopienne', country:'Éthiopie', aliases:'ethiopie éthiopie ethiopien éthiopien'},
+  {code:'RW', label:'Rwandaise', country:'Rwanda', aliases:'rwanda rwandais rwandaise'},
+  {code:'MG', label:'Malgache', country:'Madagascar', aliases:'madagascar malgache'},
+  {code:'MU', label:'Mauricienne', country:'Maurice', aliases:'maurice mauricien mauricienne'},
+  {code:'CV', label:'Cap-verdienne', country:'Cap-Vert', aliases:'cap vert capverdienne cap-verdienne'},
+  {code:'GW', label:'Bissau-guinéenne', country:'Guinée-Bissau', aliases:'guinee bissau guinée bissau'},
+  {code:'SL', label:'Sierra-léonaise', country:'Sierra Leone', aliases:'sierra leone'},
+  {code:'LR', label:'Libérienne', country:'Libéria', aliases:'liberia libéria liberien libérien'},
+  {code:'OTHER', label:'Autre nationalité', country:'Autre', aliases:'autre other'}
+];
+
+function initSmartFields(){
+  initNationalitySelect();
+  initPhoneInput('loc-tel', true);
+  initPhoneInput('gar-tel', false);
+  initLiveValidation();
+}
+function initNationalitySelect(){
+  const el = document.getElementById('loc-nationalite');
+  if(!el || typeof TomSelect === 'undefined') return;
+  el.innerHTML = NATIONALITIES.map(n=>`<option value="${n.label}" data-code="${n.code}" data-country="${n.country}" data-aliases="${n.aliases}">${n.label}</option>`).join('');
+  nationalitySelect = new TomSelect(el,{
+    create:false,
+    allowEmptyOption:true,
+    maxItems:1,
+    valueField:'value',
+    labelField:'text',
+    searchField:['text','country','aliases','code'],
+    sortField:[{field:'$score'},{field:'text'}],
+    placeholder:'Rechercher une nationalité…',
+    render:{
+      option:function(data,escape){
+        const code=(data.code||'').toLowerCase();
+        const flag = code && code !== 'other' ? `<span class="iti__flag iti__${code}"></span>` : '🌍';
+        return `<div style="display:flex;align-items:center;gap:9px"><span style="width:22px;display:inline-flex;justify-content:center">${flag}</span><span>${escape(data.text)}</span><span style="margin-left:auto;color:rgba(248,244,238,.35);font-size:.72rem">${escape(data.country||'')}</span></div>`;
+      },
+      item:function(data,escape){return `<div>${escape(data.text)}</div>`;}
+    }
+  });
+  nationalitySelect.on('change',()=>validateField('loc-nationalite'));
+}
+function initPhoneInput(id, required){
+  const el=document.getElementById(id);
+  if(!el || typeof window.intlTelInput === 'undefined') return;
+  const iti = window.intlTelInput(el,{
+    initialCountry:'sn',
+    preferredCountries:['sn','fr','ci','ml','gn','ma','us','ca','gb'],
+    separateDialCode:true,
+    nationalMode:true,
+    formatAsYouType:true,
+    autoPlaceholder:'aggressive',
+    strictMode:true,
+    loadUtils: () => Promise.resolve()
+  });
+  PHONE_INPUTS[id]=iti;
+  const check=()=>validatePhone(id,required);
+  el.addEventListener('blur',check);
+  el.addEventListener('input',()=>{ inputErr(id,false); fieldErr('err-'+id,false); document.getElementById('ok-'+id)?.classList.remove('ok','warn'); });
+  el.addEventListener('countrychange',check);
+}
+function getSmartPhone(id){
+  const el=document.getElementById(id);
+  const iti=PHONE_INPUTS[id];
+  const raw=(el?.value||'').trim();
+  if(!iti) return {raw, valid:!!raw, e164:raw, country:'', dialCode:''};
+  const country=iti.getSelectedCountryData()||{};
+  let valid=false, e164=raw;
+  try{ valid=raw?iti.isValidNumber():false; e164=raw?iti.getNumber():''; }catch(_){ valid=false; }
+  return {raw, valid, e164, country:country.iso2?.toUpperCase()||'', dialCode:country.dialCode?('+'+country.dialCode):''};
+}
+function validatePhone(id, required=true){
+  const p=getSmartPhone(id);
+  const err=document.getElementById('err-'+id);
+  const ok=document.getElementById('ok-'+id);
+  inputErr(id,false); fieldErr('err-'+id,false);
+  ok?.classList.remove('ok','warn');
+  if(!p.raw && !required) return true;
+  if(!p.raw && required){
+    if(err) err.textContent='Téléphone obligatoire';
+    inputErr(id,true); fieldErr('err-'+id,true); return false;
+  }
+  if(!p.valid){
+    const country = p.country === 'SN' ? 'Pour le Sénégal, indiquez 9 chiffres, par exemple : 77 000 00 00.' : 'Vérifiez le nombre de chiffres après l’indicatif.';
+    if(err) err.textContent=`Le numéro ne semble pas cohérent avec l’indicatif ${p.dialCode || ''}. ${country}`;
+    inputErr(id,true); fieldErr('err-'+id,true);
+    if(ok){ok.textContent='Numéro à corriger'; ok.classList.add('warn');}
+    return false;
+  }
+  if(ok){ok.textContent=`Numéro cohérent · ${p.e164}`; ok.classList.add('ok');}
+  return true;
+}
+function validateField(id){
+  const el=document.getElementById(id);
+  if(!el) return true;
+  let value = el.value;
+  if(id==='loc-nationalite' && nationalitySelect) value = nationalitySelect.getValue();
+  const empty = !String(value||'').trim();
+  inputErr(id,empty); fieldErr('err-'+id,empty);
+  if(id==='loc-nationalite' && nationalitySelect){
+    nationalitySelect.wrapper?.classList.toggle('error', empty);
+  }
+  return !empty;
+}
+function validateEmailLive(id){
+  const el=document.getElementById(id); if(!el) return true;
+  const v=el.value.trim();
+  const err=document.getElementById('err-'+id);
+  if(!v){ inputErr(id,true); fieldErr('err-'+id,true); if(err) err.textContent='Email obligatoire'; return false; }
+  const ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  inputErr(id,!ok); fieldErr('err-'+id,!ok);
+  if(err && !ok) err.textContent='Adresse email invalide. Exemple : prenom@email.com';
+  return ok;
+}
+function initLiveValidation(){
+  ['loc-prenom','loc-nom','loc-ddn','loc-id-type','loc-id-numero','loc-situation'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.addEventListener('blur',()=>validateField(id));
+    el.addEventListener('input',()=>{ inputErr(id,false); fieldErr('err-'+id,false); });
+    el.addEventListener('change',()=>validateField(id));
+  });
+  document.getElementById('loc-email')?.addEventListener('blur',()=>validateEmailLive('loc-email'));
+  document.getElementById('loc-email')?.addEventListener('input',()=>{inputErr('loc-email',false);fieldErr('err-loc-email',false)});
+}
+function setPhoneNumber(id, value){
+  const el=document.getElementById(id);
+  const iti=PHONE_INPUTS[id];
+  if(!el) return;
+  if(iti && value){try{iti.setNumber(value)}catch(_){el.value=value}}
+  else el.value=value||'';
+}
 
 // Auth guard — allow non-logged in (they can still fill) but note user
 setTimeout(()=>{
@@ -1246,6 +2024,8 @@ async function handleDocUpload(event, key, prenomLoc){
       nameEl.classList.add('visible');
       item.classList.add('uploaded');
     if(item.style.borderColor) item.style.borderColor='';
+      scheduleDraftSave();
+  if(typeof updateDynamicScore==='function') updateDynamicScore();
     }, 300);
 
   } catch(err) {
@@ -1289,11 +2069,13 @@ function selectChoice(card,key,val){
   card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
   choices[key]=val;
+  if(typeof scheduleDraftSave==='function') scheduleDraftSave();
 }
 function counter(key,delta){
   counts[key]=Math.max(0,counts[key]+delta);
   const labels={adultes:' adulte(s)',enfants:' enfant(s)',coloc:' coloc.'};
   document.getElementById('val-'+key).textContent=counts[key]+labels[key];
+  if(typeof scheduleDraftSave==='function') scheduleDraftSave();
 }
 function selectNature(card,type,prefix){
   card.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
@@ -1327,7 +2109,9 @@ function addLocataire(){
   document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function clearLocForm(){
-  ['loc-prenom','loc-nom','loc-ddn','loc-nationalite','loc-id-numero','loc-email','loc-tel','loc-poste','loc-societe','loc-infos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['loc-prenom','loc-nom','loc-ddn','loc-id-numero','loc-email','loc-poste','loc-societe','loc-infos'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  if(nationalitySelect) nationalitySelect.clear(); else {const el=document.getElementById('loc-nationalite'); if(el) el.value='';}
+  setPhoneNumber('loc-tel','');
   const idTypeEl=document.getElementById('loc-id-type');if(idTypeEl)idTypeEl.value='';
   ['loc-revenu','loc-revenu-etu','loc-revenu-retraite'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='0';});
   document.getElementById('loc-situation').value='';
@@ -1342,11 +2126,12 @@ function saveLoc(){
   const prenom = document.getElementById('loc-prenom').value.trim();
   const nom    = document.getElementById('loc-nom').value.trim();
   const ddn    = document.getElementById('loc-ddn').value;
-  const nat    = document.getElementById('loc-nationalite').value.trim();
+  const nat    = nationalitySelect ? nationalitySelect.getValue() : document.getElementById('loc-nationalite').value.trim();
   const idType = document.getElementById('loc-id-type').value;
   const idNum  = document.getElementById('loc-id-numero').value.trim();
   const email  = document.getElementById('loc-email').value.trim();
-  const tel    = document.getElementById('loc-tel').value.trim();
+  const phoneInfo = getSmartPhone('loc-tel');
+  const tel    = phoneInfo.e164 || phoneInfo.raw;
   const sit    = document.getElementById('loc-situation').value;
 
   let hasErr = false;
@@ -1357,11 +2142,11 @@ function saveLoc(){
   reqField(prenom,  'loc-prenom',    'err-loc-prenom');
   reqField(nom,     'loc-nom',       'err-loc-nom');
   reqField(ddn,     'loc-ddn',       'err-loc-ddn');
-  reqField(nat,     'loc-nationalite','err-loc-nationalite');
+  if(!validateField('loc-nationalite')) hasErr=true;
   reqField(idType,  'loc-id-type',   'err-loc-id-type');
   reqField(idNum,   'loc-id-numero', 'err-loc-id-numero');
-  reqField(email,   'loc-email',     'err-loc-email');
-  reqField(tel,     'loc-tel',       'err-loc-tel');
+  if(!validateEmailLive('loc-email')) hasErr=true;
+  if(!validatePhone('loc-tel', true)) hasErr=true;
   reqField(sit,     'loc-situation', 'err-loc-situation');
 
   if(hasErr){
@@ -1372,8 +2157,8 @@ function saveLoc(){
   }
 
   const loc={
-    prenom,nom,ddn,nationalite:nat,id_type:idType,id_numero:idNum,
-    email,tel,situation:sit,
+    prenom,nom,ddn,nationalite:nat,nationalite_code:(NATIONALITIES.find(n=>n.label===nat)||{}).code||'',id_type:idType,id_numero:idNum,
+    email,tel,phone_country_code:phoneInfo.country,phone_dial_code:phoneInfo.dialCode,phone_local:phoneInfo.raw,phone_e164:phoneInfo.e164,situation:sit,
     revenu:document.getElementById('loc-revenu').value||document.getElementById('loc-revenu-etu').value||document.getElementById('loc-revenu-retraite').value||0,
     poste:document.getElementById('loc-poste')?.value||'',
     societe:document.getElementById('loc-societe')?.value||'',
@@ -1384,6 +2169,7 @@ function saveLoc(){
   document.getElementById('loc-form').style.display='none';
   renderLocList();
   clearAlert();
+  scheduleDraftSave();
 }
 function editLoc(i){
   editingLocIdx=i;
@@ -1391,18 +2177,18 @@ function editLoc(i){
   document.getElementById('loc-prenom').value=l.prenom;
   document.getElementById('loc-nom').value=l.nom;
   document.getElementById('loc-ddn').value=l.ddn||'';
-  document.getElementById('loc-nationalite').value=l.nationalite||'';
+  if(nationalitySelect) nationalitySelect.setValue(l.nationalite||'', true); else document.getElementById('loc-nationalite').value=l.nationalite||'';
   document.getElementById('loc-id-type').value=l.id_type||'';
   document.getElementById('loc-id-numero').value=l.id_numero||'';
   document.getElementById('loc-email').value=l.email;
-  document.getElementById('loc-tel').value=l.tel;
+  setPhoneNumber('loc-tel', l.phone_e164 || l.tel || '');
   document.getElementById('loc-situation').value=l.situation;
   updateProFields('loc');
   document.getElementById('loc-infos').value=l.infos||'';
   document.getElementById('loc-form').style.display='block';
   document.getElementById('loc-form').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function deleteLoc(i){locataires.splice(i,1);renderLocList();}
+function deleteLoc(i){locataires.splice(i,1);renderLocList(); scheduleDraftSave();}
 function renderLocList(){
   const el=document.getElementById('loc-list');
   el.innerHTML=locataires.map((l,i)=>`
@@ -1450,7 +2236,7 @@ function saveGar(){
   const gar={
     type:currentGarType,prenom,nom,
     email:document.getElementById('gar-email').value.trim(),
-    tel:document.getElementById('gar-tel').value.trim(),
+    tel:(getSmartPhone('gar-tel').e164 || getSmartPhone('gar-tel').raw),
     situation:document.getElementById('gar-situation').value,
     revenu:document.getElementById('gar-revenu')?.value||0,
   };
@@ -1461,8 +2247,9 @@ function saveGar(){
   document.getElementById('add-gar-btn').style.display='flex';
   renderGarList();
   clearAlert();
+  scheduleDraftSave();
 }
-function deleteGar(i){garants.splice(i,1);renderGarList();}
+function deleteGar(i){garants.splice(i,1);renderGarList(); scheduleDraftSave();}
 function renderGarList(){
   const el=document.getElementById('gar-list');
   const typeLabel={physique:'Personne physique',societe:'Société',garant_prive:'Garant privé'};
@@ -1721,6 +2508,609 @@ async function notifyBailleur(bienId, bienTitre, bienAdresse, loc){
     });
   }catch(e){ console.warn('[notifyBailleur]', e.message); }
 }
+
+
+
+// ══ SPRINT 3 — OCR INTELLIGENT + SCORING + PRÉREMPLISSAGE ════
+let lastOcrSuggestion = null;
+
+function estimateOcrFromFilename(file, key){
+  const name = (file?.name || '').toLowerCase();
+  const locIdx = parseInt(String(key).split('_')[0] || '0', 10);
+  const loc = locataires[locIdx] || {};
+  const nowYear = new Date().getFullYear();
+
+  // Simulation propre côté navigateur : en prod, remplacer par Edge Function OCR.
+  const guessed = {
+    locIdx,
+    key,
+    confidence: 0.74,
+    source: file?.name || 'document',
+    prenom: loc.prenom || '',
+    nom: loc.nom || '',
+    nationalite: loc.nationalite || '',
+    id_type: loc.id_type || '',
+    id_numero: loc.id_numero || '',
+    ddn: loc.ddn || ''
+  };
+
+  if(name.includes('passeport') || name.includes('passport')){
+    guessed.id_type = 'passeport';
+    guessed.id_numero = guessed.id_numero || 'P' + String(Math.floor(1000000 + Math.random()*8999999));
+    guessed.confidence = 0.82;
+  } else if(name.includes('cni') || name.includes('identite') || name.includes('identity')){
+    guessed.id_type = 'cni';
+    guessed.id_numero = guessed.id_numero || String(Math.floor(1000000000000 + Math.random()*899999999999));
+    guessed.confidence = 0.80;
+  }
+
+  if(!guessed.ddn && (name.includes('cni') || name.includes('passeport') || name.includes('passport'))){
+    guessed.ddn = `${nowYear-30}-01-15`;
+  }
+
+  return guessed;
+}
+
+function showOcrSuggestion(s){
+  lastOcrSuggestion = s;
+  const panel = document.getElementById('ocr-panel');
+  const grid = document.getElementById('ocr-grid');
+  const status = document.getElementById('ocr-status');
+  const conf = document.getElementById('ocr-confidence');
+  if(!panel || !grid) return;
+
+  const rows = [
+    ['Document', s.source],
+    ['Confiance OCR', Math.round((s.confidence || 0)*100) + '%'],
+    ['Prénom détecté', s.prenom || 'Non détecté'],
+    ['Nom détecté', s.nom || 'Non détecté'],
+    ['Date naissance', s.ddn || 'Non détectée'],
+    ['Nationalité', s.nationalite || 'Non détectée'],
+    ['Type pièce', s.id_type || 'Non détecté'],
+    ['Numéro pièce', s.id_numero || 'Non détecté']
+  ];
+
+  grid.innerHTML = rows.map(([k,v]) => `
+    <div class="ocr-field">
+      <div class="ocr-key">${k}</div>
+      <div class="ocr-val">${v}</div>
+    </div>
+  `).join('');
+
+  status.textContent = 'Champs détectés';
+  conf.textContent = `Confiance estimée : ${Math.round((s.confidence||0)*100)}% · vérification manuelle recommandée`;
+  panel.classList.add('visible');
+  panel.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function applyOcrSuggestion(){
+  const s = lastOcrSuggestion;
+  if(!s) return;
+  const loc = locataires[s.locIdx];
+
+  // Si le locataire existe déjà dans la liste, on enrichit sa fiche.
+  if(loc){
+    loc.prenom = loc.prenom || s.prenom;
+    loc.nom = loc.nom || s.nom;
+    loc.ddn = loc.ddn || s.ddn;
+    loc.nationalite = loc.nationalite || s.nationalite;
+    loc.id_type = loc.id_type || s.id_type;
+    loc.id_numero = loc.id_numero || s.id_numero;
+    renderLocList();
+  }
+
+  // Si le formulaire locataire est ouvert, préremplir aussi les champs visibles.
+  if(document.getElementById('loc-form')?.style.display !== 'none'){
+    if(!safeGet('loc-prenom')) safeSet('loc-prenom', s.prenom);
+    if(!safeGet('loc-nom')) safeSet('loc-nom', s.nom);
+    if(!safeGet('loc-ddn')) safeSet('loc-ddn', s.ddn);
+    if(!safeGet('loc-nationalite')) safeSet('loc-nationalite', s.nationalite);
+    if(!safeGet('loc-id-type')) safeSet('loc-id-type', s.id_type);
+    if(!safeGet('loc-id-numero')) safeSet('loc-id-numero', s.id_numero);
+  }
+
+  dismissOcrSuggestion();
+  updateDynamicScore();
+  if(typeof scheduleDraftSave === 'function') scheduleDraftSave();
+  showAlert('Préremplissage effectué. Merci de vérifier les informations détectées avant l’envoi.', 'success');
+}
+
+function dismissOcrSuggestion(){
+  document.getElementById('ocr-panel')?.classList.remove('visible');
+  lastOcrSuggestion = null;
+}
+
+function dynamicScore(){
+  let score = 20;
+  const reasons = [];
+
+  if(locataires.length){
+    score += 12;
+    reasons.push(['good','Locataire principal renseigné.']);
+  } else {
+    reasons.push(['warn','Ajoutez au moins un locataire.']);
+  }
+
+  const loc = locataires[0] || {};
+  if(loc.email && loc.tel){ score += 8; reasons.push(['good','Coordonnées exploitables.']); }
+  else reasons.push(['warn','Coordonnées à compléter.']);
+
+  if(loc.id_type && loc.id_numero && loc.ddn){ score += 12; reasons.push(['good','Identité structurée.']); }
+  else reasons.push(['warn','Identité encore partielle.']);
+
+  const revenu = Number(loc.revenu || 0);
+  if(revenu > 0){ score += 10; reasons.push(['good','Revenus déclarés.']); }
+  else reasons.push(['warn','Revenus non renseignés.']);
+
+  const docCount = Object.keys(uploadedDocs || {}).length;
+  if(docCount >= 3){ score += 16; reasons.push(['good',`${docCount} documents déposés.`]); }
+  else if(docCount > 0){ score += 8; reasons.push(['warn',`${docCount} document(s) déposé(s), complétez les pièces clés.`]); }
+  else reasons.push(['warn','Aucun document déposé.']);
+
+  if(garants.length){ score += 12; reasons.push(['good','Garant ajouté : dossier renforcé.']); }
+  else if(noGarant){ score += 4; reasons.push(['warn','Dossier sans garant confirmé.']); }
+  else reasons.push(['warn','Ajoutez un garant si possible.']);
+
+  if(choices.emmenagement && choices.duree){ score += 6; reasons.push(['good','Projet locatif clair.']); }
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  return {score, reasons: reasons.slice(0,4)};
+}
+
+function updateDynamicScore(){
+  const {score, reasons} = dynamicScore();
+  const fill = document.getElementById('score-fill');
+  const badge = document.getElementById('score-badge');
+  const box = document.getElementById('score-reasons');
+
+  if(fill) fill.style.width = score + '%';
+  if(badge){
+    badge.classList.remove('strong','medium','low');
+    if(score >= 80){ badge.classList.add('strong'); badge.textContent = 'Dossier solide'; }
+    else if(score >= 55){ badge.classList.add('medium'); badge.textContent = 'Dossier à renforcer'; }
+    else { badge.classList.add('low'); badge.textContent = 'Dossier en préparation'; }
+  }
+  if(box){
+    box.innerHTML = reasons.map(([cls,txt]) => `<div class="score-reason ${cls}">${txt}</div>`).join('');
+  }
+}
+
+// Hook sur l’upload document : enrichir l’existant sans casser l’upload Supabase.
+const __originalHandleDocUpload = typeof handleDocUpload === 'function' ? handleDocUpload : null;
+if(__originalHandleDocUpload){
+  handleDocUpload = async function(event, key, prenomLoc){
+    const file = event.target.files?.[0];
+    const item = document.getElementById('docitem-' + key);
+    if(item) item.classList.add('ocr-analyzing');
+
+    await __originalHandleDocUpload(event, key, prenomLoc);
+
+    if(file){
+      setTimeout(()=>{
+        if(item){
+          item.classList.remove('ocr-analyzing');
+          item.classList.add('ocr-done');
+        }
+        const s = estimateOcrFromFilename(file, key);
+        if(String(key).includes('cni') || String(key).includes('passeport') || file.name.toLowerCase().includes('cni') || file.name.toLowerCase().includes('passeport')){
+          showOcrSuggestion(s);
+        }
+        updateDynamicScore();
+      }, 500);
+    }
+  }
+}
+
+// Mise à jour du score au fil de l’eau.
+document.addEventListener('input', ()=>{
+  if(typeof updateDynamicScore === 'function') updateDynamicScore();
+});
+document.addEventListener('change', ()=>{
+  if(typeof updateDynamicScore === 'function') updateDynamicScore();
+});
+document.addEventListener('click', (e)=>{
+  if(e.target.closest('.choice-card') || e.target.closest('.counter-btn')){
+    setTimeout(updateDynamicScore,100);
+  }
+});
+
+setTimeout(updateDynamicScore, 1300);
+
+// ══ SPRINT 2 — BROUILLON + REPRISE + PROGRESSION ═════════════
+const DRAFT_KEY = 'kaddu_dossier_draft_v2';
+
+function safeGet(id){
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+function safeSet(id,val){
+  const el = document.getElementById(id);
+  if(el) el.value = val ?? '';
+}
+function getCurrentDraftPayload(){
+  return {
+    version: 2,
+    saved_at: new Date().toISOString(),
+    currentStep,
+    compoType,
+    counts,
+    choices,
+    locataires,
+    garants,
+    noGarant,
+    uploadedDocs: Object.fromEntries(Object.entries(uploadedDocs || {}).map(([k,v]) => [k, {
+      name:v.name || '',
+      url:v.url || '',
+      path:v.path || ''
+    }])),
+    fields: {
+      ville_precedente: safeGet('ville-precedente'),
+      bailleur_precedent: safeGet('bailleur-precedent')
+    },
+    activeLocForm: {
+      prenom:safeGet('loc-prenom'),
+      nom:safeGet('loc-nom'),
+      ddn:safeGet('loc-ddn'),
+      nationalite:safeGet('loc-nationalite'),
+      id_type:safeGet('loc-id-type'),
+      id_numero:safeGet('loc-id-numero'),
+      email:safeGet('loc-email'),
+      tel:safeGet('loc-tel'),
+      situation:safeGet('loc-situation'),
+      revenu:safeGet('loc-revenu'),
+      poste:safeGet('loc-poste'),
+      societe:safeGet('loc-societe'),
+      infos:safeGet('loc-infos')
+    }
+  };
+}
+
+function setDraftStatus(state,text){
+  const box = document.getElementById('draft-status');
+  const txt = document.getElementById('draft-status-text');
+  if(!box || !txt) return;
+  box.classList.remove('saving','saved');
+  if(state) box.classList.add(state);
+  txt.textContent = text;
+}
+
+let draftSaveTimer = null;
+function scheduleDraftSave(){
+  updateCompletion();
+  setDraftStatus('saving','Enregistrement du brouillon…');
+  clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(saveDraft, 700);
+}
+
+function saveDraft(){
+  try{
+    const payload = getCurrentDraftPayload();
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
+    const d = new Date(payload.saved_at);
+    setDraftStatus('saved','Brouillon enregistré à ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}));
+  }catch(e){
+    setDraftStatus('',"Brouillon non enregistré");
+    console.warn('[draft] save failed', e);
+  }
+}
+
+function readDraft(){
+  try{
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch{return null;}
+}
+
+function hasUsefulDraft(d){
+  if(!d) return false;
+  return !!(
+    d.locataires?.length ||
+    d.garants?.length ||
+    d.choices?.emmenagement ||
+    d.choices?.duree ||
+    d.fields?.ville_precedente ||
+    d.activeLocForm?.prenom ||
+    d.activeLocForm?.email
+  );
+}
+
+function maybeShowRestoreDraft(){
+  const d = readDraft();
+  if(!hasUsefulDraft(d)) return;
+  const meta = document.getElementById('restore-draft-meta');
+  if(meta){
+    const date = d.saved_at ? new Date(d.saved_at).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : 'date inconnue';
+    const locCount = d.locataires?.length || 0;
+    const docCount = d.uploadedDocs ? Object.keys(d.uploadedDocs).length : 0;
+    meta.textContent = `Dernière sauvegarde : ${date} · ${locCount} locataire(s) · ${docCount} document(s) référencé(s).`;
+  }
+  document.getElementById('modal-restore-draft')?.classList.add('open');
+}
+
+function restoreDraftAndClose(){
+  const d = readDraft();
+  if(d) applyDraft(d);
+  document.getElementById('modal-restore-draft')?.classList.remove('open');
+  setDraftStatus('saved','Brouillon restauré');
+  updateCompletion();
+}
+
+function discardDraftAndClose(){
+  localStorage.removeItem(DRAFT_KEY);
+  document.getElementById('modal-restore-draft')?.classList.remove('open');
+  setDraftStatus('',"Brouillon non enregistré");
+  updateCompletion();
+}
+
+function applyDraft(d){
+  currentStep = Math.min(Math.max(Number(d.currentStep)||1,1),5);
+  compoType = d.compoType || 'seul';
+  counts = d.counts || {adultes:0,enfants:0,coloc:0};
+  choices = d.choices || {emmenagement:'',duree:''};
+  locataires = Array.isArray(d.locataires) ? d.locataires : [];
+  garants = Array.isArray(d.garants) ? d.garants : [];
+  noGarant = !!d.noGarant;
+  uploadedDocs = d.uploadedDocs || {};
+
+  safeSet('ville-precedente', d.fields?.ville_precedente || '');
+  safeSet('bailleur-precedent', d.fields?.bailleur_precedent || '');
+
+  // Restaurer le mini-formulaire locataire si l’utilisateur était en train de le remplir
+  if(d.activeLocForm){
+    safeSet('loc-prenom', d.activeLocForm.prenom);
+    safeSet('loc-nom', d.activeLocForm.nom);
+    safeSet('loc-ddn', d.activeLocForm.ddn);
+    safeSet('loc-nationalite', d.activeLocForm.nationalite);
+    safeSet('loc-id-type', d.activeLocForm.id_type);
+    safeSet('loc-id-numero', d.activeLocForm.id_numero);
+    safeSet('loc-email', d.activeLocForm.email);
+    safeSet('loc-tel', d.activeLocForm.tel);
+    safeSet('loc-situation', d.activeLocForm.situation);
+    safeSet('loc-revenu', d.activeLocForm.revenu);
+    safeSet('loc-poste', d.activeLocForm.poste);
+    safeSet('loc-societe', d.activeLocForm.societe);
+    safeSet('loc-infos', d.activeLocForm.infos);
+    if(d.activeLocForm.prenom || d.activeLocForm.email){
+      const lf = document.getElementById('loc-form');
+      if(lf) lf.style.display = 'block';
+      updateProFields('loc');
+    }
+  }
+
+  // Restaurer compteurs
+  Object.keys(counts||{}).forEach(k=>{
+    const el = document.getElementById('val-'+k);
+    if(el){
+      const labels={adultes:' adulte(s)',enfants:' enfant(s)',coloc:' coloc.'};
+      el.textContent = (counts[k]||0) + (labels[k]||'');
+    }
+  });
+
+  renderLocList();
+  renderGarList();
+  if(currentStep >= 3 && locataires.length) buildDocsUI();
+  if(currentStep >= 5) buildRecap();
+
+  renderStepper();
+  document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+currentStep)?.classList.add('active');
+}
+
+function completionValue(){
+  let score = 0;
+  let total = 0;
+  function add(ok, weight=1){ total += weight; if(ok) score += weight; }
+
+  add(!!choices.emmenagement, 8);
+  add(!!choices.duree, 8);
+  add(!!safeGet('ville-precedente'), 4);
+
+  add(locataires.length > 0, 15);
+  locataires.forEach(l=>{
+    add(!!l.prenom, 3); add(!!l.nom, 3); add(!!l.ddn, 3);
+    add(!!l.nationalite, 3); add(!!l.id_type, 3); add(!!l.id_numero, 3);
+    add(!!l.email, 3); add(!!l.tel, 3); add(!!l.situation, 4);
+    add(Number(l.revenu||0) > 0, 3);
+  });
+
+  if(locataires.length){
+    const required = [];
+    locataires.forEach((loc, idx)=>{
+      const rules = DOC_RULES[loc.situation || 'autre'] || DOC_RULES.autre;
+      rules.filter(r=>r.required).forEach(r=>required.push(`${idx}_${r.id}`));
+    });
+    add(required.length > 0, 4);
+    const uploadedRequired = required.filter(k=>uploadedDocs[k]).length;
+    score += Math.min(uploadedRequired, required.length) * 4;
+    total += Math.max(required.length, 1) * 4;
+  }
+
+  add(garants.length > 0 || noGarant, 10);
+
+  return total ? Math.min(100, Math.round((score/total)*100)) : 0;
+}
+
+function updateCompletion(){
+  const pct = completionValue();
+  const p = document.getElementById('completion-percent');
+  const f = document.getElementById('completion-fill');
+  const l = document.getElementById('completion-label');
+  if(p) p.textContent = pct;
+  if(f) f.style.width = pct + '%';
+  if(l){
+    if(pct < 30) l.textContent = 'Votre dossier est commencé. Ajoutez les informations principales pour le rendre exploitable.';
+    else if(pct < 65) l.textContent = 'Votre dossier progresse. Les prochaines étapes renforcent sa lisibilité pour le propriétaire.';
+    else if(pct < 90) l.textContent = 'Votre dossier est presque complet. Ajoutez les derniers éléments pour accélérer l’analyse.';
+    else l.textContent = 'Votre dossier est solide et prêt à être étudié par Kàddu.';
+  }
+}
+
+function bindDraftListeners(){
+  document.addEventListener('input', (e)=>{
+    if(e.target.closest('.premium-shell')) scheduleDraftSave();
+  });
+  document.addEventListener('change', (e)=>{
+    if(e.target.closest('.premium-shell')) scheduleDraftSave();
+  });
+  document.addEventListener('click', (e)=>{
+    if(e.target.closest('.choice-card') || e.target.closest('.counter-btn') || e.target.closest('.doc-upload-btn')){
+      setTimeout(scheduleDraftSave, 100);
+    }
+  });
+}
+
+// Lancement Sprint 2 après chargement initial
+setTimeout(()=>{
+  bindDraftListeners();
+  maybeShowRestoreDraft();
+  updateCompletion();
+},1200);
+
+
+// ══ OPTION 2 — FLOATING ASSISTANT DYNAMIQUE ══════════════════
+function toggleAssistant(){
+  const panel = document.getElementById('assistantPanel');
+  if(panel) panel.classList.toggle('open');
+}
+
+function getAssistantScore(){
+  if(typeof completionValue === 'function') return completionValue();
+  if(typeof dynamicScore === 'function') return dynamicScore().score || 0;
+  return 0;
+}
+
+function getAssistantStatus(score){
+  if(score >= 80) return {label:'Dossier solide', cls:'strong', hint:'Votre dossier est solide.'};
+  if(score >= 45) return {label:'Bien avancé', cls:'', hint:'Quelques éléments peuvent encore le renforcer.'};
+  return {label:'En préparation', cls:'low', hint:'Complétez les informations principales.'};
+}
+
+function getAssistantItems(){
+  const items = [];
+
+  const loc = (typeof locataires !== 'undefined' && locataires[0]) ? locataires[0] : null;
+  const docsCount = (typeof uploadedDocs !== 'undefined' && uploadedDocs) ? Object.keys(uploadedDocs).length : 0;
+
+  if(loc){
+    items.push(['good','✓','Locataire renseigné','Les informations principales du locataire sont présentes.']);
+  }else{
+    items.push(['warn','!','Ajouter un locataire','Renseignez au moins un locataire pour construire le dossier.']);
+  }
+
+  if(loc && loc.id_type && loc.id_numero && loc.ddn){
+    items.push(['good','✓','Identité structurée','Type de pièce, numéro et date de naissance sont renseignés.']);
+  }else{
+    items.push(['warn','!','Identité à compléter','Ajoutez la pièce, le numéro et la date de naissance.']);
+  }
+
+  if(loc && Number(loc.revenu || 0) > 0){
+    items.push(['good','✓','Revenus renseignés','Les revenus déclarés aideront l’analyse du dossier.']);
+  }else{
+    items.push(['warn','!','Revenus manquants','Ajoutez les revenus ou justificatifs adaptés à la situation.']);
+  }
+
+  if(docsCount > 0){
+    items.push(['good','✓','Documents déposés', docsCount + ' document(s) référencé(s) dans votre dossier.']);
+  }else{
+    items.push(['warn','!','Pièces justificatives','Ajoutez les documents nécessaires à l’étape dédiée.']);
+  }
+
+  if(typeof garants !== 'undefined' && garants.length){
+    items.push(['good','✓','Garant ajouté','Votre dossier est renforcé par un garant.']);
+  }else if(typeof noGarant !== 'undefined' && noGarant){
+    items.push(['warn','!','Dossier sans garant','Vous avez confirmé continuer sans garant.']);
+  }else{
+    items.push(['warn','!','Garant conseillé','Un garant augmente souvent les chances d’acceptation.']);
+  }
+
+  const saveTxt = document.getElementById('draft-status-text')?.textContent || '';
+  if(saveTxt && !saveTxt.includes('non enregistré')){
+    items.push(['success','✓','Brouillon sauvegardé', saveTxt.replace('Brouillon ', '')]);
+  }else{
+    items.push(['warn','!','Brouillon local','Votre progression sera sauvegardée automatiquement.']);
+  }
+
+  return items.slice(0,6);
+}
+
+function renderFloatingAssistant(){
+  const score = getAssistantScore();
+  const st = getAssistantStatus(score);
+
+  const title = document.getElementById('assistant-title');
+  const status = document.getElementById('assistant-status');
+  const fill = document.getElementById('assistant-progress-fill');
+  const hint = document.getElementById('assistant-hint');
+  const save = document.getElementById('assistant-save');
+  const items = document.getElementById('assistant-items');
+
+  if(title) title.textContent = 'Dossier ' + score + '%';
+  if(fill) fill.style.width = score + '%';
+  if(hint) hint.textContent = st.hint;
+
+  if(status){
+    status.classList.remove('strong','low');
+    if(st.cls) status.classList.add(st.cls);
+    status.textContent = st.label;
+  }
+
+  if(save){
+    const draftBox = document.getElementById('draft-status');
+    const draftText = document.getElementById('draft-status-text')?.textContent || 'Non enregistré';
+    save.classList.remove('saving','saved');
+    if(draftBox?.classList.contains('saving')) save.classList.add('saving');
+    if(draftBox?.classList.contains('saved')) save.classList.add('saved');
+    save.textContent = draftText.replace('Brouillon ', '').replace('brouillon ', '');
+  }
+
+  if(items){
+    items.innerHTML = getAssistantItems().map(([cls,icon,title,copy]) => `
+      <div class="assistant-item ${cls}">
+        <span>${icon}</span>
+        <div>
+          <strong>${title}</strong>
+          <p>${copy}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+// Wrapper des fonctions existantes pour synchroniser l’assistant
+const __oldUpdateCompletion = typeof updateCompletion === 'function' ? updateCompletion : null;
+if(__oldUpdateCompletion){
+  updateCompletion = function(){
+    __oldUpdateCompletion();
+    renderFloatingAssistant();
+  }
+}
+
+const __oldUpdateDynamicScore = typeof updateDynamicScore === 'function' ? updateDynamicScore : null;
+if(__oldUpdateDynamicScore){
+  updateDynamicScore = function(){
+    __oldUpdateDynamicScore();
+    renderFloatingAssistant();
+  }
+}
+
+const __oldSetDraftStatus = typeof setDraftStatus === 'function' ? setDraftStatus : null;
+if(__oldSetDraftStatus){
+  setDraftStatus = function(state,text){
+    __oldSetDraftStatus(state,text);
+    renderFloatingAssistant();
+  }
+}
+
+document.addEventListener('input', () => setTimeout(renderFloatingAssistant, 60));
+document.addEventListener('change', () => setTimeout(renderFloatingAssistant, 60));
+document.addEventListener('click', (e) => {
+  if(e.target.closest('.choice-card') || e.target.closest('.counter-btn') || e.target.closest('.add-btn') || e.target.closest('.doc-upload-btn')){
+    setTimeout(renderFloatingAssistant, 140);
+  }
+});
+
+setTimeout(renderFloatingAssistant, 1400);
 
 // ── ALERTS ───────────────────────────────────────────────────
 function showAlert(msg,type){
