@@ -99,6 +99,7 @@
     .reco strong{display:block;margin-bottom:4px}
     .reco span{font-size:12px;color:var(--muted);line-height:1.45}
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
   <div class="wrap">
@@ -278,7 +279,7 @@
 
 <script>
 const SB_URL  = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SB_ANON = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_ANON = window.KADDU_SUPABASE.anonKey;
 
 let codes = [];
 let campaigns = [];
