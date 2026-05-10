@@ -271,6 +271,55 @@
       .top-user{display:none}
     }
 
+    /* ══ PARTENAIRES PANEL ══════════════════════════════════════ */
+    .pt-overlay{position:fixed;inset:0;z-index:200;background:rgba(4,8,18,.88);backdrop-filter:blur(8px);display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
+    .pt-overlay.open{display:flex}
+    .pt-panel{width:100%;max-width:900px;background:linear-gradient(160deg,rgba(12,20,38,.98),rgba(7,14,28,.98));border:1px solid rgba(191,150,80,.22);border-radius:24px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.5);margin:auto}
+    .pt-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 28px;border-bottom:1px solid rgba(191,150,80,.12);background:rgba(7,15,28,.7)}
+    .pt-head-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:300}
+    .pt-head-title em{font-style:italic;color:var(--or)}
+    .pt-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(248,244,238,.5);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+    .pt-close:hover{background:rgba(255,107,107,.15);border-color:rgba(255,107,107,.3);color:#ffb3b3}
+    .pt-body{padding:24px 28px}
+    .pt-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+    .pt-btn{padding:9px 18px;border-radius:8px;font-size:.76rem;font-weight:600;letter-spacing:.06em;cursor:pointer;transition:.2s;font-family:'DM Sans',sans-serif;border:1px solid;display:inline-flex;align-items:center;gap:6px}
+    .pt-btn-primary{background:var(--or);color:#111;border-color:var(--or)}
+    .pt-btn-primary:hover{background:#DDB96E}
+    .pt-btn-ghost{background:transparent;color:rgba(248,244,238,.5);border-color:rgba(191,150,80,.2)}
+    .pt-btn-ghost:hover{border-color:var(--or);color:var(--or)}
+    .pt-grid{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto}
+    .pt-grid::-webkit-scrollbar{width:4px}
+    .pt-grid::-webkit-scrollbar-thumb{background:rgba(191,150,80,.2);border-radius:2px}
+    .pt-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1px solid rgba(191,150,80,.12);background:rgba(7,24,43,.3);transition:.18s}
+    .pt-row:hover{border-color:rgba(191,150,80,.25);background:rgba(7,24,43,.5)}
+    .pt-row.inactive{opacity:.45}
+    .pt-drag{color:rgba(248,244,238,.2);cursor:grab;font-size:1.1rem;flex-shrink:0}
+    .pt-emoji{font-size:1.5rem;width:36px;text-align:center;flex-shrink:0}
+    .pt-info{flex:1;min-width:0}
+    .pt-name{font-size:.9rem;font-weight:500;color:rgba(248,244,238,.9);margin-bottom:1px}
+    .pt-cat{font-size:.7rem;color:var(--or);text-transform:uppercase;letter-spacing:.1em}
+    .pt-url{font-size:.72rem;color:rgba(248,244,238,.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+    .pt-toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+    .pt-toggle input{opacity:0;width:0;height:0}
+    .pt-slider{position:absolute;inset:0;border-radius:20px;background:rgba(255,255,255,.1);cursor:pointer;transition:.25s}
+    .pt-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;border-radius:50%;background:rgba(248,244,238,.4);transition:.25s}
+    .pt-toggle input:checked+.pt-slider{background:rgba(0,200,117,.35)}
+    .pt-toggle input:checked+.pt-slider::before{transform:translateX(16px);background:#00C875}
+    .pt-actions{display:flex;gap:6px;flex-shrink:0}
+    .pt-action-btn{padding:5px 10px;font-size:.68rem;border-radius:6px;border:1px solid rgba(191,150,80,.2);background:transparent;color:rgba(248,244,238,.45);cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s}
+    .pt-action-btn:hover{border-color:var(--or);color:var(--or)}
+    .pt-action-del{border-color:rgba(255,107,107,.2);color:rgba(255,107,107,.4)}
+    .pt-action-del:hover{border-color:rgba(255,107,107,.5);color:#ff8a8a;background:rgba(255,107,107,.06)}
+    /* Form ajout */
+    .pt-form{display:none;border:1px solid rgba(191,150,80,.18);border-radius:12px;padding:18px;background:rgba(7,24,43,.4);margin-bottom:16px}
+    .pt-form.open{display:block}
+    .pt-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .pt-field label{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(191,150,80,.6);display:block;margin-bottom:5px}
+    .pt-input,.pt-select{width:100%;padding:9px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.18);color:rgba(248,244,238,.85);font-family:'DM Sans',sans-serif;font-size:.86rem;border-radius:8px;transition:.18s}
+    .pt-input:focus,.pt-select:focus{outline:none;border-color:rgba(191,150,80,.45)}
+    .pt-select option{background:#0b1e35}
+    .pt-empty{text-align:center;padding:32px;color:rgba(248,244,238,.25);font-size:.84rem}
+
     /* ══ FAQ MANAGER PANEL ══════════════════════════════════════ */
     .faq-overlay{
       position:fixed;inset:0;z-index:200;
@@ -836,7 +885,7 @@
       </a>
 
       <!-- MODULE : PARTENAIRES & SERVICES -->
-      <a class="module-card" href="admin-partenaires-services.html">
+      <a class="module-card" href="#" onclick="openPartenairesPanel(event)">
         <div class="module-top">
           <div class="module-icon">🤝</div>
           <div class="module-badges"><span class="mbadge mbadge-active">Actif</span><span class="mbadge mbadge-new">Nouveau</span></div>
@@ -845,11 +894,11 @@
         <div class="module-desc">Gérez les partenaires sénégalais proposés aux locataires : internet, eau, électricité, déménagement, ménage, banque et ameublement.</div>
         <div class="module-features">
           <span class="mfeat">CRUD partenaires et catégories</span>
-          <span class="mfeat">Activation / mise en avant par statut locataire</span>
-          <span class="mfeat">Suivi clics et demandes entrantes</span>
-          <span class="mfeat">Offres adaptées au marché sénégalais</span>
+          <span class="mfeat">Activation / masquage par partenaire</span>
+          <span class="mfeat">Ordre d'affichage personnalisable</span>
+          <span class="mfeat">Applicable à tous les locataires en temps réel</span>
         </div>
-        <div class="module-foot"><span class="module-link">Ouvrir le module →</span><span class="module-shortcut"><span class="key">G</span> puis <span class="key">P</span></span></div>
+        <div class="module-foot"><span class="module-link">Gérer les partenaires →</span><span class="module-shortcut"><span class="key">G</span> puis <span class="key">P</span></span></div>
       </a>
 
       <!-- MODULE : CRM LOCATAIRES -->
@@ -992,6 +1041,72 @@
   </div>
 
 </div><!-- /appShell -->
+
+<!-- ══ PARTENAIRES OVERLAY ══ -->
+<div class="pt-overlay" id="ptOverlay">
+  <div class="pt-panel">
+    <div class="pt-head">
+      <div>
+        <div class="pt-head-title">Partenaires <em>& services</em></div>
+        <div style="font-size:.72rem;color:rgba(248,244,238,.3);margin-top:3px">Visible dans l'espace de tous les locataires · Modifications en temps réel</div>
+      </div>
+      <button class="pt-close" onclick="closePtPanel()">✕</button>
+    </div>
+    <div class="pt-body">
+
+      <!-- Formulaire ajout/édition -->
+      <div class="pt-form" id="ptForm">
+        <div style="font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:14px" id="ptFormTitle">Nouveau partenaire</div>
+        <div class="pt-form-grid">
+          <div class="pt-field"><label>Nom du partenaire</label><input class="pt-input" id="pt-nom" placeholder="Ex : Sonatel Fibre"></div>
+          <div class="pt-field"><label>Catégorie</label>
+            <select class="pt-select" id="pt-cat">
+              <option value="installation">🏠 Installation</option>
+              <option value="energie">⚡ Énergie</option>
+              <option value="internet">📶 Internet & Mobile</option>
+              <option value="eau">💧 Eau</option>
+              <option value="assurance">🛡️ Assurance</option>
+              <option value="banque">🏦 Banque & Finance</option>
+              <option value="mobilite">🚗 Mobilité</option>
+              <option value="sante">🏥 Santé</option>
+              <option value="demenagement">🚛 Déménagement</option>
+              <option value="quotidien">🛒 Quotidien</option>
+              <option value="diaspora">✈️ Diaspora</option>
+              <option value="autre">🤝 Autre</option>
+            </select>
+          </div>
+          <div class="pt-field"><label>Emoji / icône</label><input class="pt-input" id="pt-emoji" placeholder="Ex : 📶" maxlength="4"></div>
+          <div class="pt-field"><label>URL de destination</label><input class="pt-input" id="pt-url" placeholder="https://..."></div>
+          <div class="pt-field" style="grid-column:span 2"><label>Description courte</label><input class="pt-input" id="pt-desc" placeholder="Ce que ce service apporte au locataire…"></div>
+          <div class="pt-field"><label>Label du bouton</label><input class="pt-input" id="pt-cta" placeholder="Ex : Ouvrir mon compteur"></div>
+          <div class="pt-field"><label>Visible par défaut</label>
+            <select class="pt-select" id="pt-actif">
+              <option value="true">✅ Visible</option>
+              <option value="false">👁‍🗨 Masqué</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <button class="pt-btn pt-btn-primary" onclick="savePtPartner()">Enregistrer →</button>
+          <button class="pt-btn pt-btn-ghost" onclick="cancelPtForm()">Annuler</button>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="pt-toolbar">
+        <button class="pt-btn pt-btn-primary" onclick="openPtForm()">+ Ajouter un partenaire</button>
+        <button class="pt-btn pt-btn-ghost" onclick="loadPtPartners()">↻ Rafraîchir</button>
+        <span id="ptCount" style="font-size:.76rem;color:rgba(248,244,238,.3);margin-left:auto"></span>
+      </div>
+
+      <!-- Liste -->
+      <div class="pt-grid" id="ptGrid">
+        <div class="pt-empty">Chargement…</div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- ══ FAQ MANAGER OVERLAY ══ -->
 <div class="faq-overlay" id="faqOverlay">
@@ -1871,6 +1986,162 @@ document.getElementById("afOverlay").addEventListener("click", e=>{
 document.addEventListener("keydown", e => {
   if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
   if(typeof gPressed !== "undefined" && gPressed && (e.key==="v"||e.key==="V")) openAfPanel();
+});
+</script>
+
+<!-- ══ PARTENAIRES SCRIPT ══ -->
+<script>
+const PT_CATS = {
+  installation:'🏠 Installation', energie:'⚡ Énergie', internet:'📶 Internet & Mobile',
+  eau:'💧 Eau', assurance:'🛡️ Assurance', banque:'🏦 Banque & Finance',
+  mobilite:'🚗 Mobilité', sante:'🏥 Santé', demenagement:'🚛 Déménagement',
+  quotidien:'🛒 Quotidien', diaspora:'✈️ Diaspora', autre:'🤝 Autre'
+};
+
+const PT_DEFAULTS = [
+  {nom:'SENELEC',categorie:'energie',emoji:'⚡',description:'Ouvrez votre compteur électrique rapidement. Accompagnement pour le raccordement de votre nouveau logement.',url:'https://www.senelec.sn',cta:'Ouvrir mon compteur',actif:true,ordre:1},
+  {nom:'SDE / ONAS',categorie:'eau',emoji:'💧',description:'Ouvrez votre abonnement eau. Démarches simplifiées pour les nouveaux locataires Kàddu.',url:'https://www.sde.sn',cta:'Ouvrir mon abonnement',actif:true,ordre:2},
+  {nom:'Sonatel Fibre',categorie:'internet',emoji:'📶',description:'Installez votre connexion internet fibre. Offres Orange exclusives pour les locataires Kàddu.',url:'https://www.orange.sn',cta:'Installer mon internet',actif:true,ordre:3},
+  {nom:'Assurance habitation',categorie:'assurance',emoji:'🛡️',description:'Assurez votre logement avec nos partenaires agréés au Sénégal. Devis en ligne, souscription immédiate.',url:'#',cta:'Obtenir mon assurance',actif:true,ordre:4},
+  {nom:'Déménageurs Dakar',categorie:'demenagement',emoji:'🚛',description:'Trouvez un déménageur professionnel à Dakar. Devis gratuit en 24h.',url:'#',cta:'Organiser mon déménagement',actif:true,ordre:5},
+  {nom:'Wave',categorie:'banque',emoji:'💳',description:'Ouvrez votre compte Wave et payez votre loyer directement depuis l\'application.',url:'https://www.wave.com/fr/senegal',cta:'Ouvrir mon compte Wave',actif:true,ordre:6},
+  {nom:'CBAO / Ecobank',categorie:'banque',emoji:'🏦',description:'Partenariat avec les principales banques sénégalaises pour faciliter l\'ouverture de compte.',url:'#',cta:'Ouvrir un compte bancaire',actif:false,ordre:7},
+  {nom:'Yassir',categorie:'quotidien',emoji:'🛒',description:'Livraison de courses et repas à domicile à Dakar. Première commande offerte.',url:'https://yassir.com',cta:'Commander maintenant',actif:false,ordre:8},
+  {nom:'Clinique du Cap',categorie:'sante',emoji:'🏥',description:'Accès préférentiel à la Clinique du Cap pour les locataires Kàddu.',url:'#',cta:'Prendre rendez-vous',actif:false,ordre:9},
+];
+
+let ptPartners = [];
+let ptEditingId = null;
+
+function openPartenairesPanel(e){
+  if(e) e.preventDefault();
+  document.getElementById('ptOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  loadPtPartners();
+}
+function closePtPanel(){
+  document.getElementById('ptOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+async function loadPtPartners(){
+  const grid = document.getElementById('ptGrid');
+  grid.innerHTML = '<div class="pt-empty">Chargement…</div>';
+  try{
+    const r = await fetch(`${SB}/rest/v1/partenaires?select=*&order=ordre.asc`, {headers:h()});
+    if(!r.ok) throw new Error('table manquante');
+    ptPartners = await r.json();
+  } catch(_){
+    // Première utilisation — afficher les partenaires par défaut
+    ptPartners = PT_DEFAULTS.map((p,i)=>({...p, id:'default_'+i}));
+  }
+  renderPtGrid();
+}
+
+function renderPtGrid(){
+  const grid = document.getElementById('ptGrid');
+  const count = document.getElementById('ptCount');
+  if(!ptPartners.length){
+    grid.innerHTML = '<div class="pt-empty">Aucun partenaire. Cliquez sur "Ajouter" pour commencer.</div>';
+    count.textContent = '';
+    return;
+  }
+  const visible = ptPartners.filter(p=>p.actif).length;
+  count.textContent = `${visible} visible${visible>1?'s':''} · ${ptPartners.length} au total`;
+  grid.innerHTML = ptPartners.map(p => `
+    <div class="pt-row ${p.actif?'':'inactive'}" id="ptrow-${p.id}">
+      <span class="pt-drag">⠿</span>
+      <span class="pt-emoji">${p.emoji||'🤝'}</span>
+      <div class="pt-info">
+        <div class="pt-name">${p.nom}</div>
+        <div class="pt-cat">${PT_CATS[p.categorie]||p.categorie}</div>
+        <div class="pt-url">${p.url||'—'}</div>
+      </div>
+      <label class="pt-toggle" title="${p.actif?'Masquer':'Afficher'}">
+        <input type="checkbox" ${p.actif?'checked':''} onchange="togglePtPartner('${p.id}',this.checked)">
+        <span class="pt-slider"></span>
+      </label>
+      <div class="pt-actions">
+        <button class="pt-action-btn" onclick="editPtPartner('${p.id}')">Modifier</button>
+        <button class="pt-action-btn pt-action-del" onclick="deletePtPartner('${p.id}')">Supprimer</button>
+      </div>
+    </div>`).join('');
+}
+
+function openPtForm(){ ptEditingId=null; clearPtForm(); document.getElementById('ptFormTitle').textContent='Nouveau partenaire'; document.getElementById('ptForm').classList.add('open'); }
+function cancelPtForm(){ document.getElementById('ptForm').classList.remove('open'); ptEditingId=null; clearPtForm(); }
+function clearPtForm(){ ['pt-nom','pt-emoji','pt-url','pt-desc','pt-cta'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';}); document.getElementById('pt-cat').value='installation'; document.getElementById('pt-actif').value='true'; }
+
+function editPtPartner(id){
+  const p = ptPartners.find(x=>String(x.id)===String(id)); if(!p)return;
+  ptEditingId = id;
+  document.getElementById('pt-nom').value = p.nom||'';
+  document.getElementById('pt-emoji').value = p.emoji||'';
+  document.getElementById('pt-cat').value = p.categorie||'autre';
+  document.getElementById('pt-url').value = p.url||'';
+  document.getElementById('pt-desc').value = p.description||'';
+  document.getElementById('pt-cta').value = p.cta||'';
+  document.getElementById('pt-actif').value = p.actif?'true':'false';
+  document.getElementById('ptFormTitle').textContent = 'Modifier : '+p.nom;
+  document.getElementById('ptForm').classList.add('open');
+  document.getElementById('ptForm').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+async function savePtPartner(){
+  const data = {
+    nom: document.getElementById('pt-nom').value.trim(),
+    emoji: document.getElementById('pt-emoji').value.trim()||'🤝',
+    categorie: document.getElementById('pt-cat').value,
+    url: document.getElementById('pt-url').value.trim(),
+    description: document.getElementById('pt-desc').value.trim(),
+    cta: document.getElementById('pt-cta').value.trim()||'En savoir plus',
+    actif: document.getElementById('pt-actif').value === 'true',
+    ordre: ptEditingId ? (ptPartners.find(p=>String(p.id)===String(ptEditingId))?.ordre||99) : (ptPartners.length+1),
+  };
+  if(!data.nom){ alert('Le nom est obligatoire.'); return; }
+  try{
+    if(ptEditingId && !String(ptEditingId).startsWith('default_')){
+      await fetch(`${SB}/rest/v1/partenaires?id=eq.${ptEditingId}`,{method:'PATCH',headers:h({'Prefer':'return=minimal'}),body:JSON.stringify(data)});
+    } else {
+      await fetch(`${SB}/rest/v1/partenaires`,{method:'POST',headers:h({'Prefer':'return=minimal'}),body:JSON.stringify(data)});
+    }
+    cancelPtForm(); loadPtPartners();
+  } catch(e){ alert('Erreur : '+e.message); }
+}
+
+async function togglePtPartner(id, actif){
+  // Mise à jour locale immédiate
+  const p = ptPartners.find(x=>String(x.id)===String(id));
+  if(p) p.actif = actif;
+  const row = document.getElementById('ptrow-'+id);
+  if(row) row.classList.toggle('inactive', !actif);
+  // Mise à jour Supabase si ID réel
+  if(!String(id).startsWith('default_')){
+    try{ await fetch(`${SB}/rest/v1/partenaires?id=eq.${id}`,{method:'PATCH',headers:h({'Prefer':'return=minimal'}),body:JSON.stringify({actif})}); }
+    catch(_){}
+  }
+  // Refresh compteur
+  const visible = ptPartners.filter(p=>p.actif).length;
+  document.getElementById('ptCount').textContent = `${visible} visible${visible>1?'s':''} · ${ptPartners.length} au total`;
+}
+
+async function deletePtPartner(id){
+  if(!confirm('Supprimer ce partenaire ?')) return;
+  if(!String(id).startsWith('default_')){
+    try{ await fetch(`${SB}/rest/v1/partenaires?id=eq.${id}`,{method:'DELETE',headers:h()}); }catch(_){}
+  }
+  ptPartners = ptPartners.filter(p=>String(p.id)!==String(id));
+  renderPtGrid();
+}
+
+document.getElementById('ptOverlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('ptOverlay')) closePtPanel();
+});
+
+// Raccourci G+P
+document.addEventListener('keydown', e => {
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(typeof gPressed !== 'undefined' && gPressed && (e.key==='p'||e.key==='P')) openPartenairesPanel();
 });
 </script>
 
