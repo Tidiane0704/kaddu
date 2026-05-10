@@ -173,8 +173,178 @@
     .ph-icon{font-size:1.1rem;line-height:1}
 
   </style>
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <script src="/assets/js/kaddu-supabase-config.js"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web">
+async function sendContactMessage(){
+  const subjectEl=document.getElementById('contact-subject');
+  const msgEl=document.getElementById('contact-message');
+  const status=document.getElementById('contact-status');
+  const btn=document.getElementById('contact-send-btn');
+  const s=getSession();
+
+  const subject=(subjectEl?.value||'').trim();
+  const message=(msgEl?.value||'').trim();
+
+  function setStatus(text,type='info'){
+    if(!status)return;
+    status.style.display='block';
+    status.textContent=text;
+    status.style.color=type==='success'?'var(--green)':type==='error'?'#ff9a9a':'var(--muted)';
+  }
+
+  if(!subject || !message){
+    setStatus('Merci de renseigner le sujet et le message avant l’envoi.','error');
+    return;
+  }
+
+  const meta=s?.user?.user_metadata||{};
+  const fromEmail=s?.user?.email || '';
+  const fromName=((meta.prenom||'')+' '+(meta.nom||'')).trim() || 'Locataire Kàddu';
+
+  btn.disabled=true;
+  btn.textContent='ENVOI…';
+  setStatus('Envoi de votre message à l’équipe Kàddu…');
+
+  const payload={
+    type:'CONTACT_LOCATAIRE',
+    payload:{
+      to:'contact@kaddu.net',
+      subject:'[Espace locataire] '+subject,
+      from_email:fromEmail,
+      from_name:fromName,
+      message,
+      source:'espace-locataire',
+      sent_at:new Date().toISOString()
+    }
+  };
+
+  try{
+    const res=await fetch(EDGE_URL + '/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+
+    let data={};
+    try{data=await res.json();}catch(_){}
+
+    if(!res.ok || data.success===false){
+      throw new Error(data.error || 'Erreur email');
+    }
+
+    setStatus('Votre message a bien été transmis à Kàddu.','success');
+    subjectEl.value='';
+    msgEl.value='';
+
+  }catch(e){
+    console.error('CONTACT_SEND_FAILED', e);
+    setStatus("L’envoi automatique n’a pas abouti. Votre messagerie va s’ouvrir.",'error');
+
+    const body=[
+      'Bonjour Kàddu,',
+      '',
+      message,
+      '',
+      '—',
+      'Nom : '+fromName,
+      'Email : '+fromEmail
+    ].join('\n');
+
+    setTimeout(()=>{
+      window.location.href='mailto:contact@kaddu.net?subject='+encodeURIComponent('[Espace locataire] '+subject)+'&body='+encodeURIComponent(body);
+    },900);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='ENVOYER';
+  }
+}
+
+</script>
+  <script src="/assets/js/kaddu-supabase-config.js">
+async function sendContactMessage(){
+  const subjectEl=document.getElementById('contact-subject');
+  const msgEl=document.getElementById('contact-message');
+  const status=document.getElementById('contact-status');
+  const btn=document.getElementById('contact-send-btn');
+  const s=getSession();
+
+  const subject=(subjectEl?.value||'').trim();
+  const message=(msgEl?.value||'').trim();
+
+  function setStatus(text,type='info'){
+    if(!status)return;
+    status.style.display='block';
+    status.textContent=text;
+    status.style.color=type==='success'?'var(--green)':type==='error'?'#ff9a9a':'var(--muted)';
+  }
+
+  if(!subject || !message){
+    setStatus('Merci de renseigner le sujet et le message avant l’envoi.','error');
+    return;
+  }
+
+  const meta=s?.user?.user_metadata||{};
+  const fromEmail=s?.user?.email || '';
+  const fromName=((meta.prenom||'')+' '+(meta.nom||'')).trim() || 'Locataire Kàddu';
+
+  btn.disabled=true;
+  btn.textContent='ENVOI…';
+  setStatus('Envoi de votre message à l’équipe Kàddu…');
+
+  const payload={
+    type:'CONTACT_LOCATAIRE',
+    payload:{
+      to:'contact@kaddu.net',
+      subject:'[Espace locataire] '+subject,
+      from_email:fromEmail,
+      from_name:fromName,
+      message,
+      source:'espace-locataire',
+      sent_at:new Date().toISOString()
+    }
+  };
+
+  try{
+    const res=await fetch(EDGE_URL + '/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+
+    let data={};
+    try{data=await res.json();}catch(_){}
+
+    if(!res.ok || data.success===false){
+      throw new Error(data.error || 'Erreur email');
+    }
+
+    setStatus('Votre message a bien été transmis à Kàddu.','success');
+    subjectEl.value='';
+    msgEl.value='';
+
+  }catch(e){
+    console.error('CONTACT_SEND_FAILED', e);
+    setStatus("L’envoi automatique n’a pas abouti. Votre messagerie va s’ouvrir.",'error');
+
+    const body=[
+      'Bonjour Kàddu,',
+      '',
+      message,
+      '',
+      '—',
+      'Nom : '+fromName,
+      'Email : '+fromEmail
+    ].join('\n');
+
+    setTimeout(()=>{
+      window.location.href='mailto:contact@kaddu.net?subject='+encodeURIComponent('[Espace locataire] '+subject)+'&body='+encodeURIComponent(body);
+    },900);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='ENVOYER';
+  }
+}
+
+</script>
 </head>
 <body>
 <div id="guard"><div class="loading-logo">Kàddu</div><div class="loading-bar"><div class="loading-bar-inner"></div></div></div>
@@ -282,7 +452,7 @@
             <div class="message-meta">Dernier message de l’équipe</div>
             <div class="message-bubble" id="team-message">Bienvenue dans votre espace locataire. Complétez votre dossier pour être prêt à candidater dès qu’un bien vous intéresse.</div>
             <div class="quick-actions">
-              <a href="https://wa.me/221700000000" target="_blank" rel="noopener">WhatsApp</a>
+              <a href="https://wa.me/221781875858" target="_blank" rel="noopener">WhatsApp</a>
               <button onclick="showPage('contact',document.querySelectorAll('.nav-item')[5])">Écrire à Kàddu</button>
               <a href="/tunnel/dossier.html">Compléter mon dossier</a>
             </div>
@@ -355,49 +525,8 @@
       <div class="page-section" id="page-partenaires">
         <h2 class="section-heading" style="margin-bottom:8px">Nos <em>partenaires</em></h2>
         <p style="color:var(--muted);font-size:.86rem;margin-bottom:28px">Des services sélectionnés pour faciliter votre installation au Sénégal.</p>
-        <div class="partenaires-grid">
-          <div class="partenaire-card">
-            <div class="part-logo">🛡️</div><div class="part-name">Assurance</div>
-            <div class="part-title">Assurance habitation</div>
-            <div class="part-desc">Assurez votre logement facilement avec nos partenaires agréés au Sénégal. Devis en ligne, souscription immédiate.</div>
-            <div class="part-link">✓ En savoir plus</div>
-            <button class="btn btn-primary" style="width:100%">Obtenir mon assurance</button>
-          </div>
-          <div class="partenaire-card">
-            <div class="part-logo">🚛</div><div class="part-name">Déménagement</div>
-            <div class="part-title">Déménageurs agréés Dakar</div>
-            <div class="part-desc">Trouvez un déménageur professionnel à Dakar et dans les grandes villes du Sénégal. Devis gratuit en 24h.</div>
-            <div class="part-link">✓ En savoir plus</div>
-            <button class="btn btn-primary" style="width:100%">Organiser mon déménagement</button>
-          </div>
-          <div class="partenaire-card">
-            <div class="part-logo">💡</div><div class="part-name">Énergie</div>
-            <div class="part-title">SENELEC — Raccordement</div>
-            <div class="part-desc">Ouvrez votre compteur SENELEC rapidement. Accompagnement pour le raccordement électrique de votre nouveau logement.</div>
-            <div class="part-link">✓ En savoir plus</div>
-            <button class="btn btn-primary" style="width:100%">Ouvrir mon compteur</button>
-          </div>
-          <div class="partenaire-card">
-            <div class="part-logo">📶</div><div class="part-name">Internet</div>
-            <div class="part-title">Sonatel / Orange Fiber</div>
-            <div class="part-desc">Installez votre connexion internet fibre rapidement. Offres exclusives pour les locataires Kàddu.</div>
-            <div class="part-link">✓ En savoir plus</div>
-            <button class="btn btn-primary" style="width:100%">Installer mon internet</button>
-          </div>
-          <div class="partenaire-card">
-            <div class="part-logo">💧</div><div class="part-name">Eau</div>
-            <div class="part-title">SDE — Abonnement eau</div>
-            <div class="part-desc">Ouvrez votre abonnement à la Sénégalaise Des Eaux. Démarches simplifiées pour les nouveaux locataires Kàddu.</div>
-            <div class="part-link">✓ En savoir plus</div>
-            <button class="btn btn-primary" style="width:100%">Ouvrir mon abonnement</button>
-          </div>
-          <div class="partenaire-card">
-            <div class="part-logo">🏦</div><div class="part-name">Banque</div>
-            <div class="part-title">Ouvrir un compte bancaire</div>
-            <div class="part-desc">Partenariat avec les principales banques sénégalaises (CBAO, Ecobank, BHS) pour faciliter l'ouverture de compte.</div>
-            <div class="part-link">✓ En savoir plus</div>
-            <button class="btn btn-primary" style="width:100%">Ouvrir un compte</button>
-          </div>
+        <div class="partenaires-grid" id="partenaires-grid">
+          <div style="color:var(--muted);font-size:.84rem;padding:20px">Chargement des partenaires…</div>
         </div>
       </div>
 
@@ -428,14 +557,14 @@
         <p style="color:var(--muted);font-size:.86rem;margin-bottom:28px">L'équipe Kàddu est à votre disposition.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:32px">
           <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📧</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">Email</div><a href="mailto:contact@kaddu.net" style="color:var(--or);font-size:.9rem">contact@kaddu.net</a></div>
-          <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📱</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">WhatsApp</div><a href="https://wa.me/221700000000" style="color:var(--or);font-size:.9rem">+221 70 000 00 00</a></div>
+          <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📱</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">WhatsApp</div><a href="https://wa.me/221781875858" style="color:var(--or);font-size:.9rem">+221 78 187 58 58</a></div>
           <div class="recap-card" style="text-align:center"><div style="font-size:2rem;margin-bottom:8px">📍</div><div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.10em;color:rgba(248,244,238,.3);margin-bottom:6px">Adresse</div><span style="font-size:.88rem">Plateau, Dakar, Sénégal</span></div>
         </div>
         <div class="pref-section">
           <div class="pref-title">Envoyer un message</div>
-          <div class="form-group"><label class="form-label">Sujet</label><input class="form-input" placeholder="Votre sujet"></div>
-          <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" rows="5" placeholder="Votre message…" style="resize:vertical"></textarea></div>
-          <div style="display:flex;justify-content:flex-end"><button class="btn btn-primary">Envoyer</button></div>
+          <div class="form-group"><label class="form-label">Sujet</label><input class="form-input" id="contact-subject" placeholder="Votre sujet"></div>
+          <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="contact-message" rows="5" placeholder="Votre message…" style="resize:vertical"></textarea></div>
+          <div id="contact-status" style="display:none;margin-bottom:12px;font-size:.82rem;color:var(--muted)"></div><div style="display:flex;justify-content:flex-end"><button class="btn btn-primary" id="contact-send-btn" onclick="sendContactMessage()">Envoyer</button></div>
         </div>
       </div>
 
@@ -446,30 +575,24 @@
 <script>
 const SB_URL=window.KADDU_SUPABASE.url;
 const SB_KEY=window.KADDU_SUPABASE.anonKey;
+const EDGE_URL=window.KADDU_SUPABASE.edgeUrl || (SB_URL + '/functions/v1');
 
 function getSession(){
   try{
-    const r=sessionStorage.getItem('kaddu_jwt') || localStorage.getItem('kaddu_jwt');
+    const r=sessionStorage.getItem('kaddu_jwt');
     if(!r)return null;
     const s=JSON.parse(r);
-    if(Date.now()>s.expires){
-      sessionStorage.removeItem('kaddu_jwt');
-      localStorage.removeItem('kaddu_jwt');
-      return null;
-    }
-    // miroir entre onglets/pages pour éviter les pertes de session lors de la reprise tunnel
-    sessionStorage.setItem('kaddu_jwt', JSON.stringify(s));
-    localStorage.setItem('kaddu_jwt', JSON.stringify(s));
+    if(Date.now()>s.expires){sessionStorage.removeItem('kaddu_jwt');return null;}
     return s;
   }catch{return null;}
 }
 // Session conservée pendant la navigation espace locataire ↔ tunnel.
 // La déconnexion explicite reste gérée par logout().
-function logout(){sessionStorage.removeItem('kaddu_jwt');localStorage.removeItem('kaddu_jwt');window.location.href='/auth/';}
+function logout(){sessionStorage.removeItem('kaddu_jwt');window.location.href='/auth/';}
 
 const session=getSession();
 if(!session||session.role!=='locataire'){
-  window.location.href='/tunnel/dossier.html';
+  window.location.href='/auth/?tab=login';
 }else{
   document.getElementById('guard').style.display='none';
   document.getElementById('app').style.display='grid';
@@ -731,6 +854,46 @@ function showPage(name,el){
   const titles={accueil:'Tableau de bord',candidatures:'Mes candidatures',dossier:'Dossier locatif',partenaires:'Nos partenaires',preferences:'Préférences',contact:'Nous contacter'};
   document.getElementById('topbar-title').innerHTML=`${titles[name]||''}`;
   window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='partenaires') loadPartenaires();
+}
+
+const PT_FALLBACK = [
+  {nom:'SENELEC',categorie:'energie',emoji:'⚡',description:'Ouvrez votre compteur électrique rapidement.',url:'https://www.senelec.sn',cta:'Ouvrir mon compteur',actif:true},
+  {nom:'SDE / ONAS',categorie:'eau',emoji:'💧',description:'Ouvrez votre abonnement eau.',url:'https://www.sde.sn',cta:'Ouvrir mon abonnement',actif:true},
+  {nom:'Sonatel Fibre',categorie:'internet',emoji:'📶',description:'Installez votre connexion fibre. Offres Orange exclusives.',url:'https://www.orange.sn',cta:'Installer mon internet',actif:true},
+  {nom:'Assurance habitation',categorie:'assurance',emoji:'🛡️',description:'Assurez votre logement avec nos partenaires agréés.',url:'#',cta:'Obtenir mon assurance',actif:true},
+  {nom:'Déménageurs Dakar',categorie:'demenagement',emoji:'🚛',description:'Déménageur professionnel à Dakar. Devis gratuit en 24h.',url:'#',cta:'Organiser mon déménagement',actif:true},
+  {nom:'Wave',categorie:'banque',emoji:'💳',description:'Payez votre loyer et gérez vos finances avec Wave.',url:'https://www.wave.com/fr/senegal',cta:'Ouvrir mon compte Wave',actif:true},
+];
+
+async function loadPartenaires(){
+  const grid = document.getElementById('partenaires-grid');
+  if(!grid) return;
+  let partners = [];
+  try{
+    const r = await fetch(`${SB_URL}/rest/v1/partenaires?actif=eq.true&select=*&order=ordre.asc`,{
+      headers:{'apikey':SB_KEY}
+    });
+    if(r.ok){ partners = await r.json(); }
+    else throw new Error();
+  } catch(_){
+    partners = PT_FALLBACK;
+  }
+  if(!partners.length){
+    grid.innerHTML='<div style="color:var(--muted);font-size:.84rem;padding:20px">Aucun service disponible pour le moment.</div>';
+    return;
+  }
+  grid.innerHTML = partners.map(p=>`
+    <div class="partenaire-card">
+      <div class="part-logo">${p.emoji||'🤝'}</div>
+      <div class="part-name">${p.nom}</div>
+      <div class="part-title">${p.nom}</div>
+      <div class="part-desc">${p.description||''}</div>
+      ${p.url&&p.url!=='#'?`<div class="part-link">✓ Partenaire vérifié</div>`:'<div class="part-link" style="color:rgba(248,244,238,.3)">⏳ Bientôt disponible</div>'}
+      <button class="btn btn-primary" style="width:100%" ${(!p.url||p.url==='#')?'disabled style="width:100%;opacity:.45;cursor:not-allowed"':''} onclick="${p.url&&p.url!=='#'?`window.open('${p.url}','_blank')`:''}">
+        ${p.cta||'En savoir plus'}
+      </button>
+    </div>`).join('');
 }
 
 async function savePref(){
@@ -814,6 +977,91 @@ function updatePassportCockpitFromDossier(d){
 
 function updatePassportCockpitEmpty(){
   setPassportCockpit(0,'À créer','Aucun dossier actif',`<div class="priority-item"><div class="priority-icon"><i class="ph ph-file-plus ph-icon"></i></div><div class="priority-text"><strong>Créer votre Passeport Locatif</strong><span>Déposez vos premières informations en moins de 10 minutes.</span></div></div><div class="priority-item success"><div class="priority-icon"><i class="ph ph-magnifying-glass ph-icon"></i></div><div class="priority-text"><strong>Explorer les biens disponibles</strong><span>Vous pouvez commencer votre recherche avant de finaliser votre dossier.</span></div></div>`,1,'Aucune candidature');
+}
+
+
+async function sendContactMessage(){
+  const subjectEl=document.getElementById('contact-subject');
+  const msgEl=document.getElementById('contact-message');
+  const status=document.getElementById('contact-status');
+  const btn=document.getElementById('contact-send-btn');
+  const s=getSession();
+
+  const subject=(subjectEl?.value||'').trim();
+  const message=(msgEl?.value||'').trim();
+
+  function setStatus(text,type='info'){
+    if(!status)return;
+    status.style.display='block';
+    status.textContent=text;
+    status.style.color=type==='success'?'var(--green)':type==='error'?'#ff9a9a':'var(--muted)';
+  }
+
+  if(!subject || !message){
+    setStatus('Merci de renseigner le sujet et le message avant l’envoi.','error');
+    return;
+  }
+
+  const meta=s?.user?.user_metadata||{};
+  const fromEmail=s?.user?.email || '';
+  const fromName=((meta.prenom||'')+' '+(meta.nom||'')).trim() || 'Locataire Kàddu';
+
+  btn.disabled=true;
+  btn.textContent='ENVOI…';
+  setStatus('Envoi de votre message à l’équipe Kàddu…');
+
+  const payload={
+    type:'CONTACT_LOCATAIRE',
+    payload:{
+      to:'contact@kaddu.net',
+      subject:'[Espace locataire] '+subject,
+      from_email:fromEmail,
+      from_name:fromName,
+      message,
+      source:'espace-locataire',
+      sent_at:new Date().toISOString()
+    }
+  };
+
+  try{
+    const res=await fetch(EDGE_URL + '/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+
+    let data={};
+    try{data=await res.json();}catch(_){}
+
+    if(!res.ok || data.success===false){
+      throw new Error(data.error || 'Erreur email');
+    }
+
+    setStatus('Votre message a bien été transmis à Kàddu.','success');
+    subjectEl.value='';
+    msgEl.value='';
+
+  }catch(e){
+    console.error('CONTACT_SEND_FAILED', e);
+    setStatus("L’envoi automatique n’a pas abouti. Votre messagerie va s’ouvrir.",'error');
+
+    const body=[
+      'Bonjour Kàddu,',
+      '',
+      message,
+      '',
+      '—',
+      'Nom : '+fromName,
+      'Email : '+fromEmail
+    ].join('\n');
+
+    setTimeout(()=>{
+      window.location.href='mailto:contact@kaddu.net?subject='+encodeURIComponent('[Espace locataire] '+subject)+'&body='+encodeURIComponent(body);
+    },900);
+  }finally{
+    btn.disabled=false;
+    btn.textContent='ENVOYER';
+  }
 }
 
 </script>
