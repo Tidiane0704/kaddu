@@ -1791,23 +1791,86 @@ const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
+function clearKadduSession(){
+  try{
+    sessionStorage.removeItem('kaddu_jwt');
+    localStorage.removeItem('kaddu_jwt');
+  }catch(_){ }
+}
+
 function getSession(){
   try{
     const r=sessionStorage.getItem('kaddu_jwt') || localStorage.getItem('kaddu_jwt');
     if(!r)return null;
     const s=JSON.parse(r);
-    if(Date.now()>s.expires){
-      sessionStorage.removeItem('kaddu_jwt');
-      localStorage.removeItem('kaddu_jwt');
+    if(!s || !s.access_token || !s.user?.id){
+      clearKadduSession();
+      return null;
+    }
+    if(s.expires && Date.now()>Number(s.expires)){
+      window.__kadduSessionExpired = true;
+      clearKadduSession();
       return null;
     }
     sessionStorage.setItem('kaddu_jwt', JSON.stringify(s));
     localStorage.setItem('kaddu_jwt', JSON.stringify(s));
     return s;
-  }catch{return null;}
+  }catch{
+    clearKadduSession();
+    return null;
+  }
 }
 
-window.addEventListener('DOMContentLoaded', initSmartFields);
+function getTenantLoginUrl(reason='session_expired'){
+  const current = window.location.pathname + window.location.search + window.location.hash;
+  return `/auth.html?mode=login&role=locataire&reason=${encodeURIComponent(reason)}&redirect=${encodeURIComponent(current)}`;
+}
+
+function redirectToTenantLogin(reason='session_expired', message){
+  try{
+    if(typeof saveDraft === 'function') saveDraft();
+    localStorage.setItem('kaddu_redirect_after_login', window.location.pathname + window.location.search + window.location.hash);
+  }catch(_){ }
+
+  const msg = message || 'Votre session a expiré pour des raisons de sécurité. Reconnectez-vous pour reprendre votre dossier là où vous l’avez laissé.';
+  if(typeof showAlert === 'function'){
+    showAlert(msg, 'error');
+    setTimeout(()=>{ window.location.href = getTenantLoginUrl(reason); }, 900);
+  }else{
+    alert(msg);
+    window.location.href = getTenantLoginUrl(reason);
+  }
+}
+
+function requireTenantSession(options={}){
+  const s = getSession();
+  if(s && s.role === 'locataire' && s.access_token && s.user?.id) return s;
+
+  const shouldRedirect = options.redirect !== false;
+  if(shouldRedirect){
+    redirectToTenantLogin(
+      options.reason || (window.__kadduSessionExpired ? 'session_expired' : 'login_required'),
+      options.message
+    );
+  }
+  return null;
+}
+
+function startSessionWatchdog(){
+  setInterval(()=>{
+    // Ne pas rediriger un nouveau visiteur qui n’a pas encore créé son espace.
+    const hadSession = !!(sessionStorage.getItem('kaddu_jwt') || localStorage.getItem('kaddu_jwt'));
+    const s = getSession();
+    if(hadSession && !s && window.__kadduSessionExpired){
+      redirectToTenantLogin('session_expired');
+    }
+  }, 30000);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initSmartFields();
+  startSessionWatchdog();
+});
 
 // ── INIT ─────────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
@@ -2112,7 +2175,7 @@ let activeDossierId = resumeDossierId || null;
 let remoteDraftTimer = null;
 let isRestoringRemoteDraft = false;
 
-function getActiveSession(){ return getSession() || session; }
+function getActiveSession(){ return getSession(); }
 function rememberActiveDossier(id){
   if(!id) return;
   activeDossierId = id;
@@ -2741,10 +2804,11 @@ async function handleDocUpload(event, key, prenomLoc){
     const ext = file.name.split('.').pop();
 
     // Upload sécurisé : l'utilisateur doit être connecté à son espace locataire.
-    const uploadSession = (typeof getActiveSession === 'function' ? getActiveSession() : (getSession() || session));
-    if(!uploadSession || !uploadSession.access_token || !uploadSession.user?.id){
-      throw new Error('SESSION_LOCATAIRE_ABSENTE');
-    }
+    const uploadSession = requireTenantSession({
+      reason:'session_expired',
+      message:'Votre session locataire a expiré. Reconnectez-vous pour continuer le dépôt de vos documents.'
+    });
+    if(!uploadSession) return;
 
     // Le dossier brouillon doit exister avant de stocker un document.
     // Cela permet un chemin compatible avec les policies Supabase : dossiers/{dossier_id}/...
@@ -3143,11 +3207,11 @@ async function submitDossier(btn){
   if(spinner) spinner.style.display = 'block';
 
   try{
-    const activeSession = getSession() || session;
-
-    if(!activeSession || !activeSession.access_token || !activeSession.user?.id){
-      throw new Error('Session locataire absente. Créez ou ouvrez votre espace locataire avant d’envoyer le dossier.');
-    }
+    const activeSession = requireTenantSession({
+      reason:'session_expired',
+      message:'Votre session locataire a expiré. Reconnectez-vous pour envoyer votre dossier.'
+    });
+    if(!activeSession) return;
 
     if(!locataires.length){
       throw new Error('Ajoutez au moins un locataire avant d’envoyer le dossier.');
@@ -3275,7 +3339,7 @@ async function notifyBailleur(bienId, bienTitre, bienAdresse, loc){
     // Récupérer email + prenom du propriétaire
     const res2 = await fetch(
       `${SB_URL}/rest/v1/profils?id=eq.${bien.proprietaire_id}&select=email,prenom`,
-      {headers:{'apikey':SB_KEY, 'Authorization': session ? 'Bearer '+session.access_token : 'Bearer '+SB_KEY}}
+      {headers:{'apikey':SB_KEY, 'Authorization': getSession() ? 'Bearer '+getSession().access_token : 'Bearer '+SB_KEY}}
     );
     if(!res2.ok) return;
     const profils = await res2.json();
