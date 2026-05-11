@@ -71,6 +71,52 @@
     .timeline-bar{height:100%;background:rgba(191,150,80,.75)}
     .timeline-val{text-align:right;color:var(--muted)}
     .footer-note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    /* ── DASHBOARD FRAUDE ── */
+    .fraude-section{margin:0 auto 0;max-width:1800px;padding:0 24px 40px}
+    .fraude-title{font-family:Georgia,serif;font-size:22px;font-weight:300;color:var(--txt);margin:40px 0 6px}
+    .fraude-title em{font-style:italic;color:var(--or)}
+    .fraude-sub{color:var(--muted);font-size:13px;margin-bottom:24px;line-height:1.6}
+    .fraude-divider{height:1px;background:rgba(191,150,80,.15);margin-bottom:28px}
+    .fraude-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+    @media(max-width:1100px){.fraude-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.fraude-grid{grid-template-columns:1fr}}
+    .fraude-card{background:#0b2039;border:1px solid var(--bdr);padding:20px 20px 16px}
+    .fraude-card h3{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin:0 0 14px;font-family:Arial,sans-serif;font-weight:700}
+    .fraude-stat-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(191,150,80,.08);font-size:13px}
+    .fraude-stat-row:last-child{border-bottom:none}
+    .fraude-stat-label{color:var(--muted)}
+    .fraude-stat-val{font-weight:700;color:var(--txt)}
+    .fraude-bar-row{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12px}
+    .fraude-bar-label{width:120px;color:var(--muted);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .fraude-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.06);border:1px solid var(--bdr)}
+    .fraude-bar-fill{height:100%}
+    .fraude-bar-val{width:32px;text-align:right;color:var(--muted)}
+    .fraude-heatmap{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .fraude-heat-item{padding:10px 12px;border:1px solid var(--bdr);background:rgba(255,255,255,.02)}
+    .fraude-heat-name{font-size:12px;color:var(--txt);margin-bottom:4px}
+    .fraude-heat-bar{height:6px;background:rgba(255,255,255,.05);margin-bottom:4px}
+    .fraude-heat-fill{height:100%}
+    .fraude-heat-stats{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+    .fraude-risk-badge{display:inline-block;padding:3px 8px;border-radius:3px;font-size:11px;font-weight:700;text-transform:uppercase}
+    .fraude-risk-low{background:rgba(0,200,117,.1);color:#77ffbe;border:1px solid rgba(0,200,117,.2)}
+    .fraude-risk-mid{background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.2)}
+    .fraude-risk-high{background:rgba(255,107,107,.08);color:#ff8a8a;border:1px solid rgba(255,107,107,.2)}
+    .fraude-score-dist{display:flex;align-items:flex-end;gap:3px;height:60px;margin-top:8px}
+    .fraude-score-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+    .fraude-score-bar{width:100%;background:rgba(191,150,80,.3);transition:.3s}
+    .fraude-score-lbl{font-size:9px;color:var(--muted);text-align:center}
+    .fraude-signal-tag{display:inline-block;margin:2px;padding:3px 7px;font-size:11px;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);color:#ff8a8a}
+    .fraude-alert-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(191,150,80,.08);font-size:12px}
+    .fraude-alert-row:last-child{border-bottom:none}
+    .fraude-alert-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px}
+    .fraude-alert-high{background:rgba(255,107,107,.15);color:#ff8a8a}
+    .fraude-alert-mid{background:rgba(191,150,80,.15);color:var(--or)}
+    .fraude-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+    .fraude-table th{text-align:left;padding:8px 10px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--bdr);color:var(--muted);font-weight:400;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+    .fraude-table td{padding:8px 10px;border-bottom:1px solid rgba(191,150,80,.06);color:var(--txt);vertical-align:top}
+    .fraude-table tr:last-child td{border-bottom:none}
+    .fraude-table tr:hover td{background:rgba(255,255,255,.02)}
     @media (max-width:1320px){
       .stats{grid-template-columns:repeat(3,1fr)}
       .layout{grid-template-columns:1fr}
@@ -251,6 +297,154 @@
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- ══ DASHBOARD FRAUDE ══ -->
+  <div class="fraude-section">
+    <div class="fraude-divider"></div>
+    <h2 class="fraude-title">Tableau de bord <em>fraude & risque</em></h2>
+    <p class="fraude-sub">Analyse comportementale des dossiers · Signaux d'alerte · Répartition du risque par dimension</p>
+
+    <!-- ROW 1 : KPIs fraude + Signaux + Score distribution -->
+    <div class="fraude-grid">
+
+      <!-- KPIs fraude globaux -->
+      <div class="fraude-card">
+        <h3>Indicateurs fraude</h3>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Dossiers à risque élevé</span><span class="fraude-stat-val" id="fKpiHigh">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Taux risque élevé</span><span class="fraude-stat-val" id="fKpiHighPct">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Score fraude moyen</span><span class="fraude-stat-val" id="fKpiAvgScore">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Dossiers incomplets</span><span class="fraude-stat-val" id="fKpiIncomplete">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Taux d'effort > 35%</span><span class="fraude-stat-val" id="fKpiEffort">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Sans garant (risque élevé)</span><span class="fraude-stat-val" id="fKpiNoGarant">—</span></div>
+      </div>
+
+      <!-- Signaux d'alerte détectés -->
+      <div class="fraude-card">
+        <h3>Motifs d'alerte fréquents</h3>
+        <div id="fSignaux"><div class="empty">Chargement…</div></div>
+      </div>
+
+      <!-- Distribution des scores -->
+      <div class="fraude-card">
+        <h3>Distribution des scores (0–100)</h3>
+        <div class="fraude-score-dist" id="fScoreDist"></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px">
+          <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+          <span><span class="fraude-risk-low">Faible</span> <span id="fDistLow" style="color:var(--muted);font-size:12px">0</span></span>
+          <span><span class="fraude-risk-mid">Modéré</span> <span id="fDistMid" style="color:var(--muted);font-size:12px">0</span></span>
+          <span><span class="fraude-risk-high">Élevé</span> <span id="fDistHigh" style="color:var(--muted);font-size:12px">0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2 : Heatmap par bien + Profils suspects + Taux fraude par type doc -->
+    <div class="fraude-grid">
+
+      <!-- Heatmap risque par bien -->
+      <div class="fraude-card">
+        <h3>Risque moyen par bien</h3>
+        <div class="fraude-heatmap" id="fHeatmap"></div>
+      </div>
+
+      <!-- Top dossiers à surveiller -->
+      <div class="fraude-card" style="grid-column:span 2">
+        <h3>Dossiers à surveiller en priorité</h3>
+        <table class="fraude-table">
+          <thead>
+            <tr>
+              <th>Candidat</th>
+              <th>Bien</th>
+              <th>Score</th>
+              <th>Risque</th>
+              <th>Motifs principaux</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody id="fAlertTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROW 3 : Évolution temporelle + Taux conversion par niveau de risque -->
+    <div class="fraude-grid" style="grid-template-columns:1fr 1fr">
+
+      <!-- Taux fraude par situation professionnelle -->
+      <div class="fraude-card">
+        <h3>Risque moyen par situation professionnelle</h3>
+        <div id="fRiskBySituation"></div>
+      </div>
+
+      <!-- Taux conversion réel selon niveau de risque -->
+      <div class="fraude-card">
+        <h3>Conversion réelle par niveau de risque</h3>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Valide la pertinence du scoring : les dossiers faible risque doivent mieux convertir.</p>
+        <table class="fraude-table">
+          <thead>
+            <tr><th>Niveau risque</th><th>Nb dossiers</th><th>Loués</th><th>Taux</th></tr>
+          </thead>
+          <tbody id="fConversionRisk"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROW 4 : Analyse comportementale tunnel -->
+    <div class="fraude-divider" style="margin-top:8px"></div>
+    <h2 class="fraude-title">Analyse du <em>tunnel locataire</em></h2>
+    <p class="fraude-sub">Comportement de remplissage · Abandons par étape · Signaux de remplissage automatique</p>
+
+    <div class="fraude-grid">
+
+      <!-- KPIs tunnel -->
+      <div class="fraude-card">
+        <h3>KPIs tunnel</h3>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Durée médiane de remplissage</span><span class="fraude-stat-val" id="tKpiMedian">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Durée minimale observée</span><span class="fraude-stat-val" id="tKpiMin">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Durée maximale observée</span><span class="fraude-stat-val" id="tKpiMax">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Remplissages suspects (&lt;2min)</span><span class="fraude-stat-val" id="tKpiSuspect" style="color:#ff8a8a">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Nb interactions médian</span><span class="fraude-stat-val" id="tKpiInteractions">—</span></div>
+        <div class="fraude-stat-row"><span class="fraude-stat-label">Retours arrière (moy.)</span><span class="fraude-stat-val" id="tKpiRetours">—</span></div>
+      </div>
+
+      <!-- Distribution durées -->
+      <div class="fraude-card">
+        <h3>Distribution des durées de remplissage</h3>
+        <div id="tDurationDist" style="margin-top:4px"></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6">
+          🟢 &gt;8 min = remplissage humain normal<br>
+          🟡 2-8 min = rapide mais acceptable<br>
+          🔴 &lt;2 min = suspect — potentiellement automatisé
+        </div>
+      </div>
+
+      <!-- Temps par étape -->
+      <div class="fraude-card">
+        <h3>Temps moyen par étape</h3>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Identifier les étapes qui ralentissent ou font abandonner les candidats.</p>
+        <div id="tStepTimes"></div>
+      </div>
+    </div>
+
+    <div class="fraude-grid" style="grid-template-columns:1fr 1fr">
+
+      <!-- Top remplissages suspects -->
+      <div class="fraude-card">
+        <h3>Remplissages suspects à vérifier</h3>
+        <table class="fraude-table">
+          <thead><tr><th>Candidat</th><th>Durée</th><th>Interactions</th><th>Suspicion</th></tr></thead>
+          <tbody id="tSuspectTable"></tbody>
+        </table>
+      </div>
+
+      <!-- Corrélation vitesse / score fraude -->
+      <div class="fraude-card">
+        <h3>Corrélation vitesse de remplissage & score fraude</h3>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 12px">Les remplissages rapides ont-ils des scores fraude plus faibles ?</p>
+        <div id="tCorrelation"></div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -575,6 +769,8 @@
       renderConversionByScore();
       renderFinalStatuses();
       renderTimeline();
+      renderFraudeDashboard();
+      renderTunnelDashboard();
     }
 
     async function init(){
@@ -678,7 +874,315 @@
     }
 
     document.addEventListener("DOMContentLoaded", initAuth);
-    // ───────────────────────────────────────────────────────────
+
+    // ══ DASHBOARD FRAUDE ═════════════════════════════════════
+    function parseMsg(row){
+      try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; }
+    }
+
+    function getRiskTier(score){
+      const s = Number(score||0);
+      if(s >= 75) return 'low';
+      if(s >= 50) return 'mid';
+      return 'high';
+    }
+
+    function getRiskLabel(score){
+      const t = getRiskTier(score);
+      return t==='low'?'Faible':t==='mid'?'Modéré':'Élevé';
+    }
+
+    function getTauxEffort(row){
+      const msg = parseMsg(row);
+      const locs = msg.locataires||[];
+      if(!locs.length) return null;
+      const rev = Number(locs[0].revenu||0);
+      const loyer = Number(row.loyer||row.prix||0);
+      if(!rev||!loyer) return null;
+      return Math.round((loyer/rev)*100);
+    }
+
+    function renderFraudeDashboard(){
+      const rows = filteredRows;
+      if(!rows.length){
+        ['fKpiHigh','fKpiHighPct','fKpiAvgScore','fKpiIncomplete','fKpiEffort','fKpiNoGarant'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.textContent='—';
+        });
+        return;
+      }
+
+      // ── KPIs fraude ──────────────────────────────────────
+      const total = rows.length;
+      const highRisk = rows.filter(r=>getRiskTier(r.score)==='high').length;
+      const avgScore = Math.round(rows.reduce((a,r)=>a+Number(r.score||0),0)/total);
+      const incomplete = rows.filter(r=>!r.docs_fournis||!Array.isArray(r.docs_fournis)||r.docs_fournis.length===0).length;
+      const highEffort = rows.filter(r=>{ const t=getTauxEffort(r); return t!==null&&t>35; }).length;
+      const noGarantHigh = rows.filter(r=>{
+        if(getRiskTier(r.score)!=='high') return false;
+        const msg=parseMsg(r); return !(msg.garants&&msg.garants.length);
+      }).length;
+
+      document.getElementById('fKpiHigh').textContent = highRisk;
+      document.getElementById('fKpiHighPct').textContent = `${Math.round(highRisk/total*100)}%`;
+      document.getElementById('fKpiAvgScore').textContent = avgScore + '/100';
+      document.getElementById('fKpiIncomplete').textContent = incomplete;
+      document.getElementById('fKpiEffort').textContent = highEffort + ' dossier' + (highEffort>1?'s':'');
+      document.getElementById('fKpiNoGarant').textContent = noGarantHigh + ' dossier' + (noGarantHigh>1?'s':'');
+
+      // ── Motifs d'alerte fréquents ─────────────────────────
+      const signaux = {};
+      rows.forEach(r=>{
+        (r.reasons||[]).forEach(reason=>{
+          signaux[reason] = (signaux[reason]||0) + 1;
+        });
+        // Inférer des signaux depuis les données
+        if(getRiskTier(r.score)==='high') signaux['Score élevé'] = (signaux['Score élevé']||0)+1;
+        const te = getTauxEffort(r);
+        if(te!==null&&te>35) signaux['Taux d\'effort >35%'] = (signaux['Taux d\'effort >35%']||0)+1;
+        const msg=parseMsg(r);
+        if(!msg.garants?.length) signaux['Sans garant'] = (signaux['Sans garant']||0)+1;
+        if(incomplete) signaux['Documents manquants'] = (signaux['Documents manquants']||0)+1;
+      });
+      const topSignaux = Object.entries(signaux).sort((a,b)=>b[1]-a[1]).slice(0,8);
+      const maxSig = topSignaux[0]?.[1]||1;
+      const sigEl = document.getElementById('fSignaux');
+      if(!topSignaux.length){
+        sigEl.innerHTML='<div class="empty">Aucun motif détecté.</div>';
+      } else {
+        sigEl.innerHTML = topSignaux.map(([label,count])=>`
+          <div class="fraude-bar-row">
+            <div class="fraude-bar-label" title="${label}">${label}</div>
+            <div class="fraude-bar-wrap"><div class="fraude-bar-fill" style="width:${Math.round(count/maxSig*100)}%;background:${count/total>0.3?'#ff8a8a':count/total>0.15?'#ffd180':'rgba(191,150,80,.6)'}"></div></div>
+            <div class="fraude-bar-val">${count}</div>
+          </div>`).join('');
+      }
+
+      // ── Distribution scores ───────────────────────────────
+      const buckets = Array(10).fill(0);
+      rows.forEach(r=>{ const s=Math.min(Math.floor(Number(r.score||0)/10),9); buckets[s]++; });
+      const maxBucket = Math.max(...buckets,1);
+      const distEl = document.getElementById('fScoreDist');
+      const colors = buckets.map((_,i)=>i>=7?'rgba(0,200,117,.7)':i>=4?'rgba(191,150,80,.7)':'rgba(255,107,107,.6)');
+      distEl.innerHTML = buckets.map((v,i)=>`
+        <div class="fraude-score-col">
+          <div class="fraude-score-bar" style="height:${Math.round(v/maxBucket*100)}%;background:${colors[i]}" title="${v} dossier${v>1?'s':''} · score ${i*10}-${i*10+9}"></div>
+          <div class="fraude-score-lbl">${i*10}</div>
+        </div>`).join('');
+      document.getElementById('fDistLow').textContent = rows.filter(r=>Number(r.score||0)>=75).length;
+      document.getElementById('fDistMid').textContent = rows.filter(r=>{ const s=Number(r.score||0); return s>=50&&s<75; }).length;
+      document.getElementById('fDistHigh').textContent = rows.filter(r=>Number(r.score||0)<50).length;
+
+      // ── Heatmap par bien ──────────────────────────────────
+      const bienMap = {};
+      rows.forEach(r=>{
+        const b = bienLabel(r.bien)||r.bien||'Autre';
+        if(!bienMap[b]) bienMap[b]={total:0,scoreSum:0,high:0};
+        bienMap[b].total++;
+        bienMap[b].scoreSum+=Number(r.score||0);
+        if(getRiskTier(r.score)==='high') bienMap[b].high++;
+      });
+      const biens = Object.entries(bienMap).sort((a,b)=>b[1].total-a[1].total);
+      const maxBienTotal = biens[0]?.[1].total||1;
+      const hmEl = document.getElementById('fHeatmap');
+      hmEl.innerHTML = biens.map(([name,d])=>{
+        const avg = Math.round(d.scoreSum/d.total);
+        const riskColor = avg>=75?'rgba(0,200,117,.7)':avg>=50?'rgba(191,150,80,.7)':'rgba(255,107,107,.6)';
+        return `<div class="fraude-heat-item">
+          <div class="fraude-heat-name">${name}</div>
+          <div class="fraude-heat-bar"><div class="fraude-heat-fill" style="width:${Math.round(d.total/maxBienTotal*100)}%;background:${riskColor}"></div></div>
+          <div class="fraude-heat-stats">
+            <span>${d.total} dossier${d.total>1?'s':''}</span>
+            <span style="color:${riskColor}">Score moy. ${avg}</span>
+            <span style="color:#ff8a8a">${d.high} risque élevé</span>
+          </div>
+        </div>`;
+      }).join('') || '<div class="empty">Aucune donnée.</div>';
+
+      // ── Top dossiers à surveiller ─────────────────────────
+      const alertRows = [...rows]
+        .sort((a,b)=>Number(a.score||0)-Number(b.score||0))
+        .slice(0,10);
+      const tableEl = document.getElementById('fAlertTable');
+      tableEl.innerHTML = alertRows.map(r=>{
+        const tier = getRiskTier(r.score);
+        const msg = parseMsg(r);
+        const motifs = (r.reasons||[]).join(', ') || (tier==='high'?'Score faible':'—');
+        const statut = r.final_status||r.status_metier||'en_cours';
+        return `<tr>
+          <td>${r.nom||'—'}</td>
+          <td>${bienLabel(r.bien)||r.bien||'—'}</td>
+          <td><strong style="color:${tier==='high'?'#ff8a8a':tier==='mid'?'var(--or)':'#77ffbe'}">${r.score||'—'}</strong></td>
+          <td><span class="fraude-risk-badge fraude-risk-${tier}">${getRiskLabel(r.score)}</span></td>
+          <td style="color:var(--muted);max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${motifs}</td>
+          <td><span class="pill pill-${statut==='loue'?'green':statut==='refuse'?'red':'orange'}">${statut}</span></td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6" class="empty">Aucun dossier.</td></tr>';
+
+      // ── Risque par situation professionnelle ──────────────
+      const sitMap = {};
+      rows.forEach(r=>{
+        const msg=parseMsg(r);
+        const locs=msg.locataires||[];
+        const sit=locs[0]?.situation||r.situation||'non précisé';
+        const labels={cdi:'Salarié CDI',cdd:'Salarié CDD',independant:'Indépendant',etudiant:'Étudiant',interimaire:'Intérimaire',retraite:'Retraité',sans_emploi:'Sans emploi',autre:'Autre'};
+        const sitLabel=labels[sit]||sit;
+        if(!sitMap[sitLabel]) sitMap[sitLabel]={total:0,scoreSum:0};
+        sitMap[sitLabel].total++;
+        sitMap[sitLabel].scoreSum+=Number(r.score||0);
+      });
+      const sits = Object.entries(sitMap).sort((a,b)=>b[1].total-a[1].total).slice(0,8);
+      const maxSitTotal = sits[0]?.[1].total||1;
+      const sitEl = document.getElementById('fRiskBySituation');
+      sitEl.innerHTML = sits.map(([name,d])=>{
+        const avg=Math.round(d.scoreSum/d.total);
+        const col=avg>=75?'rgba(0,200,117,.7)':avg>=50?'rgba(191,150,80,.7)':'rgba(255,107,107,.6)';
+        return `<div class="fraude-bar-row">
+          <div class="fraude-bar-label" title="${name}">${name}</div>
+          <div class="fraude-bar-wrap"><div class="fraude-bar-fill" style="width:${Math.round(avg)}%;background:${col}"></div></div>
+          <div class="fraude-bar-val" style="color:${col}">${avg}</div>
+        </div>`;
+      }).join('') || '<div class="empty">Données insuffisantes.</div>';
+
+      // ── Conversion par niveau de risque ──────────────────
+      const riskConv = {low:{label:'Faible',total:0,loue:0},mid:{label:'Modéré',total:0,loue:0},high:{label:'Élevé',total:0,loue:0}};
+      rows.forEach(r=>{
+        const tier=getRiskTier(r.score);
+        riskConv[tier].total++;
+        if(r.final_status==='loue') riskConv[tier].loue++;
+      });
+      const convEl = document.getElementById('fConversionRisk');
+      convEl.innerHTML = Object.entries(riskConv).map(([tier,d])=>{
+        const pct = d.total ? Math.round(d.loue/d.total*100) : 0;
+        const col = pct>=50?'pill-green':pct>=20?'pill-orange':'pill-red';
+        return `<tr>
+          <td><span class="fraude-risk-badge fraude-risk-${tier}">${d.label}</span></td>
+          <td>${d.total}</td>
+          <td>${d.loue}</td>
+          <td><span class="pill ${col}">${pct}%</span></td>
+        </tr>`;
+      }).join('');
+    }
+    // ══ DASHBOARD TUNNEL ═════════════════════════════════════
+    function renderTunnelDashboard(){
+      // Extraire les métriques tunnel disponibles
+      const withMetrics = filteredRows.map(r=>{
+        try{
+          const msg = JSON.parse(r.message||'{}');
+          return msg.tunnel_metrics ? { row:r, tm:msg.tunnel_metrics } : null;
+        }catch(_){ return null; }
+      }).filter(Boolean);
+
+      const noData = '<div class="empty" style="font-size:12px">Données disponibles sur les nouveaux dossiers uniquement.</div>';
+
+      if(!withMetrics.length){
+        ['tKpiMedian','tKpiMin','tKpiMax','tKpiSuspect','tKpiInteractions','tKpiRetours'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.textContent='—';
+        });
+        ['tDurationDist','tStepTimes','tSuspectTable','tCorrelation'].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.innerHTML=noData;
+        });
+        return;
+      }
+
+      const durees = withMetrics.map(x=>x.tm.duree_totale_sec).sort((a,b)=>a-b);
+      const median = durees[Math.floor(durees.length/2)];
+      const min = durees[0];
+      const max = durees[durees.length-1];
+      const suspects = withMetrics.filter(x=>x.tm.remplissage_rapide);
+      const avgInteractions = Math.round(withMetrics.reduce((a,x)=>a+(x.tm.nb_interactions||0),0)/withMetrics.length);
+      const avgRetours = (withMetrics.reduce((a,x)=>a+(x.tm.nb_retours||0),0)/withMetrics.length).toFixed(1);
+
+      function fmtSec(s){ return s>=60?`${Math.floor(s/60)}min ${s%60}s`:`${s}s`; }
+
+      document.getElementById('tKpiMedian').textContent = fmtSec(median);
+      document.getElementById('tKpiMin').textContent = fmtSec(min);
+      document.getElementById('tKpiMax').textContent = fmtSec(max);
+      document.getElementById('tKpiSuspect').textContent = `${suspects.length} / ${withMetrics.length}`;
+      document.getElementById('tKpiInteractions').textContent = avgInteractions;
+      document.getElementById('tKpiRetours').textContent = avgRetours;
+
+      // ── Distribution des durées ─────────────────────────
+      const dBuckets = [
+        { label:'< 2 min', max:120, col:'rgba(255,107,107,.7)', count:0 },
+        { label:'2–5 min', max:300, col:'rgba(255,179,71,.7)', count:0 },
+        { label:'5–10 min', max:600, col:'rgba(191,150,80,.7)', count:0 },
+        { label:'10–20 min', max:1200, col:'rgba(0,200,117,.6)', count:0 },
+        { label:'> 20 min', max:Infinity, col:'rgba(0,200,117,.4)', count:0 },
+      ];
+      durees.forEach(d=>{
+        for(const b of dBuckets){ if(d<b.max){ b.count++; break; } }
+      });
+      const maxBucketCount = Math.max(...dBuckets.map(b=>b.count),1);
+      document.getElementById('tDurationDist').innerHTML = dBuckets.map(b=>`
+        <div class="fraude-bar-row">
+          <div class="fraude-bar-label">${b.label}</div>
+          <div class="fraude-bar-wrap"><div class="fraude-bar-fill" style="width:${Math.round(b.count/maxBucketCount*100)}%;background:${b.col}"></div></div>
+          <div class="fraude-bar-val">${b.count}</div>
+        </div>`).join('');
+
+      // ── Temps moyen par étape ────────────────────────────
+      const stepAcc = {1:0,2:0,3:0,4:0,5:0};
+      const stepCount = {1:0,2:0,3:0,4:0,5:0};
+      withMetrics.forEach(x=>{
+        if(!x.tm.duree_par_etape) return;
+        Object.entries(x.tm.duree_par_etape).forEach(([k,v])=>{
+          const n=parseInt(k.replace(/\D/g,''));
+          if(n>=1&&n<=5){ stepAcc[n]+=v; stepCount[n]++; }
+        });
+      });
+      const stepLabels={1:'Infos générales',2:'Locataires',3:'Documents',4:'Garants',5:'Confirmation'};
+      const stepAvgs = [1,2,3,4,5].map(n=>({ n, avg:stepCount[n]?Math.round(stepAcc[n]/stepCount[n]):null }));
+      const maxStepAvg = Math.max(...stepAvgs.map(s=>s.avg||0),1);
+      document.getElementById('tStepTimes').innerHTML = stepAvgs.map(s=>`
+        <div class="fraude-bar-row">
+          <div class="fraude-bar-label" style="width:110px">Étape ${s.n}</div>
+          <div class="fraude-bar-wrap">
+            ${s.avg!==null?`<div class="fraude-bar-fill" style="width:${Math.round(s.avg/maxStepAvg*100)}%;background:rgba(191,150,80,.6)"></div>`:''}
+          </div>
+          <div class="fraude-bar-val" style="width:50px">${s.avg!==null?fmtSec(s.avg):'—'}</div>
+        </div>`).join('');
+
+      // ── Top suspects ─────────────────────────────────────
+      const suspectsSorted = [...suspects].sort((a,b)=>(a.tm.duree_totale_sec)-(b.tm.duree_totale_sec));
+      document.getElementById('tSuspectTable').innerHTML = suspectsSorted.slice(0,8).map(x=>{
+        const r=x.row; const tm=x.tm;
+        return `<tr>
+          <td>${r.nom||'—'}</td>
+          <td style="color:#ff8a8a;font-weight:700">${fmtSec(tm.duree_totale_sec)}</td>
+          <td>${tm.nb_interactions||0}</td>
+          <td><span class="fraude-risk-badge fraude-risk-high">${tm.suspicion_vitesse}/100</span></td>
+        </tr>`;
+      }).join('') || `<tr><td colspan="4" class="empty">Aucun remplissage suspect.</td></tr>`;
+
+      // ── Corrélation vitesse / score ──────────────────────
+      // Regrouper par buckets de durée et calculer score moyen
+      const corrBuckets = [
+        {label:'< 2 min',max:120,scoreSum:0,count:0},
+        {label:'2–5 min',max:300,scoreSum:0,count:0},
+        {label:'5–10 min',max:600,scoreSum:0,count:0},
+        {label:'> 10 min',max:Infinity,scoreSum:0,count:0},
+      ];
+      withMetrics.forEach(x=>{
+        const score = Number(x.row.score||0);
+        for(const b of corrBuckets){
+          if(x.tm.duree_totale_sec<b.max){ b.scoreSum+=score; b.count++; break; }
+        }
+      });
+      const maxCorrScore = 100;
+      document.getElementById('tCorrelation').innerHTML = corrBuckets.map(b=>{
+        const avg = b.count ? Math.round(b.scoreSum/b.count) : null;
+        const col = avg===null?'rgba(255,255,255,.1)':avg>=75?'rgba(0,200,117,.7)':avg>=50?'rgba(191,150,80,.7)':'rgba(255,107,107,.6)';
+        return `<div class="fraude-bar-row">
+          <div class="fraude-bar-label" style="width:75px">${b.label}</div>
+          <div class="fraude-bar-wrap">
+            ${avg!==null?`<div class="fraude-bar-fill" style="width:${avg}%;background:${col}"></div>`:''}
+          </div>
+          <div class="fraude-bar-val" style="width:50px;color:${col}">${avg!==null?avg+'/100':'—'}</div>
+          <div style="font-size:11px;color:var(--muted);margin-left:4px">(${b.count})</div>
+        </div>`;
+      }).join('');
+    }
+    // ══ FIN DASHBOARD TUNNEL ═════════════════════════════════
 
   </script>
 </body>
