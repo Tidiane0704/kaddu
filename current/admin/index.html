@@ -574,6 +574,42 @@
     }
     @keyframes spin{to{transform:rotate(360deg)}}
 
+    /* ── SCORE KÀDDU ── */
+    .af-score-wrap{
+      display:flex;align-items:stretch;gap:14px;
+      margin:0;padding:16px 18px;
+      background:rgba(7,24,43,.7);border-bottom:1px solid rgba(191,150,80,.12);
+    }
+    .af-score-main{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:76px;flex-shrink:0}
+    .af-score-circle{
+      width:68px;height:68px;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;flex-direction:column;border:3px solid;
+    }
+    .af-score-circle.low{border-color:rgba(255,107,107,.55);background:rgba(255,107,107,.08)}
+    .af-score-circle.mid{border-color:rgba(191,150,80,.55);background:rgba(191,150,80,.08)}
+    .af-score-circle.high{border-color:rgba(0,200,117,.55);background:rgba(0,200,117,.08)}
+    .af-score-num{font-size:1.35rem;font-weight:700;line-height:1;font-family:'DM Sans',sans-serif}
+    .af-score-circle.low .af-score-num{color:#ff8a8a}
+    .af-score-circle.mid .af-score-num{color:var(--or)}
+    .af-score-circle.high .af-score-num{color:#77ffbe}
+    .af-score-max{font-size:.58rem;color:rgba(248,244,238,.3);margin-top:1px}
+    .af-score-label{font-size:.64rem;text-align:center;margin-top:6px;font-weight:600;letter-spacing:.04em}
+    .af-score-bars{flex:1;display:flex;flex-direction:column;gap:7px;justify-content:center}
+    .af-bar-row{display:flex;align-items:center;gap:8px}
+    .af-bar-name{width:72px;color:rgba(248,244,238,.4);flex-shrink:0;font-size:.67rem;text-transform:uppercase;letter-spacing:.06em}
+    .af-bar-track{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}
+    .af-bar-fill{height:100%;border-radius:999px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+    .af-bar-val{width:26px;text-align:right;color:rgba(248,244,238,.5);font-size:.68rem;flex-shrink:0}
+    .af-decision-badge{
+      display:inline-flex;align-items:center;gap:5px;margin-top:7px;
+      padding:3px 9px;border-radius:999px;font-size:.62rem;font-weight:600;
+      letter-spacing:.06em;text-transform:uppercase;
+    }
+    .af-decision-pre{background:rgba(0,200,117,.1);color:#77ffbe;border:1px solid rgba(0,200,117,.22)}
+    .af-decision-verif{background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.22)}
+    .af-decision-attente{background:rgba(255,179,71,.08);color:#ffd180;border:1px solid rgba(255,179,71,.18)}
+    .af-decision-refus{background:rgba(255,107,107,.08);color:#ff8a8a;border:1px solid rgba(255,107,107,.18)}
+
     /* Historique */
     .af-history-list{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto}
     .af-history-list::-webkit-scrollbar{width:4px}
@@ -1656,6 +1692,18 @@ function exportFaqJson(){
           <div class="af-result-title">Synthèse du dossier</div>
           <div id="afVigBadge" class="af-vigilance af-vig-low">—</div>
         </div>
+        <!-- Score Kàddu -->
+        <div class="af-score-wrap" id="afScoreWrap" style="display:none">
+          <div class="af-score-main">
+            <div class="af-score-circle" id="afScoreCircle">
+              <span class="af-score-num" id="afScoreNum">—</span>
+              <span class="af-score-max">/100</span>
+            </div>
+            <div class="af-score-label" id="afScoreLabel">—</div>
+            <div class="af-decision-badge af-decision-verif" id="afDecisionBadge">—</div>
+          </div>
+          <div class="af-score-bars" id="afScoreBars"></div>
+        </div>
         <div class="af-result-body" id="afResultBody"></div>
         <div style="padding:12px 18px;border-top:1px solid rgba(191,150,80,.08);display:flex;gap:8px;flex-wrap:wrap;background:rgba(7,14,28,.3)">
           <button class="af-btn af-btn-ghost" style="font-size:.72rem;padding:6px 14px" onclick="copyAfResult()">Copier la synthèse</button>
@@ -1898,23 +1946,39 @@ async function lancerAnalyseAF(){
     }
 
     const data = await resp.json();
-    const text = data.content?.map(c=>c.text||"").join("") || "";
+    const rawText = data.content?.map(c=>c.text||"").join("") || "";
 
-    // Détecter niveau de vigilance
-    const vigEl = document.getElementById("afVigBadge");
-    if(/niveau.*élevé|vigilance.*élevé/i.test(text)){
-      vigEl.textContent="Vigilance élevée";vigEl.className="af-vigilance af-vig-high";
-    } else if(/niveau.*modér|vigilance.*modér/i.test(text)){
-      vigEl.textContent="Vigilance modérée";vigEl.className="af-vigilance af-vig-mid";
-    } else {
-      vigEl.textContent="Vigilance faible";vigEl.className="af-vigilance af-vig-low";
+    // ── Extraire le JSON score Kàddu ──────────────────────────
+    let scoreData = null;
+    let displayText = rawText;
+    const scoreMatch = rawText.match(/KADDU_SCORE:(\{[^}]+\})/);
+    if(scoreMatch){
+      try{
+        scoreData = JSON.parse(scoreMatch[1]);
+        displayText = rawText.replace(/KADDU_SCORE:\{[^}]+\}/, '').trim();
+      }catch(_){ scoreData = null; }
     }
 
-    document.getElementById("afResultBody").textContent = text;
+    // ── Badge vigilance ───────────────────────────────────────
+    const vigEl = document.getElementById("afVigBadge");
+    if(scoreData){
+      const s = scoreData.score||0;
+      if(s < 50){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vigilance af-vig-high"; }
+      else if(s < 80){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vigilance af-vig-mid"; }
+      else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vigilance af-vig-low"; }
+    } else {
+      if(/niveau.*élevé|vigilance.*élevé/i.test(rawText)){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vigilance af-vig-high"; }
+      else if(/niveau.*modér|vigilance.*modér/i.test(rawText)){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vigilance af-vig-mid"; }
+      else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vigilance af-vig-low"; }
+    }
+
+    // ── Rendu score Kàddu ─────────────────────────────────────
+    renderAfScore(scoreData);
+
+    setAfResult(displayText);
     result.classList.add("visible");
 
-    // Auto-save to session history
-    afHistory.unshift({ nom, bien, date: new Date(), result: text, vigEl: vigEl.textContent });
+    afHistory.unshift({ nom, bien, date: new Date(), result: rawText, scoreData, vigEl: vigEl.textContent });
     renderAfHistory();
 
   } catch(err){
@@ -1946,12 +2010,65 @@ function loadAfHistItem(i){
   if(!h) return;
   document.getElementById("afCandidatNom").value = h.nom;
   document.getElementById("afBienVise").value = h.bien||"";
-  document.getElementById("afResultBody").textContent = h.result;
+  let displayText = h.result.replace(/KADDU_SCORE:\{[^}]+\}/,'').trim();
+  setAfResult(displayText);
+  renderAfScore(h.scoreData||null);
   document.getElementById("afResult").classList.add("visible");
   switchAfTab("analyse", document.querySelector(".af-tab"));
 }
 
 function saveAfToHistory(){ renderAfHistory(); }
+
+function renderAfScore(sd){
+  const wrap = document.getElementById("afScoreWrap");
+  if(!sd || !sd.score){ wrap.style.display="none"; return; }
+  wrap.style.display="flex";
+
+  const s = sd.score;
+  const tier = s >= 80 ? "high" : s >= 50 ? "mid" : "low";
+
+  // Cercle score
+  const circle = document.getElementById("afScoreCircle");
+  circle.className = "af-score-circle " + tier;
+  document.getElementById("afScoreNum").textContent = s;
+
+  // Label
+  const labelEl = document.getElementById("afScoreLabel");
+  labelEl.textContent = sd.label || (s >= 80 ? "Profil rassurant" : s >= 50 ? "Profil à vérifier" : "Profil à risque");
+  labelEl.style.color = tier==="high" ? "#77ffbe" : tier==="mid" ? "var(--or)" : "#ff8a8a";
+
+  // Badge décision
+  const badge = document.getElementById("afDecisionBadge");
+  const dMap = {
+    pre_validation:    ["Pré-validation", "af-decision-pre"],
+    verification_humaine: ["À vérifier", "af-decision-verif"],
+    attente:           ["En attente", "af-decision-attente"],
+    refus:             ["Refus recommandé", "af-decision-refus"],
+  };
+  const [dLabel, dClass] = dMap[sd.decision] || ["À instruire", "af-decision-verif"];
+  badge.textContent = dLabel;
+  badge.className = "af-decision-badge " + dClass;
+
+  // Barres
+  const dims = [
+    { key:"identite",   label:"Identité",  max:20 },
+    { key:"revenus",    label:"Revenus",   max:20 },
+    { key:"documents",  label:"Documents", max:20 },
+    { key:"coherence",  label:"Cohérence", max:20 },
+    { key:"risque_fraude", label:"Fraude",  max:20 },
+  ];
+  const barsEl = document.getElementById("afScoreBars");
+  barsEl.innerHTML = dims.map(d => {
+    const val = Math.min(sd[d.key]||0, d.max);
+    const pct = Math.round((val / d.max) * 100);
+    const col = pct >= 75 ? "#77ffbe" : pct >= 50 ? "var(--or)" : "#ff8a8a";
+    return `<div class="af-bar-row">
+      <div class="af-bar-name">${d.label}</div>
+      <div class="af-bar-track"><div class="af-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="af-bar-val">${val}/${d.max}</div>
+    </div>`;
+  }).join("");
+}
 
 function copyAfResult(){
   const txt = document.getElementById("afResultBody").textContent;
