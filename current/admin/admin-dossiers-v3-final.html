@@ -438,6 +438,20 @@
                 <div class="af-result-title">Synthèse Kàddu Shield</div>
                 <div class="af-vig" id="afVigBadge">—</div>
               </div>
+              <!-- Score Kàddu -->
+              <div id="afScoreWrap" style="display:none;padding:12px 16px;background:rgba(7,24,43,.6);border-bottom:1px solid rgba(191,150,80,.1)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div id="afScoreCircle" style="width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2.5px solid rgba(191,150,80,.4);background:rgba(191,150,80,.08);flex-shrink:0">
+                    <span id="afScoreNum" style="font-size:1.1rem;font-weight:700;color:var(--or);line-height:1">—</span>
+                    <span style="font-size:.5rem;color:rgba(248,244,238,.25)">/100</span>
+                  </div>
+                  <div style="flex:1">
+                    <div id="afScoreLabel" style="font-size:.78rem;font-weight:600;color:var(--or);margin-bottom:4px">—</div>
+                    <div id="afDecisionBadge" style="display:inline-block;font-size:.62rem;padding:2px 8px;border-radius:999px;background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.2);font-weight:600;text-transform:uppercase;letter-spacing:.06em">—</div>
+                  </div>
+                  <div id="afScoreBars" style="flex:1.5;display:flex;flex-direction:column;gap:5px"></div>
+                </div>
+              </div>
               <div class="af-result-body" id="afResultBody"></div>
               <div class="af-result-foot">
                 <button class="af-btn-sm" onclick="copyAfResult()">Copier</button>
@@ -795,6 +809,7 @@
       renderHistory(row.id);
       prepareAfContext(row);
       renderDocsAdmin(row);
+      loadPasseportForDossier(row).catch(()=>{});
     }
 
     async function patchDossier(currentId, payload){
@@ -1082,6 +1097,13 @@ FORMAT DE RÉPONSE
 ## NIVEAU DE VIGILANCE
 [Faible / Modéré / Élevé] — [justification courte]
 
+SCORE KÀDDU
+À la toute fin de ta réponse, sur une ligne séparée, retourne uniquement ce bloc JSON :
+
+KADDU_SCORE:{"score":[0-100],"identite":[0-20],"revenus":[0-20],"documents":[0-20],"coherence":[0-20],"risque_fraude":[0-20],"decision":"pre_validation|verification_humaine|attente|refus","label":"Profil rassurant|Profil à vérifier|Profil à risque"}
+
+Critères : identite (concordance/validité pièces), revenus (cohérence/taux effort), documents (qualité/complétude), coherence (cohérence globale), risque_fraude (20=aucun signal, 0=signaux graves). score=somme des 5. decision: pre_validation si ≥80 / verification_humaine si 50-79 / attente si 30-49 / refus si <30.
+
 RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours laisser la décision au conseiller. Revenus informels et Wave/OM sont valides. Diaspora avec pièces étrangères = traitement neutre.`;
 
     let _afCurrentRow = null;
@@ -1151,6 +1173,25 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       if(row.reasons && row.reasons.length){
         lines.push(`Motifs pénalisants détectés : ${row.reasons.join(", ")}`);
       }
+
+      // ── Métriques de remplissage tunnel ───────────────────
+      const tm = msg.tunnel_metrics;
+      if(tm){
+        lines.push("");
+        lines.push("COMPORTEMENT DE REMPLISSAGE DU TUNNEL");
+        lines.push(`Durée totale : ${tm.duree_totale_sec}s (${Math.round(tm.duree_totale_sec/60)} min)`);
+        if(tm.duree_par_etape){
+          Object.entries(tm.duree_par_etape).forEach(([k,v])=>{
+            lines.push(`  ${k.replace(/_/g,' ')} : ${v}s`);
+          });
+        }
+        lines.push(`Interactions (clics + frappes) : ${tm.nb_interactions||0}`);
+        lines.push(`Retours en arrière entre étapes : ${tm.nb_retours||0}`);
+        if(tm.remplissage_rapide){
+          lines.push(`⚠ SIGNAL : remplissage anormalement rapide (${tm.duree_totale_sec}s · suspicion vitesse ${tm.suspicion_vitesse}/100)`);
+        }
+      }
+
       if(row.raison_depart) lines.push(`Raison du départ déclarée : ${row.raison_depart}`);
       if(row.decision_comment) lines.push(`\nCommentaire interne existant : ${row.decision_comment}`);
       return lines.filter(Boolean).join("\n");
@@ -1204,20 +1245,35 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         }
 
         const data = await resp.json();
-        const text = data.content?.map(c => c.text || "").join("") || "";
+        const rawText = data.content?.map(c => c.text || "").join("") || "";
 
-        // Badge vigilance
+        // Extraire le JSON score Kàddu
+        let scoreData = null;
+        let displayText = rawText;
+        const sm = rawText.match(/KADDU_SCORE:(\{[^}]+\})/);
+        if(sm){ try{ scoreData=JSON.parse(sm[1]); displayText=rawText.replace(/KADDU_SCORE:\{[^}]+\}/,'').trim(); }catch(_){} }
+
+        // Badge vigilance piloté par le score
         const vigEl = document.getElementById("afVigBadge");
-        if(/niveau.*élevé|vigilance.*élevé/i.test(text)){
-          vigEl.textContent = "Vigilance élevée"; vigEl.className = "af-vig af-vig-high";
-        } else if(/niveau.*modér|vigilance.*modér/i.test(text)){
-          vigEl.textContent = "Vigilance modérée"; vigEl.className = "af-vig af-vig-mid";
+        if(scoreData){
+          const s = scoreData.score||0;
+          if(s<50){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vig af-vig-high"; }
+          else if(s<80){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vig af-vig-mid"; }
+          else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vig af-vig-low"; }
         } else {
-          vigEl.textContent = "Vigilance faible"; vigEl.className = "af-vig af-vig-low";
+          if(/niveau.*élevé|vigilance.*élevé/i.test(rawText)){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vig af-vig-high"; }
+          else if(/niveau.*modér|vigilance.*modér/i.test(rawText)){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vig af-vig-mid"; }
+          else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vig af-vig-low"; }
         }
 
-        document.getElementById("afResultBody").innerHTML = renderAfMd(text);
+        renderAfScoreInline(scoreData);
+        document.getElementById("afResultBody").innerHTML = renderAfMd(displayText);
         result.classList.add("visible");
+
+        // ── Persister dans le Passeport Locatif ──────────────
+        if(scoreData && _currentDossier){
+          persistPasseportScore(_currentDossier, scoreData, displayText).catch(()=>{});
+        }
 
       } catch(err){
         alert("Erreur lors de l'analyse :\n" + err.message);
@@ -1225,6 +1281,41 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         btn.disabled = false;
         loader.classList.remove("visible");
       }
+    }
+
+    function renderAfScoreInline(sd){
+      const wrap = document.getElementById('afScoreWrap');
+      if(!sd||!sd.score){ if(wrap) wrap.style.display='none'; return; }
+      if(wrap) wrap.style.display='block';
+      const s = sd.score;
+      const tier = s>=80?'high':s>=50?'mid':'low';
+      const col = tier==='high'?'#77ffbe':tier==='mid'?'var(--or)':'#ff8a8a';
+      const circle = document.getElementById('afScoreCircle');
+      if(circle){ circle.style.borderColor=col; circle.style.background=tier==='high'?'rgba(0,200,117,.08)':tier==='mid'?'rgba(191,150,80,.08)':'rgba(255,107,107,.08)'; }
+      const numEl = document.getElementById('afScoreNum');
+      if(numEl){ numEl.textContent=s; numEl.style.color=col; }
+      const labelEl = document.getElementById('afScoreLabel');
+      if(labelEl){ labelEl.textContent=sd.label||(s>=80?'Profil rassurant':s>=50?'Profil à vérifier':'Profil à risque'); labelEl.style.color=col; }
+      const badgeEl = document.getElementById('afDecisionBadge');
+      if(badgeEl){
+        const dMap={pre_validation:'Pré-validation',verification_humaine:'À vérifier',attente:'En attente',refus:'Refus recommandé'};
+        badgeEl.textContent=dMap[sd.decision]||'À instruire';
+        badgeEl.style.color=col; badgeEl.style.borderColor=col;
+        badgeEl.style.background=tier==='high'?'rgba(0,200,117,.1)':tier==='mid'?'rgba(191,150,80,.1)':'rgba(255,107,107,.1)';
+      }
+      const dims=[{k:'identite',l:'Identité'},{k:'revenus',l:'Revenus'},{k:'documents',l:'Documents'},{k:'coherence',l:'Cohérence'},{k:'risque_fraude',l:'Fraude'}];
+      const barsEl = document.getElementById('afScoreBars');
+      if(barsEl) barsEl.innerHTML = dims.map(d=>{
+        const val=Math.min(sd[d.k]||0,20); const pct=Math.round(val/20*100);
+        const c2=pct>=75?'#77ffbe':pct>=50?'#BF9650':'#ff8a8a';
+        return `<div style="display:flex;align-items:center;gap:6px;font-size:.62rem">
+          <span style="width:60px;color:rgba(248,244,238,.4);flex-shrink:0">${d.l}</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${c2};border-radius:999px"></div>
+          </div>
+          <span style="width:22px;text-align:right;color:rgba(248,244,238,.45)">${val}</span>
+        </div>`;
+      }).join('');
     }
 
     function renderAfMd(text){
@@ -1268,7 +1359,158 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         showSuccess("Synthèse enregistrée dans le commentaire interne.");
       } catch(e){ alert("Erreur : " + e.message); }
     }
-    // ══ DOCUMENTS ADMIN ══════════════════════════════════════
+    // ══ PASSEPORT LOCATIF — PERSISTANCE ══════════════════════
+    async function persistPasseportScore(row, scoreData, synthese){
+      try{
+        const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+        const email = msg.locataires?.[0]?.email || row.email || null;
+        if(!email && !row.locataire_id) return;
+
+        // Lire le passeport existant
+        const q = row.locataire_id
+          ? `locataire_id=eq.${row.locataire_id}`
+          : `locataire_email=eq.${encodeURIComponent(email)}`;
+        const existing = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`,
+          {headers:getAuthHeaders()});
+        const rows = existing.ok ? await existing.json() : [];
+        const current = rows[0] || null;
+
+        // Calculer le nouveau score moyenné
+        const nb = (current?.nb_analyses||0) + 1;
+        const avg = (field) => Math.round(
+          ((current?.[field]||0) * (nb-1) + (scoreData[field]||0)) / nb
+        );
+
+        // Historique (garder les 10 dernières analyses)
+        const hist = JSON.parse(JSON.stringify(current?.historique||[]));
+        hist.unshift({
+          date: new Date().toISOString(),
+          score: scoreData.score,
+          decision: scoreData.decision,
+          label: scoreData.label,
+          dossier_id: row.id,
+          bien: row.bien,
+          synthese_resume: synthese.slice(0,200),
+        });
+        if(hist.length > 10) hist.pop();
+
+        // Calculer points forts et axes d'amélioration
+        const dims = [
+          {key:'identite',label:'Identité & pièces',score:scoreData.identite||0},
+          {key:'revenus',label:'Solvabilité & revenus',score:scoreData.revenus||0},
+          {key:'documents',label:'Qualité documentaire',score:scoreData.documents||0},
+          {key:'coherence',label:'Cohérence du dossier',score:scoreData.coherence||0},
+          {key:'fiabilite',label:'Profil de confiance',score:scoreData.risque_fraude||0},
+        ];
+        const pointsForts = dims.filter(d=>d.score>=16).map(d=>d.label);
+        const axesAmelio = dims.filter(d=>d.score<12).map(d=>({
+          axe: d.label,
+          conseil: getConseil(d.key, d.score)
+        }));
+
+        // Label global
+        const s = scoreData.score;
+        const label = s>=80 ? 'Profil rassurant ✓'
+          : s>=65 ? 'Profil sérieux'
+          : s>=50 ? 'Profil à renforcer'
+          : 'Profil en construction';
+
+        const payload = {
+          locataire_email: email,
+          locataire_id: row.locataire_id || null,
+          score_global: avg('score_global') || scoreData.score,
+          score_identite: avg('score_identite') || scoreData.identite||0,
+          score_revenus: avg('score_revenus') || scoreData.revenus||0,
+          score_documents: avg('score_documents') || scoreData.documents||0,
+          score_coherence: avg('score_coherence') || scoreData.coherence||0,
+          score_fiabilite: avg('score_fiabilite') || scoreData.risque_fraude||0,
+          label,
+          nb_analyses: nb,
+          nb_candidatures: Math.max(current?.nb_candidatures||0, 1),
+          historique: hist,
+          points_forts: pointsForts,
+          axes_amelioration: axesAmelio,
+          updated_at: new Date().toISOString(),
+        };
+
+        // Upsert
+        await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif`, {
+          method: 'POST',
+          headers: getAuthHeaders({'Prefer':'resolution=merge-duplicates,return=minimal'}),
+          body: JSON.stringify(payload)
+        });
+
+        // Afficher le badge passeport dans la fiche
+        renderPasseportBadge(payload);
+
+      } catch(err){ console.warn('[passeport]', err.message); }
+    }
+
+    function getConseil(key, score){
+      const conseils = {
+        identite: 'Vérifiez que la pièce d\'identité est lisible et non expirée.',
+        revenus: 'Des justificatifs de revenus complets renforcent fortement le profil.',
+        documents: 'Déposez des documents de qualité, sans flou ni découpage.',
+        coherence: 'Assurez-vous que toutes les informations sont cohérentes entre elles.',
+        fiabilite: 'Aucun signal d\'alerte détecté — le dossier gagne en confiance.',
+      };
+      return conseils[key] || 'À améliorer.';
+    }
+
+    function renderPasseportBadge(pp){
+      // Insérer ou mettre à jour le badge passeport dans la section vérification
+      const existing = document.getElementById('ppBadgeSection');
+      if(existing) existing.remove();
+      const afSection = document.getElementById('afSection');
+      if(!afSection) return;
+
+      const s = pp.score_global;
+      const tier = s>=80?'high':s>=50?'mid':'low';
+      const col = {high:'#77ffbe',mid:'var(--or)',low:'#ff8a8a'}[tier];
+      const borderCol = {high:'rgba(0,200,117,.3)',mid:'rgba(191,150,80,.3)',low:'rgba(255,107,107,.3)'}[tier];
+
+      const badge = document.createElement('div');
+      badge.id = 'ppBadgeSection';
+      badge.style.cssText = `border:1px solid ${borderCol};border-radius:10px;background:rgba(7,24,43,.5);padding:14px 16px;margin-bottom:14px`;
+      badge.innerHTML = `
+        <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:${col};margin-bottom:10px">🎫 Passeport Locatif — Score persisté</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:52px;height:52px;border-radius:50%;border:2.5px solid ${col};background:${col}14;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:1.1rem;font-weight:700;color:${col};line-height:1">${s}</span>
+            <span style="font-size:.5rem;color:rgba(248,244,238,.3)">/100</span>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:.82rem;font-weight:600;color:${col};margin-bottom:3px">${pp.label}</div>
+            <div style="font-size:.72rem;color:rgba(248,244,238,.4)">${pp.nb_analyses} analyse${pp.nb_analyses>1?'s':''} · Moyenné sur l'historique</div>
+            ${pp.points_forts?.length ? `<div style="font-size:.68rem;color:#77ffbe;margin-top:4px">✓ ${pp.points_forts.slice(0,2).join(' · ')}</div>` : ''}
+          </div>
+        </div>
+        ${pp.axes_amelioration?.length ? `
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(191,150,80,.08)">
+          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.3);margin-bottom:4px">Axes d'amélioration</div>
+          ${pp.axes_amelioration.slice(0,2).map(a=>`<div style="font-size:.72rem;color:rgba(248,244,238,.5);padding:2px 0">• ${a.axe} — ${a.conseil}</div>`).join('')}
+        </div>` : ''}`;
+
+      afSection.insertBefore(badge, afSection.firstChild);
+    }
+
+    // Charger le passeport existant à l'ouverture d'une fiche
+    async function loadPasseportForDossier(row){
+      try{
+        const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+        const email = msg.locataires?.[0]?.email || row.email || null;
+        if(!email && !row.locataire_id) return;
+        const q = row.locataire_id
+          ? `locataire_id=eq.${row.locataire_id}`
+          : `locataire_email=eq.${encodeURIComponent(email)}`;
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`,
+          {headers:getAuthHeaders()});
+        if(!res.ok) return;
+        const rows = await res.json();
+        if(rows[0]) renderPasseportBadge(rows[0]);
+      }catch(_){}
+    }
+    // ══ FIN PASSEPORT LOCATIF ═════════════════════════════════
     function renderDocsAdmin(row){
       const docs = Array.isArray(row.docs_fournis) ? row.docs_fournis : [];
       const section = document.getElementById('docsSection');
@@ -1306,9 +1548,46 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       }).join('');
     }
 
+    // ── PROMPTS D'EXTRACTION PAR TYPE DE DOCUMENT ─────────────
+    const DOC_EXTRACT_PROMPTS = {
+      cni: `Tu analyses une pièce d'identité (CNI, passeport ou titre de séjour) pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict, sans commentaire :
+KADDU_DOC:{"type_document":"[cni|passeport|titre_sejour|autre]","nom":"","prenom":"","date_naissance":"[YYYY-MM-DD ou vide]","numero_piece":"","date_expiration":"[YYYY-MM-DD ou vide]","nationalite":"","valide":[true|false],"anomalies":["liste des anomalies visuelles ou logiques, vide si aucune"]}
+Après le JSON, ajoute une synthèse courte en 2-3 lignes sur la lisibilité et la cohérence du document.`,
+
+      fiches_paie: `Tu analyses un bulletin de salaire pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict :
+KADDU_DOC:{"type_document":"bulletin_salaire","nom_salarie":"","employeur":"","salaire_net":[nombre ou null],"salaire_brut":[nombre ou null],"periode":"[MM/YYYY ou vide]","date_bulletin":"[YYYY-MM-DD ou vide]","anomalies":["incohérences typographiques, montants suspects, mentions manquantes"]}
+Après le JSON, synthèse courte sur la cohérence du document.`,
+
+      releve: `Tu analyses un relevé bancaire ou un historique de transactions (Wave, Orange Money, banque) pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict :
+KADDU_DOC:{"type_document":"releve_bancaire","titulaire":"","banque_ou_service":"","periode_debut":"[YYYY-MM-DD ou vide]","periode_fin":"[YYYY-MM-DD ou vide]","solde_moyen_estime":[nombre ou null],"revenus_reguliers_detectes":[true|false],"anomalies":["mouvements suspects, incohérences"]}
+Après le JSON, synthèse courte sur les flux financiers détectés.`,
+
+      contrat: `Tu analyses un contrat de travail pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict :
+KADDU_DOC:{"type_document":"contrat_travail","nom_salarie":"","employeur":"","type_contrat":"[CDI|CDD|interim|autre]","date_embauche":"[YYYY-MM-DD ou vide]","salaire_contractuel":[nombre ou null],"poste":"","anomalies":["éléments manquants, incohérences, signatures absentes"]}
+Après le JSON, synthèse courte sur la validité du contrat.`,
+
+      default: `Tu analyses un document locatif pour l'agence Kàddu Sénégal.
+Identifie le type de document, extrais les informations clés en JSON strict :
+KADDU_DOC:{"type_document":"[description]","nom":"","date":"[YYYY-MM-DD ou vide]","montant":[nombre ou null],"emetteur":"","anomalies":["incohérences visuelles, données manquantes ou suspectes"]}
+Après le JSON, synthèse courte en 2-3 lignes.`
+    };
+
+    function getDocPrompt(docKey){
+      if(!docKey) return DOC_EXTRACT_PROMPTS.default;
+      const k = docKey.split('_').slice(1).join('_');
+      return DOC_EXTRACT_PROMPTS[k] || DOC_EXTRACT_PROMPTS.default;
+    }
+
     async function analyserDocIA(url, name){
       const apiKey = document.getElementById('afKey')?.value?.trim();
       if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
+
+      // Récupérer le contexte déclaré du dossier pour le cross-check
+      const row = _currentDossier;
 
       // Fetch du document en base64
       let base64Data, mediaType;
@@ -1325,16 +1604,38 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         });
       }catch(e){ alert('Impossible de charger le document : '+e.message); return; }
 
-      // Requête Claude avec le document
+      // Déterminer le prompt selon le type de document
+      const docKey = (row?.docs_fournis||[]).find(d=>d.name===name)?.key || '';
+      const extractPrompt = getDocPrompt(docKey);
+
+      // Construire le contexte déclaré pour le cross-check
+      let crossContext = '';
+      if(row){
+        const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+        const locs = msg.locataires||[];
+        if(locs.length){
+          const l = locs[0];
+          crossContext = `\n\nDONNÉES DÉCLARÉES PAR LE CANDIDAT (pour vérification croisée) :
+- Nom : ${l.nom||'—'} ${l.prenom||''}
+- Date de naissance : ${l.ddn||'—'}
+- Nationalité : ${l.nationalite||'—'}
+- Numéro de pièce déclaré : ${l.id_numero||'—'}
+- Situation professionnelle : ${l.situation||'—'}
+- Revenus déclarés : ${l.revenu ? Number(l.revenu).toLocaleString('fr-FR')+' XOF/mois' : '—'}
+- Employeur déclaré : ${l.societe||'—'}
+Si des données du document diffèrent de ce qui est déclaré, mentionne-le explicitement dans les anomalies.`;
+        }
+      }
+
       const isImage = mediaType.startsWith('image/');
       const content = isImage
         ? [
             {type:'image', source:{type:'base64', media_type:mediaType, data:base64Data}},
-            {type:'text', text:`Analyse ce document locatif (${name}) pour l'agence immobilière Kàddu. Identifie : 1) Le type de document. 2) Les informations clés (nom, montants, dates, employeur). 3) Les incohérences visuelles ou typographiques. 4) Tout signal méritant vérification. Reste factuel et non accusatoire.`}
+            {type:'text', text: extractPrompt + crossContext}
           ]
         : [
             {type:'document', source:{type:'base64', media_type:'application/pdf', data:base64Data}},
-            {type:'text', text:`Analyse ce document locatif (${name}) pour l'agence immobilière Kàddu. Identifie : 1) Le type de document. 2) Les informations clés (nom, montants, dates, employeur). 3) Les incohérences ou données manquantes. 4) Tout signal méritant vérification. Reste factuel et non accusatoire.`}
+            {type:'text', text: extractPrompt + crossContext}
           ];
 
       const vigEl = document.getElementById('afVigBadge');
@@ -1345,8 +1646,6 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       btn.disabled = true;
       loader.classList.add('visible');
       resultWrap.classList.remove('visible');
-
-      // Scroll vers la section analyse
       document.getElementById('afSection')?.scrollIntoView({behavior:'smooth',block:'nearest'});
 
       try{
@@ -1359,15 +1658,68 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         const resp = await fetch('https://api.anthropic.com/v1/messages',{
           method:'POST',
           headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-          body:JSON.stringify({model:modelId, max_tokens:1000, messages:[{role:'user', content}]})
+          body:JSON.stringify({model:modelId, max_tokens:1200, messages:[{role:'user', content}]})
         });
         if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`Erreur API (${resp.status})`);}
         const data = await resp.json();
-        const text = data.content?.map(c=>c.text||'').join('')||'';
+        const rawText = data.content?.map(c=>c.text||'').join('')||'';
 
-        vigEl.textContent='Analyse document';vigEl.className='af-vig af-vig-mid';
-        document.getElementById('afResultBody').innerHTML=renderAfMd(`## Analyse — ${name}\n\n${text}`);
+        // Extraire le JSON structuré du document
+        let docData = null;
+        let displayText = rawText;
+        const dm = rawText.match(/KADDU_DOC:(\{[^}]+\})/s);
+        if(dm){ try{ docData=JSON.parse(dm[1]); displayText=rawText.replace(/KADDU_DOC:\{[^}]+\}/s,'').trim(); }catch(_){} }
+
+        // Construire l'affichage enrichi avec les données extraites
+        let extractedHtml = '';
+        if(docData){
+          const anomalies = Array.isArray(docData.anomalies) ? docData.anomalies.filter(Boolean) : [];
+          const hasAnomaly = anomalies.length > 0;
+          vigEl.textContent = hasAnomaly ? 'Anomalies détectées' : 'Document conforme';
+          vigEl.className = 'af-vig ' + (hasAnomaly ? 'af-vig-high' : 'af-vig-low');
+
+          // Tableau des données extraites
+          const fields = Object.entries(docData)
+            .filter(([k]) => !['type_document','anomalies'].includes(k) && docData[k] !== null && docData[k] !== '' && docData[k] !== undefined);
+
+          const fieldLabels = {
+            nom:'Nom', prenom:'Prénom', nom_salarie:'Nom salarié', titulaire:'Titulaire',
+            date_naissance:'Date naissance', numero_piece:'N° pièce', date_expiration:'Expiration',
+            nationalite:'Nationalité', valide:'Document valide',
+            employeur:'Employeur', salaire_net:'Salaire net (XOF)', salaire_brut:'Salaire brut (XOF)',
+            salaire_contractuel:'Salaire contractuel', periode:'Période', date_bulletin:'Date bulletin',
+            type_contrat:'Type contrat', date_embauche:'Date embauche', poste:'Poste',
+            banque_ou_service:'Banque/Service', periode_debut:'Période début', periode_fin:'Période fin',
+            solde_moyen_estime:'Solde moyen estimé', revenus_reguliers_detectes:'Revenus réguliers',
+            montant:'Montant', emetteur:'Émetteur', date:'Date',
+          };
+
+          if(fields.length){
+            extractedHtml = `<div style="margin-bottom:10px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(191,150,80,.15);border-radius:8px">
+              <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(191,150,80,.6);margin-bottom:8px">📋 Données extraites — ${docData.type_document||'Document'}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px">
+                ${fields.map(([k,v])=>`<div style="font-size:.72rem;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+                  <span style="color:rgba(248,244,238,.35)">${fieldLabels[k]||k} : </span>
+                  <strong style="color:rgba(248,244,238,.85)">${typeof v === 'boolean' ? (v?'✓ Oui':'✗ Non') : (typeof v==='number'?v.toLocaleString('fr-FR'):v)}</strong>
+                </div>`).join('')}
+              </div>
+            </div>`;
+          }
+
+          if(hasAnomaly){
+            extractedHtml += `<div style="margin-bottom:10px;padding:10px 14px;background:rgba(255,107,107,.05);border:1px solid rgba(255,107,107,.2);border-radius:8px">
+              <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#ff8a8a;margin-bottom:6px">⚠ Anomalies détectées</div>
+              ${anomalies.map(a=>`<div style="font-size:.76rem;color:rgba(248,244,238,.65);padding:2px 0">• ${a}</div>`).join('')}
+            </div>`;
+          }
+        } else {
+          vigEl.textContent='Analyse document'; vigEl.className='af-vig af-vig-mid';
+        }
+
+        const finalHtml = extractedHtml + renderAfMd(`## Analyse — ${name}\n\n${displayText}`);
+        document.getElementById('afResultBody').innerHTML = finalHtml;
         resultWrap.classList.add('visible');
+
       }catch(err){
         alert('Erreur : '+err.message);
       }finally{
