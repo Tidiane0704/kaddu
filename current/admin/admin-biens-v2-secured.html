@@ -122,6 +122,41 @@
 
     /* PHOTOS ZONE */
     .photos-zone{border:2px dashed rgba(191,150,80,.22);border-radius:5px;padding:18px;background:rgba(255,255,255,.015)}
+
+    /* ── ANALYSE PHOTOS IA ── */
+    .photo-ia-wrap{margin-top:16px;border:1px solid rgba(191,150,80,.2);border-radius:10px;overflow:hidden}
+    .photo-ia-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(7,24,43,.6);border-bottom:1px solid rgba(191,150,80,.1)}
+    .photo-ia-title{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or)}
+    .photo-ia-btn{padding:8px 16px;background:var(--or);color:#111;border:none;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;transition:.18s;display:inline-flex;align-items:center;gap:6px}
+    .photo-ia-btn:hover{background:#DDB96E}
+    .photo-ia-btn:disabled{opacity:.45;cursor:not-allowed}
+    .photo-ia-key{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(191,150,80,.08)}
+    .photo-ia-key input{flex:1;padding:7px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.18);color:rgba(248,244,238,.8);font-size:.8rem;border-radius:6px;font-family:Arial,sans-serif}
+    .photo-ia-key input:focus{outline:none;border-color:var(--or)}
+    .photo-ia-loader{display:none;align-items:center;gap:10px;padding:12px 16px;font-size:.82rem;color:rgba(248,244,238,.4)}
+    .photo-ia-loader.visible{display:flex}
+    .photo-ia-spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(191,150,80,.2);border-top-color:var(--or);animation:spin .7s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .photo-ia-results{display:none;padding:14px 16px}
+    .photo-ia-results.visible{display:block}
+    .photo-ia-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+    .photo-ia-card{border-radius:8px;overflow:hidden;border:2px solid rgba(191,150,80,.15);position:relative}
+    .photo-ia-card.ok{border-color:rgba(0,200,117,.35)}
+    .photo-ia-card.warn{border-color:rgba(255,179,71,.4)}
+    .photo-ia-card.alert{border-color:rgba(255,107,107,.5)}
+    .photo-ia-card img{width:100%;height:100px;object-fit:cover;display:block}
+    .photo-ia-card-label{padding:6px 8px;font-size:.64rem;line-height:1.4;background:rgba(7,24,43,.9)}
+    .photo-ia-card.ok .photo-ia-card-label{color:#77ffbe}
+    .photo-ia-card.warn .photo-ia-card-label{color:#ffd180}
+    .photo-ia-card.alert .photo-ia-card-label{color:#ff8a8a}
+    .photo-ia-summary{padding:12px 14px;border-radius:8px;font-size:.82rem;line-height:1.7}
+    .photo-ia-summary.ok{background:rgba(0,200,117,.06);border:1px solid rgba(0,200,117,.18);color:rgba(248,244,238,.75)}
+    .photo-ia-summary.warn{background:rgba(255,179,71,.06);border:1px solid rgba(255,179,71,.2);color:rgba(248,244,238,.75)}
+    .photo-ia-summary.alert{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:rgba(248,244,238,.75)}
+    .photo-ia-badge{display:inline-block;font-size:.62rem;padding:3px 9px;border-radius:999px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+    .photo-ia-badge.ok{background:rgba(0,200,117,.1);color:#77ffbe;border:1px solid rgba(0,200,117,.25)}
+    .photo-ia-badge.warn{background:rgba(255,179,71,.1);color:#ffd180;border:1px solid rgba(255,179,71,.25)}
+    .photo-ia-badge.alert{background:rgba(255,107,107,.08);color:#ff8a8a;border:1px solid rgba(255,107,107,.22)}
     .upload-btn-area{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border:1px solid var(--bdr);background:rgba(191,150,80,.06);color:var(--or);cursor:pointer;font-size:12px;font-weight:700;border-radius:4px;width:100%;margin-bottom:12px;transition:.15s;user-select:none}
     .upload-btn-area:hover{background:rgba(191,150,80,.13)}
     #photosFileInput{display:none}
@@ -574,6 +609,26 @@
           <p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.6">
             ⣿ Glissez pour réorganiser · ⭐ Photo principale · 🗑 Supprimer · Ajoutez une légende et un tag à chaque photo
           </p>
+
+          <!-- ── ANALYSE PHOTOS KÀDDU SHIELD ── -->
+          <div class="photo-ia-wrap" id="photoIaWrap" style="display:none">
+            <div class="photo-ia-head">
+              <div class="photo-ia-title">🔍 Analyse des photos — Kàddu Shield</div>
+              <button class="photo-ia-btn" id="photoIaBtn" onclick="lancerAnalysePhotos()">Analyser les photos →</button>
+            </div>
+            <div class="photo-ia-key">
+              <input type="password" id="photoIaKey" placeholder="Clé API Anthropic (sk-ant-…)" />
+              <span style="font-size:.68rem;color:rgba(248,244,238,.3);white-space:nowrap">Session uniquement</span>
+            </div>
+            <div class="photo-ia-loader" id="photoIaLoader">
+              <div class="photo-ia-spinner"></div>
+              <span id="photoIaProgress">Analyse en cours…</span>
+            </div>
+            <div class="photo-ia-results" id="photoIaResults">
+              <div class="photo-ia-grid" id="photoIaGrid"></div>
+              <div class="photo-ia-summary" id="photoIaSummary"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1507,9 +1562,13 @@ document.getElementById("photosFileInput").addEventListener("change",async e=>{
 
 function renderPhotosGrid(){
   const g=document.getElementById("photosGrid");
+  const iaWrap = document.getElementById("photoIaWrap");
   if(!editPhotos.length){
-    g.innerHTML=`<div style="color:var(--muted);font-size:11px;grid-column:1/-1;text-align:center;padding:14px">Aucune photo · cliquez pour en ajouter</div>`;return;
+    g.innerHTML=`<div style="color:var(--muted);font-size:11px;grid-column:1/-1;text-align:center;padding:14px">Aucune photo · cliquez pour en ajouter</div>`;
+    if(iaWrap) iaWrap.style.display='none';
+    return;
   }
+  if(iaWrap) iaWrap.style.display='block';
   g.innerHTML=editPhotos.map((p,i)=>`
     <div class="photo-item ${p.is_main?"is-main":""}" draggable="true" data-idx="${i}">
       <img src="${esc(p.url)}" alt="photo ${i+1}" loading="lazy"/>
@@ -2048,6 +2107,163 @@ function initAuth(){
 }
 
 document.addEventListener("DOMContentLoaded",initAuth);
-</script>
+
+// ══ KÀDDU SHIELD — ANALYSE PHOTOS BIENS ══════════════════════
+const PHOTO_ANALYSIS_PROMPT = `Tu analyses une photo d'annonce immobilière pour l'agence Kàddu (Sénégal).
+
+Évalue les points suivants et retourne un JSON strict sur une seule ligne :
+KADDU_PHOTO:{"statut":"ok|attention|alerte","score":[0-100],"type_detecte":"[interieur|exterieur|facade|communs|autre]","ia_probable":[true|false],"stock_probable":[true|false],"coherence_senegal":[true|false],"anomalies":["liste concise des problèmes détectés, vide si aucun"],"resume":"[1 phrase courte et factuelle]"}
+
+Critères :
+— ia_probable : vrai si l'image semble générée par IA (lumières parfaites, textures irréelles, géométrie suspecte)
+— stock_probable : vrai si l'image ressemble à une photo stock internationale (mobilier générique, style occidental, pas de marqueurs locaux)
+— coherence_senegal : vrai si le style, le mobilier, l'architecture semblent cohérents avec le marché dakarois
+— statut ok si score ≥ 70, attention si 40-69, alerte si < 40
+— anomalies : photo trop sombre, flou excessif, logo watermark visible, image recyclée évidente, incohérence entre les photos du bien
+
+Réponds uniquement avec le JSON KADDU_PHOTO, sans autre texte avant.`;
+
+async function lancerAnalysePhotos(){
+  const apiKey = document.getElementById('photoIaKey').value.trim();
+  if(!apiKey){ toast("Clé API Anthropic requise dans le champ ci-dessus.","warn"); return; }
+  if(!editPhotos.length){ toast("Aucune photo à analyser.","warn"); return; }
+
+  const btn = document.getElementById('photoIaBtn');
+  const loader = document.getElementById('photoIaLoader');
+  const progress = document.getElementById('photoIaProgress');
+  const results = document.getElementById('photoIaResults');
+  const grid = document.getElementById('photoIaGrid');
+  const summary = document.getElementById('photoIaSummary');
+
+  btn.disabled = true;
+  loader.classList.add('visible');
+  results.classList.remove('visible');
+  grid.innerHTML = '';
+  summary.innerHTML = '';
+
+  // Récupérer modèle depuis Supabase config
+  let modelId = 'claude-sonnet-4-5';
+  try{
+    const cfgR = await fetch(`${SB}/rest/v1/config?key=eq.af_model&select=value&limit=1`,{headers:headers()});
+    if(cfgR.ok){const cfg=await cfgR.json();if(cfg?.[0]?.value)modelId=cfg[0].value;}
+  }catch(_){}
+
+  const photoResults = [];
+  const total = editPhotos.length;
+
+  for(let i = 0; i < total; i++){
+    const photo = editPhotos[i];
+    progress.textContent = `Analyse photo ${i+1} / ${total}…`;
+
+    try{
+      // Télécharger la photo en base64
+      const r = await fetch(photo.url);
+      if(!r.ok) throw new Error('Impossible de charger la photo');
+      const blob = await r.blob();
+      const mediaType = blob.type || 'image/jpeg';
+      const base64Data = await new Promise((res,rej)=>{
+        const reader = new FileReader();
+        reader.onload = ()=> res(reader.result.split(',')[1]);
+        reader.onerror = rej;
+        reader.readAsDataURL(blob);
+      });
+
+      // Appel Claude
+      const resp = await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body: JSON.stringify({
+          model: modelId,
+          max_tokens: 400,
+          messages:[{ role:'user', content:[
+            {type:'image', source:{type:'base64', media_type:mediaType, data:base64Data}},
+            {type:'text', text: PHOTO_ANALYSIS_PROMPT}
+          ]}]
+        })
+      });
+
+      if(!resp.ok) throw new Error(`API (${resp.status})`);
+      const data = await resp.json();
+      const rawText = data.content?.map(c=>c.text||'').join('')||'';
+      const pm = rawText.match(/KADDU_PHOTO:(\{[^}]+\})/);
+      let photoData = null;
+      if(pm){ try{ photoData = JSON.parse(pm[1]); }catch(_){} }
+
+      photoResults.push({ photo, photoData, index: i+1 });
+
+    } catch(err){
+      photoResults.push({ photo, photoData: null, error: err.message, index: i+1 });
+    }
+
+    // Petit délai pour éviter rate limit
+    if(i < total-1) await new Promise(r => setTimeout(r, 500));
+  }
+
+  loader.classList.remove('visible');
+  renderPhotoResults(photoResults);
+  btn.disabled = false;
+}
+
+function renderPhotoResults(results){
+  const grid = document.getElementById('photoIaGrid');
+  const summary = document.getElementById('photoIaSummary');
+  const wrap = document.getElementById('photoIaResults');
+
+  let alertCount = 0, warnCount = 0, okCount = 0;
+  const globalAnomalies = [];
+
+  grid.innerHTML = results.map(r => {
+    if(!r.photoData) return `
+      <div class="photo-ia-card warn">
+        <img src="${r.photo.url}" alt="photo ${r.index}">
+        <div class="photo-ia-card-label">Photo ${r.index}<br>Analyse échouée</div>
+      </div>`;
+
+    const pd = r.photoData;
+    const tier = pd.statut||'attention';
+    if(tier==='alerte') alertCount++;
+    else if(tier==='attention') warnCount++;
+    else okCount++;
+
+    const flags = [];
+    if(pd.ia_probable) flags.push('⚠ IA probable');
+    if(pd.stock_probable) flags.push('⚠ Stock');
+    if(!pd.coherence_senegal) flags.push('⚠ Hors contexte');
+    if(pd.anomalies?.length) pd.anomalies.forEach(a => globalAnomalies.push(`Photo ${r.index} : ${a}`));
+
+    return `<div class="photo-ia-card ${tier}">
+      <img src="${r.photo.url}" alt="photo ${r.index}" loading="lazy">
+      <div class="photo-ia-card-label">
+        Photo ${r.index} — ${pd.score||'?'}/100<br>
+        ${flags.length ? flags.join(' · ') : '✓ ' + (pd.resume||'Conforme')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Synthèse globale
+  const total = results.length;
+  const globalTier = alertCount > 0 ? 'alert' : warnCount > 0 ? 'warn' : 'ok';
+  const globalScore = Math.round(results.reduce((acc,r) => acc + (r.photoData?.score||50), 0) / total);
+
+  const badgeLabels = {ok:'Photos conformes', warn:'Points d\'attention', alert:'Anomalies détectées'};
+  const badgeLabel = badgeLabels[globalTier];
+
+  let summaryHtml = `<span class="photo-ia-badge ${globalTier}">${badgeLabel}</span>`;
+  summaryHtml += `<div style="font-size:.8rem;margin-bottom:8px"><strong>${total} photo${total>1?'s':''} analysée${total>1?'s':''}</strong> · Score moyen : ${globalScore}/100 · `;
+  summaryHtml += `${okCount} conforme${okCount>1?'s':''}, ${warnCount} attention, ${alertCount} alerte${alertCount>1?'s':''}</div>`;
+
+  if(globalAnomalies.length){
+    summaryHtml += `<div style="margin-top:8px;font-size:.76rem;line-height:1.8">`;
+    globalAnomalies.forEach(a => { summaryHtml += `<div>• ${a}</div>`; });
+    summaryHtml += `</div>`;
+  } else {
+    summaryHtml += `<div style="font-size:.78rem;color:rgba(248,244,238,.55)">Aucune anomalie majeure détectée sur l'ensemble des photos.</div>`;
+  }
+
+  summary.innerHTML = summaryHtml;
+  summary.className = `photo-ia-summary ${globalTier}`;
+  wrap.classList.add('visible');
+}
+// ══ FIN ANALYSE PHOTOS ═══════════════════════════════════════
 </body>
 </html>
