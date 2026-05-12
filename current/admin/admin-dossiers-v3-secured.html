@@ -187,6 +187,68 @@
     .af-section-att{background:rgba(255,179,71,.03);border:1px solid rgba(255,179,71,.12);padding:8px 12px;margin:6px 0;border-radius:4px}
     .af-section-reco{background:rgba(191,150,80,.05);border:1px solid rgba(191,150,80,.16);padding:8px 12px;margin:6px 0;border-radius:4px}
     .af-result-foot{padding:8px 14px;border-top:1px solid rgba(191,150,80,.08);display:flex;gap:8px;background:rgba(7,14,28,.3)}
+
+    /* ── FEEDBACK SHIELD ── */
+    .af-feedback-wrap{
+      padding:12px 16px;border-top:1px solid rgba(191,150,80,.1);
+      background:rgba(4,12,24,.4);
+    }
+    .af-feedback-label{
+      font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+      color:rgba(248,244,238,.3);margin-bottom:8px;
+    }
+    .af-feedback-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .af-fb-btn{
+      padding:6px 12px;border-radius:6px;font-size:.72rem;font-weight:600;
+      cursor:pointer;font-family:'DM Sans',sans-serif;border:1px solid;
+      transition:.18s;letter-spacing:.04em;
+    }
+    .af-fb-btn.juste{
+      background:rgba(0,200,117,.08);border-color:rgba(0,200,117,.25);color:#77ffbe;
+    }
+    .af-fb-btn.juste:hover,.af-fb-btn.juste.active{
+      background:rgba(0,200,117,.18);border-color:rgba(0,200,117,.5);
+    }
+    .af-fb-btn.partielle{
+      background:rgba(191,150,80,.08);border-color:rgba(191,150,80,.25);color:var(--or);
+    }
+    .af-fb-btn.partielle:hover,.af-fb-btn.partielle.active{
+      background:rgba(191,150,80,.18);border-color:var(--or);
+    }
+    .af-fb-btn.inexacte{
+      background:rgba(255,107,107,.06);border-color:rgba(255,107,107,.22);color:#ff8a8a;
+    }
+    .af-fb-btn.inexacte:hover,.af-fb-btn.inexacte.active{
+      background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.5);
+    }
+    .af-fb-decision{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;display:none}
+    .af-fb-decision.visible{display:flex}
+    .af-fb-dec-btn{
+      padding:4px 10px;border-radius:6px;font-size:.68rem;cursor:pointer;
+      font-family:'DM Sans',sans-serif;border:1px solid rgba(191,150,80,.2);
+      background:rgba(255,255,255,.03);color:rgba(248,244,238,.5);transition:.15s;
+    }
+    .af-fb-dec-btn:hover,.af-fb-dec-btn.active{
+      border-color:var(--or);color:var(--or);background:rgba(191,150,80,.08);
+    }
+    .af-fb-note{
+      width:100%;padding:7px 10px;background:rgba(255,255,255,.03);
+      border:1px solid rgba(191,150,80,.15);color:rgba(248,244,238,.7);
+      font-family:'DM Sans',sans-serif;font-size:.78rem;border-radius:6px;
+      resize:none;min-height:52px;display:none;margin-bottom:8px;
+    }
+    .af-fb-note.visible{display:block}
+    .af-fb-submit{
+      padding:7px 16px;background:var(--or);color:#111;border:none;
+      border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;
+      font-family:'DM Sans',sans-serif;transition:.18s;display:none;
+    }
+    .af-fb-submit.visible{display:inline-block}
+    .af-fb-submit:hover{background:var(--orl)}
+    .af-fb-saved{
+      font-size:.72rem;color:#77ffbe;display:none;align-items:center;gap:6px;
+    }
+    .af-fb-saved.visible{display:flex}
     .af-apikey-hint{font-size:11px;color:rgba(248,244,238,.28);margin-top:8px}
     .af-apikey-row{display:flex;gap:8px;align-items:center;margin-top:8px}
     .af-apikey-input{
@@ -457,6 +519,31 @@
               <div class="af-result-foot">
                 <button class="af-btn-sm" onclick="copyAfResult()">Copier</button>
                 <button class="af-btn-sm" onclick="saveAfComment()">Enregistrer en commentaire</button>
+              </div>
+
+              <!-- ── FEEDBACK KÀDDU SHIELD ── -->
+              <div class="af-feedback-wrap" id="afFeedbackWrap">
+                <div class="af-feedback-label">Cette analyse était-elle pertinente ?</div>
+                <div class="af-feedback-btns">
+                  <button class="af-fb-btn juste" onclick="selectFbVerdict('juste',this)">✓ Juste</button>
+                  <button class="af-fb-btn partielle" onclick="selectFbVerdict('partielle',this)">~ Partiellement juste</button>
+                  <button class="af-fb-btn inexacte" onclick="selectFbVerdict('inexacte',this)">✕ Inexacte</button>
+                </div>
+                <!-- Décision réelle -->
+                <div class="af-fb-decision" id="afFbDecision">
+                  <span style="font-size:.62rem;color:rgba(248,244,238,.3);align-self:center;margin-right:4px">Décision réelle :</span>
+                  <button class="af-fb-dec-btn" onclick="selectFbDecision('accepte',this)">Accepté</button>
+                  <button class="af-fb-dec-btn" onclick="selectFbDecision('refuse',this)">Refusé</button>
+                  <button class="af-fb-dec-btn" onclick="selectFbDecision('complement',this)">Complément demandé</button>
+                  <button class="af-fb-dec-btn" onclick="selectFbDecision('attente',this)">En attente</button>
+                </div>
+                <!-- Note optionnelle -->
+                <textarea class="af-fb-note" id="afFbNote" placeholder="Commentaire optionnel (ce qui était juste ou faux…)"></textarea>
+                <!-- Actions -->
+                <div style="display:flex;align-items:center;gap:10px">
+                  <button class="af-fb-submit" id="afFbSubmit" onclick="submitFeedback()">Enregistrer le feedback →</button>
+                  <div class="af-fb-saved" id="afFbSaved">✓ Feedback enregistré — merci</div>
+                </div>
               </div>
             </div>
           </div>
@@ -1148,6 +1235,104 @@
       clearSession();
       goToLogin();
     }
+
+    // ══ FEEDBACK KÀDDU SHIELD ════════════════════════════════
+    let _fbVerdict = null;
+    let _fbDecision = null;
+    let _fbScoreData = null;
+    let _fbSyntheseText = null;
+
+    function resetFeedback(){
+      _fbVerdict = null;
+      _fbDecision = null;
+      document.querySelectorAll('.af-fb-btn,.af-fb-dec-btn').forEach(b=>b.classList.remove('active'));
+      document.getElementById('afFbDecision').classList.remove('visible');
+      document.getElementById('afFbNote').classList.remove('visible');
+      document.getElementById('afFbNote').value = '';
+      document.getElementById('afFbSubmit').classList.remove('visible');
+      document.getElementById('afFbSaved').classList.remove('visible');
+    }
+
+    function selectFbVerdict(verdict, btn){
+      _fbVerdict = verdict;
+      document.querySelectorAll('.af-fb-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('afFbDecision').classList.add('visible');
+      document.getElementById('afFbNote').classList.add('visible');
+      document.getElementById('afFbSubmit').classList.add('visible');
+      document.getElementById('afFbSaved').classList.remove('visible');
+    }
+
+    function selectFbDecision(decision, btn){
+      _fbDecision = decision;
+      document.querySelectorAll('.af-fb-dec-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    async function submitFeedback(){
+      if(!_fbVerdict){ return; }
+      const row = _currentDossier;
+      const scoreEl = document.getElementById('afScoreNum');
+      const score = scoreEl ? parseInt(scoreEl.textContent)||null : null;
+      const decisionEl = document.getElementById('afDecisionBadge');
+      const vigEl = document.getElementById('afVigBadge');
+      const synthese = document.getElementById('afResultBody')?.innerText || '';
+      const contexte = document.getElementById('afContextText')?.value || '';
+
+      const payload = {
+        dossier_id:       row?.id || null,
+        dossier_nom:      row?.nom || null,
+        bien:             row?.bien || null,
+        score_shield:     score,
+        decision_shield:  decisionEl?.textContent || null,
+        label_shield:     document.getElementById('afScoreLabel')?.textContent || null,
+        vigilance_shield: vigEl?.textContent || null,
+        verdict:          _fbVerdict,
+        decision_reelle:  _fbDecision,
+        commentaire:      document.getElementById('afFbNote')?.value?.trim() || null,
+        synthese_shield:  synthese.slice(0, 2000),
+        contexte_dossier: contexte.slice(0, 1000),
+        conseiller_email: currentSession?.user?.email || null,
+      };
+
+      const btn = document.getElementById('afFbSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Enregistrement…';
+
+      try{
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/af_feedback`, {
+          method: 'POST',
+          headers: { ...getAuthHeaders(), 'Prefer': 'return=minimal' },
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok){
+          const err = await res.json().catch(()=>({}));
+          // Si la table n'existe pas encore, avertir sans bloquer
+          if(err.code === '42P01'){
+            alert('La table af_feedback n\'existe pas encore.\nExécutez le SQL fourni dans Supabase SQL Editor.');
+            return;
+          }
+          throw new Error(err.message || 'Erreur');
+        }
+        document.getElementById('afFbSaved').classList.add('visible');
+        btn.classList.remove('visible');
+      }catch(e){
+        alert('Feedback non enregistré : ' + e.message);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = 'Enregistrer le feedback →';
+      }
+    }
+
+    // Réinitialiser le feedback à chaque nouvelle analyse
+    const __origSetAfResult = typeof setAfResult === 'function' ? setAfResult : null;
+    if(__origSetAfResult){
+      setAfResult = function(text){
+        __origSetAfResult(text);
+        resetFeedback();
+      };
+    }
+    // ══ FIN FEEDBACK ═════════════════════════════════════════
 
     document.addEventListener("DOMContentLoaded", initAuth);
     // ───────────────────────────────────────────────────────────
