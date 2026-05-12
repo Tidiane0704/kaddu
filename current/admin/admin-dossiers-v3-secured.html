@@ -1028,41 +1028,53 @@
       } catch(e){ return null; }
     }
 
-    function clearSession(){ localStorage.removeItem("kaddu_admin_session"); currentSession = null; }
+    const LOGIN_URL = '/admin/';
 
-    function showApp(){ document.getElementById("authOverlay").style.display = "none"; }
+    function clearSession(){
+      localStorage.removeItem("kaddu_admin_session");
+      currentSession = null;
+    }
+
+    function logout(){
+      clearSession();
+      window.location.replace(LOGIN_URL);
+    }
+
+    function showApp(){
+      const overlay = document.getElementById("authOverlay");
+      if(overlay) overlay.style.display = "none";
+    }
+
+    // Vérification périodique de l'expiration de session (toutes les 60s)
+    function startSessionWatcher(){
+      setInterval(()=>{
+        const raw = localStorage.getItem("kaddu_admin_session");
+        if(!raw){ logout(); return; }
+        try{
+          const s = JSON.parse(raw);
+          if(s.expires_at && Date.now() > s.expires_at - 60000){
+            clearSession();
+            window.location.replace(LOGIN_URL);
+          }
+        }catch(_){ logout(); }
+      }, 60000);
+    }
 
     function initAuth(){
       const logoutBtn = document.getElementById("logoutBtn");
-      if(logoutBtn) logoutBtn.addEventListener("click", () => { clearSession(); location.reload(); });
+      if(logoutBtn) logoutBtn.addEventListener("click", logout);
 
       const saved = loadSession();
-      if(saved && saved.access_token){ currentSession = saved; showApp(); init(); return; }
+      if(saved && saved.access_token){
+        currentSession = saved;
+        showApp();
+        startSessionWatcher();
+        init();
+        return;
+      }
 
-      const authBtn = document.getElementById("authBtn");
-      const authError = document.getElementById("authError");
-      const authLoading = document.getElementById("authLoading");
-
-      authBtn.addEventListener("click", async () => {
-        const email = document.getElementById("authEmail").value.trim();
-        const password = document.getElementById("authPassword").value;
-        if(!email || !password){
-          authError.textContent = "Merci de renseigner l'email et le mot de passe.";
-          authError.style.display = "block"; return;
-        }
-        authBtn.disabled = true; authError.style.display = "none"; authLoading.style.display = "block";
-        try {
-          const session = await supabaseSignIn(email, password);
-          currentSession = session; persistSession(session); showApp(); init();
-        } catch(e){
-          authError.textContent = e.message || "Connexion impossible.";
-          authError.style.display = "block";
-        } finally { authBtn.disabled = false; authLoading.style.display = "none"; }
-      });
-
-      [document.getElementById("authEmail"), document.getElementById("authPassword")]
-        .forEach(el => el && el.addEventListener("keydown", e => { if(e.key === "Enter") authBtn.click(); }));
-    }
+      // Pas de session valide → redirection vers la page de connexion
+      window.location.replace(LOGIN_URL);
 
     document.addEventListener("DOMContentLoaded", initAuth);
     // ───────────────────────────────────────────────────────────
