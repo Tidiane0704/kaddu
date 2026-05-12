@@ -566,6 +566,23 @@
       return bien;
     }
 
+
+    function normalizeReasons(value){
+      if(Array.isArray(value)) return value.filter(Boolean).map(String);
+      if(value === null || value === undefined || value === "") return [];
+      if(typeof value === "string"){
+        const trimmed = value.trim();
+        if(!trimmed) return [];
+        try{
+          const parsed = JSON.parse(trimmed);
+          if(Array.isArray(parsed)) return parsed.filter(Boolean).map(String);
+        }catch(_){ }
+        return trimmed.split(/\s*[|;\n]\s*/).filter(Boolean).map(String);
+      }
+      if(typeof value === "object") return Object.values(value).filter(Boolean).map(String);
+      return [String(value)];
+    }
+
     function eventLabel(type){
       const map = {
         dossier_created: "Dossier créé",
@@ -808,7 +825,7 @@
 
       const reasonList = document.getElementById("reasonList");
       reasonList.innerHTML = "";
-      const reasons = Array.isArray(row.reasons) ? row.reasons : [];
+      const reasons = normalizeReasons(row.reasons);
       if (!reasons.length){
         const li = document.createElement("li");
         li.textContent = "Aucun motif pénalisant enregistré.";
@@ -970,16 +987,19 @@
 
     document.getElementById("refreshBtn").addEventListener("click", async () => {
       selectedId = null;
+      document.getElementById("emptyState").style.display = "none";
+      document.getElementById("tbody").innerHTML = "";
       await init();
     });
 
-    document.getElementById("clearFiltersBtn").addEventListener("click", () => {
+    document.getElementById("clearFiltersBtn").addEventListener("click", async () => {
       document.getElementById("searchInput").value = "";
       document.getElementById("bienFilter").value = "";
       document.getElementById("statusFilter").value = "";
       document.getElementById("metierFilter").value = "";
       document.getElementById("finalFilter").value = "";
       document.getElementById("sortFilter").value = "created_desc";
+      selectedId = null;
       applyFilters();
     });
 
@@ -1069,13 +1089,26 @@
     const LOGIN_URL = '/admin/';
 
     function clearSession(){
-      localStorage.removeItem("kaddu_admin_session");
+      try{
+        localStorage.removeItem("kaddu_admin_session");
+        sessionStorage.removeItem("kaddu_admin_session");
+        Object.keys(localStorage).forEach(k => {
+          if(k && (k.includes("supabase") || k.includes("kaddu_admin") || k.includes("sb-"))){
+            localStorage.removeItem(k);
+          }
+        });
+      }catch(_){ }
       currentSession = null;
+    }
+
+    function goToLogin(){
+      const target = LOGIN_URL + (LOGIN_URL.includes("?") ? "&" : "?") + "logout=1&t=" + Date.now();
+      window.location.href = target;
     }
 
     function logout(){
       clearSession();
-      window.location.replace(LOGIN_URL);
+      goToLogin();
     }
 
     function showApp(){
@@ -1092,7 +1125,7 @@
           const s = JSON.parse(raw);
           if(s.expires_at && Date.now() > s.expires_at - 60000){
             clearSession();
-            window.location.replace(LOGIN_URL);
+            goToLogin();
           }
         }catch(_){ logout(); }
       }, 60000);
@@ -1112,7 +1145,8 @@
       }
 
       // Pas de session valide → redirection vers la page de connexion
-      window.location.replace(LOGIN_URL);
+      clearSession();
+      goToLogin();
     }
 
     document.addEventListener("DOMContentLoaded", initAuth);
@@ -1222,8 +1256,9 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       lines.push("SCORING AUTOMATIQUE");
       lines.push(`Score calculé par le système : ${row.score ?? "—"}/100`);
       lines.push(`Statut de risque : ${statusLabel(row.status)}`);
-      if(row.reasons && row.reasons.length){
-        lines.push(`Motifs pénalisants détectés : ${row.reasons.join(", ")}`);
+      const scoringReasons = normalizeReasons(row.reasons);
+      if(scoringReasons.length){
+        lines.push(`Motifs pénalisants détectés : ${scoringReasons.join(", ")}`);
       }
 
       // ── Métriques de remplissage tunnel ───────────────────
