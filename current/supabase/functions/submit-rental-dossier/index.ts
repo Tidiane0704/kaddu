@@ -41,6 +41,13 @@ function asNumber(value: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+function asIsoDateOrNull(value: unknown): string | null {
+  const s = asString(value);
+  // Supabase attend une vraie date YYYY-MM-DD.
+  // Les choix métier du tunnel comme "semaine", "mois", "plus-mois" ne sont pas des dates.
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
+}
+
 function firstLocataire(locataires: unknown): AnyObject {
   return Array.isArray(locataires) && locataires.length > 0 && typeof locataires[0] === "object"
     ? locataires[0] as AnyObject
@@ -187,13 +194,15 @@ serve(async (req: Request) => {
       telephone,
       numero_whatsapp: telephone,
       email,
-      date_naissance: asString(loc0.ddn) || null,
+      date_naissance: asIsoDateOrNull(loc0.ddn),
       nationalite: asString(loc0.nationalite) || null,
-      date_entree: asString(projet.emmenagement) || null,
+      // IMPORTANT : projet.emmenagement vaut souvent "mois", "semaine", etc.
+      // On ne l'insère donc pas dans une colonne DATE. La valeur métier reste dans payload/message.
+      date_entree: asIsoDateOrNull(projet.date_entree || projet.date_entree_souhaitee),
       duree: asString(projet.duree) || null,
       situation: asString(loc0.situation) || null,
       revenu_mensuel: asNumber(loc0.revenu),
-      date_debut_emploi: asString(loc0.date_poste || loc0.date_debut_emploi) || null,
+      date_debut_emploi: asIsoDateOrNull(loc0.date_poste || loc0.date_debut_emploi),
       garant: garants.length > 0 ? "oui" : "non",
       identite_garant: garants.length > 0
         ? garants.map((g: unknown) => {
