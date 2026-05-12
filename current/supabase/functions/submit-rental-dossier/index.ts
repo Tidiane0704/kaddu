@@ -2,12 +2,12 @@
 // Kàddu — Edge Function : submit-rental-dossier
 // Objectif : transformer un brouillon locataire "dossiers"
 //            en candidature officielle "rental_dossiers"
-// Déployer : supabase functions deploy submit-rental-dossier
 //
 // Sécurité :
 // - Le HTML du tunnel n'écrit PAS directement dans rental_dossiers.
 // - Cette fonction vérifie le JWT du locataire.
 // - L'insert admin se fait côté serveur avec SUPABASE_SERVICE_ROLE_KEY.
+// - Les emails sont déclenchés côté serveur après création de la candidature.
 // ═══════════════════════════════════════════════════════════════
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
@@ -78,6 +78,56 @@ function computeRiskLevel(score: number | null): string {
   return "eleve";
 }
 
+async function triggerWorkflowEmail(
+  supabaseUrl: string,
+  serviceRoleKey: string,
+  type: string,
+  to: string,
+  payload: AnyObject,
+): Promise<{ ok: boolean; status?: number; error?: string }> {
+  if (!to) {
+    return { ok: false, error: "Destinataire email manquant." };
+  }
+
+  try {
+    const res = await fetch(`${supabaseUrl}/functions/v1/send-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${serviceRoleKey}`,
+      },
+      body: JSON.stringify({
+        type,
+        to,
+        payload,
+
+        // Champs volontairement dupliqués pour compatibilité avec plusieurs versions
+        // possibles de la fonction send-email déjà existante.
+        email: to,
+        recipient: to,
+        data: payload,
+        dossier: payload,
+      }),
+    });
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      return {
+        ok: false,
+        status: res.status,
+        error: txt || `send-email HTTP ${res.status}`,
+      };
+    }
+
+    return { ok: true, status: res.status };
+  } catch (error) {
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : "Erreur inconnue send-email.",
+    };
+  }
+}
+
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: CORS_HEADERS });
@@ -128,7 +178,7 @@ serve(async (req: Request) => {
     const loc0 = firstLocataire(locataires);
 
     const nomComplet = `${asString(loc0.prenom)} ${asString(loc0.nom)}`.trim();
-    const email = asString(loc0.email).toLowerCase();
+    const email = asString(loc0.email || user.email).toLowerCase();
     const telephone = asString(loc0.tel || loc0.phone_e164 || loc0.phone_local);
     const score = asNumber(body.score);
     const riskLevel = asString(body.risk_level) || computeRiskLevel(score);
@@ -136,6 +186,13 @@ serve(async (req: Request) => {
 
     if (!nomComplet) throw new Error("Nom du locataire principal manquant.");
     if (!email) throw new Error("Email du locataire principal manquant.");
+
+    const bienLabel =
+      asString(body.bien_label) ||
+      asString(projet.bien_nom) ||
+      asString(projet.bien) ||
+      bienId ||
+      "Candidature spontanée";
 
     const snapshot = {
       source: "tunnel_locataire",
@@ -195,7 +252,7 @@ serve(async (req: Request) => {
     // - projet.duree peut valoir "6mois", "6-12mois", etc.
     // Ces valeurs restent dans payload, mais ne sont PAS envoyées dans des colonnes DATE.
     const rentalPayload = {
-      bien: bienId || asString(projet.bien) || "Candidature spontanée",
+      bien: bienLabel,
       nom: nomComplet,
       telephone,
       numero_whatsapp: telephone,
@@ -289,10 +346,59 @@ serve(async (req: Request) => {
       // Table optionnelle : on n'interrompt pas le dépôt.
     }
 
+    // 4) Emails workflow.
+    // On ne bloque jamais la création du dossier si l'email échoue.
+    const emailPayload = {
+      nom: nomComplet,
+      prenom: asString(loc0.prenom),
+      email,
+      telephone,
+      bien: bienLabel,
+      bien_id: bienId || null,
+      dossier_id: finalDossierId,
+      rental_dossier_id: rental?.id,
+      score,
+      risk_level: riskLevel,
+      submitted_at: now,
+      docs_count: docsFournis.length,
+    };
+
+    const emailResults: AnyObject = {};
+
+    // L1 — confirmation locataire : dossier reçu.
+    const locataireMail = await triggerWorkflowEmail(
+      SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      "L1",
+      email,
+      emailPayload,
+    );
+    emailResults.locataire_L1 = locataireMail;
+
+    if (!locataireMail.ok) {
+      console.warn("[submit-rental-dossier] Email locataire L1 non envoyé", locataireMail);
+    }
+
+    // B1 — notification admin / bailleur : nouveau dossier reçu.
+    // Même si ton tunnel l'envoie déjà, cela sécurise le workflow côté serveur.
+    const adminMail = await triggerWorkflowEmail(
+      SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      "B1",
+      "contact@kaddu.net",
+      emailPayload,
+    );
+    emailResults.admin_B1 = adminMail;
+
+    if (!adminMail.ok) {
+      console.warn("[submit-rental-dossier] Email admin B1 non envoyé", adminMail);
+    }
+
     return jsonResponse({
       success: true,
       dossier_id: finalDossierId,
       rental_dossier_id: rental?.id,
+      emails: emailResults,
     });
   } catch (error) {
     console.error("[submit-rental-dossier]", error);
