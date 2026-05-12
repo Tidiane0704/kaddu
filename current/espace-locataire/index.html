@@ -503,7 +503,7 @@ async function loadDossier(s){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
     });
     const data=res.ok?await res.json():[];
-    if(data.length){renderDossier(data[0]);renderAccueilAlert(data[0]);updateCandidatureSteps(data[0]);}
+    if(data.length){renderDossier(data[0]);renderAccueilAlert(data[0]);await updateCandidatureSteps(data[0]);}
     else renderNoDossier();
   }catch{renderNoDossier();}
 }
@@ -656,22 +656,161 @@ function renderNoDossier(){
   renderDocs([]);
 }
 
-function updateCandidatureSteps(d){
-  const step=d.statut==='accepte'?4:d.statut==='en_cours'?2:1;
-  for(let i=1;i<=4;i++){
-    const el=document.getElementById('cand-step'+i);if(!el)continue;
-    const title=el.nextElementSibling;
-    if(i<step){el.className='step-num done';el.textContent='✓';if(title)title.className='step-block-title done-txt';}
-    else if(i===step){el.className='step-num active';el.textContent=i;if(title)title.className='step-block-title active-txt';}
-    else{el.className='step-num pending';el.textContent=i;if(title)title.className='step-block-title pending-txt';}
+async function updateCandidatureSteps(d){
+  const s = getSession();
+  if(!s) return;
+
+  const esc = (v) => String(v ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+
+  function candidatureStatusLabel(cand){
+    const finalStatus = cand.final_status || '';
+    const metier = cand.status_metier || '';
+    const status = cand.status || '';
+
+    if(finalStatus === 'valide' || finalStatus === 'accepte' || status === 'accepte') return 'Acceptée';
+    if(finalStatus === 'refuse' || status === 'refuse') return 'Non retenue';
+    if(metier === 'transmis') return 'Transmise au propriétaire';
+    if(metier === 'visite') return 'Échange / visite';
+    if(metier === 'analyse' || metier === 'a_traiter') return 'En analyse Kàddu';
+    if(status === 'nouveau') return 'Dossier reçu';
+    return 'Dossier reçu';
   }
-  if(d.bien_id&&d.statut!=='en_attente'){
-    const html=`<div style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px">
-      <div style="font-size:1.6rem">🏠</div>
-      <div style="flex:1"><div style="font-weight:500;margin-bottom:2px">Candidature en cours</div><div style="font-size:.76rem;color:var(--muted)">Déposée le ${new Date(d.created_at).toLocaleDateString('fr-FR')}</div></div>
-      <span class="badge badge-${d.statut==='accepte'?'green':'blue'}">${d.statut.replace('_',' ')}</span></div>`;
-    document.getElementById('candidatures-list').innerHTML=html;
-    document.getElementById('accueil-candidatures').innerHTML=html;
+
+  function candidatureStep(cand){
+    const finalStatus = cand.final_status || '';
+    const metier = cand.status_metier || '';
+    const status = cand.status || '';
+
+    if(finalStatus === 'valide' || finalStatus === 'accepte' || status === 'accepte') return 5;
+    if(finalStatus === 'refuse' || status === 'refuse') return 5;
+    if(metier === 'visite') return 4;
+    if(metier === 'transmis') return 3;
+    if(metier === 'analyse') return 2;
+    return 1;
+  }
+
+  function renderEmptyCandidatures(){
+    document.getElementById('candidatures-list').innerHTML =
+      `<div class="alert-banner info">
+        ℹ️ Vous n'avez pas encore de candidature active.
+      </div>`;
+
+    document.getElementById('accueil-candidatures').innerHTML =
+      `<div class="alert-banner warn">
+        ⚠️ Vous n'avez pas de candidature en cours.
+        <a href="/biens/">Pour débuter votre recherche, cliquez ici !</a>
+      </div>`;
+  }
+
+  try{
+    const queries = [];
+
+    if(s.user?.email){
+      queries.push(`email=eq.${encodeURIComponent(s.user.email)}`);
+    }
+
+    if(d?.id){
+      queries.push(`payload->>dossier_id=eq.${encodeURIComponent(d.id)}`);
+    }
+
+    let rows = [];
+
+    for(const q of queries){
+      const res = await fetch(
+        `${SB_URL}/rest/v1/rental_dossiers?${q}&select=*&order=created_at.desc&limit=5`,
+        {
+          headers:{
+            'apikey': SB_KEY,
+            'Authorization':'Bearer '+s.access_token
+          }
+        }
+      );
+
+      if(res.ok){
+        rows = await res.json();
+        if(rows.length) break;
+      }else{
+        console.warn('RENTAL_DOSSIERS_READ_FAILED', res.status, await res.text().catch(()=>'')); 
+      }
+    }
+
+    if(!rows.length){
+      renderEmptyCandidatures();
+      return;
+    }
+
+    const latest = rows[0];
+    const currentStep = candidatureStep(latest);
+    const label = candidatureStatusLabel(latest);
+
+    for(let i=1;i<=4;i++){
+      const el=document.getElementById('cand-step'+i);
+      if(!el) continue;
+
+      const title=el.nextElementSibling;
+
+      if(i<currentStep){
+        el.className='step-num done';
+        el.textContent='✓';
+        if(title) title.className='step-block-title done-txt';
+      }
+      else if(i===currentStep){
+        el.className='step-num active';
+        el.textContent=i;
+        if(title) title.className='step-block-title active-txt';
+      }
+      else{
+        el.className='step-num pending';
+        el.textContent=i;
+        if(title) title.className='step-block-title pending-txt';
+      }
+    }
+
+    const cards = rows.map(cand => {
+      const date = cand.created_at
+        ? new Date(cand.created_at).toLocaleDateString('fr-FR')
+        : 'date non disponible';
+
+      const badgeClass =
+        (cand.final_status === 'valide' || cand.final_status === 'accepte' || cand.status === 'accepte')
+          ? 'green'
+          : 'blue';
+
+      return `
+        <div style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(11,32,57,.6);border:1px solid var(--bdr);border-radius:10px;margin-bottom:10px">
+          <div style="font-size:1.6rem">🏠</div>
+
+          <div style="flex:1">
+            <div style="font-weight:500;margin-bottom:2px">
+              ${esc(cand.bien || 'Candidature locative')}
+            </div>
+
+            <div style="font-size:.76rem;color:var(--muted)">
+              Dossier transmis le ${esc(date)}
+            </div>
+          </div>
+
+          <span class="badge badge-${badgeClass}">
+            ${esc(candidatureStatusLabel(cand))}
+          </span>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('candidatures-list').innerHTML = cards;
+    document.getElementById('accueil-candidatures').innerHTML = cards;
+
+    const tlStatus = document.getElementById('timeline-current-status');
+    if(tlStatus) tlStatus.textContent = label;
+
+  }catch(err){
+    console.error('LOAD_RENTAL_DOSSIERS_FAILED', err);
+    renderEmptyCandidatures();
   }
 }
 
