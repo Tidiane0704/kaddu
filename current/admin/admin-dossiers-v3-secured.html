@@ -925,6 +925,7 @@
     }
 
     async function init(){
+      setupListeners();
       try{
         allRows = await fetchDossiers();
         applyFilters();
@@ -934,6 +935,11 @@
         document.getElementById("emptyState").textContent = "Erreur de chargement : " + e.message;
       }
     }
+
+    let _listenersSetUp = false;
+    function setupListeners(){
+      if(_listenersSetUp) return;
+      _listenersSetUp = true;
 
     document.getElementById("searchInput").addEventListener("input", applyFilters);
     document.getElementById("bienFilter").addEventListener("change", applyFilters);
@@ -984,6 +990,8 @@
     document.getElementById("btnRented").addEventListener("click", async () => {
       try { await markAsRented(); } catch(e){ alert(e.message); }
     });
+
+    }
 
     // ── SUPABASE AUTH ──────────────────────────────────────────
     let currentSession = null;
