@@ -1791,86 +1791,23 @@ const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
 const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
-function clearKadduSession(){
-  try{
-    sessionStorage.removeItem('kaddu_jwt');
-    localStorage.removeItem('kaddu_jwt');
-  }catch(_){ }
-}
-
 function getSession(){
   try{
     const r=sessionStorage.getItem('kaddu_jwt') || localStorage.getItem('kaddu_jwt');
     if(!r)return null;
     const s=JSON.parse(r);
-    if(!s || !s.access_token || !s.user?.id){
-      clearKadduSession();
-      return null;
-    }
-    if(s.expires && Date.now()>Number(s.expires)){
-      window.__kadduSessionExpired = true;
-      clearKadduSession();
+    if(Date.now()>s.expires){
+      sessionStorage.removeItem('kaddu_jwt');
+      localStorage.removeItem('kaddu_jwt');
       return null;
     }
     sessionStorage.setItem('kaddu_jwt', JSON.stringify(s));
     localStorage.setItem('kaddu_jwt', JSON.stringify(s));
     return s;
-  }catch{
-    clearKadduSession();
-    return null;
-  }
+  }catch{return null;}
 }
 
-function getTenantLoginUrl(reason='session_expired'){
-  const current = window.location.pathname + window.location.search + window.location.hash;
-  return `/auth.html?mode=login&role=locataire&reason=${encodeURIComponent(reason)}&redirect=${encodeURIComponent(current)}`;
-}
-
-function redirectToTenantLogin(reason='session_expired', message){
-  try{
-    if(typeof saveDraft === 'function') saveDraft();
-    localStorage.setItem('kaddu_redirect_after_login', window.location.pathname + window.location.search + window.location.hash);
-  }catch(_){ }
-
-  const msg = message || 'Votre session a expiré pour des raisons de sécurité. Reconnectez-vous pour reprendre votre dossier là où vous l’avez laissé.';
-  if(typeof showAlert === 'function'){
-    showAlert(msg, 'error');
-    setTimeout(()=>{ window.location.href = getTenantLoginUrl(reason); }, 900);
-  }else{
-    alert(msg);
-    window.location.href = getTenantLoginUrl(reason);
-  }
-}
-
-function requireTenantSession(options={}){
-  const s = getSession();
-  if(s && s.role === 'locataire' && s.access_token && s.user?.id) return s;
-
-  const shouldRedirect = options.redirect !== false;
-  if(shouldRedirect){
-    redirectToTenantLogin(
-      options.reason || (window.__kadduSessionExpired ? 'session_expired' : 'login_required'),
-      options.message
-    );
-  }
-  return null;
-}
-
-function startSessionWatchdog(){
-  setInterval(()=>{
-    // Ne pas rediriger un nouveau visiteur qui n’a pas encore créé son espace.
-    const hadSession = !!(sessionStorage.getItem('kaddu_jwt') || localStorage.getItem('kaddu_jwt'));
-    const s = getSession();
-    if(hadSession && !s && window.__kadduSessionExpired){
-      redirectToTenantLogin('session_expired');
-    }
-  }, 30000);
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  initSmartFields();
-  startSessionWatchdog();
-});
+window.addEventListener('DOMContentLoaded', initSmartFields);
 
 // ── INIT ─────────────────────────────────────────────────────
 const params = new URLSearchParams(location.search);
@@ -2175,7 +2112,7 @@ let activeDossierId = resumeDossierId || null;
 let remoteDraftTimer = null;
 let isRestoringRemoteDraft = false;
 
-function getActiveSession(){ return getSession(); }
+function getActiveSession(){ return getSession() || session; }
 function rememberActiveDossier(id){
   if(!id) return;
   activeDossierId = id;
@@ -2804,11 +2741,10 @@ async function handleDocUpload(event, key, prenomLoc){
     const ext = file.name.split('.').pop();
 
     // Upload sécurisé : l'utilisateur doit être connecté à son espace locataire.
-    const uploadSession = requireTenantSession({
-      reason:'session_expired',
-      message:'Votre session locataire a expiré. Reconnectez-vous pour continuer le dépôt de vos documents.'
-    });
-    if(!uploadSession) return;
+    const uploadSession = (typeof getActiveSession === 'function' ? getActiveSession() : (getSession() || session));
+    if(!uploadSession || !uploadSession.access_token || !uploadSession.user?.id){
+      throw new Error('SESSION_LOCATAIRE_ABSENTE');
+    }
 
     // Le dossier brouillon doit exister avant de stocker un document.
     // Cela permet un chemin compatible avec les policies Supabase : dossiers/{dossier_id}/...
@@ -3200,27 +3136,49 @@ function buildRecap(){
 async function submitDossier(btn){
   clearAlert();
 
-  const submitBtn = btn || document.getElementById('final-submit-btn');
   const spinner = document.getElementById('spinner-submit');
-
-  if(submitBtn) submitBtn.disabled = true;
-  if(spinner) spinner.style.display = 'block';
+  const label = btn?.querySelector('span');
+  const originalLabel = label ? label.textContent : 'Envoyer ma candidature';
 
   try{
-    const activeSession = requireTenantSession({
-      reason:'session_expired',
-      message:'Votre session locataire a expiré. Reconnectez-vous pour envoyer votre dossier.'
-    });
-    if(!activeSession) return;
+    if(btn) btn.disabled = true;
+    if(spinner) spinner.style.display = 'block';
+    if(label) label.textContent = 'Envoi en cours…';
 
-    if(!locataires.length){
-      throw new Error('Ajoutez au moins un locataire avant d’envoyer le dossier.');
+    const activeSession = getSession() || session;
+
+    if(!activeSession || !activeSession.access_token || !activeSession.user?.id){
+      throw new Error("Session locataire absente. Merci de vous reconnecter à votre espace locataire.");
     }
 
-    const loc0 = locataires[0] || {};
-    if(!loc0.email){
-      throw new Error('Email du locataire principal manquant.');
+    if(!locataires || !locataires.length){
+      throw new Error("Aucun locataire renseigné. Merci d’ajouter au moins un locataire avant l’envoi.");
     }
+
+    const missingDocs = checkRequiredDocs();
+    if(missingDocs.length){
+      throw new Error('Documents obligatoires manquants : ' + missingDocs.map(m => m.label).join(', '));
+    }
+
+    // S'assurer que le brouillon existe bien dans la table dossiers avant création de la candidature officielle.
+    if(!activeDossierId && typeof saveRemoteDraft === 'function'){
+      await saveRemoteDraft(5);
+    }
+
+    if(!activeDossierId){
+      throw new Error("Le brouillon du dossier n’a pas encore été créé. Rechargez la page puis réessayez.");
+    }
+
+    const scoreData = typeof dynamicScore === 'function'
+      ? dynamicScore()
+      : { score: 0 };
+
+    const riskLevel =
+      scoreData.score >= 80
+        ? 'faible'
+        : scoreData.score >= 55
+          ? 'modere'
+          : 'eleve';
 
     const projet = {
       composition: compoType,
@@ -3228,86 +3186,98 @@ async function submitDossier(btn){
       emmenagement: choices.emmenagement,
       duree: choices.duree,
       ville_precedente: document.getElementById('ville-precedente')?.value || '',
-      bailleur_precedent: document.getElementById('bailleur-precedent')?.value || '',
+      bailleur_precedent: document.getElementById('bailleur-precedent')?.value || ''
     };
 
-    const scoreData = typeof dynamicScore === 'function'
-      ? dynamicScore()
-      : { score: null };
-
-    const riskLevel = scoreData.score === null
-      ? 'non_calcule'
-      : scoreData.score >= 80
-        ? 'faible'
-        : scoreData.score >= 55
-          ? 'moyen'
-          : 'eleve';
-
     const payload = {
-      dossier_id: activeDossierId || null,
+      dossier_id: activeDossierId,
       bien_id: bienId || null,
-      projet,
       locataires,
       garants,
       docs_fournis: getDocsPayload(),
       no_garant: noGarant,
       score: scoreData.score,
       risk_level: riskLevel,
+      projet
     };
 
-    const res = await fetch(EDGE_URL + '/submit-rental-dossier', {
+    const res = await fetch(`${EDGE_URL}/submit-rental-dossier`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + activeSession.access_token,
+        'Authorization': 'Bearer ' + activeSession.access_token
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     });
 
     const data = await res.json().catch(() => ({}));
 
     if(!res.ok || !data.success){
-      throw new Error(data.error || 'Erreur lors de la soumission du dossier.');
+      throw new Error(data.error || "Erreur lors de l’envoi de la candidature.");
     }
 
-    if(data.dossier_id){
-      rememberActiveDossier(data.dossier_id);
-    }
+    console.log('DOSSIER_OFFICIEL_CREE', data);
 
-    // Nettoyer le brouillon local uniquement après succès serveur.
+    // Nettoyage du brouillon local : la candidature officielle existe désormais dans rental_dossiers.
     try{
       localStorage.removeItem(DRAFT_KEY);
-    }catch(_){ }
+      sessionStorage.setItem('kaddu_last_rental_dossier_id', data.rental_dossier_id || '');
+    }catch(_){}
+
+    // Notifications non bloquantes : si l’email échoue, le dossier reste créé en admin.
+    const loc0 = locataires[0] || {};
+    const bienTitre =
+      document.getElementById('bien-title')?.textContent ||
+      document.getElementById('carousel-meta')?.querySelector('strong')?.textContent ||
+      'Votre logement';
+    const bienAdresse =
+      document.getElementById('bien-ville')?.textContent ||
+      '';
+
+    if(loc0.email && typeof sendEmail === 'function'){
+      sendEmail('L1', {
+        to: loc0.email,
+        prenom: loc0.prenom || 'Locataire',
+        bien_titre: bienTitre,
+        bien_adresse: bienAdresse,
+        has_docs: String((getDocsPayload() || []).length > 0),
+        dossier_url: 'https://kaddu.net/espace-locataire/'
+      }).catch(e => console.warn('MAIL_LOCATAIRE_FAILED', e));
+    }
+
+    // Notification interne Kàddu à contact@kaddu.net.
+    // Elle utilise le template B1 existant “nouveau dossier reçu”.
+    if(typeof sendEmail === 'function'){
+      sendEmail('B1', {
+        to: 'contact@kaddu.net',
+        prenom_bailleur: 'Équipe Kàddu',
+        bien_titre: bienTitre,
+        bien_adresse: bienAdresse,
+        locataire_nom: `${loc0.prenom || ''} ${loc0.nom || ''}`.trim(),
+        locataire_situation: loc0.situation || '—',
+        locataire_revenu: String(loc0.revenu || 0),
+        nb_garants: String(garants.length),
+        composition: compoType || '—',
+        espace_url: 'https://kaddu.net/admin/'
+      }).catch(e => console.warn('MAIL_ADMIN_FAILED', e));
+    }
+
+    if(bienId && typeof notifyBailleur === 'function'){
+      notifyBailleur(bienId, bienTitre, bienAdresse, loc0).catch(e => console.warn('MAIL_BAILLEUR_FAILED', e));
+    }
 
     document.getElementById('main-wrap').style.display = 'none';
     document.getElementById('success-page').style.display = 'block';
-    window.scrollTo({top:0,behavior:'smooth'});
-
-    // ── NOTIFICATIONS EMAIL ──────────────────────────────
-    const bienTitre = document.getElementById('bien-title')?.textContent || 'Votre logement';
-    const bienAdresse = document.getElementById('bien-ville')?.textContent || '';
-
-    if(loc0.email){
-      sendEmail('L1', {
-        to:           loc0.email,
-        prenom:       loc0.prenom || 'Locataire',
-        bien_titre:   bienTitre,
-        bien_adresse: bienAdresse,
-        has_docs:     String(getDocsPayload().length > 0),
-        dossier_url:  'https://kaddu.net/espace-locataire/'
-      }).catch(console.error);
-    }
-
-    if(bienId){
-      notifyBailleur(bienId, bienTitre, bienAdresse, loc0).catch(console.error);
-    }
+    window.scrollTo({top:0, behavior:'smooth'});
 
   }catch(e){
-    console.error('[submitDossier]', e);
-    showAlert(e.message || 'Erreur lors de la soumission du dossier.','error');
-    if(submitBtn) submitBtn.disabled = false;
+    console.error('SUBMIT_DOSSIER_ERROR', e);
+    showAlert(e.message || "Impossible d’envoyer votre candidature.", 'error');
+    if(btn) btn.disabled = false;
+  }finally{
     if(spinner) spinner.style.display = 'none';
+    if(label) label.textContent = originalLabel;
   }
 }
 
@@ -3339,7 +3309,7 @@ async function notifyBailleur(bienId, bienTitre, bienAdresse, loc){
     // Récupérer email + prenom du propriétaire
     const res2 = await fetch(
       `${SB_URL}/rest/v1/profils?id=eq.${bien.proprietaire_id}&select=email,prenom`,
-      {headers:{'apikey':SB_KEY, 'Authorization': getSession() ? 'Bearer '+getSession().access_token : 'Bearer '+SB_KEY}}
+      {headers:{'apikey':SB_KEY, 'Authorization': session ? 'Bearer '+session.access_token : 'Bearer '+SB_KEY}}
     );
     if(!res2.ok) return;
     const profils = await res2.json();
