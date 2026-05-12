@@ -37,19 +37,24 @@ function asString(value: unknown): string {
 }
 
 function asNumber(value: unknown): number | null {
+  if (value === null || value === undefined || value === "") return null;
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
 }
 
 function asIsoDateOrNull(value: unknown): string | null {
   const s = asString(value);
-  // Supabase attend une vraie date YYYY-MM-DD.
-  // Les choix métier du tunnel comme "semaine", "mois", "plus-mois" ne sont pas des dates.
+  // PostgreSQL DATE attend YYYY-MM-DD.
+  // Les valeurs métier du tunnel comme "semaine", "mois", "plus-mois", "6mois"
+  // ne doivent jamais être insérées dans une colonne DATE.
   return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
 }
 
 function firstLocataire(locataires: unknown): AnyObject {
-  return Array.isArray(locataires) && locataires.length > 0 && typeof locataires[0] === "object"
+  return Array.isArray(locataires) &&
+    locataires.length > 0 &&
+    typeof locataires[0] === "object" &&
+    locataires[0] !== null
     ? locataires[0] as AnyObject
     : {};
 }
@@ -61,7 +66,6 @@ function computeOccupants(projet: AnyObject, locataires: unknown): number | null
   const coloc = asNumber(counts.coloc) || 0;
 
   if (adultes || enfants || coloc) return adultes + enfants + coloc;
-
   if (Array.isArray(locataires) && locataires.length > 0) return locataires.length;
 
   return null;
@@ -105,8 +109,8 @@ serve(async (req: Request) => {
       },
     });
 
-    // Vérification du token locataire transmis par le tunnel.
-    const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(jwt);
+    const { data: userData, error: userError } =
+      await supabaseAdmin.auth.getUser(jwt);
 
     if (userError || !userData.user) {
       throw new Error("Utilisateur non authentifié.");
@@ -128,11 +132,10 @@ serve(async (req: Request) => {
     const telephone = asString(loc0.tel || loc0.phone_e164 || loc0.phone_local);
     const score = asNumber(body.score);
     const riskLevel = asString(body.risk_level) || computeRiskLevel(score);
+    const now = new Date().toISOString();
 
     if (!nomComplet) throw new Error("Nom du locataire principal manquant.");
     if (!email) throw new Error("Email du locataire principal manquant.");
-
-    const now = new Date().toISOString();
 
     const snapshot = {
       source: "tunnel_locataire",
@@ -148,8 +151,7 @@ serve(async (req: Request) => {
       submitted_at: now,
     };
 
-    // 1) Mettre à jour le brouillon / passeport locatif dans "dossiers".
-    // Si dossierId est absent, on crée quand même un brouillon finalisé.
+    // 1) Mise à jour du brouillon / Passeport Locatif dans "dossiers".
     let finalDossierId = dossierId || null;
 
     const draftPayload = {
@@ -186,23 +188,35 @@ serve(async (req: Request) => {
       finalDossierId = createdDraft?.id ?? null;
     }
 
-    // 2) Créer la candidature officielle côté admin dans "rental_dossiers".
-    // Mapping volontairement limité aux colonnes constatées dans ta table rental_dossiers.
+    // 2) Création de la candidature officielle dans "rental_dossiers".
+    //
+    // IMPORTANT :
+    // - projet.emmenagement peut valoir "mois", "semaine", "plus-mois".
+    // - projet.duree peut valoir "6mois", "6-12mois", etc.
+    // Ces valeurs restent dans payload, mais ne sont PAS envoyées dans des colonnes DATE.
     const rentalPayload = {
       bien: bienId || asString(projet.bien) || "Candidature spontanée",
       nom: nomComplet,
       telephone,
       numero_whatsapp: telephone,
       email,
+
       date_naissance: asIsoDateOrNull(loc0.ddn),
       nationalite: asString(loc0.nationalite) || null,
-      // IMPORTANT : projet.emmenagement vaut souvent "mois", "semaine", etc.
-      // On ne l'insère donc pas dans une colonne DATE. La valeur métier reste dans payload/message.
-      date_entree: asIsoDateOrNull(projet.date_entree || projet.date_entree_souhaitee),
-      duree: asString(projet.duree) || null,
+
+      // Ne jamais mettre "mois" ici.
+      date_entree: asIsoDateOrNull(
+        projet.date_entree || projet.date_entree_souhaitee || projet.emmenagement_date
+      ),
+
+      // Sécurité : la durée métier reste dans payload.projet.duree.
+      // On évite ainsi toute erreur si la colonne "duree" est typée date côté Supabase.
+      duree: null,
+
       situation: asString(loc0.situation) || null,
       revenu_mensuel: asNumber(loc0.revenu),
       date_debut_emploi: asIsoDateOrNull(loc0.date_poste || loc0.date_debut_emploi),
+
       garant: garants.length > 0 ? "oui" : "non",
       identite_garant: garants.length > 0
         ? garants.map((g: unknown) => {
@@ -210,18 +224,21 @@ serve(async (req: Request) => {
             return `${asString(gg.prenom)} ${asString(gg.nom)}`.trim();
           }).filter(Boolean).join(", ")
         : null,
+
       employeur: asString(loc0.societe) || null,
       pays_residence: asString(loc0.pays_residence) || null,
       logement_actuel: asString(projet.ville_precedente) || null,
       raison_depart: asString(projet.raison_depart) || null,
       nb_occupants: computeOccupants(projet, locataires),
+
       id_type: asString(loc0.id_type) || null,
       id_number: asString(loc0.id_numero) || null,
       bailleur_nom: asString(projet.bailleur_precedent) || null,
+
       transmission: "tunnel_locataire",
       commentaire: "Candidature créée automatiquement depuis le tunnel locataire Kàddu.",
+
       score,
-      status: "nouveau",
       ratio: null,
       flags: JSON.stringify([
         `risk_level:${riskLevel}`,
@@ -234,32 +251,18 @@ serve(async (req: Request) => {
         documents_count: docsFournis.length,
         has_garant: garants.length > 0,
       }),
+
       otp_verified: false,
+
       payload: JSON.stringify({
         ...snapshot,
         dossier_id: finalDossierId,
       }),
+
       status: "nouveau",
-ratio: null,
-flags: JSON.stringify([
-  `risk_level:${riskLevel}`,
-  `documents:${docsFournis.length}`,
-  garants.length ? "garant:oui" : "garant:non",
-]),
-reasons: JSON.stringify({
-  risk_level: riskLevel,
-  score,
-  documents_count: docsFournis.length,
-  has_garant: garants.length > 0,
-}),
-otp_verified: false,
-payload: JSON.stringify({
-  ...snapshot,
-  dossier_id: finalDossierId,
-}),
-status_metier: "a_traiter",
-final_status: "en_attente",
-updated_at: now,
+      status_metier: "a_traiter",
+      final_status: "en_attente",
+      updated_at: now,
     };
 
     const { data: rental, error: rentalError } = await supabaseAdmin
@@ -270,8 +273,7 @@ updated_at: now,
 
     if (rentalError) throw rentalError;
 
-    // 3) Optionnel : journaliser l'événement si la table existe.
-    // Si elle n'existe pas, on ignore silencieusement.
+    // 3) Journalisation optionnelle.
     try {
       await supabaseAdmin.from("dossier_events").insert({
         dossier_id: finalDossierId,
@@ -284,7 +286,7 @@ updated_at: now,
         created_at: now,
       });
     } catch (_ignored) {
-      // Table optionnelle.
+      // Table optionnelle : on n'interrompt pas le dépôt.
     }
 
     return jsonResponse({
@@ -294,9 +296,12 @@ updated_at: now,
     });
   } catch (error) {
     console.error("[submit-rental-dossier]", error);
+
     return jsonResponse({
       success: false,
-      error: error instanceof Error ? error.message : "Erreur inconnue lors de la soumission.",
+      error: error instanceof Error
+        ? error.message
+        : "Erreur inconnue lors de la soumission.",
     }, 400);
   }
 });
