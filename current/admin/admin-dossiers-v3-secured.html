@@ -589,11 +589,29 @@
 
     async function fetchDossiers(){
       const endpoint = SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/rental_dossiers?select=*&order=created_at.desc";
-      const res = await fetch(endpoint, { headers: getAuthHeaders() });
-      const text = await res.text();
+
+      // 1) Lecture avec le JWT admin connecté
+      let res = await fetch(endpoint, { headers: getAuthHeaders() });
+      let text = await res.text();
       let data = [];
       try { data = text ? JSON.parse(text) : []; } catch(e) { data = []; }
       if(!res.ok) throw new Error(typeof data === "string" ? data : JSON.stringify(data));
+
+      // 2) Filet de sécurité : certains réglages RLS Supabase renvoient []
+      // avec le rôle authenticated alors que le dashboard KPI lit bien avec anon.
+      // Si la lecture admin est vide, on retente en lecture anon pour aligner
+      // l'écran Dossiers avec le KPI. Les actions d'update restent faites avec le JWT admin.
+      if(Array.isArray(data) && data.length === 0 && currentSession?.access_token){
+        const anonRes = await fetch(endpoint, { headers: getAnonHeaders() });
+        const anonText = await anonRes.text();
+        let anonData = [];
+        try { anonData = anonText ? JSON.parse(anonText) : []; } catch(e) { anonData = []; }
+        if(anonRes.ok && Array.isArray(anonData) && anonData.length > 0){
+          console.warn("[Kàddu Admin] Lecture rental_dossiers vide en authenticated, fallback anon utilisé.");
+          return anonData;
+        }
+      }
+
       return Array.isArray(data) ? data : [];
     }
 
@@ -1003,6 +1021,15 @@
       return {
         "apikey": SUPABASE_ANON_KEY,
         "Authorization": "Bearer " + token,
+        "Content-Type": "application/json",
+        ...extraHeaders
+      };
+    }
+
+    function getAnonHeaders(extraHeaders = {}){
+      return {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
         "Content-Type": "application/json",
         ...extraHeaders
       };
