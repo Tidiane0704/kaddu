@@ -1118,6 +1118,7 @@
     .enroll-confirm-actions.visible{display:flex}
 
   </style>
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
@@ -1782,12 +1783,12 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
 
 <script>
-const SB_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co';
-const SB_KEY = 'sb_publishable_zOquxDYzpZ18s_4ALPSHUQ_f85dYwEw';
+const SB_URL = window.KADDU_SUPABASE.url;
+const SB_KEY = window.KADDU_SUPABASE.anonKey;
 const EDGE_URL = 'https://mjrmbnapdpkugkwnbhcz.supabase.co/functions/v1';
 
 // ── SESSION ──────────────────────────────────────────────────
@@ -1914,7 +1915,7 @@ function initPhoneInput(id, required){
     formatAsYouType:true,
     autoPlaceholder:'aggressive',
     strictMode:true,
-    loadUtils: () => Promise.resolve()
+    utilsScript:'https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js'
   });
   PHONE_INPUTS[id]=iti;
   const check=()=>validatePhone(id,required);
@@ -1925,12 +1926,27 @@ function initPhoneInput(id, required){
 function getSmartPhone(id){
   const el=document.getElementById(id);
   const iti=PHONE_INPUTS[id];
-  const raw=(el?.value||'').trim();
+  let raw=(el?.value||'').trim();
   if(!iti) return {raw, valid:!!raw, e164:raw, country:'', dialCode:''};
   const country=iti.getSelectedCountryData()||{};
-  let valid=false, e164=raw;
-  try{ valid=raw?iti.isValidNumber():false; e164=raw?iti.getNumber():''; }catch(_){ valid=false; }
-  return {raw, valid, e164, country:country.iso2?.toUpperCase()||'', dialCode:country.dialCode?('+'+country.dialCode):''};
+  // Nettoyer le 0 initial (convention internationale)
+  if(raw.startsWith('0') && raw.length > 1){
+    const cleaned = raw.slice(1);
+    try{ iti.setNumber('+' + (country.dialCode||'') + cleaned); raw = cleaned; if(el) el.value = cleaned; }catch(_){}
+  }
+  const digits = raw.replace(/\D/g,'');
+  // Validation par longueur selon pays
+  const lengthRules = {
+    SN:9, FR:9, CI:10, ML:8, GN:9, GM:7, MR:8,
+    MA:9, DZ:9, TN:8, CM:9, BF:8, BJ:8, TG:8,
+    NE:8, NG:10, GH:10, GA:9, CG:9, CD:9,
+    US:10, CA:10, GB:10, BE:9, CH:9, ES:9, IT:10, DE:10, PT:9,
+  };
+  const iso = country.iso2?.toUpperCase()||'';
+  const expected = lengthRules[iso];
+  const valid = expected ? digits.length === expected : (digits.length >= 7 && digits.length <= 12);
+  const e164 = raw ? ('+' + (country.dialCode||'') + digits) : '';
+  return {raw, valid, e164, country:iso, dialCode:country.dialCode?('+'+country.dialCode):''};
 }
 function validatePhone(id, required=true){
   const p=getSmartPhone(id);
@@ -2060,6 +2076,30 @@ function renderCarousel(){
 let currentStep=1;
 let compoType='seul';
 let counts={adultes:0,enfants:0,coloc:0};
+
+// ── TIMING TUNNEL ─────────────────────────────────────────────
+const _tunnelStart = Date.now();
+const _stepTimings = { 1: Date.now() };
+const _stepDurations = {};
+const _stepAttempts = { 1:0,2:0,3:0,4:0,5:0 };
+let _totalInteractions = 0;
+document.addEventListener('click', ()=>_totalInteractions++);
+document.addEventListener('keydown', ()=>_totalInteractions++);
+function _recordStepEntry(n){ _stepTimings[n]=Date.now(); _stepAttempts[n]=(_stepAttempts[n]||0)+1; }
+function _recordStepExit(from){ if(_stepTimings[from]) _stepDurations[from]=(_stepDurations[from]||0)+(Date.now()-_stepTimings[from]); }
+function _getTunnelMetrics(){
+  const totalMs = Date.now()-_tunnelStart;
+  const minExpectedMs = 120000;
+  const speedSuspicion = totalMs < minExpectedMs ? Math.round((1-totalMs/minExpectedMs)*100) : 0;
+  return {
+    duree_totale_sec: Math.round(totalMs/1000),
+    duree_par_etape: Object.fromEntries(Object.entries(_stepDurations).map(([k,v])=>[`etape_${k}`,Math.round(v/1000)])),
+    nb_retours: Object.values(_stepAttempts).reduce((a,v)=>a+Math.max(0,v-1),0),
+    nb_interactions: _totalInteractions,
+    suspicion_vitesse: speedSuspicion,
+    remplissage_rapide: speedSuspicion > 40,
+  };
+}
 let choices={emmenagement:'',duree:''};
 let locataires=[];
 let garants=[];
@@ -2069,8 +2109,10 @@ let noGarant=false;
 
 // ── STEPPER ──────────────────────────────────────────────────
 function goStep(n){
-  if(n>currentStep)return; // only go back freely
+  if(n>currentStep)return;
+  _recordStepExit(currentStep);
   currentStep=n;
+  _recordStepEntry(n);
   renderStepper();
   document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('section-'+n).classList.add('active');
@@ -2567,7 +2609,9 @@ async function nextStep(from){
     buildRecap();
   }
 
+  _recordStepExit(from);
   currentStep=from+1;
+  _recordStepEntry(currentStep);
   renderStepper();
   document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('section-'+currentStep).classList.add('active');
@@ -3198,7 +3242,8 @@ async function submitDossier(btn){
       no_garant: noGarant,
       score: scoreData.score,
       risk_level: riskLevel,
-      projet
+      projet,
+      tunnel_metrics: _getTunnelMetrics(),
     };
 
     const res = await fetch(`${EDGE_URL}/submit-rental-dossier`, {
