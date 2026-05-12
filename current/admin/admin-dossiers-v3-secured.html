@@ -481,6 +481,7 @@
     let allRows = [];
     let filteredRows = [];
     let selectedId = null;
+    let _currentDossier = null;
 
     function formatDate(value){
       if(!value) return "—";
@@ -743,6 +744,7 @@
     }
 
     function renderDetail(row){
+      _currentDossier = row;
       document.getElementById("detailBody").style.display = "block";
       document.getElementById("detailTitle").textContent = row.nom || "Dossier";
       document.getElementById("detailSub").textContent = `${bienLabel(row.bien)} · ${statusLabel(row.status)} · ${formatDate(row.created_at)}`;
@@ -996,12 +998,13 @@
     // ── SUPABASE AUTH ──────────────────────────────────────────
     let currentSession = null;
 
-    function getAuthHeaders(){
+    function getAuthHeaders(extraHeaders = {}){
       const token = currentSession?.access_token || SUPABASE_ANON_KEY;
       return {
         "apikey": SUPABASE_ANON_KEY,
         "Authorization": "Bearer " + token,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        ...extraHeaders
       };
     }
 
@@ -1083,6 +1086,7 @@
 
       // Pas de session valide → redirection vers la page de connexion
       window.location.replace(LOGIN_URL);
+    }
 
     document.addEventListener("DOMContentLoaded", initAuth);
     // ───────────────────────────────────────────────────────────
@@ -1196,6 +1200,7 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       }
 
       // ── Métriques de remplissage tunnel ───────────────────
+      const msg = (() => { try { return JSON.parse(row.message || '{}'); } catch(_) { return {}; } })();
       const tm = msg.tunnel_metrics;
       if(tm){
         lines.push("");
@@ -1749,5 +1754,6 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       }
     }
     // ══ FIN DOCUMENTS ADMIN ══════════════════════════════════
+  </script>
 </body>
 </html>
