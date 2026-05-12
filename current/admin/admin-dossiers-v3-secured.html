@@ -72,6 +72,18 @@
     .reason-list{margin:0;padding-left:18px;color:var(--muted);line-height:1.7}
     .empty{padding:32px;color:var(--muted);text-align:center}
     .footer-note{margin-top:16px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    /* ── DOCUMENTS ADMIN ── */
+    .doc-admin-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(191,150,80,.14);background:rgba(255,255,255,.02);transition:.18s}
+    .doc-admin-item:hover{border-color:rgba(191,150,80,.28);background:rgba(255,255,255,.04)}
+    .doc-admin-icon{font-size:1.1rem;flex-shrink:0;width:26px;text-align:center}
+    .doc-admin-info{flex:1;min-width:0}
+    .doc-admin-name{font-size:.82rem;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+    .doc-admin-meta{font-size:.68rem;color:var(--muted)}
+    .doc-admin-btn{padding:5px 10px;font-size:.7rem;cursor:pointer;border-radius:6px;border:1px solid rgba(191,150,80,.2);background:transparent;color:rgba(248,244,238,.55);font-family:Arial,sans-serif;transition:.18s;white-space:nowrap;flex-shrink:0}
+    .doc-admin-btn:hover{border-color:var(--or);color:var(--or)}
+    .doc-admin-analyse{border-color:rgba(74,158,255,.25);color:#53b7ff}
+    .doc-admin-analyse:hover{background:rgba(74,158,255,.08)}
     .detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .history-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
     .history-item:last-child{border-bottom:none}
@@ -123,6 +135,67 @@
       letter-spacing:.1em;text-transform:uppercase;
       color:var(--or);margin-bottom:20px
     }
+
+    /* ══ ANTIFRAUDE INLINE ══ */
+    .af-section{border:1px solid rgba(191,150,80,.22);background:rgba(191,150,80,.04);padding:14px 16px;margin-bottom:14px}
+    .af-section .title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--or);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+    .af-btn-analyse{
+      padding:10px 18px;background:var(--or);color:#111;border:none;
+      font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.06em;
+      display:inline-flex;align-items:center;gap:7px;transition:.18s;
+    }
+    .af-btn-analyse:hover{background:#DDB96E}
+    .af-btn-analyse:disabled{opacity:.45;cursor:not-allowed}
+    .af-btn-sm{
+      padding:6px 13px;background:transparent;border:1px solid rgba(191,150,80,.3);
+      color:rgba(248,244,238,.55);font-size:12px;cursor:pointer;transition:.18s;font-family:Arial,sans-serif;
+    }
+    .af-btn-sm:hover{border-color:var(--or);color:var(--or)}
+    .af-context-wrap{margin-top:12px;display:none}
+    .af-context-wrap.open{display:block}
+    .af-context-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(191,150,80,.6);margin-bottom:6px}
+    .af-context-ta{
+      width:100%;min-height:110px;padding:10px 12px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.2);
+      color:rgba(248,244,238,.85);font-size:13px;resize:vertical;line-height:1.6;
+      font-family:Arial,sans-serif;
+    }
+    .af-context-ta:focus{outline:none;border-color:var(--or)}
+    .af-loader-row{display:none;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:rgba(248,244,238,.4)}
+    .af-loader-row.visible{display:flex}
+    .af-spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(191,150,80,.2);border-top-color:var(--or);animation:spin .7s linear infinite;flex-shrink:0}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .af-result-wrap{margin-top:12px;border:1px solid rgba(191,150,80,.14);background:rgba(7,24,43,.5);display:none}
+    .af-result-wrap.visible{display:block}
+    .af-result-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(191,150,80,.1);background:rgba(7,14,28,.4)}
+    .af-result-title{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--or)}
+    .af-vig{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+    .af-vig-low{background:rgba(0,200,117,.12);color:#77ffbe;border:1px solid rgba(0,200,117,.28)}
+    .af-vig-mid{background:rgba(245,166,35,.12);color:#ffd180;border:1px solid rgba(245,166,35,.28)}
+    .af-vig-high{background:rgba(255,107,107,.1);color:#ffb3b3;border:1px solid rgba(255,107,107,.22)}
+    .af-result-body{padding:14px;font-size:13px;color:rgba(248,244,238,.75);line-height:1.8}
+    .af-result-body h2{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--or);margin:12px 0 6px;font-family:Georgia,serif;font-weight:400}
+    .af-result-body strong{color:rgba(248,244,238,.95)}
+    .af-result-body hr{border:none;border-top:1px solid rgba(191,150,80,.1);margin:10px 0}
+    .af-result-body p{margin-bottom:8px}
+    .af-result-body ul{list-style:none;padding:0;margin:0}
+    .af-result-body li{padding:4px 0;border-bottom:1px solid rgba(191,150,80,.06);display:flex;gap:8px;align-items:flex-start}
+    .af-result-body li:last-child{border-bottom:none}
+    .af-ok{color:#77ffbe;flex-shrink:0}
+    .af-warn{color:#ffb347;flex-shrink:0}
+    .af-section-coh{background:rgba(0,200,117,.03);border:1px solid rgba(0,200,117,.1);padding:8px 12px;margin:6px 0;border-radius:4px}
+    .af-section-att{background:rgba(255,179,71,.03);border:1px solid rgba(255,179,71,.12);padding:8px 12px;margin:6px 0;border-radius:4px}
+    .af-section-reco{background:rgba(191,150,80,.05);border:1px solid rgba(191,150,80,.16);padding:8px 12px;margin:6px 0;border-radius:4px}
+    .af-result-foot{padding:8px 14px;border-top:1px solid rgba(191,150,80,.08);display:flex;gap:8px;background:rgba(7,14,28,.3)}
+    .af-apikey-hint{font-size:11px;color:rgba(248,244,238,.28);margin-top:8px}
+    .af-apikey-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .af-apikey-input{
+      flex:1;padding:8px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(191,150,80,.2);
+      color:rgba(248,244,238,.75);font-size:12px;font-family:Arial,sans-serif;
+    }
+    .af-apikey-input:focus{outline:none;border-color:var(--or)}
+    .af-taux{font-size:12px;color:rgba(248,244,238,.35);margin-left:auto}
+    .af-taux.warn{color:#ffd180} .af-taux.danger{color:#ffb3b3}
   </style>
 </head>
 <body>
@@ -313,10 +386,80 @@
             <ul class="reason-list" id="reasonList"></ul>
           </div>
 
+          <!-- ══ DOCUMENTS DÉPOSÉS ══ -->
+          <div class="section" id="docsSection" style="display:none">
+            <div class="title" style="display:flex;align-items:center;justify-content:space-between">
+              <span>Documents déposés</span>
+              <span id="docsCount" style="font-size:11px;color:rgba(248,244,238,.35);text-transform:none;letter-spacing:0;font-weight:400"></span>
+            </div>
+            <div id="docsList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px"></div>
+          </div>
+          <!-- ══ FIN DOCUMENTS ══ -->
+
           <div class="section">
             <div class="title">Historique</div>
             <div id="historyList" class="muted">Chargement…</div>
           </div>
+
+          <!-- ══ VÉRIFICATION DOSSIER (ANTIFRAUDE) ══ -->
+          <div class="af-section" id="afSection">
+            <div class="title">
+              <span>🛡 Vérification du dossier</span>
+              <span id="afTaux" class="af-taux"></span>
+            </div>
+
+            <!-- Clé API (admin seulement, session uniquement) -->
+            <div class="af-apikey-row">
+              <input type="password" class="af-apikey-input" id="afKey" placeholder="Clé API Anthropic (sk-ant-…)" />
+              <button class="af-btn-sm" onclick="toggleAfContext()">Ajuster le contexte ↓</button>
+            </div>
+            <div class="af-apikey-hint">Clé stockée en session uniquement · jamais envoyée à Supabase</div>
+
+            <!-- Zone contexte ajustable par l'admin -->
+            <div class="af-context-wrap" id="afContextWrap">
+              <div class="af-context-label" style="margin-top:12px">Contexte transmis au moteur — modifiable</div>
+              <textarea class="af-context-ta" id="afContextTa" placeholder="Le contexte sera généré automatiquement depuis les données du dossier…"></textarea>
+            </div>
+
+            <!-- CTA -->
+            <div style="display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap">
+              <button class="af-btn-analyse" id="afAnalyseBtn" onclick="lancerAnalyseDossier()">
+                Analyser ce dossier →
+              </button>
+              <div class="af-loader-row" id="afLoaderRow">
+                <div class="af-spinner"></div>
+                <span>Analyse en cours…</span>
+              </div>
+            </div>
+
+            <!-- Résultat -->
+            <div class="af-result-wrap" id="afResultWrap">
+              <div class="af-result-head">
+                <div class="af-result-title">Synthèse Kàddu Shield</div>
+                <div class="af-vig" id="afVigBadge">—</div>
+              </div>
+              <!-- Score Kàddu -->
+              <div id="afScoreWrap" style="display:none;padding:12px 16px;background:rgba(7,24,43,.6);border-bottom:1px solid rgba(191,150,80,.1)">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div id="afScoreCircle" style="width:56px;height:56px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2.5px solid rgba(191,150,80,.4);background:rgba(191,150,80,.08);flex-shrink:0">
+                    <span id="afScoreNum" style="font-size:1.1rem;font-weight:700;color:var(--or);line-height:1">—</span>
+                    <span style="font-size:.5rem;color:rgba(248,244,238,.25)">/100</span>
+                  </div>
+                  <div style="flex:1">
+                    <div id="afScoreLabel" style="font-size:.78rem;font-weight:600;color:var(--or);margin-bottom:4px">—</div>
+                    <div id="afDecisionBadge" style="display:inline-block;font-size:.62rem;padding:2px 8px;border-radius:999px;background:rgba(191,150,80,.1);color:var(--or);border:1px solid rgba(191,150,80,.2);font-weight:600;text-transform:uppercase;letter-spacing:.06em">—</div>
+                  </div>
+                  <div id="afScoreBars" style="flex:1.5;display:flex;flex-direction:column;gap:5px"></div>
+                </div>
+              </div>
+              <div class="af-result-body" id="afResultBody"></div>
+              <div class="af-result-foot">
+                <button class="af-btn-sm" onclick="copyAfResult()">Copier</button>
+                <button class="af-btn-sm" onclick="saveAfComment()">Enregistrer en commentaire</button>
+              </div>
+            </div>
+          </div>
+          <!-- ══ FIN VÉRIFICATION ══ -->
 
           <div class="detail-actions">
             <a href="#" class="btn-wa" id="waLink" target="_blank" rel="noopener noreferrer">Contacter sur WhatsApp</a>
@@ -664,6 +807,9 @@
         : "#";
 
       renderHistory(row.id);
+      prepareAfContext(row);
+      renderDocsAdmin(row);
+      loadPasseportForDossier(row).catch(()=>{});
     }
 
     async function patchDossier(currentId, payload){
@@ -920,6 +1066,667 @@
     document.addEventListener("DOMContentLoaded", initAuth);
     // ───────────────────────────────────────────────────────────
 
-  </script>
+    // ══ KÀDDU SHIELD — VÉRIFICATION DOSSIER ══════════════════
+    const AF_SYSTEM_PROMPT = `Tu es l'assistant de vérification de la plateforme Kàddu, une agence immobilière premium opérant au Sénégal.
+
+Ton rôle est d'analyser les dossiers locatifs soumis par les candidats et d'identifier toute incohérence, anomalie ou élément qui mérite une attention particulière avant qu'un conseiller Kàddu statue.
+
+Tu n'es pas un juge. Tu es un assistant de préparation : tu aides les conseillers à lire vite, voir clair, et agir avec confiance.
+
+Tu travailles dans un contexte africain (Sénégal, diaspora francophone). Tu connais les réalités locales : structures de revenus informels, documents administratifs sénégalais, pratiques locatives dakaroises, profils diaspora.
+
+PÉRIMÈTRE D'ANALYSE
+IDENTITÉ — Cohérence entre les pièces, concordance nom/prénom, validité documents
+SOLVABILITÉ — Cohérence revenus/justificatifs, taux d'effort (seuil vigilance : >35%), incohérences fiches de paie/contrats
+DOCUMENTS — Lisibilité, complétude, cohérences typographiques, dates cohérentes
+PROFIL GLOBAL — Cohérence profil/bien visé, signaux de tension, éléments manquants
+
+FORMAT DE RÉPONSE
+## SYNTHÈSE DU DOSSIER
+[2-3 phrases neutres et factuelles]
+
+## POINTS DE COHÉRENCE
+✓ [élément] — [observation]
+
+## POINTS D'ATTENTION
+⚠ [élément] — [observation non accusatoire]
+
+## RECOMMANDATION
+[Dossier prêt à instruire / Demander : liste / Appeler pour clarifier : point / Mettre en attente]
+
+## NIVEAU DE VIGILANCE
+[Faible / Modéré / Élevé] — [justification courte]
+
+SCORE KÀDDU
+À la toute fin de ta réponse, sur une ligne séparée, retourne uniquement ce bloc JSON :
+
+KADDU_SCORE:{"score":[0-100],"identite":[0-20],"revenus":[0-20],"documents":[0-20],"coherence":[0-20],"risque_fraude":[0-20],"decision":"pre_validation|verification_humaine|attente|refus","label":"Profil rassurant|Profil à vérifier|Profil à risque"}
+
+Critères : identite (concordance/validité pièces), revenus (cohérence/taux effort), documents (qualité/complétude), coherence (cohérence globale), risque_fraude (20=aucun signal, 0=signaux graves). score=somme des 5. decision: pre_validation si ≥80 / verification_humaine si 50-79 / attente si 30-49 / refus si <30.
+
+RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours laisser la décision au conseiller. Revenus informels et Wave/OM sont valides. Diaspora avec pièces étrangères = traitement neutre.`;
+
+    let _afCurrentRow = null;
+
+    // Appelé à chaque sélection de dossier — prépare le contexte automatiquement
+    function prepareAfContext(row){
+      _afCurrentRow = row;
+
+      // Taux d'effort
+      const rev = parseFloat(row.revenu_mensuel) || 0;
+      const loyer = extractLoyer(row.bien);
+      const taux = rev && loyer ? Math.round((loyer / rev) * 100) : null;
+      const tauxEl = document.getElementById("afTaux");
+      if(taux !== null){
+        tauxEl.textContent = `Taux d'effort : ${taux}%`;
+        tauxEl.className = "af-taux" + (taux > 35 ? (taux > 45 ? " danger" : " warn") : "");
+      } else {
+        tauxEl.textContent = "";
+      }
+
+      // Construire le contexte automatique
+      const ctx = buildContext(row, taux);
+      document.getElementById("afContextTa").value = ctx;
+
+      // Reset résultat précédent
+      document.getElementById("afResultWrap").classList.remove("visible");
+    }
+
+    function extractLoyer(bien){
+      // Valeurs de référence Kàddu — à ajuster selon vos biens réels
+      const map = { bantukay: 350000, nopalukay: 420000, suxalikay: 280000 };
+      if(!bien) return 0;
+      const norm = bien.toLowerCase().replace(/le petit /i,"").replace(/[^a-z]/g,"");
+      return map[norm] || 0;
+    }
+
+    function buildContext(row, taux){
+      const lines = [];
+      lines.push(`DOSSIER : ${row.nom || "—"}`);
+      lines.push(`Bien visé : ${bienLabel(row.bien)}`);
+      if(row.date_entree) lines.push(`Date d'entrée souhaitée : ${row.date_entree}`);
+      if(row.duree) lines.push(`Durée : ${row.duree}`);
+      lines.push("");
+      lines.push("IDENTITÉ");
+      if(row.nationalite) lines.push(`Nationalité : ${row.nationalite}`);
+      if(row.pays_residence) lines.push(`Pays de résidence : ${row.pays_residence}`);
+      if(row.id_type) lines.push(`Pièce d'identité : ${row.id_type}${row.id_number ? " n°" + row.id_number : ""}${row.date_expiration_piece ? " · exp. " + row.date_expiration_piece : ""}`);
+      if(row.otp_verified !== undefined) lines.push(`OTP vérifié : ${row.otp_verified ? "Oui" : "Non"}`);
+      lines.push("");
+      lines.push("SOLVABILITÉ");
+      if(row.situation) lines.push(`Situation professionnelle : ${row.situation}`);
+      if(row.employeur) lines.push(`Employeur / société : ${row.employeur}`);
+      if(row.revenu_mensuel) lines.push(`Revenus déclarés : ${Number(row.revenu_mensuel).toLocaleString("fr-FR")} XOF/mois`);
+      if(taux !== null) lines.push(`Taux d'effort calculé : ${taux}%${taux > 35 ? " ⚠ au-dessus du seuil de 35%" : ""}`);
+      if(row.logement_actuel) lines.push(`Logement actuel : ${row.logement_actuel}`);
+      if(row.nb_occupants) lines.push(`Nombre d'occupants prévus : ${row.nb_occupants}`);
+      if(row.garant) lines.push(`Garant : ${row.garant}${row.identite_garant ? " (" + row.identite_garant + ")" : ""}`);
+      lines.push("");
+      lines.push("DOCUMENTS");
+      if(row.transmission) lines.push(`Mode de transmission : ${row.transmission}`);
+      if(row.iban) lines.push(`IBAN / RIB : ${row.iban}`);
+      if(row.bailleur_nom) lines.push(`Ancien bailleur : ${row.bailleur_nom}${row.bailleur_contact ? " · " + row.bailleur_contact : ""}`);
+      lines.push("");
+      lines.push("SCORING AUTOMATIQUE");
+      lines.push(`Score calculé par le système : ${row.score ?? "—"}/100`);
+      lines.push(`Statut de risque : ${statusLabel(row.status)}`);
+      if(row.reasons && row.reasons.length){
+        lines.push(`Motifs pénalisants détectés : ${row.reasons.join(", ")}`);
+      }
+
+      // ── Métriques de remplissage tunnel ───────────────────
+      const tm = msg.tunnel_metrics;
+      if(tm){
+        lines.push("");
+        lines.push("COMPORTEMENT DE REMPLISSAGE DU TUNNEL");
+        lines.push(`Durée totale : ${tm.duree_totale_sec}s (${Math.round(tm.duree_totale_sec/60)} min)`);
+        if(tm.duree_par_etape){
+          Object.entries(tm.duree_par_etape).forEach(([k,v])=>{
+            lines.push(`  ${k.replace(/_/g,' ')} : ${v}s`);
+          });
+        }
+        lines.push(`Interactions (clics + frappes) : ${tm.nb_interactions||0}`);
+        lines.push(`Retours en arrière entre étapes : ${tm.nb_retours||0}`);
+        if(tm.remplissage_rapide){
+          lines.push(`⚠ SIGNAL : remplissage anormalement rapide (${tm.duree_totale_sec}s · suspicion vitesse ${tm.suspicion_vitesse}/100)`);
+        }
+      }
+
+      if(row.raison_depart) lines.push(`Raison du départ déclarée : ${row.raison_depart}`);
+      if(row.decision_comment) lines.push(`\nCommentaire interne existant : ${row.decision_comment}`);
+      return lines.filter(Boolean).join("\n");
+    }
+
+    function toggleAfContext(){
+      document.getElementById("afContextWrap").classList.toggle("open");
+    }
+
+    async function lancerAnalyseDossier(){
+      const apiKey = document.getElementById("afKey").value.trim();
+      if(!apiKey){ alert("Clé API Anthropic requise.\nCollez votre clé sk-ant-… dans le champ au-dessus."); return; }
+      const context = document.getElementById("afContextTa").value.trim();
+      if(!context){ alert("Le contexte du dossier est vide."); return; }
+
+      const btn = document.getElementById("afAnalyseBtn");
+      const loader = document.getElementById("afLoaderRow");
+      const result = document.getElementById("afResultWrap");
+
+      btn.disabled = true;
+      loader.classList.add("visible");
+      result.classList.remove("visible");
+
+      try {
+        // Récupérer le modèle depuis Supabase config si disponible
+        let modelId = "claude-sonnet-4-5";
+        try {
+          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`, { headers: getAuthHeaders() });
+          if(cfgR.ok){ const cfg = await cfgR.json(); if(cfg?.[0]?.value) modelId = cfg[0].value; }
+        } catch(_){}
+
+        const resp = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true"
+          },
+          body: JSON.stringify({
+            model: modelId,
+            max_tokens: 1200,
+            system: AF_SYSTEM_PROMPT,
+            messages: [{ role: "user", content: `Analyse ce dossier locataire :\n\n${context}` }]
+          })
+        });
+
+        if(!resp.ok){
+          const err = await resp.json().catch(()=>({}));
+          throw new Error(err?.error?.message || `Erreur API (${resp.status})`);
+        }
+
+        const data = await resp.json();
+        const rawText = data.content?.map(c => c.text || "").join("") || "";
+
+        // Extraire le JSON score Kàddu
+        let scoreData = null;
+        let displayText = rawText;
+        const sm = rawText.match(/KADDU_SCORE:(\{[^}]+\})/);
+        if(sm){ try{ scoreData=JSON.parse(sm[1]); displayText=rawText.replace(/KADDU_SCORE:\{[^}]+\}/,'').trim(); }catch(_){} }
+
+        // Badge vigilance piloté par le score
+        const vigEl = document.getElementById("afVigBadge");
+        if(scoreData){
+          const s = scoreData.score||0;
+          if(s<50){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vig af-vig-high"; }
+          else if(s<80){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vig af-vig-mid"; }
+          else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vig af-vig-low"; }
+        } else {
+          if(/niveau.*élevé|vigilance.*élevé/i.test(rawText)){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vig af-vig-high"; }
+          else if(/niveau.*modér|vigilance.*modér/i.test(rawText)){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vig af-vig-mid"; }
+          else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vig af-vig-low"; }
+        }
+
+        renderAfScoreInline(scoreData);
+        document.getElementById("afResultBody").innerHTML = renderAfMd(displayText);
+        result.classList.add("visible");
+
+        // ── Persister dans le Passeport Locatif ──────────────
+        if(scoreData && _currentDossier){
+          persistPasseportScore(_currentDossier, scoreData, displayText).catch(()=>{});
+        }
+
+      } catch(err){
+        alert("Erreur lors de l'analyse :\n" + err.message);
+      } finally {
+        btn.disabled = false;
+        loader.classList.remove("visible");
+      }
+    }
+
+    function renderAfScoreInline(sd){
+      const wrap = document.getElementById('afScoreWrap');
+      if(!sd||!sd.score){ if(wrap) wrap.style.display='none'; return; }
+      if(wrap) wrap.style.display='block';
+      const s = sd.score;
+      const tier = s>=80?'high':s>=50?'mid':'low';
+      const col = tier==='high'?'#77ffbe':tier==='mid'?'var(--or)':'#ff8a8a';
+      const circle = document.getElementById('afScoreCircle');
+      if(circle){ circle.style.borderColor=col; circle.style.background=tier==='high'?'rgba(0,200,117,.08)':tier==='mid'?'rgba(191,150,80,.08)':'rgba(255,107,107,.08)'; }
+      const numEl = document.getElementById('afScoreNum');
+      if(numEl){ numEl.textContent=s; numEl.style.color=col; }
+      const labelEl = document.getElementById('afScoreLabel');
+      if(labelEl){ labelEl.textContent=sd.label||(s>=80?'Profil rassurant':s>=50?'Profil à vérifier':'Profil à risque'); labelEl.style.color=col; }
+      const badgeEl = document.getElementById('afDecisionBadge');
+      if(badgeEl){
+        const dMap={pre_validation:'Pré-validation',verification_humaine:'À vérifier',attente:'En attente',refus:'Refus recommandé'};
+        badgeEl.textContent=dMap[sd.decision]||'À instruire';
+        badgeEl.style.color=col; badgeEl.style.borderColor=col;
+        badgeEl.style.background=tier==='high'?'rgba(0,200,117,.1)':tier==='mid'?'rgba(191,150,80,.1)':'rgba(255,107,107,.1)';
+      }
+      const dims=[{k:'identite',l:'Identité'},{k:'revenus',l:'Revenus'},{k:'documents',l:'Documents'},{k:'coherence',l:'Cohérence'},{k:'risque_fraude',l:'Fraude'}];
+      const barsEl = document.getElementById('afScoreBars');
+      if(barsEl) barsEl.innerHTML = dims.map(d=>{
+        const val=Math.min(sd[d.k]||0,20); const pct=Math.round(val/20*100);
+        const c2=pct>=75?'#77ffbe':pct>=50?'#BF9650':'#ff8a8a';
+        return `<div style="display:flex;align-items:center;gap:6px;font-size:.62rem">
+          <span style="width:60px;color:rgba(248,244,238,.4);flex-shrink:0">${d.l}</span>
+          <div style="flex:1;height:4px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${c2};border-radius:999px"></div>
+          </div>
+          <span style="width:22px;text-align:right;color:rgba(248,244,238,.45)">${val}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function renderAfMd(text){
+      let html = text
+        .replace(/^### (.+)$/gm,"<h2>$1</h2>")
+        .replace(/^## (.+)$/gm,"<h2>$1</h2>")
+        .replace(/^# (.+)$/gm,"<h2>$1</h2>")
+        .replace(/^---+$/gm,"<hr>")
+        .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+        .replace(/^✓ (.+)$/gm,'<li><span class="af-ok">✓</span><span>$1</span></li>')
+        .replace(/^[⚠△] (.+)$/gm,'<li><span class="af-warn">⚠</span><span>$1</span></li>')
+        .replace(/^— (.+)$/gm,'<li><span style="color:var(--or);flex-shrink:0">·</span><span>$1</span></li>')
+        .replace(/\n\n/g,"</p><p>").replace(/\n/g,"<br>");
+      html = html
+        .replace(/(POINTS DE COHÉRENCE.*?)(?=POINTS D'ATTENTION|RECOMMANDATION|NIVEAU|$)/si,'<div class="af-section-coh">$1</div>')
+        .replace(/(POINTS D'ATTENTION.*?)(?=RECOMMANDATION|NIVEAU|$)/si,'<div class="af-section-att">$1</div>')
+        .replace(/(RECOMMANDATION.*?)(?=NIVEAU|$)/si,'<div class="af-section-reco">$1</div>');
+      return "<p>" + html + "</p>";
+    }
+
+    function copyAfResult(){
+      const txt = document.getElementById("afResultBody").innerText;
+      navigator.clipboard.writeText(txt).then(() => alert("Synthèse copiée."));
+    }
+
+    async function saveAfComment(){
+      if(!selectedId) return;
+      const synthese = document.getElementById("afResultBody").innerText;
+      if(!synthese) return;
+      const existing = document.getElementById("decisionCommentInput").value.trim();
+      const newComment = existing
+        ? existing + "\n\n--- Synthèse Kàddu Shield ---\n" + synthese.slice(0, 800)
+        : "--- Synthèse Kàddu Shield ---\n" + synthese.slice(0, 800);
+      document.getElementById("decisionCommentInput").value = newComment;
+      // Sauvegarder en base
+      try {
+        await patchDossier(selectedId, {
+          decision_comment: newComment,
+          updated_at: new Date().toISOString()
+        });
+        showSuccess("Synthèse enregistrée dans le commentaire interne.");
+      } catch(e){ alert("Erreur : " + e.message); }
+    }
+    // ══ PASSEPORT LOCATIF — PERSISTANCE ══════════════════════
+    async function persistPasseportScore(row, scoreData, synthese){
+      try{
+        const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+        const email = msg.locataires?.[0]?.email || row.email || null;
+        if(!email && !row.locataire_id) return;
+
+        // Lire le passeport existant
+        const q = row.locataire_id
+          ? `locataire_id=eq.${row.locataire_id}`
+          : `locataire_email=eq.${encodeURIComponent(email)}`;
+        const existing = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`,
+          {headers:getAuthHeaders()});
+        const rows = existing.ok ? await existing.json() : [];
+        const current = rows[0] || null;
+
+        // Calculer le nouveau score moyenné
+        const nb = (current?.nb_analyses||0) + 1;
+        const avg = (field) => Math.round(
+          ((current?.[field]||0) * (nb-1) + (scoreData[field]||0)) / nb
+        );
+
+        // Historique (garder les 10 dernières analyses)
+        const hist = JSON.parse(JSON.stringify(current?.historique||[]));
+        hist.unshift({
+          date: new Date().toISOString(),
+          score: scoreData.score,
+          decision: scoreData.decision,
+          label: scoreData.label,
+          dossier_id: row.id,
+          bien: row.bien,
+          synthese_resume: synthese.slice(0,200),
+        });
+        if(hist.length > 10) hist.pop();
+
+        // Calculer points forts et axes d'amélioration
+        const dims = [
+          {key:'identite',label:'Identité & pièces',score:scoreData.identite||0},
+          {key:'revenus',label:'Solvabilité & revenus',score:scoreData.revenus||0},
+          {key:'documents',label:'Qualité documentaire',score:scoreData.documents||0},
+          {key:'coherence',label:'Cohérence du dossier',score:scoreData.coherence||0},
+          {key:'fiabilite',label:'Profil de confiance',score:scoreData.risque_fraude||0},
+        ];
+        const pointsForts = dims.filter(d=>d.score>=16).map(d=>d.label);
+        const axesAmelio = dims.filter(d=>d.score<12).map(d=>({
+          axe: d.label,
+          conseil: getConseil(d.key, d.score)
+        }));
+
+        // Label global
+        const s = scoreData.score;
+        const label = s>=80 ? 'Profil rassurant ✓'
+          : s>=65 ? 'Profil sérieux'
+          : s>=50 ? 'Profil à renforcer'
+          : 'Profil en construction';
+
+        const payload = {
+          locataire_email: email,
+          locataire_id: row.locataire_id || null,
+          score_global: avg('score_global') || scoreData.score,
+          score_identite: avg('score_identite') || scoreData.identite||0,
+          score_revenus: avg('score_revenus') || scoreData.revenus||0,
+          score_documents: avg('score_documents') || scoreData.documents||0,
+          score_coherence: avg('score_coherence') || scoreData.coherence||0,
+          score_fiabilite: avg('score_fiabilite') || scoreData.risque_fraude||0,
+          label,
+          nb_analyses: nb,
+          nb_candidatures: Math.max(current?.nb_candidatures||0, 1),
+          historique: hist,
+          points_forts: pointsForts,
+          axes_amelioration: axesAmelio,
+          updated_at: new Date().toISOString(),
+        };
+
+        // Upsert
+        await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif`, {
+          method: 'POST',
+          headers: getAuthHeaders({'Prefer':'resolution=merge-duplicates,return=minimal'}),
+          body: JSON.stringify(payload)
+        });
+
+        // Afficher le badge passeport dans la fiche
+        renderPasseportBadge(payload);
+
+      } catch(err){ console.warn('[passeport]', err.message); }
+    }
+
+    function getConseil(key, score){
+      const conseils = {
+        identite: 'Vérifiez que la pièce d\'identité est lisible et non expirée.',
+        revenus: 'Des justificatifs de revenus complets renforcent fortement le profil.',
+        documents: 'Déposez des documents de qualité, sans flou ni découpage.',
+        coherence: 'Assurez-vous que toutes les informations sont cohérentes entre elles.',
+        fiabilite: 'Aucun signal d\'alerte détecté — le dossier gagne en confiance.',
+      };
+      return conseils[key] || 'À améliorer.';
+    }
+
+    function renderPasseportBadge(pp){
+      // Insérer ou mettre à jour le badge passeport dans la section vérification
+      const existing = document.getElementById('ppBadgeSection');
+      if(existing) existing.remove();
+      const afSection = document.getElementById('afSection');
+      if(!afSection) return;
+
+      const s = pp.score_global;
+      const tier = s>=80?'high':s>=50?'mid':'low';
+      const col = {high:'#77ffbe',mid:'var(--or)',low:'#ff8a8a'}[tier];
+      const borderCol = {high:'rgba(0,200,117,.3)',mid:'rgba(191,150,80,.3)',low:'rgba(255,107,107,.3)'}[tier];
+
+      const badge = document.createElement('div');
+      badge.id = 'ppBadgeSection';
+      badge.style.cssText = `border:1px solid ${borderCol};border-radius:10px;background:rgba(7,24,43,.5);padding:14px 16px;margin-bottom:14px`;
+      badge.innerHTML = `
+        <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:${col};margin-bottom:10px">🎫 Passeport Locatif — Score persisté</div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:52px;height:52px;border-radius:50%;border:2.5px solid ${col};background:${col}14;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:1.1rem;font-weight:700;color:${col};line-height:1">${s}</span>
+            <span style="font-size:.5rem;color:rgba(248,244,238,.3)">/100</span>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:.82rem;font-weight:600;color:${col};margin-bottom:3px">${pp.label}</div>
+            <div style="font-size:.72rem;color:rgba(248,244,238,.4)">${pp.nb_analyses} analyse${pp.nb_analyses>1?'s':''} · Moyenné sur l'historique</div>
+            ${pp.points_forts?.length ? `<div style="font-size:.68rem;color:#77ffbe;margin-top:4px">✓ ${pp.points_forts.slice(0,2).join(' · ')}</div>` : ''}
+          </div>
+        </div>
+        ${pp.axes_amelioration?.length ? `
+        <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(191,150,80,.08)">
+          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.3);margin-bottom:4px">Axes d'amélioration</div>
+          ${pp.axes_amelioration.slice(0,2).map(a=>`<div style="font-size:.72rem;color:rgba(248,244,238,.5);padding:2px 0">• ${a.axe} — ${a.conseil}</div>`).join('')}
+        </div>` : ''}`;
+
+      afSection.insertBefore(badge, afSection.firstChild);
+    }
+
+    // Charger le passeport existant à l'ouverture d'une fiche
+    async function loadPasseportForDossier(row){
+      try{
+        const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+        const email = msg.locataires?.[0]?.email || row.email || null;
+        if(!email && !row.locataire_id) return;
+        const q = row.locataire_id
+          ? `locataire_id=eq.${row.locataire_id}`
+          : `locataire_email=eq.${encodeURIComponent(email)}`;
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`,
+          {headers:getAuthHeaders()});
+        if(!res.ok) return;
+        const rows = await res.json();
+        if(rows[0]) renderPasseportBadge(rows[0]);
+      }catch(_){}
+    }
+    // ══ FIN PASSEPORT LOCATIF ═════════════════════════════════
+    function renderDocsAdmin(row){
+      const docs = Array.isArray(row.docs_fournis) ? row.docs_fournis : [];
+      const section = document.getElementById('docsSection');
+      const list    = document.getElementById('docsList');
+      const count   = document.getElementById('docsCount');
+
+      if(!docs.length){
+        section.style.display = 'none';
+        return;
+      }
+      section.style.display = 'block';
+      count.textContent = `${docs.length} fichier${docs.length>1?'s':''} déposé${docs.length>1?'s':''}`;
+
+      const DOC_ICONS = {
+        cni:'🪪', contrat:'📋', fiches_paie:'💰', releve:'🏦',
+        avis_impo:'📄', registre:'🏢', bilan:'📊', contrat_client:'📋',
+        certif_scol:'🎓', lettre:'✉️', contrats_interim:'📋',
+        pension:'📄', justif_ressources:'💼', justif_situation:'📄',
+      };
+
+      list.innerHTML = docs.map((doc, i) => {
+        const docId = doc.key ? doc.key.split('_').slice(1).join('_') : '';
+        const icon  = DOC_ICONS[docId] || '📎';
+        const name  = doc.name || `Document ${i+1}`;
+        const ext   = name.split('.').pop().toUpperCase();
+        return `<div class="doc-admin-item">
+          <div class="doc-admin-icon">${icon}</div>
+          <div class="doc-admin-info">
+            <div class="doc-admin-name">${name}</div>
+            <div class="doc-admin-meta">${ext} · ${doc.key||''}</div>
+          </div>
+          <button class="doc-admin-btn" onclick="window.open('${doc.url}','_blank')">Ouvrir</button>
+          <button class="doc-admin-btn doc-admin-analyse" onclick="analyserDocIA('${doc.url}','${name}')">Analyser IA</button>
+        </div>`;
+      }).join('');
+    }
+
+    // ── PROMPTS D'EXTRACTION PAR TYPE DE DOCUMENT ─────────────
+    const DOC_EXTRACT_PROMPTS = {
+      cni: `Tu analyses une pièce d'identité (CNI, passeport ou titre de séjour) pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict, sans commentaire :
+KADDU_DOC:{"type_document":"[cni|passeport|titre_sejour|autre]","nom":"","prenom":"","date_naissance":"[YYYY-MM-DD ou vide]","numero_piece":"","date_expiration":"[YYYY-MM-DD ou vide]","nationalite":"","valide":[true|false],"anomalies":["liste des anomalies visuelles ou logiques, vide si aucune"]}
+Après le JSON, ajoute une synthèse courte en 2-3 lignes sur la lisibilité et la cohérence du document.`,
+
+      fiches_paie: `Tu analyses un bulletin de salaire pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict :
+KADDU_DOC:{"type_document":"bulletin_salaire","nom_salarie":"","employeur":"","salaire_net":[nombre ou null],"salaire_brut":[nombre ou null],"periode":"[MM/YYYY ou vide]","date_bulletin":"[YYYY-MM-DD ou vide]","anomalies":["incohérences typographiques, montants suspects, mentions manquantes"]}
+Après le JSON, synthèse courte sur la cohérence du document.`,
+
+      releve: `Tu analyses un relevé bancaire ou un historique de transactions (Wave, Orange Money, banque) pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict :
+KADDU_DOC:{"type_document":"releve_bancaire","titulaire":"","banque_ou_service":"","periode_debut":"[YYYY-MM-DD ou vide]","periode_fin":"[YYYY-MM-DD ou vide]","solde_moyen_estime":[nombre ou null],"revenus_reguliers_detectes":[true|false],"anomalies":["mouvements suspects, incohérences"]}
+Après le JSON, synthèse courte sur les flux financiers détectés.`,
+
+      contrat: `Tu analyses un contrat de travail pour l'agence Kàddu Sénégal.
+Extrais les données suivantes en JSON strict :
+KADDU_DOC:{"type_document":"contrat_travail","nom_salarie":"","employeur":"","type_contrat":"[CDI|CDD|interim|autre]","date_embauche":"[YYYY-MM-DD ou vide]","salaire_contractuel":[nombre ou null],"poste":"","anomalies":["éléments manquants, incohérences, signatures absentes"]}
+Après le JSON, synthèse courte sur la validité du contrat.`,
+
+      default: `Tu analyses un document locatif pour l'agence Kàddu Sénégal.
+Identifie le type de document, extrais les informations clés en JSON strict :
+KADDU_DOC:{"type_document":"[description]","nom":"","date":"[YYYY-MM-DD ou vide]","montant":[nombre ou null],"emetteur":"","anomalies":["incohérences visuelles, données manquantes ou suspectes"]}
+Après le JSON, synthèse courte en 2-3 lignes.`
+    };
+
+    function getDocPrompt(docKey){
+      if(!docKey) return DOC_EXTRACT_PROMPTS.default;
+      const k = docKey.split('_').slice(1).join('_');
+      return DOC_EXTRACT_PROMPTS[k] || DOC_EXTRACT_PROMPTS.default;
+    }
+
+    async function analyserDocIA(url, name){
+      const apiKey = document.getElementById('afKey')?.value?.trim();
+      if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
+
+      // Récupérer le contexte déclaré du dossier pour le cross-check
+      const row = _currentDossier;
+
+      // Fetch du document en base64
+      let base64Data, mediaType;
+      try{
+        const r = await fetch(url);
+        if(!r.ok) throw new Error('Impossible de récupérer le document');
+        const blob = await r.blob();
+        mediaType = blob.type || 'application/pdf';
+        base64Data = await new Promise((res,rej)=>{
+          const reader = new FileReader();
+          reader.onload = ()=> res(reader.result.split(',')[1]);
+          reader.onerror = rej;
+          reader.readAsDataURL(blob);
+        });
+      }catch(e){ alert('Impossible de charger le document : '+e.message); return; }
+
+      // Déterminer le prompt selon le type de document
+      const docKey = (row?.docs_fournis||[]).find(d=>d.name===name)?.key || '';
+      const extractPrompt = getDocPrompt(docKey);
+
+      // Construire le contexte déclaré pour le cross-check
+      let crossContext = '';
+      if(row){
+        const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+        const locs = msg.locataires||[];
+        if(locs.length){
+          const l = locs[0];
+          crossContext = `\n\nDONNÉES DÉCLARÉES PAR LE CANDIDAT (pour vérification croisée) :
+- Nom : ${l.nom||'—'} ${l.prenom||''}
+- Date de naissance : ${l.ddn||'—'}
+- Nationalité : ${l.nationalite||'—'}
+- Numéro de pièce déclaré : ${l.id_numero||'—'}
+- Situation professionnelle : ${l.situation||'—'}
+- Revenus déclarés : ${l.revenu ? Number(l.revenu).toLocaleString('fr-FR')+' XOF/mois' : '—'}
+- Employeur déclaré : ${l.societe||'—'}
+Si des données du document diffèrent de ce qui est déclaré, mentionne-le explicitement dans les anomalies.`;
+        }
+      }
+
+      const isImage = mediaType.startsWith('image/');
+      const content = isImage
+        ? [
+            {type:'image', source:{type:'base64', media_type:mediaType, data:base64Data}},
+            {type:'text', text: extractPrompt + crossContext}
+          ]
+        : [
+            {type:'document', source:{type:'base64', media_type:'application/pdf', data:base64Data}},
+            {type:'text', text: extractPrompt + crossContext}
+          ];
+
+      const vigEl = document.getElementById('afVigBadge');
+      const resultWrap = document.getElementById('afResultWrap');
+      const loader = document.getElementById('afLoaderRow');
+      const btn = document.getElementById('afAnalyseBtn');
+
+      btn.disabled = true;
+      loader.classList.add('visible');
+      resultWrap.classList.remove('visible');
+      document.getElementById('afSection')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+      try{
+        let modelId = 'claude-sonnet-4-5';
+        try{
+          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`,{headers:getAuthHeaders()});
+          if(cfgR.ok){const cfg=await cfgR.json();if(cfg?.[0]?.value)modelId=cfg[0].value;}
+        }catch(_){}
+
+        const resp = await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body:JSON.stringify({model:modelId, max_tokens:1200, messages:[{role:'user', content}]})
+        });
+        if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`Erreur API (${resp.status})`);}
+        const data = await resp.json();
+        const rawText = data.content?.map(c=>c.text||'').join('')||'';
+
+        // Extraire le JSON structuré du document
+        let docData = null;
+        let displayText = rawText;
+        const dm = rawText.match(/KADDU_DOC:(\{[^}]+\})/s);
+        if(dm){ try{ docData=JSON.parse(dm[1]); displayText=rawText.replace(/KADDU_DOC:\{[^}]+\}/s,'').trim(); }catch(_){} }
+
+        // Construire l'affichage enrichi avec les données extraites
+        let extractedHtml = '';
+        if(docData){
+          const anomalies = Array.isArray(docData.anomalies) ? docData.anomalies.filter(Boolean) : [];
+          const hasAnomaly = anomalies.length > 0;
+          vigEl.textContent = hasAnomaly ? 'Anomalies détectées' : 'Document conforme';
+          vigEl.className = 'af-vig ' + (hasAnomaly ? 'af-vig-high' : 'af-vig-low');
+
+          // Tableau des données extraites
+          const fields = Object.entries(docData)
+            .filter(([k]) => !['type_document','anomalies'].includes(k) && docData[k] !== null && docData[k] !== '' && docData[k] !== undefined);
+
+          const fieldLabels = {
+            nom:'Nom', prenom:'Prénom', nom_salarie:'Nom salarié', titulaire:'Titulaire',
+            date_naissance:'Date naissance', numero_piece:'N° pièce', date_expiration:'Expiration',
+            nationalite:'Nationalité', valide:'Document valide',
+            employeur:'Employeur', salaire_net:'Salaire net (XOF)', salaire_brut:'Salaire brut (XOF)',
+            salaire_contractuel:'Salaire contractuel', periode:'Période', date_bulletin:'Date bulletin',
+            type_contrat:'Type contrat', date_embauche:'Date embauche', poste:'Poste',
+            banque_ou_service:'Banque/Service', periode_debut:'Période début', periode_fin:'Période fin',
+            solde_moyen_estime:'Solde moyen estimé', revenus_reguliers_detectes:'Revenus réguliers',
+            montant:'Montant', emetteur:'Émetteur', date:'Date',
+          };
+
+          if(fields.length){
+            extractedHtml = `<div style="margin-bottom:10px;padding:10px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(191,150,80,.15);border-radius:8px">
+              <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(191,150,80,.6);margin-bottom:8px">📋 Données extraites — ${docData.type_document||'Document'}</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px">
+                ${fields.map(([k,v])=>`<div style="font-size:.72rem;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+                  <span style="color:rgba(248,244,238,.35)">${fieldLabels[k]||k} : </span>
+                  <strong style="color:rgba(248,244,238,.85)">${typeof v === 'boolean' ? (v?'✓ Oui':'✗ Non') : (typeof v==='number'?v.toLocaleString('fr-FR'):v)}</strong>
+                </div>`).join('')}
+              </div>
+            </div>`;
+          }
+
+          if(hasAnomaly){
+            extractedHtml += `<div style="margin-bottom:10px;padding:10px 14px;background:rgba(255,107,107,.05);border:1px solid rgba(255,107,107,.2);border-radius:8px">
+              <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#ff8a8a;margin-bottom:6px">⚠ Anomalies détectées</div>
+              ${anomalies.map(a=>`<div style="font-size:.76rem;color:rgba(248,244,238,.65);padding:2px 0">• ${a}</div>`).join('')}
+            </div>`;
+          }
+        } else {
+          vigEl.textContent='Analyse document'; vigEl.className='af-vig af-vig-mid';
+        }
+
+        const finalHtml = extractedHtml + renderAfMd(`## Analyse — ${name}\n\n${displayText}`);
+        document.getElementById('afResultBody').innerHTML = finalHtml;
+        resultWrap.classList.add('visible');
+
+      }catch(err){
+        alert('Erreur : '+err.message);
+      }finally{
+        btn.disabled=false;
+        loader.classList.remove('visible');
+      }
+    }
+    // ══ FIN DOCUMENTS ADMIN ══════════════════════════════════
 </body>
 </html>
