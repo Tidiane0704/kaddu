@@ -239,9 +239,27 @@ serve(async (req: Request) => {
         ...snapshot,
         dossier_id: finalDossierId,
       }),
-      status_metier: "a_traiter",
-      final_status: "en_attente",
-      updated_at: now,
+      status: "nouveau",
+ratio: null,
+flags: JSON.stringify([
+  `risk_level:${riskLevel}`,
+  `documents:${docsFournis.length}`,
+  garants.length ? "garant:oui" : "garant:non",
+]),
+reasons: JSON.stringify({
+  risk_level: riskLevel,
+  score,
+  documents_count: docsFournis.length,
+  has_garant: garants.length > 0,
+}),
+otp_verified: false,
+payload: JSON.stringify({
+  ...snapshot,
+  dossier_id: finalDossierId,
+}),
+status_metier: "a_traiter",
+final_status: "en_attente",
+updated_at: now,
     };
 
     const { data: rental, error: rentalError } = await supabaseAdmin
