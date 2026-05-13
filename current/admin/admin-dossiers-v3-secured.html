@@ -89,6 +89,17 @@
     .history-item:last-child{border-bottom:none}
     .action-help{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
     .success-note{display:none;margin-top:12px;padding:10px 12px;border:1px solid rgba(0,200,117,.35);background:rgba(0,200,117,.1);color:#77ffbe}
+
+
+    /* ── GOUVERNANCE SUPPRESSION / RGPD ── */
+    .gdpr-box{border:1px solid rgba(255,107,107,.22);background:rgba(255,107,107,.035);padding:14px 16px;margin-bottom:14px}
+    .gdpr-box .title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#ffb3b3;margin-bottom:12px}
+    .gdpr-warning{font-size:13px;color:rgba(248,244,238,.62);line-height:1.65;margin-bottom:12px}
+    .gdpr-lock{padding:10px 12px;border:1px solid rgba(245,166,35,.25);background:rgba(245,166,35,.07);color:#ffd180;font-size:13px;line-height:1.55;margin-bottom:12px}
+    .gdpr-request-form{display:none;margin-top:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:12px}
+    .gdpr-request-form.open{display:block}
+    .gdpr-request-form label{display:block;font-size:12px;color:rgba(248,244,238,.55);margin:10px 0 6px}
+    .gdpr-small{font-size:12px;color:rgba(248,244,238,.38);line-height:1.55;margin-top:8px}
     @media (max-width:1320px){.toolbar{grid-template-columns:1fr 1fr 1fr}.stats{grid-template-columns:1fr 1fr 1fr}.layout{grid-template-columns:1fr}}
     @media (max-width:900px){.toolbar{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
     @media (max-width:760px){.toolbar{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.hero{display:block}.hero h1{font-size:38px}.grid{grid-template-columns:1fr}}
@@ -553,6 +564,41 @@
             <a href="#" class="btn-wa" id="waLink" target="_blank" rel="noopener noreferrer">Contacter sur WhatsApp</a>
           </div>
 
+          <!-- ══ GOUVERNANCE SUPPRESSION / RGPD ══ -->
+          <div class="gdpr-box" id="gdprSection">
+            <div class="title">Zone sensible — conservation & droit à l’oubli</div>
+            <div class="gdpr-warning">
+              Aucune suppression définitive n’est exécutée depuis cet écran. L’admin peut uniquement créer une demande.
+              La suppression réelle doit passer par une Edge Function serveur avec vérifications métier, double validation et journal d’audit.
+            </div>
+            <div class="gdpr-lock" id="gdprGuardStatus">Sélectionnez un dossier pour évaluer les protections.</div>
+            <div class="detail-actions">
+              <button class="btn-danger" id="btnOpenDeletionRequest" type="button">Demander suppression RGPD</button>
+            </div>
+            <div class="gdpr-request-form" id="deletionRequestForm">
+              <label for="deletionReasonSelect">Motif de la demande</label>
+              <select id="deletionReasonSelect">
+                <option value="">Choisir un motif</option>
+                <option value="droit_oubli">Droit à l’oubli demandé par le candidat</option>
+                <option value="dossier_expire">Dossier candidat expiré / rétention dépassée</option>
+                <option value="doublon">Doublon ou erreur de saisie</option>
+                <option value="donnees_erronees">Données erronées à purger</option>
+                <option value="autre">Autre motif documenté</option>
+              </select>
+              <label for="deletionRequestComment">Commentaire / justification interne</label>
+              <textarea id="deletionRequestComment" placeholder="Ex : demande reçue par email le…, candidat non retenu, aucune location active connue…"></textarea>
+              <div class="detail-actions">
+                <button class="btn-danger" id="btnSubmitDeletionRequest" type="button">Créer la demande — sans supprimer</button>
+                <button class="btn-ghost" id="btnCancelDeletionRequest" type="button">Annuler</button>
+              </div>
+              <div class="gdpr-small">
+                Cette action crée une ligne dans <code>deletion_requests</code>. Elle ne supprime ni le dossier ni les fichiers Storage.
+              </div>
+            </div>
+          </div>
+          <!-- ══ FIN GOUVERNANCE SUPPRESSION / RGPD ══ -->
+
+
           <div class="footer-note">
             Cette V3 ajoute la couche conversion : statut final, date de conversion et marquage “Loué”.
           </div>
@@ -676,7 +722,8 @@
         score_generated: "Score généré",
         status_metier_changed: "Statut métier modifié",
         internal_comment_added: "Commentaire interne ajouté",
-        dossier_converted: "Dossier converti en location"
+        dossier_converted: "Dossier converti en location",
+        deletion_request_created: "Demande de suppression créée"
       };
       return map[type] || type || "Événement";
     }
@@ -934,6 +981,7 @@
       renderHistory(row.id);
       prepareAfContext(row);
       renderDocsAdmin(row);
+      renderGdprGuard(row);
       loadPasseportForDossier(row).catch(()=>{});
     }
 
@@ -1118,6 +1166,153 @@
       try { await markAsRented(); } catch(e){ alert(e.message); }
     });
 
+    const openDelBtn = document.getElementById("btnOpenDeletionRequest");
+    if(openDelBtn) openDelBtn.addEventListener("click", () => {
+      const form = document.getElementById("deletionRequestForm");
+      if(form) form.classList.toggle("open");
+    });
+
+    const cancelDelBtn = document.getElementById("btnCancelDeletionRequest");
+    if(cancelDelBtn) cancelDelBtn.addEventListener("click", () => {
+      const form = document.getElementById("deletionRequestForm");
+      if(form) form.classList.remove("open");
+      const reason = document.getElementById("deletionReasonSelect");
+      const comment = document.getElementById("deletionRequestComment");
+      if(reason) reason.value = "";
+      if(comment) comment.value = "";
+    });
+
+    const submitDelBtn = document.getElementById("btnSubmitDeletionRequest");
+    if(submitDelBtn) submitDelBtn.addEventListener("click", async () => {
+      try { await createDeletionRequest(); } catch(e){ alert(e.message); }
+    });
+
+    }
+
+
+
+    function getRetentionCategory(row){
+      const finalStatus = row?.final_status || "en_cours";
+      const metierStatus = row?.status_metier || "nouveau";
+      const isRented = finalStatus === "loue" || metierStatus === "valide";
+      if(isRented){
+        return {
+          code: "location_active_or_validated",
+          locked: true,
+          label: "Protection forte : dossier validé / loué",
+          detail: "Ce dossier peut être lié à une location ou à des preuves contractuelles. Suppression définitive bloquée sans validation renforcée côté serveur."
+        };
+      }
+      if(finalStatus === "en_cours" && !["refuse","archive"].includes(metierStatus)){
+        return {
+          code: "active_candidate",
+          locked: true,
+          label: "Protection : candidature encore active",
+          detail: "Le dossier est encore en cours. Il faut d’abord le refuser, l’abandonner ou l’archiver avant toute demande de purge."
+        };
+      }
+      return {
+        code: "candidate_non_retained",
+        locked: false,
+        label: "Demande possible : candidat non retenu / dossier archivé",
+        detail: "Une demande de suppression peut être créée, mais l’exécution restera soumise à validation et contrôles serveur."
+      };
+    }
+
+    function renderGdprGuard(row){
+      const guard = getRetentionCategory(row);
+      const statusEl = document.getElementById("gdprGuardStatus");
+      if(statusEl){
+        statusEl.innerHTML = `<strong>${guard.label}</strong><br>${guard.detail}`;
+      }
+      const btn = document.getElementById("btnOpenDeletionRequest");
+      if(btn){
+        btn.textContent = guard.locked ? "Créer une demande exceptionnelle" : "Demander suppression RGPD";
+      }
+    }
+
+    function extractStoragePathsFromDocs(row){
+      const docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+      return docs.map(doc => {
+        if(doc.path) return doc.path;
+        if(doc.key && String(doc.key).includes("/")) return doc.key;
+        if(doc.url){
+          try{
+            const u = new URL(doc.url);
+            const marker = "/storage/v1/object/public/";
+            const idx = u.pathname.indexOf(marker);
+            if(idx >= 0){
+              const rest = u.pathname.slice(idx + marker.length);
+              return decodeURIComponent(rest.split("/").slice(1).join("/"));
+            }
+          }catch(_){ }
+        }
+        return doc.key || doc.name || null;
+      }).filter(Boolean);
+    }
+
+    async function createDeletionRequest(){
+      if(!selectedId) return;
+      const row = allRows.find(r => r.id === selectedId) || _currentDossier;
+      if(!row) throw new Error("Aucun dossier sélectionné.");
+
+      const reason = document.getElementById("deletionReasonSelect")?.value || "";
+      const comment = document.getElementById("deletionRequestComment")?.value?.trim() || "";
+      if(!reason){
+        alert("Choisissez un motif avant de créer la demande.");
+        return;
+      }
+      if(!comment || comment.length < 12){
+        alert("Ajoutez un commentaire suffisamment explicite avant de créer la demande.");
+        return;
+      }
+
+      const guard = getRetentionCategory(row);
+      const storagePaths = extractStoragePathsFromDocs(row);
+      const payload = {
+        rental_dossier_id: row.id,
+        locataire_id: row.locataire_id || null,
+        locataire_email: row.email || null,
+        locataire_nom: row.nom || null,
+        reason_code: reason,
+        comment: comment,
+        status: "pending",
+        protection_code: guard.code,
+        is_protected: guard.locked,
+        final_status_snapshot: row.final_status || "en_cours",
+        status_metier_snapshot: row.status_metier || "nouveau",
+        storage_paths: storagePaths,
+        requested_by: currentSession?.user?.email || "admin",
+        requested_at: new Date().toISOString()
+      };
+
+      const res = await fetch(`${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/deletion_requests`, {
+        method: "POST",
+        headers: { ...getAuthHeaders(), "Prefer": "return=minimal" },
+        body: JSON.stringify(payload)
+      });
+
+      if(!res.ok){
+        const txt = await res.text();
+        if(txt.includes("42P01") || txt.toLowerCase().includes("deletion_requests")){
+          throw new Error("La table deletion_requests n’existe pas encore. Exécute d’abord le SQL de gouvernance suppression dans Supabase.");
+        }
+        throw new Error(txt || "Impossible de créer la demande de suppression.");
+      }
+
+      await createDossierEvent({
+        dossierId: row.id,
+        eventType: "deletion_request_created",
+        oldValue: null,
+        newValue: guard.locked ? "pending_protected" : "pending",
+        comment: `${reason} — ${comment}`
+      }).catch(()=>{});
+
+      document.getElementById("deletionRequestForm")?.classList.remove("open");
+      document.getElementById("deletionReasonSelect").value = "";
+      document.getElementById("deletionRequestComment").value = "";
+      showSuccess("Demande de suppression créée. Aucune donnée n’a été supprimée.");
+      renderHistory(row.id);
     }
 
     // ── SUPABASE AUTH ──────────────────────────────────────────
@@ -1804,21 +1999,34 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         pension:'📄', justif_ressources:'💼', justif_situation:'📄',
       };
 
-      list.innerHTML = docs.map((doc, i) => {
-        const docId = doc.key ? doc.key.split('_').slice(1).join('_') : '';
-        const icon  = DOC_ICONS[docId] || '📎';
-        const name  = doc.name || `Document ${i+1}`;
-        const ext   = name.split('.').pop().toUpperCase();
-        return `<div class="doc-admin-item">
-          <div class="doc-admin-icon">${icon}</div>
-          <div class="doc-admin-info">
-            <div class="doc-admin-name">${name}</div>
-            <div class="doc-admin-meta">${ext} · ${doc.key||''}</div>
-          </div>
-          <button class="doc-admin-btn" onclick="window.open('${doc.url}','_blank')">Ouvrir</button>
-          <button class="doc-admin-btn doc-admin-analyse" onclick="analyserDocIA('${doc.url}','${name}')">Analyser IA</button>
-        </div>`;
-      }).join('');
+      // Bouton analyse groupée
+      const alreadyAnalysed = row._docsAnalysed || false;
+      list.innerHTML = `
+        <div style="margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="doc-admin-btn doc-admin-analyse" style="padding:8px 16px;font-size:.76rem;font-weight:600"
+            onclick="analyserTousDocsIA()" id="btnAnalyseAll">
+            🔍 Analyser tous les documents + cross-check
+          </button>
+          ${alreadyAnalysed
+            ? '<span style="font-size:.68rem;color:#77ffbe">✓ Déjà analysés dans cette session</span>'
+            : '<span style="font-size:.68rem;color:rgba(248,244,238,.3)">1 seule requête · cross-check automatique avec les données déclarées</span>'
+          }
+        </div>` +
+        docs.map((doc, i) => {
+          const docId = doc.key ? doc.key.split('_').slice(1).join('_') : '';
+          const icon  = DOC_ICONS[docId] || '📎';
+          const name  = doc.name || `Document ${i+1}`;
+          const ext   = name.split('.').pop().toUpperCase();
+          return `<div class="doc-admin-item">
+            <div class="doc-admin-icon">${icon}</div>
+            <div class="doc-admin-info">
+              <div class="doc-admin-name">${name}</div>
+              <div class="doc-admin-meta">${ext} · ${doc.key||''}</div>
+            </div>
+            <button class="doc-admin-btn" onclick="window.open('${doc.url}','_blank')">Ouvrir</button>
+            <button class="doc-admin-btn doc-admin-analyse" onclick="analyserDocIA('${doc.url}','${name}')">Analyser seul</button>
+          </div>`;
+        }).join('');
     }
 
     // ── PROMPTS D'EXTRACTION PAR TYPE DE DOCUMENT ─────────────
@@ -1853,6 +2061,158 @@ Après le JSON, synthèse courte en 2-3 lignes.`
       if(!docKey) return DOC_EXTRACT_PROMPTS.default;
       const k = docKey.split('_').slice(1).join('_');
       return DOC_EXTRACT_PROMPTS[k] || DOC_EXTRACT_PROMPTS.default;
+    }
+
+    async function analyserTousDocsIA(){
+      const apiKey = document.getElementById('afKey')?.value?.trim();
+      if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
+
+      const row = _currentDossier;
+      const docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+      if(!docs.length){ alert('Aucun document à analyser.'); return; }
+
+      const btn = document.getElementById('btnAnalyseAll');
+      if(btn){ btn.disabled = true; btn.textContent = `⏳ Chargement des ${docs.length} documents…`; }
+
+      const vigEl  = document.getElementById('afVigBadge');
+      const result = document.getElementById('afResultWrap');
+      const loader = document.getElementById('afLoaderRow');
+      if(loader) loader.classList.add('visible');
+      if(result) result.classList.remove('visible');
+
+      // Construire le contexte déclaré pour cross-check
+      const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+      const crossContext = `
+DONNÉES DÉCLARÉES PAR LE CANDIDAT (pour vérification croisée) :
+- Nom : ${row.nom||'—'}
+- Date de naissance : ${row.date_naissance||'—'}
+- Nationalité : ${row.nationalite||'—'}
+- Situation : ${row.situation||'—'}
+- Employeur : ${row.employeur||'—'}
+- Revenu mensuel déclaré : ${row.revenu_mensuel ? Number(row.revenu_mensuel).toLocaleString('fr-FR')+' XOF' : '—'}
+- Garant : ${row.garant||'—'}
+
+Pour chaque document analysé, indique si les données correspondent aux déclarations ci-dessus.
+Si une donnée diffère, mentionne-le explicitement avec le label ⚠ ÉCART DÉTECTÉ.`;
+
+      const PROMPT_GROUPE = `Tu es l'assistant antifraude de l'agence immobilière Kàddu (Sénégal).
+Tu reçois ${docs.length} document(s) d'un dossier locataire. Analyse-les tous et produis :
+
+1. Pour chaque document : type détecté, données clés extraites, anomalies visuelles
+2. Cross-check global : compare les données entre documents et avec les déclarations du candidat
+3. Synthèse consolidée : cohérence globale du dossier documentaire
+
+Format de réponse :
+## ANALYSE PAR DOCUMENT
+[Pour chaque doc : ## Doc N — [type] puis données et anomalies]
+
+## CROSS-CHECK GLOBAL
+[Écarts entre documents et déclarations]
+
+## SYNTHÈSE DOCUMENTAIRE
+[Évaluation globale en 3-4 phrases]
+
+## NIVEAU DE FIABILITÉ DOCUMENTAIRE
+[Élevé / Moyen / Faible] — [justification courte]
+
+${crossContext}
+
+Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
+
+      try{
+        // Charger tous les documents en parallèle
+        if(btn) btn.textContent = `⏳ Analyse en cours…`;
+
+        const contentParts = [];
+        let loaded = 0;
+
+        await Promise.all(docs.map(async (doc) => {
+          try{
+            const r = await fetch(doc.url);
+            if(!r.ok) return;
+            const blob = await r.blob();
+            const mediaType = blob.type || 'application/pdf';
+            const base64 = await new Promise((res,rej)=>{
+              const reader = new FileReader();
+              reader.onload = ()=> res(reader.result.split(',')[1]);
+              reader.onerror = rej;
+              reader.readAsDataURL(blob);
+            });
+            const isImage = mediaType.startsWith('image/');
+            contentParts.push(isImage
+              ? {type:'image', source:{type:'base64', media_type:mediaType, data:base64}}
+              : {type:'document', source:{type:'base64', media_type:'application/pdf', data:base64}}
+            );
+            contentParts.push({type:'text', text:`— Document "${doc.name||'Document'}" (${doc.key||''}) —`});
+            loaded++;
+          }catch(_){}
+        }));
+
+        if(!loaded){ throw new Error('Impossible de charger les documents depuis le Storage.'); }
+
+        // Ajouter le prompt à la fin
+        contentParts.push({type:'text', text: PROMPT_GROUPE});
+
+        // Récupérer modèle
+        let modelId = 'claude-sonnet-4-5';
+        try{
+          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`,{headers:getAuthHeaders()});
+          if(cfgR.ok){const cfg=await cfgR.json();if(cfg?.[0]?.value)modelId=cfg[0].value;}
+        }catch(_){}
+
+        // Appel Claude — une seule requête
+        const resp = await fetch('https://api.anthropic.com/v1/messages',{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'x-api-key':apiKey,
+            'anthropic-version':'2023-06-01',
+            'anthropic-dangerous-direct-browser-access':'true'
+          },
+          body:JSON.stringify({
+            model: modelId,
+            max_tokens: 2000,
+            messages:[{role:'user', content: contentParts}]
+          })
+        });
+
+        if(!resp.ok){
+          const err=await resp.json().catch(()=>({}));
+          throw new Error(err?.error?.message||`Erreur API (${resp.status})`);
+        }
+
+        const data = await resp.json();
+        const rawText = data.content?.map(c=>c.text||'').join('')||'';
+
+        // Badge vigilance
+        if(/faible/i.test(rawText) && /fiabilité/i.test(rawText)){
+          vigEl.textContent='Fiabilité faible'; vigEl.className='af-vig af-vig-high';
+        } else if(/moyen/i.test(rawText) && /fiabilité/i.test(rawText)){
+          vigEl.textContent='Fiabilité moyenne'; vigEl.className='af-vig af-vig-mid';
+        } else {
+          vigEl.textContent='Analyse documents'; vigEl.className='af-vig af-vig-mid';
+        }
+
+        document.getElementById('afResultBody').innerHTML = renderAfMd(
+          `## Analyse groupée — ${loaded} document${loaded>1?'s':''}\n\n${rawText}`
+        );
+        result.classList.add('visible');
+
+        // Marquer comme analysé dans cette session
+        if(_currentDossier) _currentDossier._docsAnalysed = true;
+        if(btn){
+          btn.disabled = false;
+          btn.textContent = '✓ Analysés — Relancer';
+          btn.style.color = '#77ffbe';
+          btn.style.borderColor = 'rgba(0,200,117,.4)';
+        }
+
+      }catch(err){
+        alert('Erreur : '+err.message);
+        if(btn){ btn.disabled=false; btn.textContent='🔍 Analyser tous les documents + cross-check'; }
+      }finally{
+        if(loader) loader.classList.remove('visible');
+      }
     }
 
     async function analyserDocIA(url, name){
