@@ -85,6 +85,46 @@
       color:#ffb3b3;font-size:.8rem;display:none
     }
     .auth-loading{margin-top:10px;text-align:center;font-size:.78rem;color:var(--muted);display:none}
+    .auth-pw-wrap{position:relative}
+    .auth-pw-wrap input{padding-right:44px}
+    .auth-eye-btn{
+      position:absolute;right:10px;top:50%;transform:translateY(-50%);
+      border:none;background:transparent;color:rgba(248,244,238,.35);
+      cursor:pointer;width:28px;height:28px;display:flex;align-items:center;
+      justify-content:center;border-radius:6px;transition:.18s;font-size:.9rem;
+    }
+    .auth-eye-btn:hover{color:var(--or);background:rgba(191,150,80,.08)}
+    .auth-forgot{
+      display:block;text-align:right;font-size:.72rem;color:rgba(248,244,238,.35);
+      margin-top:6px;cursor:pointer;transition:.18s;background:none;border:none;
+      font-family:'DM Sans',sans-serif;padding:0;
+    }
+    .auth-forgot:hover{color:var(--or)}
+    .auth-reset-box{
+      display:none;margin-top:16px;padding:14px 16px;
+      border:1px solid rgba(191,150,80,.2);border-radius:10px;
+      background:rgba(191,150,80,.05);
+    }
+    .auth-reset-box.visible{display:block}
+    .auth-reset-box p{font-size:.78rem;color:var(--muted);margin-bottom:10px;line-height:1.55}
+    .auth-reset-input{
+      width:100%;padding:10px 12px;background:rgba(255,255,255,.04);
+      border:1px solid rgba(191,150,80,.18);border-radius:8px;
+      color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.88rem;
+      margin-bottom:8px;box-sizing:border-box;
+    }
+    .auth-reset-input:focus{outline:none;border-color:var(--or)}
+    .auth-reset-btn{
+      width:100%;padding:10px;background:transparent;border:1px solid rgba(191,150,80,.3);
+      border-radius:8px;color:var(--or);font-family:'DM Sans',sans-serif;
+      font-size:.78rem;font-weight:600;cursor:pointer;transition:.18s;
+    }
+    .auth-reset-btn:hover{background:rgba(191,150,80,.1)}
+    .auth-reset-ok{
+      font-size:.76rem;color:#77ffbe;margin-top:8px;display:none;
+      align-items:center;gap:6px;
+    }
+    .auth-reset-ok.visible{display:flex}
 
     /* ── APP SHELL ── */
     #appShell{display:none}
@@ -677,9 +717,25 @@
         <label for="authPw">Mot de passe</label>
         <input id="authPw" type="password" autocomplete="current-password"/>
       </div>
+      <div class="auth-field">
+        <label for="authPw">Mot de passe</label>
+        <div class="auth-pw-wrap">
+          <input id="authPw" type="password" autocomplete="current-password"/>
+          <button class="auth-eye-btn" type="button" id="authPwEye" aria-label="Afficher le mot de passe">👁</button>
+        </div>
+        <button class="auth-forgot" type="button" id="authForgotBtn">Mot de passe oublié ?</button>
+      </div>
       <button class="auth-btn" id="authBtn">Connexion →</button>
       <div class="auth-err" id="authErr"></div>
       <div class="auth-loading" id="authLoading">Authentification en cours…</div>
+
+      <!-- Reset password -->
+      <div class="auth-reset-box" id="authResetBox">
+        <p>Entrez votre adresse email admin. Vous recevrez un lien pour créer un nouveau mot de passe.</p>
+        <input class="auth-reset-input" id="authResetEmail" type="email" placeholder="votre@email.com"/>
+        <button class="auth-reset-btn" id="authResetBtn">Envoyer le lien de réinitialisation →</button>
+        <div class="auth-reset-ok" id="authResetOk">✓ Email envoyé — vérifiez votre boîte mail</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1271,6 +1327,49 @@ document.getElementById("authBtn").addEventListener("click", async () => {
 });
 
 ["authEmail","authPw"].forEach(id => document.getElementById(id).addEventListener("keydown", e => { if(e.key==="Enter") document.getElementById("authBtn").click(); }));
+
+// ── EYE TOGGLE ───────────────────────────────────────────────
+document.getElementById("authPwEye").addEventListener("click", function(){
+  const input = document.getElementById("authPw");
+  const visible = input.type === "text";
+  input.type = visible ? "password" : "text";
+  this.textContent = visible ? "👁" : "🙈";
+});
+
+// ── MOT DE PASSE OUBLIÉ ──────────────────────────────────────
+document.getElementById("authForgotBtn").addEventListener("click", function(){
+  const box = document.getElementById("authResetBox");
+  const open = box.classList.toggle("visible");
+  this.textContent = open ? "Annuler" : "Mot de passe oublié ?";
+  if(open){
+    const email = document.getElementById("authEmail").value.trim();
+    if(email) document.getElementById("authResetEmail").value = email;
+  }
+});
+
+document.getElementById("authResetBtn").addEventListener("click", async function(){
+  const email = document.getElementById("authResetEmail").value.trim();
+  const okEl  = document.getElementById("authResetOk");
+  const errEl = document.getElementById("authErr");
+  if(!email){ errEl.textContent="Entrez votre adresse email."; errEl.style.display="block"; return; }
+  this.disabled = true;
+  this.textContent = "Envoi en cours…";
+  errEl.style.display = "none";
+  try{
+    await fetch(`${SB}/auth/v1/recover`, {
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":ANON},
+      body:JSON.stringify({email})
+    });
+    okEl.classList.add("visible");
+    this.textContent = "Email envoyé ✓";
+  }catch(e){
+    errEl.textContent = "Erreur lors de l'envoi. Réessayez.";
+    errEl.style.display = "block";
+    this.disabled = false;
+    this.textContent = "Envoyer le lien de réinitialisation →";
+  }
+});
 document.getElementById("logoutBtn").addEventListener("click", () => { clearSess(); location.reload(); });
 
 // ══ SHOW APP ══════════════════════════════════════
