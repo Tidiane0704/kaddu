@@ -2676,6 +2676,49 @@ const DOC_RULES = {
 // Stockage des uploads { locataireIdx_docId : { file, url, status } }
 let uploadedDocs = {};
 
+// ── PROSPECT DRAFT / UPLOAD CONTEXT ──────────────────────────
+// Permet à un candidat non encore connecté de déposer temporairement
+// ses documents dans dossiers/tmp/{prospect_draft_id}/...
+// Une fois la candidature envoyée, submit-rental-dossier pourra rattacher
+// ces chemins au dossier officiel.
+const PROSPECT_DRAFT_KEY = 'kaddu_prospect_draft_id_v1';
+
+function getOrCreateProspectDraftId(){
+  try{
+    let id = sessionStorage.getItem(PROSPECT_DRAFT_KEY) || localStorage.getItem(PROSPECT_DRAFT_KEY);
+    if(!id){
+      const rand = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2);
+      id = 'prospect_' + rand.replace(/[^a-zA-Z0-9_-]/g,'');
+      sessionStorage.setItem(PROSPECT_DRAFT_KEY, id);
+      localStorage.setItem(PROSPECT_DRAFT_KEY, id);
+    }
+    return id;
+  }catch(_){
+    return 'prospect_' + Date.now() + '_' + Math.random().toString(16).slice(2);
+  }
+}
+
+function getUploadAuthContext(){
+  const s = (typeof getActiveSession === 'function' ? getActiveSession() : (getSession() || session));
+  if(s && s.access_token && s.user && s.user.id){
+    return {
+      mode: 'locataire',
+      token: s.access_token,
+      userId: s.user.id,
+      draftId: activeDossierId || null,
+      folder: activeDossierId || s.user.id
+    };
+  }
+  const prospectId = getOrCreateProspectDraftId();
+  return {
+    mode: 'prospect',
+    token: SB_KEY,
+    userId: null,
+    draftId: prospectId,
+    folder: 'tmp/' + prospectId
+  };
+}
+
 function buildDocsUI(){
   const container = document.getElementById('docs-container');
   if(!locataires.length){ container.innerHTML = ''; return; }
@@ -2784,26 +2827,25 @@ async function handleDocUpload(event, key, prenomLoc){
     // Upload vers Supabase Storage — bucket "documents"
     const ext = file.name.split('.').pop();
 
-    // Upload sécurisé : l'utilisateur doit être connecté à son espace locataire.
-    const uploadSession = (typeof getActiveSession === 'function' ? getActiveSession() : (getSession() || session));
-    if(!uploadSession || !uploadSession.access_token || !uploadSession.user?.id){
-      throw new Error('SESSION_LOCATAIRE_ABSENTE');
-    }
+    // Upload sécurisé :
+    // - locataire connecté : dossiers/{dossier_id ou user_id}/...
+    // - prospect non connecté : dossiers/tmp/{prospect_draft_id}/...
+    const uploadContext = getUploadAuthContext();
 
-    // Le dossier brouillon doit exister avant de stocker un document.
-    // Cela permet un chemin compatible avec les policies Supabase : dossiers/{dossier_id}/...
-    if(!activeDossierId && typeof saveRemoteDraft === 'function'){
+    // Si une vraie session locataire existe, on crée/réutilise le brouillon distant.
+    // En mode prospect, on ne bloque plus : les fichiers sont stockés en tmp.
+    if(uploadContext.mode === 'locataire' && !activeDossierId && typeof saveRemoteDraft === 'function'){
       await saveRemoteDraft(3);
+      uploadContext.folder = activeDossierId || uploadContext.userId;
     }
 
-    const ownerFolder = activeDossierId || uploadSession.user.id;
-    const path = `dossiers/${ownerFolder}/${key}_${Date.now()}.${ext}`;
+    const path = `dossiers/${uploadContext.folder}/${key}_${Date.now()}.${ext}`;
 
     const res = await fetch(`${SB_URL}/storage/v1/object/documents-dossiers/${path}`, {
       method: 'POST',
       headers: {
         'apikey': SB_KEY,
-        'Authorization': 'Bearer ' + uploadSession.access_token,
+        'Authorization': 'Bearer ' + uploadContext.token,
         'Content-Type': file.type || 'application/octet-stream',
         'x-upsert': 'true',
       },
@@ -4282,6 +4324,29 @@ setTimeout(()=>{
     updateEnrollmentState && updateEnrollmentState();
   }
 }, 600);
+
+// ══ PATCH PROSPECT : AUTORISER LE DÉPÔT DOCUMENTAIRE TEMPORAIRE ══
+// L'utilisateur peut continuer sans espace locataire actif. Les uploads vont
+// dans dossiers/tmp/{prospect_draft_id}/ puis seront rattachés au dossier final.
+(function(){
+  const previousEnsureTenantEnrollment = typeof ensureTenantEnrollment === 'function' ? ensureTenantEnrollment : null;
+  if(previousEnsureTenantEnrollment){
+    ensureTenantEnrollment = async function(){
+      if(hasActiveTenantSession()){
+        updateEnrollmentState && updateEnrollmentState();
+        return true;
+      }
+      getOrCreateProspectDraftId();
+      const state = document.getElementById('enroll-state');
+      if(state){
+        state.textContent = 'Mode prospect sécurisé';
+        state.classList.remove('ok');
+      }
+      showAlert('Vous pouvez continuer en mode prospect. Vos documents seront enregistrés temporairement puis rattachés à votre candidature lors de l’envoi final.', 'info');
+      return true;
+    };
+  }
+})();
 
 </script>
 </body>
