@@ -286,6 +286,21 @@
     .af-apikey-input:focus{outline:none;border-color:var(--or)}
     .af-taux{font-size:12px;color:rgba(248,244,238,.35);margin-left:auto}
     .af-taux.warn{color:#ffd180} .af-taux.danger{color:#ffb3b3}
+
+    /* ── OCR STRUCTURÉ & CROSS-CHECK ── */
+    .ocr-box{border:1px solid rgba(83,183,255,.22);background:rgba(83,183,255,.035);padding:14px 16px;margin-bottom:14px}
+    .ocr-box .title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#b8e1ff;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+    .ocr-pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:.66rem;font-weight:700;border:1px solid rgba(83,183,255,.25);color:#b8e1ff;background:rgba(83,183,255,.08)}
+    .ocr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:8px}
+    .ocr-field{font-size:.74rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+    .ocr-field span{color:rgba(248,244,238,.38)}
+    .ocr-field strong{color:rgba(248,244,238,.88)}
+    .check-row{display:grid;grid-template-columns:1.1fr .8fr .8fr .55fr;gap:8px;align-items:start;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.74rem}
+    .check-row:last-child{border-bottom:none}
+    .check-head{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(248,244,238,.32);padding-bottom:6px}
+    .check-ok{color:#77ffbe}.check-warning{color:#ffd180}.check-ko{color:#ff8a8a}.check-unknown{color:rgba(248,244,238,.5)}
+    .ocr-empty{font-size:.76rem;color:rgba(248,244,238,.42);line-height:1.6}
+
   </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
@@ -491,6 +506,17 @@
             <div id="docsList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px"></div>
           </div>
           <!-- ══ FIN DOCUMENTS ══ -->
+
+          <!-- ══ OCR STRUCTURÉ & ÉCARTS ══ -->
+          <div class="ocr-box" id="ocrSection" style="display:none">
+            <div class="title">
+              <span>🔎 OCR structuré & écarts</span>
+              <span class="ocr-pill" id="ocrCount">—</span>
+            </div>
+            <div id="ocrContent" class="ocr-empty">Aucune extraction structurée disponible pour ce dossier.</div>
+          </div>
+          <!-- ══ FIN OCR STRUCTURÉ ══ -->
+
 
           <div class="section">
             <div class="title">Historique</div>
@@ -1004,6 +1030,7 @@
       renderHistory(row.id);
       prepareAfContext(row);
       renderDocsAdmin(row);
+      renderSavedDocumentExtractions(row).catch(()=>{});
       renderGdprGuard(row);
       afficherSyntheseSauvegardee(row);
       loadPasseportForDossier(row).catch(()=>{});
@@ -2156,6 +2183,116 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         }).join('');
     }
 
+
+
+    // ══ OCR STRUCTURÉ & CROSS-CHECK — ADMIN ══════════════════
+    function getDeclaredDataForShield(row){
+      const payload = (() => { try{ return typeof row?.payload === 'string' ? JSON.parse(row.payload) : (row?.payload||{}); }catch(_){ return {}; } })();
+      const msg = (() => { try{ return typeof row?.message === 'string' ? JSON.parse(row.message) : (row?.message||{}); }catch(_){ return {}; } })();
+      const loc = payload.locataires?.[0] || msg.locataires?.[0] || {};
+      return {
+        nom: loc.nom || row?.nom || null,
+        prenom: loc.prenom || null,
+        full_name: [loc.nom || row?.nom, loc.prenom].filter(Boolean).join(' ') || row?.nom || null,
+        date_naissance: loc.ddn || row?.date_naissance || null,
+        nationalite: loc.nationalite || row?.nationalite || null,
+        id_type: loc.id_type || row?.id_type || null,
+        id_number: loc.id_numero || row?.id_number || null,
+        situation: loc.situation || row?.situation || null,
+        employeur: loc.societe || row?.employeur || null,
+        poste: loc.poste || null,
+        revenu_mensuel: loc.revenu || row?.revenu_mensuel || null,
+        email: loc.email || row?.email || null,
+        telephone: loc.telephone || row?.telephone || null
+      };
+    }
+
+    function safeVal(v){
+      if(v === null || v === undefined || v === '') return '—';
+      if(Array.isArray(v)) return v.join(', ');
+      if(typeof v === 'object') return JSON.stringify(v);
+      return String(v);
+    }
+
+    function renderChecksTable(checks){
+      if(!Array.isArray(checks) || !checks.length){
+        return '<div class="ocr-empty">Aucun écart structuré détecté.</div>';
+      }
+      return `
+        <div class="check-row check-head"><div>Contrôle</div><div>Déclaré</div><div>Extrait</div><div>Résultat</div></div>
+        ${checks.map(c => {
+          const cls = c.result === 'ok' ? 'check-ok' : c.result === 'ko' ? 'check-ko' : c.result === 'warning' ? 'check-warning' : 'check-unknown';
+          const label = c.result === 'ok' ? 'OK' : c.result === 'ko' ? 'Écart fort' : c.result === 'warning' ? 'À vérifier' : 'Inconnu';
+          return `<div class="check-row">
+            <div><strong>${c.label || c.control_code || 'Contrôle'}</strong><br><span class="muted">${c.explanation || ''}</span></div>
+            <div>${safeVal(c.declared_value)}</div>
+            <div>${safeVal(c.extracted_value)}</div>
+            <div class="${cls}">${label}</div>
+          </div>`;
+        }).join('')}`;
+    }
+
+    function renderDocExtractionPanel(docData, checks, title='Données extraites'){
+      const data = docData || {};
+      const entries = Object.entries(data).filter(([k,v]) => !['anomalies'].includes(k) && v !== null && v !== undefined && v !== '');
+      const anomalies = Array.isArray(data.anomalies) ? data.anomalies.filter(Boolean) : [];
+      return `
+        <div style="margin-bottom:12px;padding:10px 14px;background:rgba(83,183,255,.04);border:1px solid rgba(83,183,255,.16);border-radius:8px">
+          <div style="font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:#b8e1ff;margin-bottom:8px">${title}${data.type_document ? ' — '+data.type_document : ''}</div>
+          ${entries.length ? `<div class="ocr-grid">${entries.map(([k,v])=>`<div class="ocr-field"><span>${k.replace(/_/g,' ')} : </span><strong>${safeVal(v)}</strong></div>`).join('')}</div>` : '<div class="ocr-empty">Aucune donnée structurée exploitable.</div>'}
+          ${anomalies.length ? `<div style="margin-top:10px;padding:8px 10px;border:1px solid rgba(255,107,107,.22);background:rgba(255,107,107,.05);border-radius:6px;color:#ffb3b3;font-size:.76rem">⚠ ${anomalies.join('<br>⚠ ')}</div>` : ''}
+        </div>
+        <div style="padding:10px 14px;background:rgba(255,255,255,.025);border:1px solid rgba(191,150,80,.1);border-radius:8px">
+          <div style="font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:8px">Écarts document ↔ déclaration</div>
+          ${renderChecksTable(checks)}
+        </div>`;
+    }
+
+    async function renderSavedDocumentExtractions(row){
+      const section = document.getElementById('ocrSection');
+      const content = document.getElementById('ocrContent');
+      const count = document.getElementById('ocrCount');
+      if(!section || !content || !row?.id) return;
+
+      section.style.display = 'block';
+      content.innerHTML = '<div class="ocr-empty">Chargement des extractions sauvegardées…</div>';
+      count.textContent = '—';
+
+      try{
+        const [exR, ckR] = await Promise.all([
+          fetch(`${SUPABASE_URL}/rest/v1/dossier_document_extractions?rental_dossier_id=eq.${row.id}&select=*&order=created_at.desc&limit=8`, {headers:getAuthHeaders()}),
+          fetch(`${SUPABASE_URL}/rest/v1/dossier_document_crosschecks?rental_dossier_id=eq.${row.id}&select=*&order=created_at.desc&limit=30`, {headers:getAuthHeaders()})
+        ]);
+        if(!exR.ok){
+          const t = await exR.text();
+          if(t.includes('42P01') || t.toLowerCase().includes('dossier_document_extractions')){
+            content.innerHTML = '<div class="ocr-empty">Tables OCR non créées. Exécute le SQL Kàddu Shield structuré dans Supabase.</div>';
+            count.textContent = 'SQL requis';
+            return;
+          }
+          throw new Error(t || 'Erreur chargement extractions');
+        }
+        const extractions = await exR.json();
+        const checks = ckR.ok ? await ckR.json() : [];
+        if(!extractions.length){
+          content.innerHTML = '<div class="ocr-empty">Aucune extraction structurée sauvegardée. Lance “Analyser seul” sur un document pour créer la première extraction audit-able.</div>';
+          count.textContent = '0';
+          return;
+        }
+        count.textContent = `${extractions.length} extraction${extractions.length>1?'s':''}`;
+        content.innerHTML = extractions.map(ex => {
+          const cks = checks.filter(c => c.extraction_id === ex.id);
+          return `<div style="margin-bottom:12px">
+            <div style="font-size:.72rem;color:#b8e1ff;margin-bottom:6px">📄 ${ex.document_name || ex.type_detected || 'Document'} <span class="muted">· ${formatDate(ex.created_at)}</span></div>
+            ${renderDocExtractionPanel(ex.extraction || {}, cks, 'Extraction sauvegardée')}
+          </div>`;
+        }).join('');
+      }catch(e){
+        content.innerHTML = `<div class="ocr-empty">Erreur chargement OCR : ${e.message}</div>`;
+      }
+    }
+    // ══ FIN OCR STRUCTURÉ & CROSS-CHECK — ADMIN ══════════════
+
     // ── PROMPTS D'EXTRACTION PAR TYPE DE DOCUMENT ─────────────
     const DOC_EXTRACT_PROMPTS = {
       cni: `Tu analyses une pièce d'identité (CNI, passeport ou titre de séjour) pour l'agence Kàddu Sénégal.
@@ -2185,9 +2322,10 @@ Après le JSON, synthèse courte en 2-3 lignes.`
     };
 
     function getDocPrompt(docKey){
-      if(!docKey) return DOC_EXTRACT_PROMPTS.default;
+      const common = `\n\nIMPORTANT — Format obligatoire : retourne d'abord un JSON strict préfixé par KADDU_DOC:. Ajoute toujours les champs lisibilite, confidence et anomalies. Ensuite seulement, ajoute une synthèse courte. Ne mets pas le JSON dans un bloc markdown.`;
+      if(!docKey) return DOC_EXTRACT_PROMPTS.default + common;
       const k = docKey.split('_').slice(1).join('_');
-      return DOC_EXTRACT_PROMPTS[k] || DOC_EXTRACT_PROMPTS.default;
+      return (DOC_EXTRACT_PROMPTS[k] || DOC_EXTRACT_PROMPTS.default) + common;
     }
 
     async function analyserTousDocsIA(){
@@ -2267,7 +2405,11 @@ Format de réponse :
 
 ${crossContext}
 
-Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
+Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".
+
+À la fin, retourne aussi ces deux blocs JSON stricts, sans markdown :
+KADDU_DOCS:[{"document_name":"","type_document":"","nom":"","prenom":"","employeur":"","salaire_net":null,"date_expiration":"","lisibilite":"bonne|moyenne|faible","confidence":0,"anomalies":[]}]
+KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_value":null,"result":"ok|warning|ko|unknown","severity":"low|medium|high","score_impact":0,"explanation":""}]`;
 
       try{
         // Charger tous les documents en parallèle
@@ -2305,8 +2447,13 @@ Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
 
         const data = await callShieldAnalyze({
           mode: "documents",
+          dossierId: row?.id || null,
+          locataireId: row?.locataire_id || null,
+          locataireEmail: row?.email || null,
+          documentsMeta: docs,
+          declaredData: getDeclaredDataForShield(row),
           contentParts,
-          maxTokens: 2000
+          maxTokens: 2600
         });
         const rawText = data.rawText || data.displayText || '';
 
@@ -2319,9 +2466,12 @@ Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
           vigEl.textContent='Analyse documents'; vigEl.className='af-vig af-vig-mid';
         }
 
+        const structuredChecksHtml = Array.isArray(data.checks) && data.checks.length
+          ? `<div class="ocr-box" style="margin-top:12px"><div class="title"><span>Écarts structurés détectés</span></div>${renderChecksTable(data.checks)}</div>`
+          : '';
         document.getElementById('afResultBody').innerHTML = renderAfMd(
           `## Analyse groupée — ${loaded} document${loaded>1?'s':''}\n\n${rawText}`
-        );
+        ) + structuredChecksHtml;
         result.classList.add('visible');
 
         // Marquer comme analysé dans cette session
@@ -2366,7 +2516,9 @@ Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
       }catch(e){ alert('Impossible de charger le document : '+e.message); return; }
 
       // Déterminer le prompt selon le type de document
-      const docKey = (row?.docs_fournis||[]).find(d=>d.name===name)?.key || '';
+      let documentMeta = (row?.docs_fournis||[]).find(d=>d.name===name) || null;
+      if(!documentMeta){ documentMeta = { name, url, key: '', type: '' }; }
+      const docKey = documentMeta?.key || '';
       const extractPrompt = getDocPrompt(docKey);
 
       // Construire le contexte déclaré pour le cross-check
@@ -2412,16 +2564,25 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       try{
         const data = await callShieldAnalyze({
           mode: "single_document",
+          dossierId: row?.id || null,
+          locataireId: row?.locataire_id || null,
+          locataireEmail: row?.email || null,
+          documentMeta,
+          declaredData: getDeclaredDataForShield(row),
+          saveExtraction: true,
           contentParts: content,
-          maxTokens: 1200
+          maxTokens: 1400
         });
         const rawText = data.rawText || data.displayText || '';
 
         // Extraire le JSON structuré du document
-        let docData = null;
-        let displayText = rawText;
-        const dm = rawText.match(/KADDU_DOC:(\{[^}]+\})/s);
-        if(dm){ try{ docData=JSON.parse(dm[1]); displayText=rawText.replace(/KADDU_DOC:\{[^}]+\}/s,'').trim(); }catch(_){} }
+        let docData = data.docData || null;
+        let checks = Array.isArray(data.checks) ? data.checks : [];
+        let displayText = data.displayText || rawText;
+        if(!docData){
+          const dm = rawText.match(/KADDU_DOC:(\{[\s\S]*?\})/s);
+          if(dm){ try{ docData=JSON.parse(dm[1]); displayText=rawText.replace(dm[0],'').trim(); }catch(_){} }
+        }
 
         // Construire l'affichage enrichi avec les données extraites
         let extractedHtml = '';
@@ -2469,9 +2630,11 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
           vigEl.textContent='Analyse document'; vigEl.className='af-vig af-vig-mid';
         }
 
-        const finalHtml = extractedHtml + renderAfMd(`## Analyse — ${name}\n\n${displayText}`);
+        const structuredPanel = docData ? renderDocExtractionPanel(docData, checks, 'Extraction structurée') : '';
+        const finalHtml = extractedHtml + structuredPanel + renderAfMd(`## Analyse — ${name}\n\n${displayText}`);
         document.getElementById('afResultBody').innerHTML = finalHtml;
         resultWrap.classList.add('visible');
+        if(row?.id){ renderSavedDocumentExtractions(row).catch(()=>{}); }
 
       }catch(err){
         alert('Erreur : '+err.message);
