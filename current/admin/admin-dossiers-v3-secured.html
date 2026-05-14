@@ -1984,8 +1984,14 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       const list    = document.getElementById('docsList');
       const count   = document.getElementById('docsCount');
 
-      // ── Format nouveau tunnel : docs_fournis (JSON avec URLs) ─
+      // ── Chercher docs_fournis : colonne directe OU dans payload ─
       let docs = Array.isArray(row.docs_fournis) ? row.docs_fournis : [];
+      if(!docs.length){
+        try{
+          const p = typeof row.payload === 'string' ? JSON.parse(row.payload) : (row.payload||{});
+          if(Array.isArray(p.docs_fournis)) docs = p.docs_fournis;
+        }catch(_){}
+      }
 
       // ── Format ancien tunnel : transmission (texte) + payload.step4.docs ─
       if(!docs.length && row.transmission){
@@ -2109,8 +2115,14 @@ Après le JSON, synthèse courte en 2-3 lignes.`
       if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
 
       const row = _currentDossier;
-      // Reconstituer les docs comme dans renderDocsAdmin
+      // Chercher docs_fournis : colonne directe OU dans payload
       let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+      if(!docs.length){
+        try{
+          const p = typeof row?.payload === 'string' ? JSON.parse(row.payload) : (row?.payload||{});
+          if(Array.isArray(p.docs_fournis)) docs = p.docs_fournis;
+        }catch(_){}
+      }
       if(!docs.length && row?.transmission){
         const fileNames = row.transmission.split(',').map(s=>s.trim()).filter(Boolean);
         let step4Docs = {};
@@ -2139,16 +2151,19 @@ Après le JSON, synthèse courte en 2-3 lignes.`
       if(result) result.classList.remove('visible');
 
       // Construire le contexte déclaré pour cross-check
-      const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
+      const payloadData = (() => { try{ return typeof row.payload==='string'?JSON.parse(row.payload):(row.payload||{}); }catch(_){ return {}; } })();
+      const loc0 = payloadData.locataires?.[0] || {};
       const crossContext = `
 DONNÉES DÉCLARÉES PAR LE CANDIDAT (pour vérification croisée) :
-- Nom : ${row.nom||'—'}
-- Date de naissance : ${row.date_naissance||'—'}
-- Nationalité : ${row.nationalite||'—'}
-- Situation : ${row.situation||'—'}
-- Employeur : ${row.employeur||'—'}
-- Revenu mensuel déclaré : ${row.revenu_mensuel ? Number(row.revenu_mensuel).toLocaleString('fr-FR')+' XOF' : '—'}
-- Garant : ${row.garant||'—'}
+- Nom : ${loc0.nom||row.nom||'—'} ${loc0.prenom||''}
+- Date de naissance : ${loc0.ddn||row.date_naissance||'—'}
+- Nationalité : ${loc0.nationalite||row.nationalite||'—'}
+- Type de pièce : ${loc0.id_type||'—'} | Numéro : ${loc0.id_numero||'—'}
+- Situation : ${loc0.situation||row.situation||'—'}
+- Employeur/Société : ${loc0.societe||row.employeur||'—'}
+- Poste : ${loc0.poste||'—'}
+- Revenu mensuel déclaré : ${loc0.revenu ? Number(loc0.revenu).toLocaleString('fr-FR')+' XOF' : (row.revenu_mensuel ? Number(row.revenu_mensuel).toLocaleString('fr-FR')+' XOF' : '—')}
+- Garant : ${(payloadData.garants?.length ? 'Oui' : (payloadData.no_garant ? 'Non (confirmé)' : row.garant||'—'))}
 
 Pour chaque document analysé, indique si les données correspondent aux déclarations ci-dessus.
 Si une donnée diffère, mentionne-le explicitement avec le label ⚠ ÉCART DÉTECTÉ.`;
