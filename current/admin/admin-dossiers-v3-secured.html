@@ -198,6 +198,23 @@
     .af-section-att{background:rgba(255,179,71,.03);border:1px solid rgba(255,179,71,.12);padding:8px 12px;margin:6px 0;border-radius:4px}
     .af-section-reco{background:rgba(191,150,80,.05);border:1px solid rgba(191,150,80,.16);padding:8px 12px;margin:6px 0;border-radius:4px}
     .af-result-foot{padding:8px 14px;border-top:1px solid rgba(191,150,80,.08);display:flex;gap:8px;background:rgba(7,14,28,.3)}
+    .af-saved-badge{
+      display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
+      border-radius:6px;font-size:.66rem;font-weight:600;
+      background:rgba(0,200,117,.08);border:1px solid rgba(0,200,117,.2);color:#77ffbe;
+    }
+    .af-synthese-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:8px 14px;background:rgba(0,200,117,.05);
+      border-bottom:1px solid rgba(0,200,117,.12);
+    }
+    .af-synthese-header span{font-size:.68rem;color:#77ffbe}
+    .af-relancer-btn{
+      font-size:.68rem;padding:4px 10px;border-radius:6px;cursor:pointer;
+      border:1px solid rgba(191,150,80,.25);background:transparent;
+      color:rgba(248,244,238,.4);font-family:'DM Sans',sans-serif;transition:.15s;
+    }
+    .af-relancer-btn:hover{border-color:var(--or);color:var(--or)}
 
     /* ── FEEDBACK SHIELD ── */
     .af-feedback-wrap{
@@ -987,6 +1004,7 @@
       prepareAfContext(row);
       renderDocsAdmin(row);
       renderGdprGuard(row);
+      afficherSyntheseSauvegardee(row);
       loadPasseportForDossier(row).catch(()=>{});
     }
 
@@ -1379,11 +1397,6 @@
       try{
         localStorage.removeItem("kaddu_admin_session");
         sessionStorage.removeItem("kaddu_admin_session");
-        Object.keys(localStorage).forEach(k => {
-          if(k && (k.includes("supabase") || k.includes("kaddu_admin") || k.includes("sb-"))){
-            localStorage.removeItem(k);
-          }
-        });
       }catch(_){ }
       currentSession = null;
     }
@@ -1544,7 +1557,62 @@
     });
     // ───────────────────────────────────────────────────────────
 
-    // ══ KÀDDU SHIELD — VÉRIFICATION DOSSIER ══════════════════
+    // ══ SAUVEGARDE & AFFICHAGE SYNTHÈSE SHIELD ═══════════════
+    async function sauvegarderSynthese(dossierId, synthese, score){
+      try{
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/rental_dossiers?id=eq.${dossierId}`,
+          {
+            method: 'PATCH',
+            headers: { ...getAuthHeaders(), 'Prefer': 'return=minimal' },
+            body: JSON.stringify({
+              af_synthese: synthese,
+              af_synthese_at: new Date().toISOString(),
+              ...(score !== null ? { af_score: score } : {})
+            })
+          }
+        );
+        if(!res.ok){
+          const err = await res.json().catch(()=>({}));
+          // Colonne absente → rappeler d'exécuter le SQL
+          if(err.code === '42703'){
+            console.warn('[Shield] Colonnes af_synthese manquantes — exécutez af_synthese.sql dans Supabase');
+          }
+        }
+      }catch(_){}
+    }
+
+    function afficherSyntheseSauvegardee(row){
+      const synthese = row.af_synthese;
+      if(!synthese) return;
+
+      const result  = document.getElementById('afResultWrap');
+      const body    = document.getElementById('afResultBody');
+      const loader  = document.getElementById('afLoaderRow');
+      const vigEl   = document.getElementById('afVigBadge');
+      if(!result || !body) return;
+
+      // Afficher en-tête "déjà analysé"
+      const date = row.af_synthese_at
+        ? new Date(row.af_synthese_at).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+        : 'date inconnue';
+
+      body.innerHTML = `
+        <div class="af-synthese-header">
+          <span>✓ Analyse sauvegardée le ${date}</span>
+          <button class="af-relancer-btn" onclick="document.getElementById('afAnalyseBtn').click()">↺ Relancer</button>
+        </div>
+        ${renderAfMd(synthese)}`;
+
+      if(row.af_score !== null && row.af_score !== undefined){
+        const s = row.af_score;
+        if(s<50){ vigEl.textContent="Vigilance élevée"; vigEl.className="af-vig af-vig-high"; }
+        else if(s<80){ vigEl.textContent="Vigilance modérée"; vigEl.className="af-vig af-vig-mid"; }
+        else{ vigEl.textContent="Vigilance faible"; vigEl.className="af-vig af-vig-low"; }
+      }
+      result.classList.add('visible');
+    }
+    // ══ FIN SAUVEGARDE SYNTHÈSE ═══════════════════════════════
     const AF_SYSTEM_PROMPT = `Tu es l'assistant de vérification de la plateforme Kàddu, une agence immobilière premium opérant au Sénégal.
 
 Ton rôle est d'analyser les dossiers locatifs soumis par les candidats et d'identifier toute incohérence, anomalie ou élément qui mérite une attention particulière avant qu'un conseiller Kàddu statue.
@@ -1753,6 +1821,11 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         // ── Persister dans le Passeport Locatif ──────────────
         if(scoreData && _currentDossier){
           persistPasseportScore(_currentDossier, scoreData, displayText).catch(()=>{});
+        }
+
+        // ── Sauvegarder la synthèse en base ──────────────────
+        if(_currentDossier?.id){
+          sauvegarderSynthese(_currentDossier.id, displayText, scoreData?.score||null).catch(()=>{});
         }
 
       } catch(err){
@@ -2285,6 +2358,11 @@ Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
 
         // Marquer comme analysé dans cette session
         if(_currentDossier) _currentDossier._docsAnalysed = true;
+        // Sauvegarder la synthèse en base
+        if(_currentDossier?.id){
+          const synthDoc = `## Analyse groupée — ${loaded} document${loaded>1?'s':''}\n\n${rawText}`;
+          sauvegarderSynthese(_currentDossier.id, synthDoc, null).catch(()=>{});
+        }
         if(btn){
           btn.disabled = false;
           btn.textContent = '✓ Analysés — Relancer';
