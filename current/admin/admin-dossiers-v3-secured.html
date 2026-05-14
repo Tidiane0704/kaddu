@@ -502,14 +502,15 @@
             <div class="title">
               <span>🛡 Vérification du dossier</span>
               <span id="afTaux" class="af-taux"></span>
-            </div>
-
-            <!-- Clé API (admin seulement, session uniquement) -->
+            </div>            <!-- IA sécurisée via Supabase Edge Function : aucune clé Anthropic dans le navigateur -->
             <div class="af-apikey-row">
-              <input type="password" class="af-apikey-input" id="afKey" placeholder="Clé API Anthropic (sk-ant-…)" />
+              <div class="af-apikey-input" style="display:flex;align-items:center;gap:8px;color:#77ffbe;border-color:rgba(0,200,117,.25);background:rgba(0,200,117,.06)">
+                <span>🔐</span>
+                <span>Kàddu Shield sécurisé — clé IA côté serveur</span>
+              </div>
               <button class="af-btn-sm" onclick="toggleAfContext()">Ajuster le contexte ↓</button>
             </div>
-            <div class="af-apikey-hint">Clé stockée en session uniquement · jamais envoyée à Supabase</div>
+            <div class="af-apikey-hint">La clé Anthropic est stockée dans Supabase Secrets · jamais exposée au navigateur</div>
 
             <!-- Zone contexte ajustable par l'admin -->
             <div class="af-context-wrap" id="afContextWrap">
@@ -1490,7 +1491,7 @@
       const decisionEl = document.getElementById('afDecisionBadge');
       const vigEl = document.getElementById('afVigBadge');
       const synthese = document.getElementById('afResultBody')?.innerText || '';
-      const contexte = document.getElementById('afContextText')?.value || '';
+      const contexte = document.getElementById('afContextTa')?.value || '';
 
       const payload = {
         dossier_id:       row?.id || null,
@@ -1749,6 +1750,22 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       document.getElementById("afContextWrap").classList.toggle("open");
     }
 
+    async function callShieldAnalyze(payload){
+      const endpoint = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1/shield-analyze-dossier`;
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || data?.ok === false){
+        const msg = data?.error || data?.message || `Erreur Edge Function (${res.status})`;
+        throw new Error(msg);
+      }
+      return data;
+    }
+
     async function lancerAnalyseDossier(){
       const apiKey = document.getElementById("afKey").value.trim();
       if(!apiKey){ alert("Clé API Anthropic requise.\nCollez votre clé sk-ant-… dans le champ au-dessus."); return; }
@@ -1764,42 +1781,22 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       result.classList.remove("visible");
 
       try {
-        // Récupérer le modèle depuis Supabase config si disponible
-        let modelId = "claude-sonnet-4-5";
-        try {
-          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`, { headers: getAuthHeaders() });
-          if(cfgR.ok){ const cfg = await cfgR.json(); if(cfg?.[0]?.value) modelId = cfg[0].value; }
-        } catch(_){}
-
-        const resp = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey,
-            "anthropic-version": "2023-06-01",
-            "anthropic-dangerous-direct-browser-access": "true"
-          },
-          body: JSON.stringify({
-            model: modelId,
-            max_tokens: 1200,
-            system: AF_SYSTEM_PROMPT,
-            messages: [{ role: "user", content: `Analyse ce dossier locataire :\n\n${context}` }]
-          })
+        const data = await callShieldAnalyze({
+          mode: "dossier",
+          context,
+          systemPrompt: AF_SYSTEM_PROMPT,
+          maxTokens: 1200
         });
 
-        if(!resp.ok){
-          const err = await resp.json().catch(()=>({}));
-          throw new Error(err?.error?.message || `Erreur API (${resp.status})`);
+        const rawText = data.rawText || "";
+        let scoreData = data.scoreData || null;
+        let displayText = data.displayText || rawText;
+
+        // Filet de sécurité si l'Edge Function renvoie seulement le texte brut
+        if(!scoreData){
+          const sm = rawText.match(/KADDU_SCORE:(\{[\s\S]*?\})/);
+          if(sm){ try{ scoreData=JSON.parse(sm[1]); displayText=rawText.replace(sm[0], '').trim(); }catch(_){} }
         }
-
-        const data = await resp.json();
-        const rawText = data.content?.map(c => c.text || "").join("") || "";
-
-        // Extraire le JSON score Kàddu
-        let scoreData = null;
-        let displayText = rawText;
-        const sm = rawText.match(/KADDU_SCORE:(\{[^}]+\})/);
-        if(sm){ try{ scoreData=JSON.parse(sm[1]); displayText=rawText.replace(/KADDU_SCORE:\{[^}]+\}/,'').trim(); }catch(_){} }
 
         // Badge vigilance piloté par le score
         const vigEl = document.getElementById("afVigBadge");
@@ -2311,36 +2308,12 @@ Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
         // Ajouter le prompt à la fin
         contentParts.push({type:'text', text: PROMPT_GROUPE});
 
-        // Récupérer modèle
-        let modelId = 'claude-sonnet-4-5';
-        try{
-          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`,{headers:getAuthHeaders()});
-          if(cfgR.ok){const cfg=await cfgR.json();if(cfg?.[0]?.value)modelId=cfg[0].value;}
-        }catch(_){}
-
-        // Appel Claude — une seule requête
-        const resp = await fetch('https://api.anthropic.com/v1/messages',{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'x-api-key':apiKey,
-            'anthropic-version':'2023-06-01',
-            'anthropic-dangerous-direct-browser-access':'true'
-          },
-          body:JSON.stringify({
-            model: modelId,
-            max_tokens: 2000,
-            messages:[{role:'user', content: contentParts}]
-          })
+        const data = await callShieldAnalyze({
+          mode: "documents",
+          contentParts,
+          maxTokens: 2000
         });
-
-        if(!resp.ok){
-          const err=await resp.json().catch(()=>({}));
-          throw new Error(err?.error?.message||`Erreur API (${resp.status})`);
-        }
-
-        const data = await resp.json();
-        const rawText = data.content?.map(c=>c.text||'').join('')||'';
+        const rawText = data.rawText || data.displayText || '';
 
         // Badge vigilance
         if(/faible/i.test(rawText) && /fiabilité/i.test(rawText)){
@@ -2445,20 +2418,12 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       document.getElementById('afSection')?.scrollIntoView({behavior:'smooth',block:'nearest'});
 
       try{
-        let modelId = 'claude-sonnet-4-5';
-        try{
-          const cfgR = await fetch(`${SUPABASE_URL}/rest/v1/config?key=eq.af_model&select=value&limit=1`,{headers:getAuthHeaders()});
-          if(cfgR.ok){const cfg=await cfgR.json();if(cfg?.[0]?.value)modelId=cfg[0].value;}
-        }catch(_){}
-
-        const resp = await fetch('https://api.anthropic.com/v1/messages',{
-          method:'POST',
-          headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-          body:JSON.stringify({model:modelId, max_tokens:1200, messages:[{role:'user', content}]})
+        const data = await callShieldAnalyze({
+          mode: "single_document",
+          contentParts: content,
+          maxTokens: 1200
         });
-        if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error(err?.error?.message||`Erreur API (${resp.status})`);}
-        const data = await resp.json();
-        const rawText = data.content?.map(c=>c.text||'').join('')||'';
+        const rawText = data.rawText || data.displayText || '';
 
         // Extraire le JSON structuré du document
         let docData = null;
