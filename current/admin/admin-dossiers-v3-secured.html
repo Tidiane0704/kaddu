@@ -1767,8 +1767,6 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
     }
 
     async function lancerAnalyseDossier(){
-      const apiKey = document.getElementById("afKey").value.trim();
-      if(!apiKey){ alert("Clé API Anthropic requise.\nCollez votre clé sk-ant-… dans le champ au-dessus."); return; }
       const context = document.getElementById("afContextTa").value.trim();
       if(!context){ alert("Le contexte du dossier est vide."); return; }
 
@@ -2193,9 +2191,6 @@ Après le JSON, synthèse courte en 2-3 lignes.`
     }
 
     async function analyserTousDocsIA(){
-      const apiKey = document.getElementById('afKey')?.value?.trim();
-      if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
-
       const row = _currentDossier;
       // Chercher docs_fournis : colonne directe OU dans payload
       let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
@@ -2352,9 +2347,6 @@ Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".`;
     }
 
     async function analyserDocIA(url, name){
-      const apiKey = document.getElementById('afKey')?.value?.trim();
-      if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
-
       // Récupérer le contexte déclaré du dossier pour le cross-check
       const row = _currentDossier;
 
