@@ -274,9 +274,14 @@
 </head>
 <body>
   <nav>
-    <div class="brand">Kàddu Admin</div>
+    <div class="brand">
+      <a href="/admin/" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px">
+        <span style="font-size:.72rem;color:rgba(248,244,238,.3)">←</span>
+        Kàddu Admin
+      </a>
+    </div>
     <div class="nav-actions">
-      <a class="btn-ghost" href="dashboard-kaddu-kpi-secured.html">📊 KPI</a>
+      <a class="btn-ghost" href="dashboard-kaddu-kpi-secured.html" target="_blank">📊 KPI</a>
       <button class="btn-ghost" id="clearFiltersBtn">Réinitialiser</button>
       <button class="btn" id="refreshBtn">Rafraîchir</button>
       <button class="btn-ghost" id="logoutBtn">Déconnexion</button>
@@ -1530,6 +1535,13 @@
     // ══ FIN FEEDBACK ═════════════════════════════════════════
 
     document.addEventListener("DOMContentLoaded", initAuth);
+
+    // Recharger les dossiers quand on revient sur cet onglet (après KPI)
+    document.addEventListener("visibilitychange", () => {
+      if(document.visibilityState === "visible" && currentSession){
+        init();
+      }
+    });
     // ───────────────────────────────────────────────────────────
 
     // ══ KÀDDU SHIELD — VÉRIFICATION DOSSIER ══════════════════
