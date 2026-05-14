@@ -250,7 +250,7 @@ function buildCrossChecks(declared: DeclaredData | null | undefined, extraction:
 
 async function restInsert(table: string, payload: unknown) {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = Deno.env.get("SERVICE_ROLE_KEY");
   if (!supabaseUrl || !serviceKey) return { skipped: true, reason: "SUPABASE_SERVICE_ROLE_KEY absent" };
 
   const res = await fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/${table}`, {
