@@ -1980,10 +1980,48 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
     }
     // ══ FIN PASSEPORT LOCATIF ═════════════════════════════════
     function renderDocsAdmin(row){
-      const docs = Array.isArray(row.docs_fournis) ? row.docs_fournis : [];
       const section = document.getElementById('docsSection');
       const list    = document.getElementById('docsList');
       const count   = document.getElementById('docsCount');
+
+      // ── Format nouveau tunnel : docs_fournis (JSON avec URLs) ─
+      let docs = Array.isArray(row.docs_fournis) ? row.docs_fournis : [];
+
+      // ── Format ancien tunnel : transmission (texte) + payload.step4.docs ─
+      if(!docs.length && row.transmission){
+        const fileNames = row.transmission.split(',').map(s=>s.trim()).filter(Boolean);
+        // Récupérer les types depuis payload.step4.docs si disponible
+        let step4Docs = {};
+        try{
+          const payload = typeof row.payload === 'string' ? JSON.parse(row.payload) : (row.payload||{});
+          step4Docs = payload?.step4?.docs || {};
+        }catch(_){}
+
+        // Inverser le mapping type→nom pour retrouver le type depuis le nom
+        const typeByName = {};
+        Object.entries(step4Docs).forEach(([type, name]) => {
+          if(name) typeByName[name] = type;
+        });
+
+        const typeLabels = {
+          identite:'Pièce d\'identité', pro:'Justificatif professionnel',
+          domicile:'Justificatif de domicile', loyer:'Quittance de loyer',
+          bancaire:'Relevé bancaire', autre:'Document'
+        };
+
+        docs = fileNames.map((name, i) => {
+          const type = typeByName[name] || 'autre';
+          return {
+            name,
+            key: `legacy_${i}_${type}`,
+            // URL de téléchargement direct depuis Supabase Storage
+            url: `${SUPABASE_URL}/storage/v1/object/public/rental-documents/${encodeURIComponent(name)}`,
+            type,
+            typeLabel: typeLabels[type] || 'Document',
+            isLegacy: true
+          };
+        });
+      }
 
       if(!docs.length){
         section.style.display = 'none';
@@ -1993,13 +2031,15 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       count.textContent = `${docs.length} fichier${docs.length>1?'s':''} déposé${docs.length>1?'s':''}`;
 
       const DOC_ICONS = {
-        cni:'🪪', contrat:'📋', fiches_paie:'💰', releve:'🏦',
-        avis_impo:'📄', registre:'🏢', bilan:'📊', contrat_client:'📋',
-        certif_scol:'🎓', lettre:'✉️', contrats_interim:'📋',
-        pension:'📄', justif_ressources:'💼', justif_situation:'📄',
+        identite:'🪪', cni:'🪪', passeport:'🪪',
+        pro:'💼', fiches_paie:'💰', contrat:'📋',
+        domicile:'🏠', loyer:'🏠',
+        releve:'🏦', bancaire:'🏦',
+        avis_impo:'📄', registre:'🏢', bilan:'📊',
+        certif_scol:'🎓', lettre:'✉️', pension:'📄',
+        justif_ressources:'💼', justif_situation:'📄', autre:'📎'
       };
 
-      // Bouton analyse groupée
       const alreadyAnalysed = row._docsAnalysed || false;
       list.innerHTML = `
         <div style="margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
@@ -2009,22 +2049,23 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
           </button>
           ${alreadyAnalysed
             ? '<span style="font-size:.68rem;color:#77ffbe">✓ Déjà analysés dans cette session</span>'
-            : '<span style="font-size:.68rem;color:rgba(248,244,238,.3)">1 seule requête · cross-check automatique avec les données déclarées</span>'
+            : '<span style="font-size:.68rem;color:rgba(248,244,238,.3)">1 seule requête · cross-check automatique</span>'
           }
         </div>` +
         docs.map((doc, i) => {
-          const docId = doc.key ? doc.key.split('_').slice(1).join('_') : '';
-          const icon  = DOC_ICONS[docId] || '📎';
+          const docId = doc.key ? doc.key.split('_').slice(1).join('_') : (doc.type||'');
+          const icon  = DOC_ICONS[docId] || DOC_ICONS[doc.type] || '📎';
           const name  = doc.name || `Document ${i+1}`;
           const ext   = name.split('.').pop().toUpperCase();
+          const label = doc.typeLabel || (doc.key ? doc.key.split('_').slice(1).join(' ') : '');
           return `<div class="doc-admin-item">
             <div class="doc-admin-icon">${icon}</div>
             <div class="doc-admin-info">
               <div class="doc-admin-name">${name}</div>
-              <div class="doc-admin-meta">${ext} · ${doc.key||''}</div>
+              <div class="doc-admin-meta">${ext}${label?' · '+label:''}</div>
             </div>
             <button class="doc-admin-btn" onclick="window.open('${doc.url}','_blank')">Ouvrir</button>
-            <button class="doc-admin-btn doc-admin-analyse" onclick="analyserDocIA('${doc.url}','${name}')">Analyser seul</button>
+            <button class="doc-admin-btn doc-admin-analyse" onclick="analyserDocIA('${doc.url}','${name.replace(/'/g,"\\'")}')">Analyser seul</button>
           </div>`;
         }).join('');
     }
@@ -2068,7 +2109,24 @@ Après le JSON, synthèse courte en 2-3 lignes.`
       if(!apiKey){ alert('Clé API Anthropic requise.\nRenseignez-la dans la section Vérification ci-dessous.'); return; }
 
       const row = _currentDossier;
-      const docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+      // Reconstituer les docs comme dans renderDocsAdmin
+      let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+      if(!docs.length && row?.transmission){
+        const fileNames = row.transmission.split(',').map(s=>s.trim()).filter(Boolean);
+        let step4Docs = {};
+        try{
+          const payload = typeof row.payload === 'string' ? JSON.parse(row.payload) : (row.payload||{});
+          step4Docs = payload?.step4?.docs || {};
+        }catch(_){}
+        const typeByName = {};
+        Object.entries(step4Docs).forEach(([type, name]) => { if(name) typeByName[name] = type; });
+        docs = fileNames.map((name, i) => ({
+          name,
+          key: `legacy_${i}_${typeByName[name]||'autre'}`,
+          url: `${SUPABASE_URL}/storage/v1/object/public/rental-documents/${encodeURIComponent(name)}`,
+          type: typeByName[name] || 'autre'
+        }));
+      }
       if(!docs.length){ alert('Aucun document à analyser.'); return; }
 
       const btn = document.getElementById('btnAnalyseAll');
