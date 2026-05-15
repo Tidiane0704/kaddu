@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kàddu · Vérification & Confiance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  <script src="/assets/js/kaddu-supabase-config.js"></script>
+  <style>
+    :root{--or:#BF9650;--orl:#DDB96E;--bg:#060d18;--card:#0b2039;--txt:#F8F4EE;--muted:rgba(248,244,238,.52);--bdr:rgba(191,150,80,.16);--bds:rgba(191,150,80,.32);--green:#00C875;--red:#ff6b6b;--blue:#53b7ff}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:#060d18;color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased}body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse 80% 60% at 10% 0%,rgba(191,150,80,.09),transparent 55%),linear-gradient(180deg,#060d18,#08152a)}a{text-decoration:none;color:inherit}.topbar{position:sticky;top:0;z-index:50;background:rgba(6,13,24,.92);backdrop-filter:blur(18px);border-bottom:1px solid var(--bdr);height:64px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(145deg,rgba(191,150,80,.2),rgba(191,150,80,.05));border:1px solid var(--bds);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;color:var(--or)}.brand-name{font-size:.88rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}.badge{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:rgba(191,150,80,.1);border:1px solid var(--bdr);color:var(--or)}.top-actions{display:flex;align-items:center;gap:10px}.ghost{border:1px solid var(--bdr);background:transparent;color:rgba(248,244,238,.6);border-radius:999px;padding:8px 14px;font-family:'DM Sans',sans-serif;cursor:pointer}.ghost:hover{border-color:var(--or);color:var(--or)}.main{max-width:1280px;margin:0 auto;padding:40px 32px 70px}.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:24px;margin-bottom:24px}.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--or);margin-bottom:10px}.title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:300;line-height:1.05;margin-bottom:12px}.title em{font-style:italic;color:var(--or)}.sub{font-size:.96rem;color:var(--muted);max-width:720px;line-height:1.7}.hero-card,.card{border:1px solid var(--bdr);border-radius:20px;background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));padding:22px}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.kpi{border:1px solid var(--bdr);border-radius:16px;background:rgba(7,24,43,.45);padding:16px}.kpi-k{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:6px}.kpi-v{font-family:'Playfair Display',serif;font-size:2rem;font-weight:300}.kpi-m{font-size:.72rem;color:rgba(248,244,238,.35)}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid var(--bdr);background:rgba(255,255,255,.03);color:rgba(248,244,238,.55);border-radius:999px;padding:9px 15px;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}.tab.active{background:rgba(191,150,80,.13);border-color:var(--or);color:var(--or)}.btn{border:1px solid var(--or);background:var(--or);color:#080808;border-radius:999px;padding:10px 18px;font-weight:700;font-size:.78rem;letter-spacing:.08em;cursor:pointer;font-family:'DM Sans',sans-serif}.btn:hover{background:var(--orl)}.btn.secondary{background:transparent;color:var(--or);border-color:rgba(191,150,80,.28)}.table-wrap{overflow:auto;border:1px solid var(--bdr);border-radius:18px;background:rgba(7,24,43,.35)}table{width:100%;border-collapse:collapse;min-width:980px}th,td{text-align:left;padding:14px 15px;border-bottom:1px solid rgba(191,150,80,.08);vertical-align:top}th{font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(191,150,80,.78);background:rgba(7,14,28,.65)}td{font-size:.84rem;color:rgba(248,244,238,.72)}tr:last-child td{border-bottom:none}.rule-name{font-weight:700;color:rgba(248,244,238,.9);margin-bottom:3px}.rule-desc{font-size:.75rem;color:rgba(248,244,238,.38);line-height:1.45}.pill{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid}.pill.high{color:#ff9a9a;background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.22)}.pill.mid{color:var(--or);background:rgba(191,150,80,.1);border-color:rgba(191,150,80,.22)}.pill.low{color:#77ffbe;background:rgba(0,200,117,.08);border-color:rgba(0,200,117,.22)}.switch{position:relative;display:inline-block;width:40px;height:22px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;cursor:pointer;inset:0;background:rgba(255,255,255,.12);border-radius:999px;transition:.2s}.slider:before{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:rgba(248,244,238,.55);transition:.2s}input:checked+.slider{background:rgba(0,200,117,.34)}input:checked+.slider:before{transform:translateX(18px);background:#00C875}.input,.select{width:100%;border:1px solid rgba(191,150,80,.18);background:rgba(255,255,255,.04);border-radius:10px;color:rgba(248,244,238,.85);padding:9px 10px;font-family:'DM Sans',sans-serif}.input:focus,.select:focus{outline:none;border-color:var(--or)}.select option{background:#0b1e35}.notice{border:1px solid rgba(83,183,255,.18);background:rgba(83,183,255,.06);color:rgba(248,244,238,.7);border-radius:16px;padding:14px 16px;font-size:.83rem;line-height:1.55;margin-bottom:18px}.status{font-size:.76rem;color:rgba(248,244,238,.35)}.modal{position:fixed;inset:0;background:rgba(4,8,18,.86);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.modal.open{display:flex}.modal-box{width:100%;max-width:680px;border:1px solid rgba(191,150,80,.24);border-radius:22px;background:linear-gradient(160deg,rgba(12,20,38,.98),rgba(7,14,28,.98));box-shadow:0 40px 100px rgba(0,0,0,.5);overflow:hidden}.modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(191,150,80,.12)}.modal-title{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:300}.modal-body{padding:22px 24px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(191,150,80,.7);margin-bottom:6px}.field.full{grid-column:1/-1}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.empty{padding:30px;text-align:center;color:rgba(248,244,238,.3)}@media(max-width:900px){.hero{grid-template-columns:1fr}.kpi-grid{grid-template-columns:1fr 1fr}.main{padding:26px 18px}.topbar{padding:0 18px}}@media(max-width:560px){.kpi-grid,.form-grid{grid-template-columns:1fr}.brand-name{display:none}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><div class="mark">K</div><div class="brand-name">Kàddu</div><div class="badge">Trust Center</div></div>
+    <div class="top-actions"><a class="ghost" href="index-admin.html">← Hub admin</a><button class="ghost" id="logoutBtn">Déconnexion</button></div>
+  </header>
+
+  <main class="main">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Vérification & confiance</div>
+        <h1 class="title">Piloter les règles du moteur <em>Kàddu Shield</em>.</h1>
+        <p class="sub">Ajustez les règles de scoring, leur gravité, leur impact et leur activation. Ce module sert de centre de contrôle fonctionnel avant connexion complète au moteur antifraude.</p>
+      </div>
+      <div class="hero-card">
+        <div class="kpi-k">Statut du module</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:300;margin:6px 0;color:#77ffbe">Actif</div>
+        <div class="status" id="sessionStatus">Chargement de la session…</div>
+      </div>
+    </section>
+
+    <section class="kpi-grid">
+      <div class="kpi"><div class="kpi-k">Règles</div><div class="kpi-v" id="kpiRules">—</div><div class="kpi-m">paramétrées</div></div>
+      <div class="kpi"><div class="kpi-k">Actives</div><div class="kpi-v" id="kpiActive">—</div><div class="kpi-m">utilisées par le scoring</div></div>
+      <div class="kpi"><div class="kpi-k">Impact max</div><div class="kpi-v" id="kpiImpact">—</div><div class="kpi-m">points cumulés</div></div>
+      <div class="kpi"><div class="kpi-k">Critiques</div><div class="kpi-v" id="kpiCritical">—</div><div class="kpi-m">gravité haute</div></div>
+    </section>
+
+    <div class="notice">Ce fichier corrige le 404 du hub : il doit être déposé à la racine publique du site sous le nom exact <strong>admin-verification-confiance.html</strong>. Si ta page admin principale est nommée autrement, garde le lien du hub inchangé : c’est cette page qui manquait.</div>
+
+    <section class="card">
+      <div class="toolbar">
+        <div class="tabs">
+          <button class="tab active" data-filter="all">Toutes</button>
+          <button class="tab" data-filter="identite">Identité</button>
+          <button class="tab" data-filter="revenus">Revenus</button>
+          <button class="tab" data-filter="documents">Documents</button>
+          <button class="tab" data-filter="coherence">Cohérence</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" onclick="loadRules()">↻ Rafraîchir</button><button class="btn" onclick="openRuleModal()">+ Nouvelle règle</button></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Règle</th><th>Catégorie</th><th>Gravité</th><th>Impact</th><th>Seuil</th><th>Active</th><th>Action</th></tr></thead>
+          <tbody id="rulesBody"><tr><td colspan="7" class="empty">Chargement…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="status" id="saveStatus" style="margin-top:12px"></div>
+    </section>
+  </main>
+
+  <div class="modal" id="ruleModal">
+    <div class="modal-box">
+      <div class="modal-head"><div class="modal-title" id="modalTitle">Nouvelle règle</div><button class="ghost" onclick="closeRuleModal()">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="ruleId">
+        <div class="form-grid">
+          <div class="field full"><label>Nom de la règle</label><input class="input" id="ruleName" placeholder="Ex : CNI expirée"></div>
+          <div class="field full"><label>Description</label><input class="input" id="ruleDesc" placeholder="Observation affichée à l’admin"></div>
+          <div class="field"><label>Catégorie</label><select class="select" id="ruleCat"><option value="identite">Identité</option><option value="revenus">Revenus</option><option value="documents">Documents</option><option value="coherence">Cohérence</option><option value="fraude">Risque fraude</option></select></div>
+          <div class="field"><label>Gravité</label><select class="select" id="ruleSeverity"><option value="low">Faible</option><option value="mid">Modérée</option><option value="high">Haute</option></select></div>
+          <div class="field"><label>Impact score</label><input class="input" id="ruleImpact" type="number" min="0" max="100" value="10"></div>
+          <div class="field"><label>Seuil / condition</label><input class="input" id="ruleThreshold" placeholder="Ex : > 35%"></div>
+        </div>
+        <div class="modal-actions"><button class="btn secondary" onclick="closeRuleModal()">Annuler</button><button class="btn" onclick="saveRule()">Enregistrer →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SB = window.KADDU_SUPABASE?.url || '';
+    const ANON = window.KADDU_SUPABASE?.anonKey || '';
+    let session = null, rules = [], currentFilter = 'all';
+    const DEFAULT_RULES = [
+      {id:'local-1',name:'Pièce d’identité expirée',description:'La date d’expiration de la CNI, du passeport ou du titre transmis est dépassée.',category:'identite',severity:'high',impact:25,threshold:'date_expiration < aujourd’hui',active:true},
+      {id:'local-2',name:'Nom différent entre documents',description:'Le nom déclaré ne correspond pas exactement au nom visible sur les pièces clés.',category:'identite',severity:'high',impact:30,threshold:'nom/prénom non concordants',active:true},
+      {id:'local-3',name:'Taux d’effort élevé',description:'Le loyer représente une part trop importante des revenus nets déclarés.',category:'revenus',severity:'mid',impact:15,threshold:'loyer / revenus > 35%',active:true},
+      {id:'local-4',name:'Revenus déclarés non justifiés',description:'Les revenus déclarés ne sont pas appuyés par une fiche de paie, relevé, attestation ou flux mobile money.',category:'revenus',severity:'mid',impact:18,threshold:'justificatif absent',active:true},
+      {id:'local-5',name:'Document illisible ou tronqué',description:'Le document transmis est flou, incomplet ou ne permet pas une lecture fiable.',category:'documents',severity:'mid',impact:12,threshold:'qualité OCR insuffisante',active:true},
+      {id:'local-6',name:'Dates incohérentes',description:'Les dates du contrat, bulletin, attestation ou justificatif ne sont pas alignées.',category:'coherence',severity:'mid',impact:12,threshold:'chronologie incohérente',active:true},
+      {id:'local-7',name:'Employeur non cohérent',description:'L’employeur du contrat ne correspond pas à celui du bulletin ou du relevé.',category:'coherence',severity:'high',impact:24,threshold:'employeur différent',active:true}
+    ];
+    function h(extra={}){return {apikey:ANON,Authorization:'Bearer '+(session?.access_token||ANON),'Content-Type':'application/json',...extra}}
+    function loadSess(){try{const r=localStorage.getItem('kaddu_admin_session');if(!r)return null;const s=JSON.parse(r);if(s.expires_at&&Date.now()>s.expires_at-60000)return null;return s}catch(_){return null}}
+    function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+    function labelCat(c){return {identite:'Identité',revenus:'Revenus',documents:'Documents',coherence:'Cohérence',fraude:'Risque fraude'}[c]||c}
+    function labelSeverity(s){return {low:'Faible',mid:'Modérée',high:'Haute'}[s]||s}
+    function init(){session=loadSess(); if(!session?.access_token){document.getElementById('sessionStatus').textContent='Session admin absente : retournez au hub et reconnectez-vous.'} else {document.getElementById('sessionStatus').textContent='Session admin détectée.'} loadRules();}
+    async function loadRules(){document.getElementById('rulesBody').innerHTML='<tr><td colspan="7" class="empty">Chargement…</td></tr>';try{const r=await fetch(`${SB}/rest/v1/trust_rules?select=*&order=category.asc,impact.desc`,{headers:h()});if(!r.ok)throw new Error('table trust_rules indisponible');const rows=await r.json();rules=rows.length?rows:DEFAULT_RULES;}catch(e){rules=DEFAULT_RULES;document.getElementById('saveStatus').textContent='Mode local : crée la table Supabase trust_rules pour persister ces réglages.'}renderRules();}
+    function renderRules(){const visible=rules.filter(r=>currentFilter==='all'||r.category===currentFilter);document.getElementById('rulesBody').innerHTML=visible.length?visible.map(r=>`<tr><td><div class="rule-name">${esc(r.name)}</div><div class="rule-desc">${esc(r.description)}</div></td><td>${labelCat(r.category)}</td><td><span class="pill ${r.severity}">${labelSeverity(r.severity)}</span></td><td><input class="input" type="number" value="${Number(r.impact)||0}" min="0" max="100" onchange="patchRule('${r.id}',{impact:Number(this.value)||0})" style="max-width:90px"></td><td>${esc(r.threshold||'—')}</td><td><label class="switch"><input type="checkbox" ${r.active?'checked':''} onchange="patchRule('${r.id}',{active:this.checked})"><span class="slider"></span></label></td><td><button class="ghost" onclick="editRule('${r.id}')">Modifier</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Aucune règle dans cette catégorie.</td></tr>';updateKpis();}
+    function updateKpis(){document.getElementById('kpiRules').textContent=rules.length;document.getElementById('kpiActive').textContent=rules.filter(r=>r.active).length;document.getElementById('kpiImpact').textContent=rules.filter(r=>r.active).reduce((a,b)=>a+(Number(b.impact)||0),0);document.getElementById('kpiCritical').textContent=rules.filter(r=>r.severity==='high').length;}
+    document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentFilter=b.dataset.filter;renderRules();}));
+    function openRuleModal(){document.getElementById('modalTitle').textContent='Nouvelle règle';['ruleId','ruleName','ruleDesc','ruleThreshold'].forEach(id=>document.getElementById(id).value='');document.getElementById('ruleCat').value='identite';document.getElementById('ruleSeverity').value='mid';document.getElementById('ruleImpact').value=10;document.getElementById('ruleModal').classList.add('open')}
+    function closeRuleModal(){document.getElementById('ruleModal').classList.remove('open')}
+    function editRule(id){const r=rules.find(x=>String(x.id)===String(id));if(!r)return;document.getElementById('modalTitle').textContent='Modifier la règle';document.getElementById('ruleId').value=r.id;document.getElementById('ruleName').value=r.name||'';document.getElementById('ruleDesc').value=r.description||'';document.getElementById('ruleCat').value=r.category||'identite';document.getElementById('ruleSeverity').value=r.severity||'mid';document.getElementById('ruleImpact').value=r.impact||0;document.getElementById('ruleThreshold').value=r.threshold||'';document.getElementById('ruleModal').classList.add('open')}
+    async function saveRule(){const id=document.getElementById('ruleId').value;const body={name:document.getElementById('ruleName').value.trim(),description:document.getElementById('ruleDesc').value.trim(),category:document.getElementById('ruleCat').value,severity:document.getElementById('ruleSeverity').value,impact:Number(document.getElementById('ruleImpact').value)||0,threshold:document.getElementById('ruleThreshold').value.trim(),active:true,updated_at:new Date().toISOString()};if(!body.name){alert('Nom obligatoire.');return} if(id){await patchRule(id,body,true)}else{try{const r=await fetch(`${SB}/rest/v1/trust_rules`,{method:'POST',headers:h({'Prefer':'return=representation'}),body:JSON.stringify(body)});if(!r.ok)throw new Error();const [row]=await r.json();rules.push(row||{...body,id:'local-'+Date.now()});}catch(_){rules.push({...body,id:'local-'+Date.now()});}}closeRuleModal();renderRules();}
+    async function patchRule(id,body,silent=false){const idx=rules.findIndex(x=>String(x.id)===String(id));if(idx>=0)rules[idx]={...rules[idx],...body};renderRules();if(String(id).startsWith('local-')){document.getElementById('saveStatus').textContent='Modification locale non persistée : table trust_rules non trouvée.';return}try{const r=await fetch(`${SB}/rest/v1/trust_rules?id=eq.${id}`,{method:'PATCH',headers:h({'Prefer':'return=minimal'}),body:JSON.stringify(body)});if(!r.ok)throw new Error(await r.text());document.getElementById('saveStatus').textContent=silent?'Règle enregistrée.':'Modification enregistrée.';}catch(e){document.getElementById('saveStatus').textContent='Erreur de sauvegarde Supabase : vérifiez la table trust_rules et les policies RLS.'}}
+    document.getElementById('logoutBtn').addEventListener('click',()=>{localStorage.removeItem('kaddu_admin_session');location.href='index-admin.html'});
+    document.getElementById('ruleModal').addEventListener('click',e=>{if(e.target.id==='ruleModal')closeRuleModal()});
+    init();
+  </script>
+</body>
+</html>
