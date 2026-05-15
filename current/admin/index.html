@@ -837,6 +837,32 @@
         </div>
       </a>
 
+
+
+      <!-- MODULE : VÉRIFICATION & CONFIANCE -->
+      <a class="module-card" href="admin-verification-confiance.html">
+        <div class="module-top">
+          <div class="module-icon">🛡️</div>
+          <div class="module-badges">
+            <span class="mbadge mbadge-active">Actif</span>
+            <span class="mbadge mbadge-new">Trust</span>
+          </div>
+        </div>
+        <div class="module-name">Vérification <em>& Confiance</em></div>
+        <div class="module-desc">Pilotez le moteur Kàddu Shield : règles de scoring, gravité, impact, seuils de vigilance et signaux de risque appliqués aux dossiers locataires.</div>
+        <div class="module-features">
+          <span class="mfeat">Règles de scoring paramétrables</span>
+          <span class="mfeat">Gravité · impact · activation</span>
+          <span class="mfeat">Signaux documentaires & revenus</span>
+          <span class="mfeat">Audit des décisions moteur</span>
+        </div>
+        <div class="module-foot">
+          <span class="module-link">Configurer les règles →</span>
+          <span class="module-shortcut"><span class="key">G</span> puis <span class="key">T</span></span>
+        </div>
+      </a>
+
+
       <!-- MODULE 3 : KPIs -->
       <a class="module-card" href="dashboard-kaddu-kpi-secured.html">
         <div class="module-top">
@@ -1111,6 +1137,7 @@
           <div class="shortcuts-row">
             <div class="shortcut-pill"><span class="key">G</span><span class="key">B</span> Biens</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">D</span> Dossiers</div>
+            <div class="shortcut-pill"><span class="key">G</span><span class="key">T</span> Trust</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">K</span> KPIs</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">M</span> Marché</div>
             <div class="shortcut-pill"><span class="key">G</span><span class="key">O</span> Marketing</div>
@@ -1124,7 +1151,7 @@
   </div><!-- /main -->
 
   <div class="hub-footer">
-    <span>Kàddu Admin Hub · <span id="footerVersion">v3.1</span></span>
+    <span>Kàddu Admin Hub · <span id="footerVersion">v3.2</span></span>
     <span id="footerDate"></span>
   </div>
 
@@ -1434,6 +1461,7 @@ document.addEventListener("keydown", e => {
   if(gPressed){
     if(e.key==="b"||e.key==="B") location.href="admin-biens-v2-secured.html";
     if(e.key==="d"||e.key==="D") location.href="admin-dossiers-v3-secured.html";
+    if(e.key==="t"||e.key==="T") location.href="admin-verification-confiance.html";
     if(e.key==="k"||e.key==="K") location.href="dashboard-kaddu-kpi-secured.html";
     if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
     if(e.key==="o"||e.key==="O") location.href="admin-marketing-operations.html";
