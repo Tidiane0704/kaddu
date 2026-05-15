@@ -301,8 +301,44 @@
     .check-ok{color:#77ffbe}.check-warning{color:#ffd180}.check-ko{color:#ff8a8a}.check-unknown{color:rgba(248,244,238,.5)}
     .ocr-empty{font-size:.76rem;color:rgba(248,244,238,.42);line-height:1.6}
 
+
+    /* ── PHASE 3 : SIGNAUX RÉSEAU / FRAUDE RÉCURRENTE ── */
+    .network-box{border:1px solid rgba(178,140,255,.24);background:rgba(178,140,255,.035);padding:14px 16px;margin-bottom:14px}
+    .network-box .title{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#e1d1ff;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+    .network-pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:.66rem;font-weight:700;border:1px solid rgba(178,140,255,.28);color:#e1d1ff;background:rgba(178,140,255,.08)}
+    .network-summary{font-size:.78rem;color:rgba(248,244,238,.58);line-height:1.65;margin-bottom:10px}
+    .network-card{padding:10px 12px;border:1px solid rgba(178,140,255,.14);background:rgba(255,255,255,.025);border-radius:8px;margin-top:8px}
+    .network-card strong{color:rgba(248,244,238,.9)}
+    .network-meta{font-size:.68rem;color:rgba(248,244,238,.38);margin-top:4px;line-height:1.5}
+    .network-low{color:#b8e1ff}.network-medium{color:#ffd180}.network-high{color:#ffb3b3}.network-critical{color:#ff6b6b}
+    .network-empty{font-size:.76rem;color:rgba(248,244,238,.42);line-height:1.6}
+
   </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
+  <script>
+    // Kàddu Shield V2 — bridge modulaire
+    // Charge les prompts/lib externes sans bloquer l'ancien admin.
+    window.KADDU_SHIELD_READY = Promise.all([
+      import('/assets/js/shield/prompts/index.js'),
+      import('/assets/js/shield/lib/document-router.js'),
+      import('/assets/js/shield/lib/fraud-signals.js'),
+      import('/assets/js/shield/lib/passport-engine.js')
+    ]).then(([prompts, router, fraudSignals, passportEngine]) => {
+      window.KADDU_SHIELD = {
+        ...prompts,
+        ...router,
+        ...fraudSignals,
+        ...passportEngine,
+        loaded: true
+      };
+      console.info('[Kàddu Shield] Moteur modulaire chargé.');
+      return window.KADDU_SHIELD;
+    }).catch((err) => {
+      console.warn('[Kàddu Shield] Modules externes indisponibles, fallback inline utilisé.', err);
+      window.KADDU_SHIELD = { loaded: false, error: err };
+      return window.KADDU_SHIELD;
+    });
+  </script>
 </head>
 <body>
   <nav>
@@ -516,6 +552,16 @@
             <div id="ocrContent" class="ocr-empty">Aucune extraction structurée disponible pour ce dossier.</div>
           </div>
           <!-- ══ FIN OCR STRUCTURÉ ══ -->
+
+          <!-- ══ PHASE 3 : SIGNAUX RÉSEAU / FRAUDE RÉCURRENTE ══ -->
+          <div class="network-box" id="networkSection" style="display:none">
+            <div class="title">
+              <span>🕸️ Signaux réseau & doublons</span>
+              <span class="network-pill" id="networkLevel">—</span>
+            </div>
+            <div id="networkContent" class="network-empty">Sélectionnez un dossier pour analyser les signaux récurrents.</div>
+          </div>
+          <!-- ══ FIN PHASE 3 ══ -->
 
 
           <div class="section">
@@ -1031,6 +1077,7 @@
       prepareAfContext(row);
       renderDocsAdmin(row);
       renderSavedDocumentExtractions(row).catch(()=>{});
+      renderFraudNetwork(row);
       renderGdprGuard(row);
       afficherSyntheseSauvegardee(row);
       loadPasseportForDossier(row).catch(()=>{});
@@ -1934,142 +1981,282 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         showSuccess("Synthèse enregistrée dans le commentaire interne.");
       } catch(e){ alert("Erreur : " + e.message); }
     }
-    // ══ PASSEPORT LOCATIF — PERSISTANCE ══════════════════════
+    // ══ PASSEPORT LOCATIF INTELLIGENT — PHASE 4 ═══════════════
+    // Objectif : transformer le score Shield en historique exploitable,
+    // lisible par le conseiller, sans créer de nouvelles colonnes obligatoires.
+
+    function ppClamp(n, min=0, max=100){ return Math.max(min, Math.min(max, Number(n)||0)); }
+
+    function ppAvg(currentValue, newValue, nb){
+      const oldVal = Number(currentValue || 0);
+      const val = Number(newValue || 0);
+      if(nb <= 1) return Math.round(val);
+      return Math.round(((oldVal * (nb-1)) + val) / nb);
+    }
+
+    function getPasseportTier(score){
+      const s = ppClamp(score);
+      if(s >= 85) return {code:'premium', label:'Profil premium', color:'#77ffbe', border:'rgba(0,200,117,.36)', bg:'rgba(0,200,117,.08)'};
+      if(s >= 70) return {code:'serieux', label:'Profil sérieux', color:'#b8e1ff', border:'rgba(83,183,255,.32)', bg:'rgba(83,183,255,.07)'};
+      if(s >= 55) return {code:'renforcer', label:'Profil à renforcer', color:'var(--or)', border:'rgba(191,150,80,.34)', bg:'rgba(191,150,80,.08)'};
+      return {code:'construction', label:'Profil en construction', color:'#ff8a8a', border:'rgba(255,107,107,.32)', bg:'rgba(255,107,107,.07)'};
+    }
+
+    function getPasseportDecision(score){
+      const s = ppClamp(score);
+      if(s >= 85) return 'Pré-validation possible si aucun signal réseau/documentaire critique.';
+      if(s >= 70) return 'Instruction recommandée avec vérification ciblée des pièces sensibles.';
+      if(s >= 55) return 'Demander un complément ou clarifier les points faibles avant décision.';
+      return 'Ne pas valider sans vérification humaine renforcée et pièces complémentaires.';
+    }
+
+    function getConseil(key, score){
+      const conseils = {
+        identite: score < 10
+          ? 'Redemander une pièce lisible, non expirée, avec recto-verso ou MRZ exploitable.'
+          : 'Vérifier la concordance nom, date de naissance et numéro de pièce avec les déclarations.',
+        revenus: score < 10
+          ? 'Demander une preuve de revenus plus forte : fiche de paie récente, attestation employeur, relevé bancaire ou CNSS/IPRES.'
+          : 'Confirmer la régularité des revenus avec au moins une source indépendante.',
+        documents: score < 10
+          ? 'Redemander les documents en PDF net ou photo complète, sans recadrage ni flou.'
+          : 'Contrôler les métadonnées, l’origine du fichier et les éventuelles manipulations visibles.',
+        coherence: score < 10
+          ? 'Clarifier les écarts entre déclarations, pièces, revenus, logement actuel et bien visé.'
+          : 'Faire un appel court pour confirmer les zones encore ambiguës.',
+        fiabilite: score < 10
+          ? 'Vérifier les doublons, les coordonnées et les empreintes documentaires avant toute décision.'
+          : 'Conserver la vigilance réseau : même un bon dossier peut partager des signaux avec d’autres candidatures.',
+      };
+      return conseils[key] || 'À améliorer.';
+    }
+
+    function buildPasseportDimensions(scoreData){
+      return [
+        {key:'identite', label:'Identité & pièces', score:ppClamp(scoreData.identite,0,20), max:20},
+        {key:'revenus', label:'Solvabilité & revenus', score:ppClamp(scoreData.revenus,0,20), max:20},
+        {key:'documents', label:'Qualité documentaire', score:ppClamp(scoreData.documents,0,20), max:20},
+        {key:'coherence', label:'Cohérence du dossier', score:ppClamp(scoreData.coherence,0,20), max:20},
+        {key:'fiabilite', label:'Profil de confiance', score:ppClamp(scoreData.risque_fraude,0,20), max:20},
+      ];
+    }
+
+    function buildPasseportAdviceFromScores(scoreData, networkAnalysis){
+      const dims = buildPasseportDimensions(scoreData);
+      const pointsForts = dims
+        .filter(d => d.score >= 16)
+        .map(d => `${d.label} (${d.score}/${d.max})`);
+
+      const axesAmelio = dims
+        .filter(d => d.score < 14)
+        .sort((a,b)=>a.score-b.score)
+        .map(d => ({
+          axe: d.label,
+          score: d.score,
+          priorite: d.score < 10 ? 'haute' : 'moyenne',
+          conseil: getConseil(d.key, d.score)
+        }));
+
+      if(networkAnalysis && ['high','critical'].includes(networkAnalysis.level)){
+        axesAmelio.unshift({
+          axe: 'Signaux réseau & doublons',
+          score: networkAnalysis.score,
+          priorite: networkAnalysis.level === 'critical' ? 'haute' : 'moyenne',
+          conseil: 'Clarifier les rapprochements détectés : pièce, téléphone, IBAN, email ou empreinte documentaire partagée.'
+        });
+      }
+
+      return {pointsForts, axesAmelio};
+    }
+
+    function computePasseportTrend(historique){
+      const hist = Array.isArray(historique) ? historique.filter(h => h && h.score !== undefined) : [];
+      if(hist.length < 2) return {label:'Tendance non mesurable', delta:0, code:'flat'};
+      const latest = Number(hist[0].score || 0);
+      const previous = Number(hist[1].score || 0);
+      const delta = latest - previous;
+      if(delta >= 8) return {label:`En progression (+${delta})`, delta, code:'up'};
+      if(delta <= -8) return {label:`En recul (${delta})`, delta, code:'down'};
+      return {label:'Stable', delta, code:'flat'};
+    }
+
+    function buildPasseportSummary(pp){
+      const score = ppClamp(pp.score_global);
+      const tier = getPasseportTier(score);
+      const trend = computePasseportTrend(pp.historique);
+      const axes = Array.isArray(pp.axes_amelioration) ? pp.axes_amelioration : [];
+      const forts = Array.isArray(pp.points_forts) ? pp.points_forts : [];
+      const mainAxis = axes[0]?.axe ? ` Point prioritaire : ${axes[0].axe}.` : '';
+      const strong = forts.length ? ` Point fort : ${forts[0]}.` : '';
+      return `${tier.label} — score ${score}/100, ${pp.nb_analyses||0} analyse${(pp.nb_analyses||0)>1?'s':''}, tendance : ${trend.label}.${strong}${mainAxis}`;
+    }
+
+    function getPasseportBars(pp){
+      return [
+        {label:'Identité', value:ppClamp(pp.score_identite,0,20), max:20},
+        {label:'Revenus', value:ppClamp(pp.score_revenus,0,20), max:20},
+        {label:'Docs', value:ppClamp(pp.score_documents,0,20), max:20},
+        {label:'Cohérence', value:ppClamp(pp.score_coherence,0,20), max:20},
+        {label:'Fiabilité', value:ppClamp(pp.score_fiabilite,0,20), max:20},
+      ];
+    }
+
+    function renderPasseportBars(pp){
+      return getPasseportBars(pp).map(b => {
+        const pct = Math.round((b.value / b.max) * 100);
+        const c = pct >= 80 ? '#77ffbe' : pct >= 60 ? '#b8e1ff' : pct >= 45 ? 'var(--or)' : '#ff8a8a';
+        return `<div style="display:flex;align-items:center;gap:7px;font-size:.68rem;margin:5px 0">
+          <span style="width:68px;color:rgba(248,244,238,.42);flex-shrink:0">${b.label}</span>
+          <div style="flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${c};border-radius:999px"></div>
+          </div>
+          <span style="width:34px;text-align:right;color:rgba(248,244,238,.5)">${b.value}/${b.max}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function copyPasseportSummary(){
+      const box = document.getElementById('ppSummaryText');
+      if(!box) return;
+      navigator.clipboard.writeText(box.innerText || box.textContent || '').then(()=>{
+        showSuccess('Synthèse passeport copiée.');
+      }).catch(()=>{});
+    }
+
     async function persistPasseportScore(row, scoreData, synthese){
       try{
         const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
         const email = msg.locataires?.[0]?.email || row.email || null;
         if(!email && !row.locataire_id) return;
 
-        // Lire le passeport existant
         const q = row.locataire_id
           ? `locataire_id=eq.${row.locataire_id}`
           : `locataire_email=eq.${encodeURIComponent(email)}`;
-        const existing = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`,
-          {headers:getAuthHeaders()});
+        const existing = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`, {headers:getAuthHeaders()});
         const rows = existing.ok ? await existing.json() : [];
         const current = rows[0] || null;
+        const nb = (current?.nb_analyses || 0) + 1;
 
-        // Calculer le nouveau score moyenné
-        const nb = (current?.nb_analyses||0) + 1;
-        const avg = (field) => Math.round(
-          ((current?.[field]||0) * (nb-1) + (scoreData[field]||0)) / nb
-        );
+        const networkAnalysis = (typeof getNetworkAnalysis === 'function') ? getNetworkAnalysis(row) : null;
+        const advice = buildPasseportAdviceFromScores(scoreData, networkAnalysis);
+        const label = getPasseportTier(scoreData.score).label;
 
-        // Historique (garder les 10 dernières analyses)
-        const hist = JSON.parse(JSON.stringify(current?.historique||[]));
+        const hist = JSON.parse(JSON.stringify(current?.historique || []));
         hist.unshift({
           date: new Date().toISOString(),
-          score: scoreData.score,
-          decision: scoreData.decision,
-          label: scoreData.label,
+          score: Number(scoreData.score || 0),
+          decision: scoreData.decision || null,
+          label: scoreData.label || label,
           dossier_id: row.id,
           bien: row.bien,
-          synthese_resume: synthese.slice(0,200),
+          status_risque: row.status || null,
+          network_level: networkAnalysis?.level || 'low',
+          network_score: networkAnalysis?.score || 0,
+          axes_prioritaires: advice.axesAmelio.slice(0,3).map(a=>a.axe),
+          synthese_resume: String(synthese || '').slice(0,260),
         });
-        if(hist.length > 10) hist.pop();
-
-        // Calculer points forts et axes d'amélioration
-        const dims = [
-          {key:'identite',label:'Identité & pièces',score:scoreData.identite||0},
-          {key:'revenus',label:'Solvabilité & revenus',score:scoreData.revenus||0},
-          {key:'documents',label:'Qualité documentaire',score:scoreData.documents||0},
-          {key:'coherence',label:'Cohérence du dossier',score:scoreData.coherence||0},
-          {key:'fiabilite',label:'Profil de confiance',score:scoreData.risque_fraude||0},
-        ];
-        const pointsForts = dims.filter(d=>d.score>=16).map(d=>d.label);
-        const axesAmelio = dims.filter(d=>d.score<12).map(d=>({
-          axe: d.label,
-          conseil: getConseil(d.key, d.score)
-        }));
-
-        // Label global
-        const s = scoreData.score;
-        const label = s>=80 ? 'Profil rassurant ✓'
-          : s>=65 ? 'Profil sérieux'
-          : s>=50 ? 'Profil à renforcer'
-          : 'Profil en construction';
+        if(hist.length > 12) hist.pop();
 
         const payload = {
           locataire_email: email,
           locataire_id: row.locataire_id || null,
-          score_global: avg('score_global') || scoreData.score,
-          score_identite: avg('score_identite') || scoreData.identite||0,
-          score_revenus: avg('score_revenus') || scoreData.revenus||0,
-          score_documents: avg('score_documents') || scoreData.documents||0,
-          score_coherence: avg('score_coherence') || scoreData.coherence||0,
-          score_fiabilite: avg('score_fiabilite') || scoreData.risque_fraude||0,
+          score_global: ppAvg(current?.score_global, scoreData.score, nb),
+          score_identite: ppAvg(current?.score_identite, scoreData.identite, nb),
+          score_revenus: ppAvg(current?.score_revenus, scoreData.revenus, nb),
+          score_documents: ppAvg(current?.score_documents, scoreData.documents, nb),
+          score_coherence: ppAvg(current?.score_coherence, scoreData.coherence, nb),
+          score_fiabilite: ppAvg(current?.score_fiabilite, scoreData.risque_fraude, nb),
           label,
           nb_analyses: nb,
-          nb_candidatures: Math.max(current?.nb_candidatures||0, 1),
+          nb_candidatures: Math.max(current?.nb_candidatures || 0, 1),
           historique: hist,
-          points_forts: pointsForts,
-          axes_amelioration: axesAmelio,
+          points_forts: advice.pointsForts,
+          axes_amelioration: advice.axesAmelio,
           updated_at: new Date().toISOString(),
         };
 
-        // Upsert
-        await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif`, {
+        const up = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif`, {
           method: 'POST',
           headers: getAuthHeaders({'Prefer':'resolution=merge-duplicates,return=minimal'}),
           body: JSON.stringify(payload)
         });
+        if(!up.ok){
+          const t = await up.text();
+          console.warn('[passeport] upsert non appliqué', t);
+        }
 
-        // Afficher le badge passeport dans la fiche
         renderPasseportBadge(payload);
-
       } catch(err){ console.warn('[passeport]', err.message); }
     }
 
-    function getConseil(key, score){
-      const conseils = {
-        identite: 'Vérifiez que la pièce d\'identité est lisible et non expirée.',
-        revenus: 'Des justificatifs de revenus complets renforcent fortement le profil.',
-        documents: 'Déposez des documents de qualité, sans flou ni découpage.',
-        coherence: 'Assurez-vous que toutes les informations sont cohérentes entre elles.',
-        fiabilite: 'Aucun signal d\'alerte détecté — le dossier gagne en confiance.',
-      };
-      return conseils[key] || 'À améliorer.';
-    }
-
     function renderPasseportBadge(pp){
-      // Insérer ou mettre à jour le badge passeport dans la section vérification
       const existing = document.getElementById('ppBadgeSection');
       if(existing) existing.remove();
       const afSection = document.getElementById('afSection');
-      if(!afSection) return;
+      if(!afSection || !pp) return;
 
-      const s = pp.score_global;
-      const tier = s>=80?'high':s>=50?'mid':'low';
-      const col = {high:'#77ffbe',mid:'var(--or)',low:'#ff8a8a'}[tier];
-      const borderCol = {high:'rgba(0,200,117,.3)',mid:'rgba(191,150,80,.3)',low:'rgba(255,107,107,.3)'}[tier];
+      const score = ppClamp(pp.score_global);
+      const tier = getPasseportTier(score);
+      const trend = computePasseportTrend(pp.historique);
+      const axes = Array.isArray(pp.axes_amelioration) ? pp.axes_amelioration : [];
+      const forts = Array.isArray(pp.points_forts) ? pp.points_forts : [];
+      const hist = Array.isArray(pp.historique) ? pp.historique : [];
+      const summary = buildPasseportSummary(pp);
+
+      const trendColor = trend.code === 'up' ? '#77ffbe' : trend.code === 'down' ? '#ff8a8a' : 'rgba(248,244,238,.45)';
+      const latest = hist[0] || {};
+      const networkText = latest.network_level && latest.network_level !== 'low'
+        ? ` · Réseau : ${networkLevelLabel ? networkLevelLabel(latest.network_level) : latest.network_level} (${latest.network_score || 0}/100)`
+        : '';
 
       const badge = document.createElement('div');
       badge.id = 'ppBadgeSection';
-      badge.style.cssText = `border:1px solid ${borderCol};border-radius:10px;background:rgba(7,24,43,.5);padding:14px 16px;margin-bottom:14px`;
+      badge.style.cssText = `border:1px solid ${tier.border};border-radius:12px;background:rgba(7,24,43,.58);padding:14px 16px;margin-bottom:14px;box-shadow:0 10px 26px rgba(0,0,0,.12)`;
       badge.innerHTML = `
-        <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:${col};margin-bottom:10px">🎫 Passeport Locatif — Score persisté</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
+          <div style="font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:${tier.color}">🎫 Passeport Locatif intelligent — Phase 4</div>
+          <button class="af-btn-sm" onclick="copyPasseportSummary()">Copier synthèse</button>
+        </div>
         <div style="display:flex;align-items:center;gap:14px">
-          <div style="width:52px;height:52px;border-radius:50%;border:2.5px solid ${col};background:${col}14;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
-            <span style="font-size:1.1rem;font-weight:700;color:${col};line-height:1">${s}</span>
-            <span style="font-size:.5rem;color:rgba(248,244,238,.3)">/100</span>
+          <div style="width:62px;height:62px;border-radius:50%;border:2.5px solid ${tier.color};background:${tier.bg};display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:1.25rem;font-weight:800;color:${tier.color};line-height:1">${score}</span>
+            <span style="font-size:.52rem;color:rgba(248,244,238,.32)">/100</span>
           </div>
-          <div style="flex:1">
-            <div style="font-size:.82rem;font-weight:600;color:${col};margin-bottom:3px">${pp.label}</div>
-            <div style="font-size:.72rem;color:rgba(248,244,238,.4)">${pp.nb_analyses} analyse${pp.nb_analyses>1?'s':''} · Moyenné sur l'historique</div>
-            ${pp.points_forts?.length ? `<div style="font-size:.68rem;color:#77ffbe;margin-top:4px">✓ ${pp.points_forts.slice(0,2).join(' · ')}</div>` : ''}
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+              <span style="font-size:.9rem;font-weight:700;color:${tier.color}">${tier.label}</span>
+              <span style="font-size:.66rem;padding:3px 8px;border-radius:999px;border:1px solid ${tier.border};background:${tier.bg};color:${tier.color}">${pp.nb_analyses || 0} analyse${(pp.nb_analyses||0)>1?'s':''}</span>
+              <span style="font-size:.66rem;color:${trendColor}">${trend.label}</span>
+            </div>
+            <div id="ppSummaryText" style="font-size:.74rem;color:rgba(248,244,238,.56);line-height:1.55">${summary}${networkText}</div>
           </div>
         </div>
-        ${pp.axes_amelioration?.length ? `
-        <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(191,150,80,.08)">
-          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.3);margin-bottom:4px">Axes d'amélioration</div>
-          ${pp.axes_amelioration.slice(0,2).map(a=>`<div style="font-size:.72rem;color:rgba(248,244,238,.5);padding:2px 0">• ${a.axe} — ${a.conseil}</div>`).join('')}
-        </div>` : ''}`;
+        <div style="margin-top:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.025);border-radius:8px">
+          ${renderPasseportBars(pp)}
+        </div>
+        <div style="margin-top:10px;padding:10px 12px;border:1px solid rgba(191,150,80,.12);background:rgba(191,150,80,.04);border-radius:8px">
+          <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:5px">Recommandation conseiller</div>
+          <div style="font-size:.75rem;color:rgba(248,244,238,.62);line-height:1.55">${getPasseportDecision(score)}</div>
+        </div>
+        ${forts.length ? `
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)">
+            <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#77ffbe;margin-bottom:4px">Points forts</div>
+            ${forts.slice(0,3).map(f=>`<div style="font-size:.72rem;color:rgba(119,255,190,.78);padding:2px 0">✓ ${f}</div>`).join('')}
+          </div>` : ''}
+        ${axes.length ? `
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)">
+            <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.34);margin-bottom:4px">Actions prioritaires</div>
+            ${axes.slice(0,4).map(a=>`<div style="font-size:.72rem;color:rgba(248,244,238,.58);padding:3px 0">• <strong style="color:${a.priorite==='haute'?'#ffb3b3':'var(--or)'}">${a.axe}</strong> — ${a.conseil || ''}</div>`).join('')}
+          </div>` : ''}
+        ${hist.length ? `
+          <div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)">
+            <div style="font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(248,244,238,.34);margin-bottom:4px">Historique récent</div>
+            ${hist.slice(0,3).map(h=>`<div style="font-size:.7rem;color:rgba(248,244,238,.48);padding:2px 0">${formatDate(h.date)} · ${h.score}/100 · ${bienLabel(h.bien)}${h.network_level && h.network_level!=='low' ? ' · réseau '+h.network_level : ''}</div>`).join('')}
+          </div>` : ''}`;
 
       afSection.insertBefore(badge, afSection.firstChild);
     }
 
-    // Charger le passeport existant à l'ouverture d'une fiche
     async function loadPasseportForDossier(row){
       try{
         const msg = (() => { try{ return JSON.parse(row.message||'{}'); }catch(_){ return {}; } })();
@@ -2078,14 +2265,13 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         const q = row.locataire_id
           ? `locataire_id=eq.${row.locataire_id}`
           : `locataire_email=eq.${encodeURIComponent(email)}`;
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`,
-          {headers:getAuthHeaders()});
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/passeport_locatif?${q}&select=*&limit=1`, {headers:getAuthHeaders()});
         if(!res.ok) return;
         const rows = await res.json();
         if(rows[0]) renderPasseportBadge(rows[0]);
-      }catch(_){}
+      }catch(_){ }
     }
-    // ══ FIN PASSEPORT LOCATIF ═════════════════════════════════
+    // ══ FIN PASSEPORT LOCATIF INTELLIGENT — PHASE 4 ═══════════
     function renderDocsAdmin(row){
       const section = document.getElementById('docsSection');
       const list    = document.getElementById('docsList');
@@ -2150,6 +2336,8 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         releve:'🏦', bancaire:'🏦',
         avis_impo:'📄', registre:'🏢', bilan:'📊',
         certif_scol:'🎓', lettre:'✉️', pension:'📄',
+        attestation_travail:'💼', attestation_bancaire:'🏦', recu_mobile_money:'📱',
+        recu_wave:'📱', wave:'📱', orange_money:'📱', om:'📱', cnss:'🧾', ipres:'🧾', cnss_ipres:'🧾', garant:'🤝',
         justif_ressources:'💼', justif_situation:'📄', autre:'📎'
       };
 
@@ -2295,38 +2483,531 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
 
     // ── PROMPTS D'EXTRACTION PAR TYPE DE DOCUMENT ─────────────
     const DOC_EXTRACT_PROMPTS = {
-      cni: `Tu analyses une pièce d'identité (CNI, passeport ou titre de séjour) pour l'agence Kàddu Sénégal.
-Extrais les données suivantes en JSON strict, sans commentaire :
-KADDU_DOC:{"type_document":"[cni|passeport|titre_sejour|autre]","nom":"","prenom":"","date_naissance":"[YYYY-MM-DD ou vide]","numero_piece":"","date_expiration":"[YYYY-MM-DD ou vide]","nationalite":"","valide":[true|false],"anomalies":["liste des anomalies visuelles ou logiques, vide si aucune"]}
-Après le JSON, ajoute une synthèse courte en 2-3 lignes sur la lisibilité et la cohérence du document.`,
 
-      fiches_paie: `Tu analyses un bulletin de salaire pour l'agence Kàddu Sénégal.
-Extrais les données suivantes en JSON strict :
-KADDU_DOC:{"type_document":"bulletin_salaire","nom_salarie":"","employeur":"","salaire_net":[nombre ou null],"salaire_brut":[nombre ou null],"periode":"[MM/YYYY ou vide]","date_bulletin":"[YYYY-MM-DD ou vide]","anomalies":["incohérences typographiques, montants suspects, mentions manquantes"]}
-Après le JSON, synthèse courte sur la cohérence du document.`,
+      // ── PIÈCE D'IDENTITÉ ─────────────────────────────────────
+      cni: `Tu analyses une pièce d'identité pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être une CNI sénégalaise, un passeport (mauritanien, français, sénégalais, ivoirien, etc.) ou un titre de séjour.
 
-      releve: `Tu analyses un relevé bancaire ou un historique de transactions (Wave, Orange Money, banque) pour l'agence Kàddu Sénégal.
-Extrais les données suivantes en JSON strict :
-KADDU_DOC:{"type_document":"releve_bancaire","titulaire":"","banque_ou_service":"","periode_debut":"[YYYY-MM-DD ou vide]","periode_fin":"[YYYY-MM-DD ou vide]","solde_moyen_estime":[nombre ou null],"revenus_reguliers_detectes":[true|false],"anomalies":["mouvements suspects, incohérences"]}
-Après le JSON, synthèse courte sur les flux financiers détectés.`,
+INSTRUCTIONS CRITIQUES :
+- Pour un passeport : lis impérativement les deux lignes MRZ en bas du document. La MRZ est la source de vérité — elle prime sur le texte imprimé si les deux diffèrent.
+- MRZ ligne 1 : type, pays émetteur, nom/prénom
+- MRZ ligne 2 : numéro passeport (7 car.), nationalité, date naissance (AAMMJJ), sexe, date expiration (AAMMJJ)
+- Convertis les dates MRZ en format YYYY-MM-DD (ex: 870407 → 1987-04-07)
+- Extrais aussi le numéro national (NNI/NINEA) si visible
+- Note tous les tampons de voyage avec pays, date et type (entrée/sortie)
 
-      contrat: `Tu analyses un contrat de travail pour l'agence Kàddu Sénégal.
-Extrais les données suivantes en JSON strict :
-KADDU_DOC:{"type_document":"contrat_travail","nom_salarie":"","employeur":"","type_contrat":"[CDI|CDD|interim|autre]","date_embauche":"[YYYY-MM-DD ou vide]","salaire_contractuel":[nombre ou null],"poste":"","anomalies":["éléments manquants, incohérences, signatures absentes"]}
-Après le JSON, synthèse courte sur la validité du contrat.`,
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[cni|passeport|titre_sejour|autre]","nom":"","prenom":"","date_naissance":"[YYYY-MM-DD]","lieu_naissance":"","nationalite":"","numero_piece":"","numero_national":"[NNI ou vide]","date_emission":"[YYYY-MM-DD ou vide]","date_expiration":"[YYYY-MM-DD]","sexe":"[M|F]","pays_emetteur":"","valide":[true|false],"mrz_lue":[true|false],"tampons":[{"pays":"","date":"","type":"entree|sortie"}],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["liste précise des anomalies : document expiré, photo floue, données incohérentes entre MRZ et texte, altération visible, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la validité et la cohérence.`,
 
-      default: `Tu analyses un document locatif pour l'agence Kàddu Sénégal.
-Identifie le type de document, extrais les informations clés en JSON strict :
-KADDU_DOC:{"type_document":"[description]","nom":"","date":"[YYYY-MM-DD ou vide]","montant":[nombre ou null],"emetteur":"","anomalies":["incohérences visuelles, données manquantes ou suspectes"]}
-Après le JSON, synthèse courte en 2-3 lignes.`
+      // ── BULLETIN DE SALAIRE ──────────────────────────────────
+      fiches_paie: `Tu analyses un bulletin de salaire pour l'agence immobilière Kàddu (Sénégal).
+Le document peut venir de France, du Sénégal ou d'un autre pays africain.
+
+INSTRUCTIONS :
+- Extrais le salaire NET à payer (pas brut, pas net imposable)
+- Note la devise exacte (XOF, EUR, etc.)
+- Vérifie la cohérence : employeur, SIRET/NINEA, période, cumuls annuels
+- Détecte les anomalies typographiques : polices mélangées, alignements suspects, montants arrondis artificiellement
+- Note si c'est un bulletin papier scanné ou un PDF natif
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"bulletin_salaire","nom_salarie":"","prenom_salarie":"","employeur":"","siret_ou_ninea":"","poste":"","convention_collective":"","salaire_net":[nombre ou null],"salaire_brut":[nombre ou null],"devise":"[XOF|EUR|autre]","periode":"[MM/YYYY]","date_paiement":"[YYYY-MM-DD ou vide]","cumul_net_annuel":[nombre ou null],"anciennete_mois":[nombre ou null],"type_contrat":"[CDI|CDD|interim|autre]","lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["liste précise : incohérences typographiques, montants suspects, SIRET absent, cumuls incohérents, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la cohérence et la fiabilité du document.`,
+
+      // ── RELEVÉ BANCAIRE ──────────────────────────────────────
+      releve: `Tu analyses un relevé bancaire ou un historique de transactions pour l'agence immobilière Kàddu (Sénégal).
+Le document peut venir d'une banque classique, de Wave, Orange Money, Free Money, ou d'un autre service mobile money.
+
+INSTRUCTIONS :
+- Identifie la source : banque physique (CBAO, Ecobank, BHS, CIH, BNP, etc.) ou mobile money
+- Calcule ou estime le solde moyen sur la période
+- Identifie les revenus réguliers (virements récurrents de même montant)
+- Détecte les mouvements suspects : virements circulaires, dépôts juste avant relevé, sorties massives
+- Note si le relevé couvre bien 3 mois minimum
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[releve_bancaire|releve_mobile_money|releve_wave|releve_orange_money|autre]","titulaire":"","iban_ou_numero":"","banque_ou_service":"","pays":"","periode_debut":"[YYYY-MM-DD]","periode_fin":"[YYYY-MM-DD]","nb_mois_couverts":[nombre],"solde_debut":[nombre ou null],"solde_fin":[nombre ou null],"solde_moyen_estime":[nombre ou null],"devise":"[XOF|EUR|autre]","revenus_reguliers_detectes":[true|false],"montant_revenu_regulier":[nombre ou null],"nb_transactions":[nombre ou null],"plus_gros_debit":[nombre ou null],"plus_gros_credit":[nombre ou null],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["dépôts inhabituels avant présentation, virements circulaires, solde insuffisant, période incomplète, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur les flux et la capacité financière détectée.`,
+
+      // ── CONTRAT DE TRAVAIL ───────────────────────────────────
+      contrat: `Tu analyses un contrat de travail pour l'agence immobilière Kàddu (Sénégal).
+
+INSTRUCTIONS :
+- Identifie le type exact : CDI, CDD (avec durée), intérim, freelance, promesse d'embauche
+- Vérifie la présence des signatures des deux parties
+- Note si le contrat est en période d'essai
+- Vérifie la cohérence employeur/SIRET avec les bulletins de salaire si mentionnés
+- Pour CDD : note la date de fin et évalue le risque de précarité pour la location
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[cdi|cdd|interim|freelance|promesse_embauche|autre]","nom_salarie":"","employeur":"","siret_ou_ninea":"","poste":"","date_embauche":"[YYYY-MM-DD]","date_fin_contrat":"[YYYY-MM-DD ou vide si CDI]","salaire_contractuel":[nombre ou null],"devise":"[XOF|EUR|autre]","periode_essai":[true|false],"fin_periode_essai":"[YYYY-MM-DD ou vide]","temps_plein":[true|false]","signe_salarie":[true|false],"signe_employeur":[true|false],"lieu_travail":"","lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["signatures manquantes, dates incohérentes, CDD trop court pour la location, mentions obligatoires absentes, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la solidité du contrat pour un dossier locatif.`,
+
+      // ── KBIS / REGISTRE DE COMMERCE ─────────────────────────
+      registre: `Tu analyses un extrait Kbis, un registre de commerce (RCCM), un NINEA ou un document d'immatriculation d'entreprise pour l'agence immobilière Kàddu (Sénégal).
+
+INSTRUCTIONS :
+- Identifie le pays et le type de registre (Kbis France, RCCM Sénégal/OHADA, NINEA, etc.)
+- Note la forme juridique exacte (SARL, SAS, SA, EI, auto-entrepreneur, etc.)
+- Vérifie la date de création et l'ancienneté de la société
+- Identifie le(s) dirigeant(s) et leur qualité
+- Vérifie si la société est en activité ou radiée
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[kbis|rccm|ninea|immatriculation|autre]","raison_sociale":"","forme_juridique":"","numero_immatriculation":"","pays":"","date_creation":"[YYYY-MM-DD ou vide]","capital_social":[nombre ou null],"devise_capital":"[XOF|EUR|autre]","siege_social":"","activite":"","dirigeant_nom":"","dirigeant_qualite":"","statut_activite":"[actif|radie|en_liquidation|inconnu]","date_document":"[YYYY-MM-DD ou vide]","lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["société radiée, document périmé (>3 mois), dirigeant différent du candidat, activité incohérente, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la solidité et la crédibilité de la structure.`,
+
+      // ── BILAN / DÉCLARATION FISCALE ──────────────────────────
+      bilan: `Tu analyses un bilan comptable, un compte de résultat, une déclaration fiscale ou une plaquette financière pour l'agence immobilière Kàddu (Sénégal).
+
+INSTRUCTIONS :
+- Identifie l'exercice fiscal couvert
+- Note le chiffre d'affaires, le résultat net et les capitaux propres
+- Évalue la cohérence avec les revenus déclarés par le candidat
+- Détecte les signes de fragilité : résultat négatif, capitaux propres négatifs, dettes élevées
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[bilan|compte_resultat|declaration_fiscale|plaquette|autre]","raison_sociale":"","exercice":"[YYYY ou YYYY-YYYY]","chiffre_affaires":[nombre ou null],"resultat_net":[nombre ou null],"capitaux_propres":[nombre ou null],"total_bilan":[nombre ou null],"devise":"[XOF|EUR|autre]","commissaire_aux_comptes":[true|false],"certifie":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["résultat négatif, capitaux propres négatifs, document non certifié, exercice trop ancien, incohérence avec revenus déclarés, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la santé financière de la structure.`,
+
+      // ── AVIS D'IMPOSITION ────────────────────────────────────
+      avis_impo: `Tu analyses un avis d'imposition ou une déclaration de revenus pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être français (DGFIP), sénégalais (DGID) ou d'un autre pays.
+
+INSTRUCTIONS :
+- Extrais le revenu fiscal de référence (RFR) — c'est le chiffre clé pour le dossier locatif
+- Note l'année d'imposition (pas l'année des revenus — attention au décalage d'un an)
+- Vérifie la cohérence avec les bulletins de salaire
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[avis_imposition|declaration_revenus|autre]","nom":"","prenom":"","annee_revenus":[nombre],"revenu_fiscal_reference":[nombre ou null],"impot_net":[nombre ou null],"devise":"[XOF|EUR|autre]","pays":"","numero_fiscal":"","situation_familiale":"","nb_parts":[nombre ou null],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["document périmé (>2 ans), RFR incohérent avec revenus déclarés, document tronqué, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur les revenus confirmés par l'administration fiscale.`,
+
+      // ── QUITTANCE DE LOYER ───────────────────────────────────
+      contrat_client: `Tu analyses une quittance de loyer, un bail ou un document de situation locative précédente pour l'agence immobilière Kàddu (Sénégal).
+
+INSTRUCTIONS :
+- Identifie le bailleur (nom, coordonnées) — sera utilisé pour vérification
+- Note le loyer mensuel et sa cohérence avec les revenus du candidat
+- Vérifie la continuité des quittances (pas de mois manquants)
+- Note si le candidat était locataire ou propriétaire-occupant
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[quittance_loyer|bail|attestation_hebergement|autre]","locataire_nom":"","adresse_bien":"","bailleur_nom":"","bailleur_contact":"","loyer_mensuel":[nombre ou null],"charges":[nombre ou null],"devise":"[XOF|EUR|autre]","periode_debut":"[YYYY-MM-DD ou vide]","periode_fin":"[YYYY-MM-DD ou vide]","paiements_reguliers":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["loyer élevé vs revenus, bailleur non identifiable, quittances non consécutives, document manuscrit non officiel, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur le comportement locatif antérieur.`,
+
+      // ── JUSTIFICATIF DE DOMICILE ─────────────────────────────
+      domicile: `Tu analyses un justificatif de domicile pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être une facture d'électricité (Senelec, EDF, etc.), d'eau, de téléphone, internet, ou une attestation d'hébergement.
+
+INSTRUCTIONS :
+- Vérifie que le nom sur le document correspond au candidat
+- Note la date du document — doit être récent (< 3 mois pour valider l'adresse actuelle)
+- Extrais l'adresse complète
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[facture_electricite|facture_eau|facture_telecom|facture_internet|attestation_hebergement|autre]","nom_titulaire":"","adresse":"","emetteur":"[Senelec|EDF|Orange|autre]","date_document":"[YYYY-MM-DD ou vide]","montant":[nombre ou null],"devise":"[XOF|EUR|autre]","recent":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["document > 3 mois, nom différent du candidat, adresse illisible, document manuscrit non officiel, etc."]}
+Après le JSON, synthèse courte sur la validité comme justificatif de domicile.`,
+
+      // ── CERTIFICAT DE SCOLARITÉ ──────────────────────────────
+      certif_scol: `Tu analyses un certificat de scolarité, une carte étudiante ou un document d'inscription pour l'agence immobilière Kàddu (Sénégal).
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[certificat_scolarite|carte_etudiant|attestation_inscription|autre]","nom":"","prenom":"","etablissement":"","niveau":"","annee_scolaire":"","date_fin_estimee":"[YYYY-MM-DD ou vide]","bourse":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["document périmé, établissement non reconnu, niveau incohérent avec l'âge, etc."]}
+Après le JSON, synthèse courte sur la situation académique.`,
+
+
+      // ── ATTESTATION DE TRAVAIL ───────────────────────────────
+      attestation_travail: `Tu analyses une attestation de travail pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être une attestation employeur, un certificat de travail, une lettre de confirmation d'emploi ou une attestation de présence en entreprise.
+
+INSTRUCTIONS :
+- Identifie l'employeur, le salarié, le poste, l'ancienneté et la rémunération si elle est indiquée.
+- Vérifie la présence d'un cachet, d'une signature, d'un signataire identifiable et d'une date de document.
+- Vérifie si l'attestation est récente et cohérente avec la situation déclarée par le candidat.
+- Distingue une attestation formelle d'une simple lettre libre.
+- Ne conclus jamais à une fraude : parle d'anomalie, d'incohérence ou d'élément à vérifier.
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"attestation_travail","nom_salarie":"","prenom_salarie":"","employeur":"","siret_ou_ninea":"","poste":"","date_embauche":"[YYYY-MM-DD ou vide]","anciennete_mois":[nombre ou null],"salaire_indique":[nombre ou null],"devise":"[XOF|EUR|autre]","signataire_nom":"","signataire_fonction":"","cachet_present":[true|false],"signature_presente":[true|false],"date_document":"[YYYY-MM-DD ou vide]","recent":[true|false],"document_formel":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["cachet absent, signature absente, salaire non indiqué, employeur différent, document ancien, signataire non identifiable, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la solidité de l'attestation pour un dossier locatif.`,
+
+      // ── ATTESTATION BANCAIRE ─────────────────────────────────
+      attestation_bancaire: `Tu analyses une attestation bancaire pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être une attestation de compte, une attestation de solde, une lettre bancaire ou un certificat bancaire.
+
+INSTRUCTIONS :
+- Identifie la banque, le titulaire, le pays et le numéro de compte partiellement masqué si visible.
+- Vérifie si l'attestation confirme seulement l'existence du compte ou aussi un solde / une capacité financière.
+- Vérifie la date : une attestation trop ancienne a une valeur probante plus faible.
+- Vérifie la présence d'un cachet, d'une signature et d'un signataire bancaire.
+- Distingue une attestation bancaire officielle d'une simple capture ou lettre non formelle.
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"attestation_bancaire","titulaire":"","banque":"","pays":"","numero_compte_partiel":"","date_document":"[YYYY-MM-DD ou vide]","solde_indique":[nombre ou null],"devise":"[XOF|EUR|autre]","relation_bancaire_confirmee":[true|false],"capacite_financiere_confirmee":[true|false],"cachet_present":[true|false],"signature_presente":[true|false],"signataire_nom":"","recent":[true|false],"document_officiel_probable":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["document ancien, absence cachet/signature, titulaire différent, montant non indiqué, banque non identifiable, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la valeur probante du document.`,
+
+      // ── REÇU MOBILE MONEY ────────────────────────────────────
+      recu_mobile_money: `Tu analyses un reçu ou une capture de transaction Mobile Money pour l'agence immobilière Kàddu (Sénégal).
+Le document peut venir de Wave, Orange Money, Free Money, Wizall ou d'un autre service mobile money.
+
+INSTRUCTIONS :
+- Identifie le service utilisé et le format du document : reçu officiel, capture écran, SMS, export PDF ou photo.
+- Extrais le titulaire, le bénéficiaire, le montant, la date et la référence de transaction.
+- Vérifie si le reçu concerne un paiement de loyer, un revenu, un transfert familial, une avance, une caution ou un autre motif.
+- Une transaction isolée ne prouve pas un revenu régulier : signale-le clairement.
+- Détecte les captures recadrées, références absentes, dates absentes ou titulaires non identifiables.
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"recu_mobile_money","service":"[Wave|Orange Money|Free Money|Wizall|autre]","format_document":"[recu_officiel|capture_ecran|sms|export_pdf|photo|autre]","titulaire":"","beneficiaire":"","telephone_partiel":"","montant":[nombre ou null],"devise":"[XOF|EUR|autre]","date_transaction":"[YYYY-MM-DD ou vide]","reference_transaction":"","motif_detecte":"","paiement_loyer_detecte":[true|false],"revenu_detecte":[true|false],"transaction_recurrente_probable":[true|false],"capture_ecran_probable":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["capture recadrée, référence absente, date absente, titulaire non identifiable, transaction isolée, montant incohérent, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la fiabilité du reçu et sa valeur dans le dossier.`,
+
+      // ── CNSS / IPRES / COTISATIONS SOCIALES ─────────────────
+      cnss_ipres: `Tu analyses un relevé CNSS, IPRES ou document de cotisation sociale pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être une attestation d'immatriculation, un relevé de cotisations, un historique salarié ou une preuve d'affiliation sociale.
+
+INSTRUCTIONS :
+- Identifie l'organisme : CNSS, IPRES ou équivalent.
+- Vérifie le nom du salarié, le numéro d'assuré, l'employeur et les périodes cotisées.
+- Le document permet de confirmer l'existence d'un emploi déclaré et une ancienneté professionnelle.
+- Note les interruptions, périodes manquantes ou incohérences d'employeur.
+- Vérifie si les périodes sont récentes et cohérentes avec l'emploi déclaré.
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"cnss_ipres","organisme":"[CNSS|IPRES|autre]","nom_salarie":"","prenom_salarie":"","numero_assure":"","employeur":"","numero_employeur":"","periode_debut":"[YYYY-MM-DD ou vide]","periode_fin":"[YYYY-MM-DD ou vide]","nb_mois_cotises":[nombre ou null],"emploi_confirme":[true|false],"anciennete_confirmee":[true|false],"cotisations_recentes":[true|false],"date_document":"[YYYY-MM-DD ou vide]","lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["employeur différent, périodes manquantes, document ancien, salarié non identifiable, cotisations non récentes, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la stabilité professionnelle confirmée par le document.`,
+
+      // ── GARANT / PRISE EN CHARGE ─────────────────────────────
+      garant: `Tu analyses un document relatif à un garant pour l'agence immobilière Kàddu (Sénégal).
+Le document peut être une pièce d'identité du garant, une attestation de prise en charge, un justificatif de revenus, un justificatif de domicile ou une lettre d'engagement.
+
+INSTRUCTIONS :
+- Identifie le garant, son lien avec le candidat et la nature exacte du document fourni.
+- Vérifie si l'engagement du garant est explicite ou seulement implicite.
+- Vérifie la présence d'une signature, d'une pièce d'identité et de justificatifs de revenus.
+- Analyse la solidité du garant sans remplacer la décision du conseiller.
+- Si le document ne contient qu'une identité sans engagement écrit, signale que la garantie reste incomplète.
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"garant","nature_document":"[piece_identite|attestation_prise_en_charge|revenus_garant|domicile_garant|lettre_engagement|autre]","nom_garant":"","prenom_garant":"","lien_candidat":"","type_piece":"","numero_piece":"","date_expiration_piece":"[YYYY-MM-DD ou vide]","revenu_garant":[nombre ou null],"devise":"[XOF|EUR|autre]","employeur_garant":"","engagement_ecrit_present":[true|false],"signature_presente":[true|false],"piece_identite_presente":[true|false],"justificatif_revenus_present":[true|false],"justificatif_domicile_present":[true|false],"garantie_complete":[true|false],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["engagement absent, signature absente, revenus non prouvés, identité incomplète, pièce expirée, lien candidat non indiqué, etc."]}
+Après le JSON, synthèse de 2-3 lignes sur la valeur du garant dans le dossier.`,
+
+      // ── DOCUMENT PAR DÉFAUT ──────────────────────────────────
+      default: `Tu analyses un document dans le cadre d'un dossier de location immobilière pour l'agence Kàddu (Sénégal).
+
+INSTRUCTIONS GÉNÉRALES :
+- Identifie précisément le type de document
+- Extrais toutes les données chiffrées (montants, dates, numéros)
+- Évalue la lisibilité et la fiabilité du document
+- Note toute anomalie visuelle, typographique ou logique
+- Sois précis sur les montants et leur devise (XOF, EUR, etc.)
+
+Retourne ce JSON strict :
+KADDU_DOC:{"type_document":"[description précise du type de document]","nom":"","date":"[YYYY-MM-DD ou vide]","montant":[nombre ou null],"devise":"[XOF|EUR|autre ou vide]","emetteur":"","destinataire":"","periode_couverte":"","informations_cles":["liste des infos importantes extraites"],"lisibilite":"[bonne|moyenne|mauvaise]","confidence":[0.0-1.0],"anomalies":["liste précise des anomalies ou incohérences détectées"]}
+Après le JSON, synthèse de 2-3 lignes sur la pertinence et la fiabilité de ce document pour un dossier locatif.`
+
     };
 
     function getDocPrompt(docKey){
-      const common = `\n\nIMPORTANT — Format obligatoire : retourne d'abord un JSON strict préfixé par KADDU_DOC:. Ajoute toujours les champs lisibilite, confidence et anomalies. Ensuite seulement, ajoute une synthèse courte. Ne mets pas le JSON dans un bloc markdown.`;
-      if(!docKey) return DOC_EXTRACT_PROMPTS.default + common;
-      const k = docKey.split('_').slice(1).join('_');
-      return (DOC_EXTRACT_PROMPTS[k] || DOC_EXTRACT_PROMPTS.default) + common;
+      const common = `
+
+RÈGLES ABSOLUES :
+1. Retourne d'abord le JSON KADDU_DOC: sur une seule ligne, sans bloc markdown, sans backticks.
+2. Les valeurs numériques (montants, scores) sont des nombres, jamais des chaînes.
+3. confidence est un nombre entre 0.0 et 1.0 (ex: 0.92).
+4. Les dates sont au format YYYY-MM-DD strict.
+5. anomalies est un tableau — vide [] si aucune anomalie.
+6. Ne jamais écrire "fraude" ou "fraudeur" — utilise "incohérence", "anomalie", "à vérifier".
+7. Après le JSON, ajoute une synthèse en prose (jamais en JSON).
+8. Ajoute toujours les champs V2 suivants dans KADDU_DOC si le type de document le permet : document_origin, proof_strength, ocr_confidence, authenticity_confidence, tampering_signals, metadata_signals.
+9. document_origin vaut uniquement : pdf_native|scan|screenshot|photo|unknown.
+10. proof_strength vaut uniquement : strong|medium|weak.
+11. tampering_signals et metadata_signals sont des tableaux — vides [] si aucun signal.
+12. Ne te base jamais uniquement sur un signal technique pour conclure : indique seulement le niveau de vigilance documentaire.`;
+
+      // Mapping conservé en fallback pour éviter toute régression.
+      const keyMap = {
+        'cni': 'cni', 'passeport': 'cni', 'identite': 'cni', 'titre_sejour': 'cni',
+        'fiches_paie': 'fiches_paie', 'bulletin_salaire': 'fiches_paie', 'fiche_paie': 'fiches_paie',
+        'releve': 'releve', 'bancaire': 'releve', 'rib': 'releve',
+        'contrat': 'contrat', 'contrat_travail': 'contrat',
+        'registre': 'registre', 'kbis': 'registre', 'rccm': 'registre', 'ninea': 'registre',
+        'bilan': 'bilan', 'declaration_fiscale': 'bilan',
+        'avis_impo': 'avis_impo', 'avis_imposition': 'avis_impo',
+        'contrat_client': 'contrat_client', 'quittance': 'contrat_client', 'loyer': 'contrat_client',
+        'domicile': 'domicile', 'justif': 'domicile',
+        'certif_scol': 'certif_scol', 'scolarite': 'certif_scol',
+        'attestation_travail': 'attestation_travail', 'attestation_employeur': 'attestation_travail', 'certificat_travail': 'attestation_travail',
+        'attestation_bancaire': 'attestation_bancaire', 'certificat_bancaire': 'attestation_bancaire', 'certificat_compte': 'attestation_bancaire',
+        'recu_mobile_money': 'recu_mobile_money', 'recu_wave': 'recu_mobile_money', 'wave': 'recu_mobile_money', 'orange_money': 'recu_mobile_money', 'om': 'recu_mobile_money', 'free_money': 'recu_mobile_money', 'wizall': 'recu_mobile_money',
+        'cnss': 'cnss_ipres', 'ipres': 'cnss_ipres', 'cnss_ipres': 'cnss_ipres', 'cotisation_sociale': 'cnss_ipres',
+        'garant': 'garant', 'prise_en_charge': 'garant', 'attestation_garant': 'garant', 'lettre_engagement': 'garant'
+      };
+
+      const parts = String(docKey || '').split('_');
+      const rawKey = parts.length > 1 ? parts.slice(1).join('_') : String(docKey || '');
+      const mapped = keyMap[rawKey] || keyMap[rawKey.toLowerCase()] || rawKey || 'default';
+
+      // Bridge V2 : si le module externe possède ce type, on l'utilise.
+      // Sinon on garde les prompts inline historiques pour conserver toute la couverture actuelle.
+      const shield = window.KADDU_SHIELD;
+      if(shield?.loaded && shield.DOC_EXTRACT_PROMPTS?.[mapped]){
+        if(typeof shield.getPromptWithRules === 'function'){
+          return shield.getPromptWithRules(mapped);
+        }
+        return shield.DOC_EXTRACT_PROMPTS[mapped] + common;
+      }
+
+      return (DOC_EXTRACT_PROMPTS[mapped] || DOC_EXTRACT_PROMPTS.default) + common;
     }
+
+
+    // ══ PHASE 3 — SIGNAUX RÉSEAU / FRAUDE RÉCURRENTE ═════════
+    function normString(v){
+      return String(v||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    }
+
+    function normEmail(v){ return String(v||'').trim().toLowerCase(); }
+    function normPhone(v){
+      const d = String(v||'').replace(/\\D/g,'');
+      if(!d) return '';
+      // Sénégal : garder les 9 derniers chiffres pour matcher +221 / 00221 / local
+      return d.length >= 9 ? d.slice(-9) : d;
+    }
+    function normIban(v){ return String(v||'').toUpperCase().replace(/\\s+/g,'').replace(/[^A-Z0-9]/g,''); }
+
+    function getRowPayload(row){
+      try{ return typeof row?.payload === 'string' ? JSON.parse(row.payload) : (row?.payload||{}); }catch(_){ return {}; }
+    }
+    function getRowMessage(row){
+      try{ return typeof row?.message === 'string' ? JSON.parse(row.message) : (row?.message||{}); }catch(_){ return {}; }
+    }
+    function getRowLocataire(row){
+      const payload = getRowPayload(row);
+      const msg = getRowMessage(row);
+      return payload?.locataires?.[0] || msg?.locataires?.[0] || {};
+    }
+
+    function extractDocsForNetwork(row){
+      let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+      if(!docs.length){
+        const p = getRowPayload(row);
+        if(Array.isArray(p.docs_fournis)) docs = p.docs_fournis;
+      }
+      return docs.map(d => ({
+        name: d?.name || d?.filename || d?.key || '',
+        key: d?.key || d?.type || '',
+        url: d?.url || '',
+        sha256: d?.sha256 || d?.hash || d?.phase2_meta?.sha256 || d?.technical_meta?.sha256 || d?.metadata?.sha256 || ''
+      })).filter(d => d.name || d.sha256 || d.url);
+    }
+
+    function buildNetworkSignals(row){
+      const loc = getRowLocataire(row);
+      const docs = extractDocsForNetwork(row);
+      const fullName = [loc.nom || row?.nom, loc.prenom].filter(Boolean).join(' ') || row?.nom || '';
+      const birth = loc.ddn || row?.date_naissance || '';
+      const signals = [];
+      const push = (type, label, value, weight, severity='medium') => {
+        if(value && String(value).trim()) signals.push({type,label,value:String(value),norm:String(value),weight,severity});
+      };
+
+      push('email', 'Email identique', normEmail(loc.email || row?.email), 22, 'high');
+      push('telephone', 'Téléphone identique', normPhone(loc.telephone || row?.telephone), 24, 'high');
+      push('whatsapp', 'WhatsApp identique', normPhone(row?.numero_whatsapp), 24, 'high');
+      push('id_number', 'Numéro de pièce identique', normString(loc.id_numero || row?.id_number), 42, 'critical');
+      push('iban', 'IBAN/RIB identique', normIban(row?.iban), 38, 'critical');
+      push('name_birth', 'Nom + date de naissance identiques', normString(fullName) + '|' + String(birth||''), 28, 'high');
+      push('employer', 'Employeur identique', normString(loc.societe || row?.employeur), 6, 'low');
+      push('landlord_contact', 'Contact ancien bailleur identique', normPhone(row?.bailleur_contact), 12, 'medium');
+
+      docs.forEach((d, idx) => {
+        if(d.sha256) push('doc_hash', `Empreinte document identique #${idx+1}`, d.sha256, 45, 'critical');
+        // utile en fallback, mais moins robuste : même nom de fichier peut être banal
+        if(d.name && d.name.length > 8) push('doc_name', `Nom de fichier réutilisé #${idx+1}`, normString(d.name), 10, 'medium');
+      });
+      return signals.filter(s => s.value && !['|'].includes(s.value));
+    }
+
+    function compareNetworkRows(current, other){
+      const a = buildNetworkSignals(current);
+      const b = buildNetworkSignals(other);
+      const matches = [];
+      a.forEach(sa => {
+        b.forEach(sb => {
+          if(sa.type === sb.type && sa.norm === sb.norm && sa.norm && sa.norm !== '|'){
+            // Éviter les faux positifs : employeur seul ou nom fichier seul restent faibles
+            matches.push({
+              type: sa.type,
+              label: sa.label,
+              value: sa.value,
+              weight: sa.weight,
+              severity: sa.severity,
+              other_id: other.id,
+              other_nom: other.nom || 'Dossier sans nom',
+              other_email: other.email || '',
+              other_bien: other.bien || '',
+              other_date: other.created_at || null
+            });
+          }
+        });
+      });
+      return matches;
+    }
+
+    function getNetworkAnalysis(row){
+      const others = (allRows||[]).filter(r => r && r.id !== row?.id);
+      const matchesByDossier = [];
+      let rawMatches = [];
+      others.forEach(other => {
+        const matches = compareNetworkRows(row, other);
+        if(matches.length){
+          const score = matches.reduce((sum,m)=>sum+(Number(m.weight)||0),0);
+          matchesByDossier.push({other, matches, score});
+          rawMatches = rawMatches.concat(matches);
+        }
+      });
+
+      const critical = rawMatches.filter(m => m.severity === 'critical').length;
+      const high = rawMatches.filter(m => m.severity === 'high').length;
+      const score = Math.min(100, matchesByDossier.reduce((sum,x)=>sum+x.score,0));
+      let level = 'low';
+      if(critical >= 1 || score >= 55) level = 'critical';
+      else if(high >= 1 || score >= 30) level = 'high';
+      else if(score >= 12) level = 'medium';
+
+      return {level, score, matchesByDossier: matchesByDossier.sort((a,b)=>b.score-a.score), rawMatches};
+    }
+
+    function networkLevelLabel(level){
+      const map = {low:'Aucun signal fort', medium:'Signal faible/modéré', high:'Signal fort', critical:'Signal critique'};
+      return map[level] || '—';
+    }
+
+    function networkSeverityLabel(sev){
+      const map = {low:'faible', medium:'modéré', high:'fort', critical:'critique'};
+      return map[sev] || sev || '—';
+    }
+
+    function renderFraudNetwork(row){
+      const section = document.getElementById('networkSection');
+      const content = document.getElementById('networkContent');
+      const badge = document.getElementById('networkLevel');
+      if(!section || !content || !badge || !row) return;
+      section.style.display = 'block';
+
+      const analysis = getNetworkAnalysis(row);
+      badge.textContent = networkLevelLabel(analysis.level);
+      badge.className = `network-pill network-${analysis.level}`;
+
+      if(!analysis.matchesByDossier.length){
+        content.innerHTML = `<div class="network-empty">Aucun doublon fort détecté parmi les dossiers actuellement chargés dans l’admin. Ce contrôle reste indicatif : il dépend des champs disponibles et des dossiers visibles côté front.</div>`;
+        return;
+      }
+
+      const intro = analysis.level === 'critical'
+        ? 'Des signaux critiques de réutilisation apparaissent. À vérifier avant toute décision.'
+        : analysis.level === 'high'
+          ? 'Un ou plusieurs signaux forts sont partagés avec d’autres dossiers.'
+          : 'Quelques signaux faibles ou modérés sont partagés avec d’autres dossiers.';
+
+      content.innerHTML = `
+        <div class="network-summary"><strong class="network-${analysis.level}">${intro}</strong><br>Score réseau indicatif : ${analysis.score}/100 · ${analysis.rawMatches.length} correspondance${analysis.rawMatches.length>1?'s':''} · ${analysis.matchesByDossier.length} dossier${analysis.matchesByDossier.length>1?'s':''} rapproché${analysis.matchesByDossier.length>1?'s':''}.</div>
+        ${analysis.matchesByDossier.slice(0,6).map(group => `
+          <div class="network-card">
+            <div><strong>${group.other.nom || 'Dossier sans nom'}</strong> <span class="muted">· ${bienLabel(group.other.bien)} · ${formatDate(group.other.created_at)}</span></div>
+            <div class="network-meta">${group.matches.map(m => `• <span class="network-${m.severity}">${m.label}</span> — gravité ${networkSeverityLabel(m.severity)}`).join('<br>')}</div>
+          </div>
+        `).join('')}
+        <div class="network-meta" style="margin-top:10px">Règle métier : un doublon peut être légitime (couple, garant, même employeur, même famille). Ne pas refuser automatiquement : demander une clarification ciblée.</div>`;
+    }
+
+    function getNetworkContextForPrompt(row){
+      const a = getNetworkAnalysis(row);
+      if(!a.matchesByDossier.length) return '';
+      const lines = [];
+      lines.push('SIGNAUX RÉSEAU — PHASE 3');
+      lines.push(`Niveau indicatif : ${networkLevelLabel(a.level)} · Score réseau : ${a.score}/100`);
+      a.matchesByDossier.slice(0,5).forEach(g => {
+        lines.push(`- Rapprochement avec ${g.other.nom || 'dossier sans nom'} (${bienLabel(g.other.bien)}): ${g.matches.map(m=>m.label).join(', ')}`);
+      });
+      lines.push('Interprétation : signal indicatif uniquement. Ne pas accuser. Recommander une clarification si le signal porte sur pièce, IBAN, téléphone ou empreinte documentaire.');
+      return lines.join('\
+');
+    }
+    // ══ FIN PHASE 3 ════════════════════════════════════════════
+
+
+    // ══ PHASE 2 — MÉTADONNÉES, HASH & SIGNAUX TECHNIQUES ═════
+    async function blobToBase64(blob){
+      return await new Promise((res,rej)=>{
+        const reader = new FileReader();
+        reader.onload = ()=> res(String(reader.result).split(',')[1]);
+        reader.onerror = rej;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function computeSha256FromBlob(blob){
+      try{
+        if(!crypto?.subtle) return null;
+        const buffer = await blob.arrayBuffer();
+        const hash = await crypto.subtle.digest('SHA-256', buffer);
+        return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+      }catch(_){ return null; }
+    }
+
+    function inferDocumentOrigin({name='', mediaType='', size=0}){
+      const lower = String(name||'').toLowerCase();
+      if(mediaType.includes('pdf')) return 'pdf_native_or_scan';
+      if(mediaType.startsWith('image/')){
+        if(/screenshot|capture|screen|whatsapp|wave|orange|om/i.test(lower)) return 'screenshot';
+        return 'photo_or_scan';
+      }
+      return 'unknown';
+    }
+
+    function inferTechnicalSignals({name='', mediaType='', size=0}){
+      const signals = [];
+      const lower = String(name||'').toLowerCase();
+      const ext = lower.split('.').pop() || '';
+      if(['jpg','jpeg','png','webp'].includes(ext) || mediaType.startsWith('image/')) signals.push('image_file');
+      if(ext === 'pdf' || mediaType.includes('pdf')) signals.push('pdf_file');
+      if(/whatsapp|wa-|img-|screenshot|capture|screen/i.test(lower)) signals.push('capture_or_phone_filename');
+      if(size && size < 35_000) signals.push('very_small_file_possible_compression_or_truncation');
+      if(size && size > 12_000_000) signals.push('large_file_possible_scan_bundle');
+      return signals;
+    }
+
+    function buildTechnicalMetadataBlock(meta){
+      if(!meta) return '';
+      return `\n\nMÉTADONNÉES TECHNIQUES DISPONIBLES — PHASE 2 :
+- Nom fichier : ${meta.name || '—'}
+- Type MIME : ${meta.mediaType || '—'}
+- Taille : ${meta.size || 0} octets
+- Extension : ${meta.extension || '—'}
+- SHA-256 : ${meta.sha256 || 'non calculé'}
+- Origine technique estimée : ${meta.origin || 'unknown'}
+- Signaux techniques client : ${(meta.technicalSignals||[]).join(', ') || 'aucun'}
+
+UTILISATION : ces métadonnées sont des indices, pas des preuves. Utilise-les pour renseigner document_origin, metadata_signals, proof_strength et tampering_signals, sans accusation.`;
+    }
+
+    async function getDocumentTechnicalMeta(blob, doc={}){
+      const name = doc?.name || doc?.filename || 'Document';
+      const mediaType = blob.type || 'application/pdf';
+      const extension = String(name).includes('.') ? String(name).split('.').pop().toLowerCase() : '';
+      const sha256 = await computeSha256FromBlob(blob);
+      const baseMeta = { name, mediaType, size: blob.size || 0, extension };
+      return {
+        ...baseMeta,
+        sha256,
+        origin: inferDocumentOrigin(baseMeta),
+        technicalSignals: inferTechnicalSignals(baseMeta)
+      };
+    }
+    // ══ FIN PHASE 2 ════════════════════════════════════════════
 
     async function analyserTousDocsIA(){
       const row = _currentDossier;
@@ -2383,12 +3064,15 @@ DONNÉES DÉCLARÉES PAR LE CANDIDAT (pour vérification croisée) :
 Pour chaque document analysé, indique si les données correspondent aux déclarations ci-dessus.
 Si une donnée diffère, mentionne-le explicitement avec le label ⚠ ÉCART DÉTECTÉ.`;
 
+      const networkContext = getNetworkContextForPrompt(row);
+
       const PROMPT_GROUPE = `Tu es l'assistant antifraude de l'agence immobilière Kàddu (Sénégal).
 Tu reçois ${docs.length} document(s) d'un dossier locataire. Analyse-les tous et produis :
 
-1. Pour chaque document : type détecté, données clés extraites, anomalies visuelles
+1. Pour chaque document : type détecté, données clés extraites, anomalies visuelles et signaux techniques Phase 2
 2. Cross-check global : compare les données entre documents et avec les déclarations du candidat
 3. Synthèse consolidée : cohérence globale du dossier documentaire
+4. Analyse manipulation : origine document, niveau de preuve, signaux de recadrage/compression/polices/alignements si visibles
 
 Format de réponse :
 ## ANALYSE PAR DOCUMENT
@@ -2405,10 +3089,12 @@ Format de réponse :
 
 ${crossContext}
 
+${networkContext ? '\n' + networkContext : ''}
+
 Reste factuel et non accusatoire. Ne jamais écrire "fraude" ou "fraudeur".
 
 À la fin, retourne aussi ces deux blocs JSON stricts, sans markdown :
-KADDU_DOCS:[{"document_name":"","type_document":"","nom":"","prenom":"","employeur":"","salaire_net":null,"date_expiration":"","lisibilite":"bonne|moyenne|faible","confidence":0,"anomalies":[]}]
+KADDU_DOCS:[{"document_name":"","type_document":"","nom":"","prenom":"","employeur":"","salaire_net":null,"date_expiration":"","document_origin":"pdf_native|scan|screenshot|photo|unknown","proof_strength":"strong|medium|weak","ocr_confidence":0,"authenticity_confidence":0,"lisibilite":"bonne|moyenne|faible","confidence":0,"tampering_signals":[],"metadata_signals":[],"sha256":"","anomalies":[]}]
 KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_value":null,"result":"ok|warning|ko|unknown","severity":"low|medium|high","score_impact":0,"explanation":""}]`;
 
       try{
@@ -2424,18 +3110,15 @@ KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_val
             if(!r.ok) return;
             const blob = await r.blob();
             const mediaType = blob.type || 'application/pdf';
-            const base64 = await new Promise((res,rej)=>{
-              const reader = new FileReader();
-              reader.onload = ()=> res(reader.result.split(',')[1]);
-              reader.onerror = rej;
-              reader.readAsDataURL(blob);
-            });
+            const techMeta = await getDocumentTechnicalMeta(blob, doc);
+            doc._phase2_meta = techMeta;
+            const base64 = await blobToBase64(blob);
             const isImage = mediaType.startsWith('image/');
             contentParts.push(isImage
               ? {type:'image', source:{type:'base64', media_type:mediaType, data:base64}}
               : {type:'document', source:{type:'base64', media_type:'application/pdf', data:base64}}
             );
-            contentParts.push({type:'text', text:`— Document "${doc.name||'Document'}" (${doc.key||''}) —`});
+            contentParts.push({type:'text', text:`— Document "${doc.name||'Document'}" (${doc.key||''}) —${buildTechnicalMetadataBlock(techMeta)}`});
             loaded++;
           }catch(_){}
         }));
@@ -2501,23 +3184,20 @@ KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_val
       const row = _currentDossier;
 
       // Fetch du document en base64
-      let base64Data, mediaType;
+      let base64Data, mediaType, technicalMeta;
       try{
         const r = await fetch(url);
         if(!r.ok) throw new Error('Impossible de récupérer le document');
         const blob = await r.blob();
         mediaType = blob.type || 'application/pdf';
-        base64Data = await new Promise((res,rej)=>{
-          const reader = new FileReader();
-          reader.onload = ()=> res(reader.result.split(',')[1]);
-          reader.onerror = rej;
-          reader.readAsDataURL(blob);
-        });
+        technicalMeta = await getDocumentTechnicalMeta(blob, {name, url});
+        base64Data = await blobToBase64(blob);
       }catch(e){ alert('Impossible de charger le document : '+e.message); return; }
 
       // Déterminer le prompt selon le type de document
       let documentMeta = (row?.docs_fournis||[]).find(d=>d.name===name) || null;
       if(!documentMeta){ documentMeta = { name, url, key: '', type: '' }; }
+      documentMeta = { ...documentMeta, phase2_meta: technicalMeta, sha256: technicalMeta?.sha256 || null };
       const docKey = documentMeta?.key || '';
       const extractPrompt = getDocPrompt(docKey);
 
@@ -2544,11 +3224,11 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       const content = isImage
         ? [
             {type:'image', source:{type:'base64', media_type:mediaType, data:base64Data}},
-            {type:'text', text: extractPrompt + crossContext}
+            {type:'text', text: extractPrompt + buildTechnicalMetadataBlock(technicalMeta) + crossContext}
           ]
         : [
             {type:'document', source:{type:'base64', media_type:'application/pdf', data:base64Data}},
-            {type:'text', text: extractPrompt + crossContext}
+            {type:'text', text: extractPrompt + buildTechnicalMetadataBlock(technicalMeta) + crossContext}
           ];
 
       const vigEl = document.getElementById('afVigBadge');
@@ -2597,15 +3277,65 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
             .filter(([k]) => !['type_document','anomalies'].includes(k) && docData[k] !== null && docData[k] !== '' && docData[k] !== undefined);
 
           const fieldLabels = {
-            nom:'Nom', prenom:'Prénom', nom_salarie:'Nom salarié', titulaire:'Titulaire',
-            date_naissance:'Date naissance', numero_piece:'N° pièce', date_expiration:'Expiration',
-            nationalite:'Nationalité', valide:'Document valide',
-            employeur:'Employeur', salaire_net:'Salaire net (XOF)', salaire_brut:'Salaire brut (XOF)',
-            salaire_contractuel:'Salaire contractuel', periode:'Période', date_bulletin:'Date bulletin',
-            type_contrat:'Type contrat', date_embauche:'Date embauche', poste:'Poste',
-            banque_ou_service:'Banque/Service', periode_debut:'Période début', periode_fin:'Période fin',
-            solde_moyen_estime:'Solde moyen estimé', revenus_reguliers_detectes:'Revenus réguliers',
-            montant:'Montant', emetteur:'Émetteur', date:'Date',
+            // Identité
+            nom:'Nom', prenom:'Prénom', date_naissance:'Date naissance',
+            lieu_naissance:'Lieu naissance', nationalite:'Nationalité',
+            numero_piece:'N° pièce', numero_national:'N° national (NNI)',
+            date_emission:'Date émission', date_expiration:'Expiration',
+            pays_emetteur:'Pays émetteur', sexe:'Sexe',
+            valide:'Document valide', mrz_lue:'MRZ lue',
+            // Salaire
+            nom_salarie:'Nom salarié', prenom_salarie:'Prénom salarié',
+            employeur:'Employeur', siret_ou_ninea:'SIRET/NINEA',
+            poste:'Poste', convention_collective:'Convention collective',
+            salaire_net:'Salaire net', salaire_brut:'Salaire brut',
+            devise:'Devise', periode:'Période', date_paiement:'Date paiement',
+            cumul_net_annuel:'Cumul net annuel', anciennete_mois:'Ancienneté (mois)',
+            type_contrat:'Type contrat',
+            // Relevé bancaire
+            titulaire:'Titulaire', iban_ou_numero:'IBAN/Numéro',
+            banque_ou_service:'Banque/Service', pays:'Pays',
+            periode_debut:'Période début', periode_fin:'Période fin',
+            nb_mois_couverts:'Mois couverts', solde_debut:'Solde début',
+            solde_fin:'Solde fin', solde_moyen_estime:'Solde moyen estimé',
+            revenus_reguliers_detectes:'Revenus réguliers',
+            montant_revenu_regulier:'Montant revenu régulier',
+            nb_transactions:'Nb transactions',
+            plus_gros_debit:'Plus gros débit', plus_gros_credit:'Plus gros crédit',
+            // Contrat
+            nom_salarie:'Nom salarié', date_embauche:'Date embauche',
+            date_fin_contrat:'Fin contrat', salaire_contractuel:'Salaire contractuel',
+            periode_essai:'Période d\'essai', fin_periode_essai:'Fin période essai',
+            temps_plein:'Temps plein', signe_salarie:'Signé salarié',
+            signe_employeur:'Signé employeur', lieu_travail:'Lieu travail',
+            // Registre
+            raison_sociale:'Raison sociale', forme_juridique:'Forme juridique',
+            numero_immatriculation:'N° immatriculation', date_creation:'Date création',
+            capital_social:'Capital social', siege_social:'Siège social',
+            activite:'Activité', dirigeant_nom:'Dirigeant',
+            dirigeant_qualite:'Qualité dirigeant', statut_activite:'Statut',
+            date_document:'Date document',
+            // Bilan
+            exercice:'Exercice', chiffre_affaires:'Chiffre d\'affaires',
+            resultat_net:'Résultat net', capitaux_propres:'Capitaux propres',
+            total_bilan:'Total bilan', commissaire_aux_comptes:'CAC',
+            certifie:'Certifié',
+            // Avis imposition
+            annee_revenus:'Année revenus', revenu_fiscal_reference:'Revenu fiscal ref.',
+            impot_net:'Impôt net', numero_fiscal:'N° fiscal',
+            situation_familiale:'Situation familiale', nb_parts:'Nb parts',
+            // Quittance
+            locataire_nom:'Locataire', adresse_bien:'Adresse bien',
+            bailleur_nom:'Bailleur', bailleur_contact:'Contact bailleur',
+            loyer_mensuel:'Loyer mensuel', charges:'Charges',
+            paiements_reguliers:'Paiements réguliers',
+            // Domicile
+            nom_titulaire:'Titulaire', adresse:'Adresse',
+            emetteur:'Émetteur', recent:'Document récent',
+            // Communs
+            montant:'Montant', date:'Date', destinataire:'Destinataire',
+            periode_couverte:'Période couverte',
+            lisibilite:'Lisibilité', confidence:'Fiabilité',
           };
 
           if(fields.length){
