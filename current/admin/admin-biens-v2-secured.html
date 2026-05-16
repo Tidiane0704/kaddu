@@ -413,42 +413,149 @@
   </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
 
-<style id="biens-v2-hotfix">
-  /* Hotfix V2 — évite le chevauchement des cartes à droite */
-  .biens-grid,
-  #biensGrid {
+<style id="biens-v2-layout-correction-validated">
+  /* Correction validée — stabilité layout Biens & Médias */
+  html, body { overflow-x: hidden !important; }
+  body { min-width: 0 !important; }
+
+  /* On neutralise les éléments injectés par le shell global qui créaient des doublons / logos parasites */
+  .kaddu-admin-hub-return,
+  .kaddu-admin-logo-mini {
+    display: none !important;
+  }
+
+  /* Sidebar : logo maîtrisé + retour hub unique */
+  nav {
+    width: 270px !important;
+    min-width: 270px !important;
+    overflow: hidden !important;
+  }
+  nav .brand {
+    min-height: 82px !important;
+    background-size: 118px auto !important;
+    background-position: 0 0 !important;
+    overflow: hidden !important;
+  }
+  nav .brand::after {
+    left: 2px !important;
+    bottom: 10px !important;
+    font-size: 9px !important;
+    letter-spacing: .18em !important;
+    white-space: nowrap !important;
+  }
+  .biens-hub-main {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    margin: 0 0 6px 0 !important;
+    padding: 13px 14px !important;
+    border-radius: 14px !important;
+    border: 1px solid rgba(199,154,73,.24) !important;
+    background: rgba(255,255,255,.025) !important;
+    color: rgba(248,241,230,.88) !important;
+    font: 800 12px/1.2 'DM Sans', Arial, sans-serif !important;
+    text-decoration: none !important;
+  }
+  .biens-hub-main::after { content: '›'; color: var(--lux-gold2); opacity: .75; }
+  nav .nav-right a[href="/admin/"] { display: none !important; }
+
+  /* Zone principale : largeur contrôlée et aucun débordement horizontal */
+  .wrap {
+    margin-left: 270px !important;
+    width: calc(100vw - 270px) !important;
+    max-width: calc(100vw - 270px) !important;
+    overflow-x: hidden !important;
+    padding: 30px 34px 48px !important;
+  }
+  .wrap::before,
+  .wrap::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  /* Hero et blocs : ils restent au-dessus des cartes, jamais sous elles */
+  .lux-hero,
+  .toolbar,
+  .stats,
+  .page.active {
+    position: relative !important;
+    z-index: 1 !important;
+    clear: both !important;
+    max-width: 100% !important;
+  }
+
+  /* Grille biens : 4 colonnes max, responsive, sans chevauchement */
+  #biensGrid,
+  .biens-grid {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
     gap: 22px !important;
     width: 100% !important;
     max-width: 100% !important;
+    min-width: 0 !important;
     overflow: visible !important;
+    align-items: stretch !important;
   }
-
   .bien-card {
+    width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
+    position: relative !important;
+    overflow: hidden !important;
+    contain: layout paint !important;
   }
-
-  .bcimg,
-  .bcimg img {
+  .bcimg {
+    position: relative !important;
+    width: 100% !important;
     max-width: 100% !important;
+    height: 210px !important;
+    overflow: hidden !important;
   }
+  .bcimg img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  .bc-body { position: relative !important; z-index: 1 !important; }
 
-  /* Hotfix V2 — logo footer trop grand */
+  /* Footer / logo : suppression des logos parasites géants en bas */
   footer img,
   .footer img,
+  .admin-footer img,
   .kaddu-footer img,
-  .admin-footer img {
-    max-width: 105px !important;
+  .kaddu-admin-footer img {
+    max-width: 96px !important;
+    max-height: 42px !important;
+    width: auto !important;
     height: auto !important;
     object-fit: contain !important;
   }
-
+  footer,
+  .footer,
   .admin-footer,
   .kaddu-footer,
-  footer {
+  .kaddu-admin-footer {
     overflow: hidden !important;
+  }
+
+  @media (min-width: 1500px) {
+    #biensGrid,
+    .biens-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  }
+  @media (max-width: 1180px) {
+    #biensGrid,
+    .biens-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  }
+  @media (max-width: 1000px) {
+    nav { width: 100% !important; min-width: 0 !important; position: static !important; }
+    .wrap { margin-left: 0 !important; width: 100% !important; max-width: 100% !important; }
+  }
+  @media (max-width: 680px) {
+    #biensGrid,
+    .biens-grid { grid-template-columns: 1fr !important; }
   }
 </style>
 
@@ -474,6 +581,7 @@
 <!-- NAV -->
 <nav>
   <div class="brand">Kàddu Admin</div>
+  <a class="biens-hub-main" href="/admin/">← Retour au hub admin</a>
   <div class="nav-tabs">
     <button class="tab-btn active" data-tab="biens">🏠 Biens</button>
     <button class="tab-btn" data-tab="commerciaux">👤 Commerciaux</button>
