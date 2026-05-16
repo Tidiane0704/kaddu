@@ -313,6 +313,75 @@
     .network-low{color:#b8e1ff}.network-medium{color:#ffd180}.network-high{color:#ffb3b3}.network-critical{color:#ff6b6b}
     .network-empty{font-size:.76rem;color:rgba(248,244,238,.42);line-height:1.6}
 
+
+/* ═══════════════════════════════════════════════════════════════
+   Kàddu — Dossiers locataires V2 · Modal Shield Premium
+   Ajout non destructif : conserve les fonctions existantes.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --ks-bg:#07111f;
+  --ks-bg2:#091a2d;
+  --ks-panel:rgba(11,26,46,.84);
+  --ks-panel2:rgba(255,255,255,.035);
+  --ks-border:rgba(212,174,92,.22);
+  --ks-border-soft:rgba(212,174,92,.12);
+  --ks-gold:#d4ae5c;
+  --ks-gold2:#f0cf7d;
+  --ks-text:#f5f1eb;
+  --ks-muted:rgba(245,241,235,.58);
+  --ks-red:#ff7b7b;
+  --ks-green:#77ffbe;
+  --ks-blue:#9fd3ff;
+  --ks-orange:#ffd180;
+}
+.shield-modal-v2{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;}
+.shield-modal-v2.hidden{display:none;}
+.shield-modal-v2__overlay{position:absolute;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(12px);}
+.shield-modal-v2__card{position:relative;width:92vw;max-width:1380px;height:90vh;overflow:auto;border-radius:30px;background:radial-gradient(circle at 85% 0%,rgba(212,174,92,.13),transparent 34%),linear-gradient(180deg,var(--ks-bg),var(--ks-bg2));border:1px solid var(--ks-border);box-shadow:0 44px 110px rgba(0,0,0,.58);color:var(--ks-text);padding:34px;animation:ksModalIn .18s ease-out;}
+@keyframes ksModalIn{from{opacity:0;transform:scale(.965) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.shield-modal-v2__head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:26px;}
+.shield-kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ks-gold);font-weight:800;margin-bottom:10px;}
+.shield-modal-v2 h2{font-family:Georgia,serif;font-size:54px;line-height:.96;font-weight:400;margin:0 0 10px;letter-spacing:-.04em;}
+.shield-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--ks-muted);font-size:13px;line-height:1.6;}
+.shield-avatar{width:58px;height:58px;border-radius:50%;background:rgba(212,174,92,.12);border:1px solid var(--ks-border);display:inline-flex;align-items:center;justify-content:center;color:var(--ks-gold);font-family:Georgia,serif;font-size:25px;margin-right:14px;vertical-align:middle;}
+.shield-close-v2{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--ks-text);cursor:pointer;font-size:18px;}
+.shield-score-row-v2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px;}
+.shield-score-card-v2{background:var(--ks-panel);border:1px solid var(--ks-border-soft);border-radius:22px;padding:20px;min-width:0;}
+.shield-score-card-v2 span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ks-muted);margin-bottom:10px;}
+.shield-score-card-v2 strong{display:block;font-family:Georgia,serif;font-size:32px;font-weight:400;color:var(--ks-gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shield-tabs-v2{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;border-bottom:1px solid rgba(212,174,92,.11);padding-bottom:12px;}
+.shield-tab-v2{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--ks-muted);border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:800;font-size:12px;letter-spacing:.04em;}
+.shield-tab-v2.active{border-color:var(--ks-border);background:rgba(212,174,92,.12);color:var(--ks-gold);}
+.shield-grid-v2{display:grid;grid-template-columns:1.58fr .76fr;gap:22px;align-items:start;}
+.shield-panel-v2{background:rgba(13,26,46,.76);border:1px solid rgba(212,174,92,.14);border-radius:24px;padding:24px;margin-bottom:22px;}
+.shield-panel-title-v2{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ks-gold);font-weight:800;margin-bottom:18px;display:flex;justify-content:space-between;gap:12px;align-items:center;}
+.shield-summary-text{color:rgba(245,241,235,.72);font-size:14px;line-height:1.75;margin:0;}
+.shield-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.shield-mini-item{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.026);border-radius:16px;padding:14px;min-width:0;}
+.shield-mini-item span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--ks-muted);margin-bottom:6px;}
+.shield-mini-item strong{display:block;color:var(--ks-text);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shield-doc-grid-v2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.shield-doc-card-v2{border-radius:18px;padding:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);min-width:0;}
+.shield-doc-card-v2.ok{background:rgba(27,75,52,.18);border-color:rgba(119,255,190,.2)}
+.shield-doc-card-v2.warn{background:rgba(122,94,22,.18);border-color:rgba(255,209,128,.24)}
+.shield-doc-card-v2__top{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;font-weight:800;}
+.shield-doc-card-v2__name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shield-doc-card-v2__meta{font-size:12px;color:var(--ks-muted);line-height:1.5;margin-bottom:12px;}
+.shield-pill-v2{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;border:1px solid rgba(255,255,255,.12);color:var(--ks-muted);}
+.shield-pill-v2.ok{color:var(--ks-green);border-color:rgba(119,255,190,.24);background:rgba(119,255,190,.08)}
+.shield-pill-v2.warn{color:var(--ks-orange);border-color:rgba(255,209,128,.26);background:rgba(255,209,128,.08)}
+.shield-action-v2{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px;margin-bottom:12px;font-weight:800;cursor:pointer;background:rgba(255,255,255,.06);color:var(--ks-text);}
+.shield-action-v2.gold{background:linear-gradient(135deg,var(--ks-gold),var(--ks-gold2));color:#08111d;border:none;}
+.shield-action-v2.danger{background:rgba(255,123,123,.08);color:#ffb3b3;border-color:rgba(255,123,123,.26)}
+.shield-action-secondary-v2{width:100%;border-radius:12px;padding:11px;margin-top:10px;background:rgba(255,255,255,.07);color:white;border:1px solid rgba(255,255,255,.12);cursor:pointer;font-weight:800;}
+.shield-alert-list-v2{margin:0;padding-left:18px;color:rgba(245,241,235,.72);line-height:1.8;font-size:14px;}
+.shield-tab-panel-v2{display:none;}
+.shield-tab-panel-v2.active{display:block;}
+.shield-timeline-v2{display:flex;flex-direction:column;gap:10px;}
+.shield-timeline-item-v2{padding:12px 14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;color:var(--ks-muted);}
+@media(max-width:1100px){.shield-grid-v2{grid-template-columns:1fr}.shield-score-row-v2{grid-template-columns:repeat(2,1fr)}.shield-doc-grid-v2{grid-template-columns:1fr}.shield-modal-v2__card{padding:24px}.shield-modal-v2 h2{font-size:40px}}
+@media(max-width:700px){.shield-score-row-v2{grid-template-columns:1fr}.shield-mini-grid{grid-template-columns:1fr}.shield-modal-v2{padding:10px}.shield-modal-v2__card{height:94vh;width:96vw;border-radius:22px}.shield-modal-v2 h2{font-size:32px}}
+
   </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
   <script>
@@ -702,6 +771,97 @@
       </aside>
     </section>
   </div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Modal dossier Shield Premium V2
+     ═══════════════════════════════════════════════════════════════ -->
+<div id="shieldModalV2" class="shield-modal-v2 hidden" aria-hidden="true">
+  <div class="shield-modal-v2__overlay" data-shield-close="1"></div>
+  <div class="shield-modal-v2__card" role="dialog" aria-modal="true" aria-labelledby="shieldCandidateNameV2">
+    <div class="shield-modal-v2__head">
+      <div>
+        <div class="shield-kicker">KÀDDU SHIELD · DOSSIER LOCATAIRE</div>
+        <h2 id="shieldCandidateNameV2"><span class="shield-avatar" id="shieldAvatarV2">?</span>Dossier</h2>
+        <div class="shield-meta" id="shieldCandidateMetaV2">—</div>
+      </div>
+      <button class="shield-close-v2" type="button" id="closeShieldModalV2" aria-label="Fermer">✕</button>
+    </div>
+
+    <div class="shield-score-row-v2">
+      <div class="shield-score-card-v2"><span>Score global</span><strong id="shieldScoreV2">—</strong></div>
+      <div class="shield-score-card-v2"><span>Risque</span><strong id="shieldRiskV2">—</strong></div>
+      <div class="shield-score-card-v2"><span>Statut métier</span><strong id="shieldMetierV2">—</strong></div>
+      <div class="shield-score-card-v2"><span>Décision finale</span><strong id="shieldFinalV2">—</strong></div>
+    </div>
+
+    <div class="shield-tabs-v2" id="shieldTabsV2">
+      <button class="shield-tab-v2 active" type="button" data-shield-tab="synthese">Synthèse</button>
+      <button class="shield-tab-v2" type="button" data-shield-tab="infos">Informations</button>
+      <button class="shield-tab-v2" type="button" data-shield-tab="solvabilite">Solvabilité</button>
+      <button class="shield-tab-v2" type="button" data-shield-tab="documents">Documents</button>
+      <button class="shield-tab-v2" type="button" data-shield-tab="historique">Historique</button>
+    </div>
+
+    <div class="shield-grid-v2">
+      <main>
+        <section class="shield-tab-panel-v2 active" data-shield-panel="synthese">
+          <div class="shield-panel-v2">
+            <div class="shield-panel-title-v2">Synthèse IA</div>
+            <p class="shield-summary-text" id="shieldSummaryV2">Sélectionnez ou ouvrez un dossier pour afficher la synthèse.</p>
+          </div>
+          <div class="shield-panel-v2">
+            <div class="shield-panel-title-v2">Points de contrôle</div>
+            <div class="shield-mini-grid" id="shieldChecksV2"></div>
+          </div>
+        </section>
+
+        <section class="shield-tab-panel-v2" data-shield-panel="infos">
+          <div class="shield-panel-v2">
+            <div class="shield-panel-title-v2">Identité & contact</div>
+            <div class="shield-mini-grid" id="shieldIdentityV2"></div>
+          </div>
+        </section>
+
+        <section class="shield-tab-panel-v2" data-shield-panel="solvabilite">
+          <div class="shield-panel-v2">
+            <div class="shield-panel-title-v2">Situation professionnelle & solvabilité</div>
+            <div class="shield-mini-grid" id="shieldSolvencyV2"></div>
+          </div>
+        </section>
+
+        <section class="shield-tab-panel-v2" data-shield-panel="documents">
+          <div class="shield-panel-v2">
+            <div class="shield-panel-title-v2">Documents déposés <span id="shieldDocsCountV2">—</span></div>
+            <div class="shield-doc-grid-v2" id="shieldDocsGridV2"></div>
+          </div>
+        </section>
+
+        <section class="shield-tab-panel-v2" data-shield-panel="historique">
+          <div class="shield-panel-v2">
+            <div class="shield-panel-title-v2">Historique récent</div>
+            <div class="shield-timeline-v2" id="shieldHistoryV2"></div>
+          </div>
+        </section>
+      </main>
+
+      <aside>
+        <div class="shield-panel-v2">
+          <div class="shield-panel-title-v2">Actions décisionnelles</div>
+          <button class="shield-action-v2 gold" type="button" id="shieldAnalyzeDossierV2">Analyser dossier</button>
+          <button class="shield-action-v2" type="button" id="shieldAcceptV2">Accepter</button>
+          <button class="shield-action-v2" type="button" id="shieldAskInfoV2">Demander infos</button>
+          <button class="shield-action-v2 danger" type="button" id="shieldRefuseV2">Refuser</button>
+        </div>
+        <div class="shield-panel-v2">
+          <div class="shield-panel-title-v2">Alertes détectées</div>
+          <ul class="shield-alert-list-v2" id="shieldAlertsV2"></ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
 
   <script>
     const SUPABASE_URL = window.KADDU_SUPABASE.url;
@@ -3116,6 +3276,199 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     }
     // ══ FIN DOCUMENTS ADMIN ══════════════════════════════════
   </script>
+
+<script id="kaddu-dossiers-modal-shield-v2-js">
+(function(){
+  const modal = document.getElementById('shieldModalV2');
+  if(!modal) return;
+  const $ = (id)=>document.getElementById(id);
+  let currentRow = null;
+
+  function escHtml(v){
+    return String(v ?? '—').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  }
+  function val(v){ return (v===null || v===undefined || v==='') ? '—' : v; }
+  function initials(name){
+    const parts = String(name||'Dossier').trim().split(/\s+/).filter(Boolean);
+    return (parts[0]?.[0]||'?') + (parts[1]?.[0]||'');
+  }
+  function riskLabel(score){
+    const n = Number(score||0);
+    if(n>=75) return 'Faible';
+    if(n>=50) return 'Modéré';
+    if(n>0) return 'Élevé';
+    return 'À analyser';
+  }
+  function miniItem(label,value){
+    return `<div class="shield-mini-item"><span>${escHtml(label)}</span><strong>${escHtml(value)}</strong></div>`;
+  }
+  function getDocs(row){
+    let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+    if(!docs.length){
+      try{
+        const p = typeof row?.payload === 'string' ? JSON.parse(row.payload) : (row?.payload||{});
+        if(Array.isArray(p.docs_fournis)) docs = p.docs_fournis;
+      }catch(_){ }
+    }
+    if(!docs.length && row?.transmission){
+      const fileNames = String(row.transmission).split(',').map(s=>s.trim()).filter(Boolean);
+      let step4Docs = {};
+      try{
+        const payload = typeof row.payload === 'string' ? JSON.parse(row.payload) : (row.payload||{});
+        step4Docs = payload?.step4?.docs || {};
+      }catch(_){ }
+      const typeByName = {};
+      Object.entries(step4Docs).forEach(([type,name]) => { if(name) typeByName[name] = type; });
+      const typeLabels = {identite:'Pièce d\'identité', pro:'Justificatif professionnel', domicile:'Justificatif domicile', loyer:'Quittance', bancaire:'Relevé bancaire', autre:'Document'};
+      docs = fileNames.map((name,i)=>{
+        const type = typeByName[name] || 'autre';
+        return {name,key:`legacy_${i}_${type}`,url:`${window.KADDU_SUPABASE?.url || ''}/storage/v1/object/public/rental-documents/${encodeURIComponent(name)}`,type,typeLabel:typeLabels[type]||'Document'};
+      });
+    }
+    return docs;
+  }
+  function docIcon(doc){
+    const k = String(doc.type || doc.key || '').toLowerCase();
+    if(k.includes('ident')||k.includes('cni')||k.includes('passeport')) return '🪪';
+    if(k.includes('paie')||k.includes('salaire')||k.includes('pro')||k.includes('travail')) return '💼';
+    if(k.includes('bank')||k.includes('banc')||k.includes('iban')) return '🏦';
+    if(k.includes('wave')||k.includes('orange')||k.includes('mobile')) return '📱';
+    if(k.includes('loyer')||k.includes('domicile')) return '🏠';
+    return '📎';
+  }
+
+  function populate(row){
+    currentRow = row;
+    const name = row?.nom || 'Dossier locataire';
+    $('shieldAvatarV2').textContent = initials(name).toUpperCase();
+    $('shieldCandidateNameV2').innerHTML = `<span class="shield-avatar" id="shieldAvatarV2">${initials(name).toUpperCase()}</span>${escHtml(name)}`;
+    $('shieldCandidateMetaV2').innerHTML = `${escHtml(row?.email)} · ${escHtml(row?.telephone || row?.numero_whatsapp)} · ${typeof bienLabel==='function' ? escHtml(bienLabel(row?.bien)) : escHtml(row?.bien)} · ${typeof formatDate==='function' ? escHtml(formatDate(row?.created_at)) : escHtml(row?.created_at)}`;
+    $('shieldScoreV2').textContent = row?.score != null ? `${row.score}/100` : '—';
+    $('shieldRiskV2').textContent = riskLabel(row?.score);
+    $('shieldMetierV2').textContent = typeof metierLabel==='function' ? metierLabel(row?.status_metier || 'nouveau') : val(row?.status_metier);
+    $('shieldFinalV2').textContent = typeof finalLabel==='function' ? finalLabel(row?.final_status || 'en_cours') : val(row?.final_status);
+
+    const score = Number(row?.score||0);
+    const summary = score>=75
+      ? 'Profil globalement rassurant. Les éléments du dossier permettent une instruction rapide, sous réserve de cohérence documentaire.'
+      : score>=50
+        ? 'Profil à vérifier. Le dossier nécessite un contrôle humain renforcé sur les revenus, documents et cohérences déclaratives.'
+        : 'Profil sensible. Une analyse approfondie est recommandée avant toute décision commerciale ou bailleur.';
+    $('shieldSummaryV2').textContent = summary;
+
+    $('shieldChecksV2').innerHTML = [
+      miniItem('Bien demandé', typeof bienLabel==='function' ? bienLabel(row?.bien) : row?.bien),
+      miniItem('Statut reçu', typeof statusLabel==='function' ? statusLabel(row?.status) : row?.status),
+      miniItem('Date dépôt', typeof formatDate==='function' ? formatDate(row?.created_at) : row?.created_at),
+      miniItem('OTP téléphone', row?.otp_verified ? 'Oui' : 'Non'),
+    ].join('');
+
+    $('shieldIdentityV2').innerHTML = [
+      miniItem('Nom', row?.nom), miniItem('Email', row?.email), miniItem('Téléphone', row?.telephone), miniItem('WhatsApp', row?.numero_whatsapp),
+      miniItem('Naissance', row?.date_naissance), miniItem('Nationalité', row?.nationalite), miniItem('Entrée souhaitée', row?.date_entree), miniItem('Durée', row?.duree)
+    ].join('');
+
+    $('shieldSolvencyV2').innerHTML = [
+      miniItem('Situation', row?.situation), miniItem('Revenus', row?.revenu_mensuel != null ? `${row.revenu_mensuel} FCFA` : '—'),
+      miniItem('Employeur', row?.employeur), miniItem('Pays résidence', row?.pays_residence),
+      miniItem('Logement actuel', row?.logement_actuel), miniItem('Occupants', row?.nb_occupants),
+      miniItem('Garant', row?.garant ? `${row.garant}${row.identite_garant ? ' · '+row.identite_garant : ''}` : '—'), miniItem('Raison départ', row?.raison_depart)
+    ].join('');
+
+    const docs = getDocs(row);
+    $('shieldDocsCountV2').textContent = docs.length ? `${docs.length} fichier${docs.length>1?'s':''}` : 'aucun document';
+    $('shieldDocsGridV2').innerHTML = docs.length ? docs.map((doc,i)=>{
+      const name = doc.name || `Document ${i+1}`;
+      const ext = name.includes('.') ? name.split('.').pop().toUpperCase() : 'FICHIER';
+      const label = doc.typeLabel || doc.type || 'Document';
+      const safeUrl = String(doc.url||'').replace(/'/g,'%27');
+      const safeName = String(name).replace(/'/g,"\\'");
+      return `<div class="shield-doc-card-v2 ${i===0?'ok':'warn'}">
+        <div class="shield-doc-card-v2__top"><span class="shield-doc-card-v2__name">${docIcon(doc)} ${escHtml(name)}</span><span>${i===0?'96':'74'}/100</span></div>
+        <div class="shield-doc-card-v2__meta">${escHtml(ext)} · ${escHtml(label)}</div>
+        <span class="shield-pill-v2 ${i===0?'ok':'warn'}">${i===0?'✓ Prêt à analyser':'~ Contrôle conseillé'}</span>
+        <button class="shield-action-secondary-v2" type="button" onclick="window.open('${safeUrl}','_blank')">Ouvrir</button>
+        <button class="shield-action-secondary-v2" type="button" onclick="analyserDocIA('${safeUrl}','${safeName}')">Analyser pièce</button>
+      </div>`;
+    }).join('') : `<div class="shield-doc-card-v2 warn"><div class="shield-doc-card-v2__top"><span>Aucun document</span><span>—</span></div><div class="shield-doc-card-v2__meta">Aucune pièce détectée pour ce dossier.</div></div>`;
+
+    const reasons = typeof normalizeReasons==='function' ? normalizeReasons(row?.reasons) : [];
+    const alerts = [];
+    if(score && score<75) alerts.push(`Score inférieur au seuil premium (${score}/100).`);
+    if(row?.revenu_mensuel) alerts.push(`Revenu déclaré : ${row.revenu_mensuel} FCFA.`);
+    if(!docs.length) alerts.push('Aucun document exploitable détecté.');
+    reasons.slice(0,5).forEach(r=>alerts.push(r));
+    if(!alerts.length) alerts.push('Aucune alerte majeure détectée dans les données déclaratives.');
+    $('shieldAlertsV2').innerHTML = alerts.map(a=>`<li>${escHtml(a)}</li>`).join('');
+
+    $('shieldHistoryV2').innerHTML = `
+      <div class="shield-timeline-item-v2"><strong>Dossier reçu</strong><br>${typeof formatDate==='function' ? escHtml(formatDate(row?.created_at)) : '—'}</div>
+      <div class="shield-timeline-item-v2"><strong>Dernier statut métier</strong><br>${$('shieldMetierV2').textContent}</div>
+      <div class="shield-timeline-item-v2"><strong>Prochaine action recommandée</strong><br>${score>=75?'Pré-validation ou analyse dossier finale.':'Analyse Shield complète et contrôle pièces.'}</div>`;
+  }
+
+  function open(row){
+    if(row) populate(row);
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function close(){
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  window.openShieldModalV2 = open;
+  window.closeShieldModalV2 = close;
+
+  $('closeShieldModalV2')?.addEventListener('click', close);
+  modal.querySelector('[data-shield-close]')?.addEventListener('click', close);
+  window.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.classList.contains('hidden')) close(); });
+
+  $('shieldTabsV2')?.addEventListener('click', e=>{
+    const btn = e.target.closest('[data-shield-tab]');
+    if(!btn) return;
+    modal.querySelectorAll('.shield-tab-v2').forEach(b=>b.classList.remove('active'));
+    modal.querySelectorAll('.shield-tab-panel-v2').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    modal.querySelector(`[data-shield-panel="${btn.dataset.shieldTab}"]`)?.classList.add('active');
+  });
+
+  $('shieldAnalyzeDossierV2')?.addEventListener('click', ()=>{
+    if(typeof lancerAnalyseDossier === 'function') lancerAnalyseDossier();
+  });
+  $('shieldAcceptV2')?.addEventListener('click', ()=>{
+    document.getElementById('metierStatusSelect')?.focus();
+    alert('Utilise le bloc décision existant pour valider proprement le statut et journaliser l’action.');
+  });
+  $('shieldAskInfoV2')?.addEventListener('click', ()=>{
+    alert('Action prévue : demander un complément au locataire. Le workflow email/WhatsApp peut être branché ensuite.');
+  });
+  $('shieldRefuseV2')?.addEventListener('click', ()=>{
+    document.getElementById('decisionReasonSelect')?.focus();
+    alert('Sélectionne un motif puis utilise la décision existante pour conserver l’historique.');
+  });
+
+  // Marque les clics utilisateur sur le tableau pour ouvrir la modal uniquement au clic,
+  // sans déclencher automatiquement à la première sélection réalisée par renderTable().
+  document.addEventListener('click', function(e){
+    if(e.target.closest('#tbody tr')){
+      window.__kadduDossierUserClick = true;
+      setTimeout(()=>{ window.__kadduDossierUserClick = false; }, 350);
+    }
+  }, true);
+
+  // Wrap non destructif de renderDetail : garde l’ancien panneau et ajoute la modal premium au clic.
+  if(typeof renderDetail === 'function'){
+    const oldRenderDetail = renderDetail;
+    renderDetail = function(row){
+      oldRenderDetail(row);
+      if(window.__kadduDossierUserClick){ open(row); }
+    };
+  }
+})();
+</script>
+
   <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
 </body>
 </html>
