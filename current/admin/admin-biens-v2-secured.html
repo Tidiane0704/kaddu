@@ -246,373 +246,171 @@
 
     @media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.fg2,.fg3,.fg4{grid-template-columns:1fr}.biens-grid{grid-template-columns:1fr}}
     @media(max-width:640px){.nav-tabs{display:none}.drawer{max-width:100vw}.wrap{padding:14px 12px}}
-  </style>
+  
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/kaddu-admin-luxury.css">
-  <style id="kaddu-biens-editorial-luxury">
+    /* ═══════════════════════════════════════════════════════════════
+       KÀDDU ADMIN — EDITORIAL LUXURY V2 · BIENS & MÉDIAS
+       Ajout non destructif : conserve les IDs, listeners JS et CRUD existants.
+    ═══════════════════════════════════════════════════════════════ */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@400;500;700;800&display=swap');
+
     :root{
-      --kaddu-ink:#061525;
-      --kaddu-night:#07182B;
-      --kaddu-panel:rgba(11,32,57,.76);
-      --kaddu-panel-2:rgba(255,255,255,.035);
-      --kaddu-gold:#BF9650;
-      --kaddu-gold-soft:#DDB96E;
-      --kaddu-cream:#F8F4EE;
-      --kaddu-muted:rgba(248,244,238,.62);
-      --kaddu-line:rgba(191,150,80,.18);
-      --kaddu-line-strong:rgba(191,150,80,.38);
-      --kaddu-radius:22px;
-      --kaddu-shadow:0 24px 80px rgba(0,0,0,.32);
+      --lux-bg:#061522;
+      --lux-bg2:#081c2f;
+      --lux-panel:rgba(8,24,40,.82);
+      --lux-panel2:rgba(15,35,55,.72);
+      --lux-gold:#C79A49;
+      --lux-gold2:#E7C374;
+      --lux-cream:#F8F1E6;
+      --lux-muted:rgba(248,241,230,.62);
+      --lux-line:rgba(199,154,73,.22);
+      --lux-line2:rgba(199,154,73,.42);
+      --lux-green:#33D987;
+      --lux-red:#FF5B4F;
+      --lux-blue:#54BDF9;
     }
 
     body{
-      font-family:"DM Sans",Arial,sans-serif;
+      font-family:'DM Sans', Arial, sans-serif;
       background:
-        radial-gradient(circle at 12% -10%, rgba(191,150,80,.22), transparent 34%),
-        radial-gradient(circle at 84% 0%, rgba(221,185,110,.12), transparent 31%),
-        linear-gradient(135deg,#061525 0%,#07182B 48%,#03101f 100%);
-      color:var(--kaddu-cream);
+        radial-gradient(circle at 78% 8%, rgba(199,154,73,.14), transparent 30%),
+        radial-gradient(circle at 25% 0%, rgba(84,189,249,.08), transparent 34%),
+        linear-gradient(180deg,#061522 0%,#050d14 100%);
+      color:var(--lux-cream);
+    }
+    body:before{
+      content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),rgba(0,0,0,.08));
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:44px 44px;
-      mask-image:linear-gradient(to bottom, rgba(0,0,0,.65), transparent 78%);
-      z-index:-1;
-    }
-
+    /* Sidebar premium — utilise le nav existant pour ne rien casser */
     nav{
-      height:78px;
-      padding:0 34px;
-      background:rgba(5,17,31,.82);
-      backdrop-filter:blur(22px);
-      border-bottom:1px solid rgba(191,150,80,.18);
-      box-shadow:0 16px 42px rgba(0,0,0,.22);
+      position:fixed;left:0;top:0;bottom:0;width:270px;height:auto;z-index:80;
+      background:linear-gradient(180deg,rgba(5,18,30,.98),rgba(5,14,23,.94));
+      border-right:1px solid rgba(199,154,73,.18);border-bottom:none;
+      padding:22px 18px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:20px;
+      box-shadow:18px 0 60px rgba(0,0,0,.35);
     }
-
     .brand{
-      font-family:"Playfair Display",Georgia,serif;
-      font-size:25px;
-      letter-spacing:.02em;
-      color:var(--kaddu-gold-soft);
-      display:flex;
-      align-items:center;
-      gap:12px;
+      min-height:74px;background:url('/assets/img/logo-kaddu.svg') left top/118px auto no-repeat;
+      color:transparent;font-size:0;border-bottom:1px solid rgba(199,154,73,.15);position:relative;margin-bottom:4px;
     }
-
-    .brand img{
-      width:42px;
-      height:42px;
-      object-fit:contain;
-      filter:drop-shadow(0 10px 24px rgba(191,150,80,.22));
+    .brand:after{
+      content:'LA PAROLE QUI ENGAGE';position:absolute;left:4px;bottom:12px;color:rgba(248,241,230,.42);
+      font:700 10px/1 'DM Sans';letter-spacing:.22em;
     }
-
-    .brand small{
-      display:block;
-      font-family:"DM Sans",Arial,sans-serif;
-      font-size:9px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      color:rgba(248,244,238,.45);
-      margin-top:1px;
-    }
-
+    .nav-tabs{display:flex;flex-direction:column;gap:8px;width:100%}
     .tab-btn{
-      font-family:"DM Sans",Arial,sans-serif;
-      border-radius:999px;
-      padding:9px 15px;
-      letter-spacing:.09em;
+      width:100%;justify-content:flex-start;text-align:left;border-radius:14px;padding:14px 16px;
+      font-size:13px;letter-spacing:.05em;background:transparent;color:rgba(248,241,230,.68);
       border:1px solid transparent;
     }
-
     .tab-btn.active{
-      background:linear-gradient(135deg, rgba(191,150,80,.2), rgba(191,150,80,.06));
-      border-color:rgba(191,150,80,.32);
-      color:var(--kaddu-gold-soft);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+      background:linear-gradient(135deg,rgba(199,154,73,.25),rgba(199,154,73,.08));
+      border:1px solid rgba(199,154,73,.42);color:var(--lux-gold2);
+      box-shadow:0 12px 34px rgba(199,154,73,.08), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .nav-right{margin-top:auto;display:flex;flex-direction:column;align-items:stretch;gap:9px;width:100%}
+    .nav-right .btn{justify-content:center;border-radius:14px;padding:12px 13px}
+    .nav-right .btn:first-child:before{content:'← Hub admin';font-weight:800;color:var(--lux-cream)}
+    .nav-right .btn:first-child{font-size:0;order:-1}
+    .nav-right .btn:first-child{display:inline-flex}
+    .nav-right .btn:first-child[href="admin-dossiers-v3-secured.html"]:before{content:'📋 Dossiers'}
+
+    /* Topbar contextuelle */
+    .wrap{max-width:none;margin-left:270px;padding:30px 34px 48px;min-height:100vh}
+    .wrap:before{
+      content:'Biens & médias';display:block;font-family:'Playfair Display', Georgia, serif;font-size:39px;line-height:1;color:var(--lux-cream);
+      margin:0 0 4px 20px;text-shadow:0 4px 26px rgba(0,0,0,.35);
+    }
+    .wrap:after{
+      content:'Pilotez les biens publiés, les photos, les commerciaux affectés et la qualité média.';
+      display:block;color:var(--lux-muted);font-size:14px;margin:0 0 22px 20px;
     }
 
-    .btn{
-      font-family:"DM Sans",Arial,sans-serif;
-      border-radius:999px;
-      box-shadow:none;
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg,var(--kaddu-gold-soft),var(--kaddu-gold));
-      color:#07111f;
-      box-shadow:0 14px 34px rgba(191,150,80,.22);
-    }
-
-    .btn-ghost{
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(191,150,80,.18);
-    }
-
-    .btn-ghost:hover{
-      background:rgba(191,150,80,.08);
-      border-color:rgba(191,150,80,.46);
-      color:var(--kaddu-gold-soft);
-    }
-
-    .admin-back-hub{
-      color:rgba(248,244,238,.72);
-      border:1px solid rgba(191,150,80,.2);
-      background:rgba(255,255,255,.035);
-      padding:8px 13px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:700;
-      letter-spacing:.04em;
-      transition:.18s ease;
-    }
-
-    .admin-back-hub:hover{
-      color:#07111f;
-      background:var(--kaddu-gold-soft);
-      border-color:var(--kaddu-gold-soft);
-    }
-
-    .wrap{
-      max-width:1580px;
-      padding:22px 28px 44px;
-    }
-
-    .kaddu-admin-hero{
-      max-width:1580px;
-      margin:0 auto;
-      padding:34px 28px 10px;
-    }
-
-    .kaddu-hero-card{
-      position:relative;
-      overflow:hidden;
-      border:1px solid rgba(191,150,80,.22);
-      border-radius:30px;
+    /* Hero cinématique injecté */
+    .lux-hero{
+      margin:14px 0 24px;min-height:260px;border-radius:30px;border:1px solid rgba(199,154,73,.24);
       background:
-        linear-gradient(135deg, rgba(11,32,57,.86), rgba(7,24,43,.66)),
-        radial-gradient(circle at 85% 10%, rgba(191,150,80,.22), transparent 32%);
-      box-shadow:var(--kaddu-shadow);
-      padding:28px 30px;
-      display:grid;
-      grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);
-      gap:22px;
-      align-items:end;
+        linear-gradient(90deg,rgba(6,21,34,.96) 0%,rgba(8,27,45,.82) 42%,rgba(6,13,20,.22) 100%),
+        radial-gradient(circle at 82% 12%,rgba(231,195,116,.18),transparent 30%),
+        url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80') center right/cover no-repeat;
+      box-shadow:0 28px 80px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.07);
+      padding:30px;display:grid;grid-template-columns:1.35fr .65fr;gap:22px;align-items:end;overflow:hidden;position:relative;
     }
+    .lux-hero:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(199,154,73,.08),transparent 40%,rgba(255,255,255,.03));pointer-events:none}
+    .lux-eyebrow{display:inline-flex;border:1px solid rgba(199,154,73,.36);border-radius:999px;padding:8px 15px;color:rgba(248,241,230,.68);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;background:rgba(255,255,255,.035)}
+    .lux-title{font-family:'Playfair Display', Georgia, serif;font-size:58px;line-height:1.02;margin:22px 0 12px;color:var(--lux-cream);letter-spacing:-.035em}
+    .lux-title em{font-style:italic;color:var(--lux-gold);font-weight:600}
+    .lux-lead{max-width:700px;color:rgba(248,241,230,.72);font-size:16px;line-height:1.7}
+    .lux-hero-actions{display:flex;gap:12px;justify-content:flex-end;align-items:center;flex-wrap:wrap;position:relative;z-index:1}
+    .lux-hero-actions .btn{border-radius:14px;padding:13px 18px;font-size:13px}
 
-    .kaddu-hero-card::after{
-      content:"";
-      position:absolute;
-      width:360px;
-      height:360px;
-      right:-170px;
-      top:-190px;
-      border-radius:999px;
-      background:rgba(191,150,80,.18);
-      filter:blur(2px);
-    }
-
-    .kaddu-eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:10px;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      color:rgba(248,244,238,.62);
-      border:1px solid rgba(191,150,80,.22);
-      background:rgba(191,150,80,.07);
-      border-radius:999px;
-      padding:6px 12px;
-      margin-bottom:13px;
-    }
-
-    .kaddu-hero-card h1{
-      font-family:"Playfair Display",Georgia,serif;
-      font-size:clamp(34px,4vw,58px);
-      line-height:.98;
-      font-weight:400;
-      color:var(--kaddu-cream);
-      letter-spacing:-.035em;
-      margin:0;
-    }
-
-    .kaddu-hero-card h1 em{
-      color:var(--kaddu-gold-soft);
-      font-style:italic;
-    }
-
-    .kaddu-hero-sub{
-      max-width:760px;
-      margin-top:13px;
-      color:rgba(248,244,238,.62);
-      font-size:14px;
-      line-height:1.75;
-    }
-
-    .kaddu-hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      gap:10px;
-      position:relative;
-      z-index:2;
-    }
-
-    .stat,.bien-card,.comm-card,.modal-box,.auth-box,.drawer{
-      border-radius:var(--kaddu-radius);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.022)),
-        rgba(11,32,57,.72);
-      border:1px solid rgba(191,150,80,.18);
-      box-shadow:0 18px 52px rgba(0,0,0,.2);
-    }
-
-    .stat{
-      padding:17px 18px;
-    }
-
-    .stat .k{
-      font-family:"DM Sans",Arial,sans-serif;
-      color:rgba(248,244,238,.52);
-    }
-
-    .stat .v,.bc-price,.bc-body h3,.comm-info h3,.drawer-head h2,.modal-box h3,.auth-box h2,.sh3{
-      font-family:"Playfair Display",Georgia,serif;
-    }
-
-    .stat .v{
-      color:var(--kaddu-gold-soft);
-      letter-spacing:-.04em;
-    }
-
-    .bien-card{
-      border-radius:24px;
-      overflow:hidden;
-      transform:translateY(0);
-    }
-
-    .bien-card:hover{
-      transform:translateY(-3px);
-      border-color:rgba(191,150,80,.42);
-      box-shadow:0 26px 70px rgba(0,0,0,.28);
-    }
-
-    .bcimg{
-      height:190px;
-      background:linear-gradient(135deg,rgba(191,150,80,.2),rgba(7,24,43,.9));
-    }
-
-    .bc-body{
-      padding:17px;
-    }
-
-    .bc-body h3{
-      font-size:21px;
-      letter-spacing:-.02em;
-    }
-
-    input,select,textarea,.ai{
-      font-family:"DM Sans",Arial,sans-serif;
-      border-radius:14px;
-      background:rgba(255,255,255,.045);
-      border:1px solid rgba(191,150,80,.17);
-    }
-
-    label,.slabel{
-      font-family:"DM Sans",Arial,sans-serif;
-      color:var(--kaddu-gold-soft);
-    }
-
+    /* Toolbars / stats */
     .toolbar{
-      padding:13px;
-      border:1px solid rgba(191,150,80,.14);
-      border-radius:24px;
-      background:rgba(255,255,255,.028);
-      backdrop-filter:blur(12px);
+      background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(199,154,73,.035));
+      border:1px solid rgba(199,154,73,.16);border-radius:24px;padding:16px 18px;margin-bottom:20px;
+      box-shadow:0 18px 55px rgba(0,0,0,.18);
     }
-
-    .drawer{
-      background:
-        radial-gradient(circle at 0% 0%, rgba(191,150,80,.14), transparent 28%),
-        #081827;
-      border-left:1px solid rgba(191,150,80,.28);
-      border-radius:28px 0 0 28px;
+    input,select,textarea{
+      border-radius:13px;background:rgba(5,16,27,.74);border:1px solid rgba(199,154,73,.18);color:var(--lux-cream);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
     }
-
-    .drawer-head,.drawer-foot{
-      background:rgba(8,24,39,.92);
-      backdrop-filter:blur(18px);
+    select{appearance:auto}
+    .stats{grid-template-columns:repeat(5,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+    .stat{
+      border-radius:22px;border:1px solid rgba(199,154,73,.18);
+      background:linear-gradient(180deg,rgba(14,37,60,.92),rgba(8,24,40,.86));
+      padding:20px 22px;box-shadow:0 18px 55px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
+      position:relative;overflow:hidden;
     }
+    .stat:after{content:'ⓘ';position:absolute;right:18px;top:18px;color:rgba(248,241,230,.24);font-size:13px}
+    .stat .k{font-size:11px;color:rgba(248,241,230,.55);letter-spacing:.16em;margin-bottom:16px}
+    .stat .v{font-family:'Playfair Display', Georgia, serif;font-size:36px;color:var(--lux-gold2)}
 
-    .dtab{
-      border-radius:999px;
+    /* Cards biens immersives */
+    .biens-grid{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+    .bien-card{
+      border-radius:24px;border:1px solid rgba(199,154,73,.22);background:linear-gradient(180deg,rgba(8,24,40,.88),rgba(5,16,27,.94));
+      overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04);
     }
+    .bien-card:hover{transform:translateY(-2px);border-color:rgba(231,195,116,.52);box-shadow:0 30px 90px rgba(0,0,0,.36),0 0 0 1px rgba(231,195,116,.04)}
+    .bcimg{height:210px;background:linear-gradient(135deg,rgba(199,154,73,.18),rgba(7,24,43,.85))}
+    .bcimg:after{content:'';position:absolute;inset:auto 0 0 0;height:58%;background:linear-gradient(to top,rgba(5,16,27,.92),transparent);pointer-events:none}
+    .bc-sbadge,.bc-tbadge{z-index:2;border-radius:999px;font-size:11px;padding:6px 13px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+    .bc-body{padding:18px 18px 20px}
+    .bc-body h3{font-family:'Playfair Display', Georgia, serif;font-size:22px;letter-spacing:-.02em;color:var(--lux-cream)}
+    .bc-meta{font-size:12px;color:rgba(248,241,230,.56)}
+    .bc-price{font-family:'DM Sans',Arial,sans-serif;font-weight:800;font-size:19px;color:var(--lux-gold2);letter-spacing:.02em}
+    .spec-tag,.photo-count{border-radius:9px;background:rgba(255,255,255,.035);border-color:rgba(199,154,73,.16);color:rgba(248,241,230,.72);padding:5px 9px;font-size:11px}
+    .bc-actions{border-top:1px solid rgba(199,154,73,.13);padding-top:12px;margin-top:12px}
 
-    .dtab.active{
-      background:rgba(191,150,80,.16);
-      color:var(--kaddu-gold-soft);
-      border:1px solid rgba(191,150,80,.34);
-    }
+    /* Boutons */
+    .btn{border-radius:12px;font-family:'DM Sans',Arial,sans-serif}
+    .btn-primary{background:linear-gradient(135deg,var(--lux-gold2),var(--lux-gold));color:#120d05;box-shadow:0 14px 34px rgba(199,154,73,.22)}
+    .btn-ghost{border-color:rgba(199,154,73,.2);background:rgba(255,255,255,.025);color:var(--lux-cream)}
+    .btn-ghost:hover{background:rgba(199,154,73,.08);border-color:rgba(199,154,73,.48);color:var(--lux-gold2)}
 
+    /* Drawers / auth */
+    .drawer{background:linear-gradient(180deg,#071827,#050f18);border-left:1px solid rgba(199,154,73,.38)}
+    .drawer-head,.drawer-foot{background:rgba(5,15,24,.96);border-color:rgba(199,154,73,.18)}
+    .drawer-head h2,.auth-box h2,.modal-box h3{font-family:'Playfair Display', Georgia, serif}
     .auth-box{
-      max-width:460px;
-      padding:38px 34px;
-      position:relative;
-      overflow:hidden;
+      max-width:560px;border-radius:30px;padding:42px;background:linear-gradient(155deg,rgba(9,28,47,.96),rgba(9,23,36,.92));
+      border:1px solid rgba(199,154,73,.22);box-shadow:0 35px 120px rgba(0,0,0,.55);
     }
+    #authOverlay{background:radial-gradient(circle at 50% 0%,rgba(199,154,73,.13),transparent 35%),var(--lux-bg)}
+    .auth-box:before{content:'';display:block;width:110px;height:74px;margin-bottom:18px;background:url('/assets/img/logo-kaddu.svg') left center/contain no-repeat}
+    .ab{border-radius:18px;background:linear-gradient(135deg,var(--lux-gold2),var(--lux-gold));padding:15px;color:#111}
 
-    .auth-box::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:radial-gradient(circle at 85% 0%, rgba(191,150,80,.18), transparent 36%);
-      pointer-events:none;
-    }
+    @media(max-width:1000px){nav{position:static;width:auto;height:auto}.wrap{margin-left:0}.lux-hero{grid-template-columns:1fr}.lux-hero-actions{justify-content:flex-start}.stats{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.lux-title{font-size:40px}.wrap{padding:18px 14px}.lux-hero{padding:22px;border-radius:22px}.stats{grid-template-columns:1fr}.nav-tabs{display:flex}}
 
-    .kaddu-auth-logo{
-      width:74px;
-      height:auto;
-      margin-bottom:18px;
-      filter:drop-shadow(0 16px 28px rgba(191,150,80,.22));
-      position:relative;
-      z-index:1;
-    }
-
-    .auth-box > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .ab{
-      border-radius:999px;
-      background:linear-gradient(135deg,var(--kaddu-gold-soft),var(--kaddu-gold));
-      color:#07111f;
-    }
-
-    @media(max-width:1000px){
-      .kaddu-hero-card{grid-template-columns:1fr}
-      .kaddu-hero-actions{justify-content:flex-start}
-      nav{height:auto;min-height:78px;flex-wrap:wrap;padding:16px 18px}
-    }
-
-    @media(max-width:640px){
-      .kaddu-admin-hero{padding:22px 12px 6px}
-      .kaddu-hero-card{padding:22px 18px;border-radius:24px}
-      .wrap{padding:14px 12px 34px}
-      .brand img{width:34px;height:34px}
-    }
   </style>
-
   <script src="/assets/js/kaddu-supabase-config.js"></script>
 </head>
 <body>
@@ -620,7 +418,6 @@
 <!-- AUTH -->
 <div id="authOverlay">
   <div class="auth-box">
-    <img class="kaddu-auth-logo" src="/assets/img/logo-kaddu.svg" alt="Kàddu" onerror="this.src='/assets/img/logo-kaddu.png'">
     <div style="display:inline-block;padding:3px 9px;border:1px solid var(--bdr);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--or);margin-bottom:16px">Kàddu · Admin sécurisé</div>
     <h2>Biens <em>& Médias</em></h2>
     <p class="auth-sub">Back-office de gestion des biens immobiliers, photos et équipe commerciale.</p>
@@ -636,17 +433,14 @@
 
 <!-- NAV -->
 <nav>
-  <div class="brand">
-    <img src="/assets/img/logo-kaddu.svg" alt="Kàddu" onerror="this.src='/assets/img/logo-kaddu.png'">
-    <span>Kàddu Admin<small>la parole qui engage</small></span>
-  </div>
+  <div class="brand">Kàddu Admin</div>
   <div class="nav-tabs">
     <button class="tab-btn active" data-tab="biens">🏠 Biens</button>
     <button class="tab-btn" data-tab="commerciaux">👤 Commerciaux</button>
     <button class="tab-btn" data-tab="setup">⚙️ Setup SQL</button>
   </div>
   <div class="nav-right">
-    <a class="admin-back-hub" href="/admin/">← Hub admin</a>
+    <a class="btn btn-ghost btn-sm" href="/admin/">← Hub admin</a>
     <a class="btn btn-ghost btn-sm" href="admin-dossiers-v3-secured.html">📋 Dossiers</a>
     <a class="btn btn-ghost btn-sm" href="dashboard-kaddu-kpi-secured.html">📊 KPIs</a>
     <button class="btn btn-ghost btn-sm" id="logoutBtn">Déconnexion</button>
@@ -654,22 +448,6 @@
 </nav>
 
 <div id="toastZone"></div>
-
-<div class="kaddu-admin-hero">
-  <section class="kaddu-hero-card">
-    <div>
-      <div class="kaddu-eyebrow">Gestion patrimoniale · Biens & médias</div>
-      <h1>Biens <em>& médias</em></h1>
-      <p class="kaddu-hero-sub">Pilotez les biens publiés, les photos, les commerciaux affectés et la qualité média depuis une interface alignée avec le cockpit Kàddu Shield.</p>
-    </div>
-    <div class="kaddu-hero-actions">
-      <a class="btn btn-ghost" href="/admin/">← Retour hub admin</a>
-      <button class="btn btn-primary" onclick="document.getElementById('newBienBtn')?.click()">+ Nouveau bien</button>
-      <button class="btn btn-ghost" onclick="document.querySelector('[data-tab=commerciaux]')?.click()">👤 Commerciaux</button>
-    </div>
-  </section>
-</div>
-
 
 <!-- CONFIRM MODAL -->
 <div class="modal-backdrop" id="confirmModal">
@@ -1225,6 +1003,21 @@ Je reste disponible pour répondre à vos questions et vous accompagner à chaqu
 
 <!-- ══════════════════════════════════════════════ PAGES ══ -->
 <div class="wrap">
+
+  <!-- HERO EDITORIAL LUXURY — non destructif -->
+  <section class="lux-hero" aria-label="Pilotage biens et médias">
+    <div>
+      <span class="lux-eyebrow">Gestion patrimoniale · Biens & médias</span>
+      <h1 class="lux-title">Biens <em>& médias</em></h1>
+      <p class="lux-lead">Interface premium pour gérer les biens publiés, enrichir les photos, affecter les commerciaux et suivre la qualité média sans perdre le fonctionnel existant.</p>
+    </div>
+    <div class="lux-hero-actions">
+      <a class="btn btn-ghost" href="/admin/">← Retour hub admin</a>
+      <button class="btn btn-primary" onclick="openBienDrawer()">+ Nouveau bien</button>
+      <button class="btn btn-ghost" onclick="document.querySelector('[data-tab=commerciaux]').click()">👤 Commerciaux</button>
+    </div>
+  </section>
+
 
   <!-- BIENS -->
   <div class="page active" id="page-biens">
