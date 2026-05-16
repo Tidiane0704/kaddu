@@ -412,6 +412,46 @@
 
   </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
+
+<style id="biens-v2-hotfix">
+  /* Hotfix V2 — évite le chevauchement des cartes à droite */
+  .biens-grid,
+  #biensGrid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 22px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .bien-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .bcimg,
+  .bcimg img {
+    max-width: 100% !important;
+  }
+
+  /* Hotfix V2 — logo footer trop grand */
+  footer img,
+  .footer img,
+  .kaddu-footer img,
+  .admin-footer img {
+    max-width: 105px !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  .admin-footer,
+  .kaddu-footer,
+  footer {
+    overflow: hidden !important;
+  }
+</style>
+
 </head>
 <body>
 
