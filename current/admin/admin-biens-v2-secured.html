@@ -2708,5 +2708,32 @@ function renderPhotoResults(results){
 // ══ FIN ANALYSE PHOTOS ═══════════════════════════════════════
 </script>
 <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
+
+<script id="biens-sidebar-logo-dom-fix">
+document.addEventListener("DOMContentLoaded", function(){
+  const sidebar = document.querySelector("aside, .sidebar, [class*='sidebar']");
+  if(!sidebar) return;
+
+  // Supprime le premier bloc visuel de logo/slogan existant
+  const first = sidebar.firstElementChild;
+  if(first){
+    first.remove();
+  }
+
+  // Injecte un logo texte propre
+  const cleanLogo = document.createElement("div");
+  cleanLogo.innerHTML = `
+    <div style="font-family:Georgia,serif;font-size:34px;line-height:1;color:#F8F4EE;margin:8px 0 6px;">
+      Kàddu
+    </div>
+    <div style="font-size:10px;letter-spacing:.22em;color:rgba(248,244,238,.48);margin-bottom:34px;">
+      LA PAROLE QUI ENGAGE
+    </div>
+  `;
+
+  sidebar.insertBefore(cleanLogo, sidebar.firstChild);
+});
+</script>
+
 </body>
 </html>
