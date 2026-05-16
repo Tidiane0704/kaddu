@@ -600,6 +600,37 @@
 }
 </style>
 
+
+<style id="biens-logo-shell-fix">
+  /* Corrige le logo sidebar injecté par kaddu-admin-shell.js sur Biens */
+  .kaddu-admin-sidebar .kaddu-shell-logo,
+  .kaddu-admin-sidebar .kaddu-shell-brand,
+  .kaddu-admin-sidebar .kaddu-shell-tagline,
+  .kaddu-admin-sidebar img[src*="logo-kaddu"],
+  .kaddu-admin-sidebar img[src*="kaddu"] {
+    display: none !important;
+  }
+
+  .kaddu-admin-sidebar::before {
+    content: "Kàddu";
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 30px;
+    line-height: 1;
+    color: #F8F4EE;
+    margin: 8px 0 4px;
+  }
+
+  .kaddu-admin-sidebar::after {
+    content: "LA PAROLE QUI ENGAGE";
+    display: block;
+    font-size: 10px;
+    letter-spacing: .22em;
+    color: rgba(248,244,238,.45);
+    margin-bottom: 28px;
+  }
+</style>
+
 </head>
 <body>
 
