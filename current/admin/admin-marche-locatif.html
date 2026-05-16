@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu Admin — Marché locatif</title>
+  <link rel="stylesheet" href="/assets/css/kaddu-admin-luxury.css">
+</head>
+<body class="kaddu-admin-luxury">
+  <main class="kaddu-page">
+    <div class="kaddu-page-inner">
+      <header class="kaddu-page-header">
+        <div>
+          <div class="kaddu-page-eyebrow">Observatoire marché</div>
+          <h1 class="kaddu-page-title">Marché <em>locatif</em></h1>
+          <p class="kaddu-page-sub">Suivez les tendances de loyers, tensions par quartier, opportunités de pricing et signaux utiles pour Dakar et les zones prioritaires Kàddu.</p>
+        </div>
+        <div class="kaddu-actions">
+          <a class="kaddu-lux-btn" href="/admin/">← Hub admin</a>
+          <button class="kaddu-lux-btn primary" type="button" onclick="alert('Module V1 prêt. Le branchement Supabase complet sera ajouté à la prochaine itération.')">Exporter</button>
+        </div>
+      </header>
+
+      <section class="kaddu-grid">
+        
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Quartiers suivis</div>
+          <div class="kaddu-v">12</div>
+          <div class="kaddu-meta">Dakar, VDN, Almadies, Mermoz…</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Loyer médian F3</div>
+          <div class="kaddu-v">420k</div>
+          <div class="kaddu-meta">FCFA / mois — estimation active</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Tension demande</div>
+          <div class="kaddu-v">Élevée</div>
+          <div class="kaddu-meta">Biens meublés premium</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Données import</div>
+          <div class="kaddu-v">CSV</div>
+          <div class="kaddu-meta">Connecteur Supabase à brancher</div>
+        </div>
+      </section>
+
+      <section class="kaddu-wide">
+        <div class="kaddu-lux-card highlight">
+          <div class="kaddu-k">Activité récente</div>
+          <div class="kaddu-list">
+            
+            <div class="kaddu-row">
+              <div>
+                <strong>VDN / Sipres</strong>
+                <div class="kaddu-meta">Demande stable, profil diaspora et professionnels.</div>
+              </div>
+              <span class="kaddu-badge green">Actif</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Almadies</strong>
+                <div class="kaddu-meta">Prix hauts, forte exigence qualité photo.</div>
+              </div>
+              <span class="kaddu-badge ">Premium</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Mermoz</strong>
+                <div class="kaddu-meta">Bon équilibre rendement / liquidité.</div>
+              </div>
+              <span class="kaddu-badge blue">À suivre</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Ouakam</strong>
+                <div class="kaddu-meta">Demande dynamique mais plus hétérogène.</div>
+              </div>
+              <span class="kaddu-badge ">Veille</span>
+            </div>
+          </div>
+        </div>
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Actions recommandées</div>
+          <div class="kaddu-list">
+            
+            <div class="kaddu-row">
+              <div>
+                <strong>Importer CSV marché</strong>
+                <div class="kaddu-meta">Préparer fichier quartiers / typologies / loyers.</div>
+              </div>
+              <span class="kaddu-badge ">Importer</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Ajuster estimation</strong>
+                <div class="kaddu-meta">Brancher les seuils dans le simulateur bailleur.</div>
+              </div>
+              <span class="kaddu-badge green">Pricing</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Créer alerte marché</strong>
+                <div class="kaddu-meta">Notifier si variation &gt; 8%.</div>
+              </div>
+              <span class="kaddu-badge blue">Bientôt</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
+</body>
+</html>

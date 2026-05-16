@@ -693,6 +693,7 @@
     .af-info-card-val{font-size:.84rem;color:rgba(248,244,238,.65);line-height:1.6}
   </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
+  <link rel="stylesheet" href="/assets/css/kaddu-admin-luxury.css">
 </head>
 <body>
 
@@ -957,7 +958,7 @@
       </a>
 
       <!-- MODULE : VÉRIFICATION DOSSIERS (antifraude) -->
-      <a class="module-card" href="#" onclick="openAfPanel(event)">
+      <a class="module-card" href="admin-verifications-dossiers.html">
         <div class="module-top">
           <div class="module-icon">🛡️</div>
           <div class="module-badges">
@@ -999,7 +1000,7 @@
       </a>
 
       <!-- MODULE : PARTENAIRES & SERVICES -->
-      <a class="module-card" href="#" onclick="openPartenairesPanel(event)">
+      <a class="module-card" href="admin-partenaires-services.html">
         <div class="module-top">
           <div class="module-icon">🤝</div>
           <div class="module-badges"><span class="mbadge mbadge-active">Actif</span><span class="mbadge mbadge-new">Nouveau</span></div>
@@ -2392,5 +2393,6 @@ document.getElementById("faqOverlay").addEventListener("click",e=>{
   if(e.target===document.getElementById("faqOverlay")) closeFaqManager();
 });
 </script>
+  <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
 </body>
 </html>

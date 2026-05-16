@@ -1,0 +1,424 @@
+
+/* ==========================================================================
+   Kàddu Admin — Editorial Luxury Design System
+   Version: 2026-05-16
+   Objectif: harmoniser les pages admin sans casser les scripts existants.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+:root{
+  --kaddu-gold:#BF9650;
+  --kaddu-gold-2:#E1B866;
+  --kaddu-gold-3:#8D672E;
+  --kaddu-navy:#07182B;
+  --kaddu-black:#080908;
+  --kaddu-cream:#F8F1E6;
+  --kaddu-paper:#F4E7D2;
+  --kaddu-text:#F8F4EE;
+  --kaddu-muted:rgba(248,244,238,.62);
+  --kaddu-border:rgba(191,150,80,.28);
+  --kaddu-border-soft:rgba(191,150,80,.14);
+  --kaddu-green:#62d56f;
+  --kaddu-red:#ff5e45;
+  --kaddu-orange:#F5A623;
+  --kaddu-blue:#53b7ff;
+  --kaddu-shadow:0 22px 70px rgba(0,0,0,.38);
+  --kaddu-glow:0 0 28px rgba(191,150,80,.18);
+}
+
+/* Page shell */
+body.kaddu-admin-luxury,
+body[data-kaddu-admin-shell="true"]{
+  font-family:'DM Sans', Arial, sans-serif !important;
+  background:
+    radial-gradient(circle at 78% 12%,rgba(191,150,80,.15),transparent 32%),
+    radial-gradient(circle at 14% 42%,rgba(4,33,48,.56),transparent 28%),
+    linear-gradient(135deg,#030404 0%,#071018 48%,#090806 100%) !important;
+  color:var(--kaddu-text) !important;
+}
+
+body.kaddu-admin-luxury::before,
+body[data-kaddu-admin-shell="true"]::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,.15));
+  z-index:-1;
+}
+
+/* Header / nav normalization */
+body.kaddu-admin-luxury nav,
+body[data-kaddu-admin-shell="true"] nav,
+body.kaddu-admin-luxury header,
+body[data-kaddu-admin-shell="true"] header{
+  border-color:var(--kaddu-border-soft) !important;
+}
+
+body.kaddu-admin-luxury .brand,
+body[data-kaddu-admin-shell="true"] .brand{
+  color:var(--kaddu-gold) !important;
+  font-family:'Playfair Display', Georgia, serif !important;
+}
+
+/* Titles */
+body.kaddu-admin-luxury h1,
+body[data-kaddu-admin-shell="true"] h1{
+  font-family:'Playfair Display', Georgia, serif !important;
+  font-weight:500 !important;
+  color:var(--kaddu-text) !important;
+  letter-spacing:-.035em;
+  text-shadow:0 10px 26px rgba(0,0,0,.36);
+}
+
+body.kaddu-admin-luxury h1 em,
+body[data-kaddu-admin-shell="true"] h1 em{
+  color:var(--kaddu-gold) !important;
+  font-style:italic !important;
+}
+
+body.kaddu-admin-luxury h2,
+body[data-kaddu-admin-shell="true"] h2,
+body.kaddu-admin-luxury h3,
+body[data-kaddu-admin-shell="true"] h3{
+  font-family:'Playfair Display', Georgia, serif !important;
+}
+
+/* Cards / panels */
+body.kaddu-admin-luxury .card,
+body[data-kaddu-admin-shell="true"] .card,
+body.kaddu-admin-luxury .section,
+body[data-kaddu-admin-shell="true"] .section,
+body.kaddu-admin-luxury .stat,
+body[data-kaddu-admin-shell="true"] .stat,
+body.kaddu-admin-luxury .panel,
+body[data-kaddu-admin-shell="true"] .panel,
+body.kaddu-admin-luxury .module-card,
+body[data-kaddu-admin-shell="true"] .module-card,
+body.kaddu-admin-luxury .stat-card,
+body[data-kaddu-admin-shell="true"] .stat-card{
+  border-color:var(--kaddu-border-soft) !important;
+  box-shadow:0 16px 48px rgba(0,0,0,.18);
+}
+
+body.kaddu-admin-luxury .card:hover,
+body[data-kaddu-admin-shell="true"] .card:hover,
+body.kaddu-admin-luxury .module-card:hover,
+body[data-kaddu-admin-shell="true"] .module-card:hover{
+  border-color:var(--kaddu-border) !important;
+}
+
+/* Buttons */
+body.kaddu-admin-luxury .btn,
+body[data-kaddu-admin-shell="true"] .btn,
+body.kaddu-admin-luxury button.btn,
+body[data-kaddu-admin-shell="true"] button.btn,
+body.kaddu-admin-luxury .btn-primary,
+body[data-kaddu-admin-shell="true"] .btn-primary{
+  border-radius:10px !important;
+}
+
+body.kaddu-admin-luxury .btn:not(.btn-ghost):not(.btn-danger):not(.btn-wa),
+body[data-kaddu-admin-shell="true"] .btn:not(.btn-ghost):not(.btn-danger):not(.btn-wa),
+body.kaddu-admin-luxury .btn-primary,
+body[data-kaddu-admin-shell="true"] .btn-primary{
+  background:linear-gradient(135deg,var(--kaddu-gold-2),var(--kaddu-gold)) !important;
+  color:#14110A !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:0 10px 24px rgba(191,150,80,.22);
+}
+
+body.kaddu-admin-luxury .btn-ghost,
+body[data-kaddu-admin-shell="true"] .btn-ghost,
+body.kaddu-admin-luxury .btn-secondary,
+body[data-kaddu-admin-shell="true"] .btn-secondary{
+  color:var(--kaddu-text) !important;
+  border:1px solid var(--kaddu-border-soft) !important;
+  background:rgba(255,255,255,.025) !important;
+}
+
+/* Tables */
+body.kaddu-admin-luxury table,
+body[data-kaddu-admin-shell="true"] table{
+  border-color:var(--kaddu-border-soft) !important;
+}
+
+body.kaddu-admin-luxury th,
+body[data-kaddu-admin-shell="true"] th{
+  color:var(--kaddu-gold) !important;
+  letter-spacing:.12em !important;
+  text-transform:uppercase !important;
+}
+
+body.kaddu-admin-luxury td,
+body[data-kaddu-admin-shell="true"] td{
+  border-color:rgba(191,150,80,.12) !important;
+}
+
+/* Inputs */
+body.kaddu-admin-luxury input,
+body[data-kaddu-admin-shell="true"] input,
+body.kaddu-admin-luxury select,
+body[data-kaddu-admin-shell="true"] select,
+body.kaddu-admin-luxury textarea,
+body[data-kaddu-admin-shell="true"] textarea{
+  border-color:var(--kaddu-border-soft) !important;
+  background:rgba(255,255,255,.035) !important;
+  color:var(--kaddu-text) !important;
+}
+
+body.kaddu-admin-luxury input:focus,
+body[data-kaddu-admin-shell="true"] input:focus,
+body.kaddu-admin-luxury select:focus,
+body[data-kaddu-admin-shell="true"] select:focus,
+body.kaddu-admin-luxury textarea:focus,
+body[data-kaddu-admin-shell="true"] textarea:focus{
+  border-color:var(--kaddu-gold) !important;
+  box-shadow:0 0 0 3px rgba(191,150,80,.12) !important;
+}
+
+/* Shared shell widgets */
+.kaddu-admin-hub-return{
+  position:fixed;
+  top:18px;
+  left:18px;
+  z-index:9998;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:38px;
+  padding:9px 13px;
+  border-radius:999px;
+  border:1px solid rgba(191,150,80,.25);
+  background:rgba(8,9,8,.62);
+  backdrop-filter:blur(12px);
+  color:var(--kaddu-text);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:700;
+  box-shadow:0 14px 40px rgba(0,0,0,.28);
+  transition:.18s ease;
+}
+
+.kaddu-admin-hub-return:hover{
+  transform:translateY(-1px);
+  border-color:var(--kaddu-gold);
+  color:var(--kaddu-gold-2);
+}
+
+.kaddu-admin-hub-return .mark{
+  color:var(--kaddu-gold);
+  font-family:'Playfair Display', Georgia, serif;
+  font-size:18px;
+  line-height:1;
+}
+
+.kaddu-admin-logo-mini{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:9997;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(191,150,80,.18);
+  background:rgba(8,9,8,.48);
+  backdrop-filter:blur(12px);
+  color:rgba(248,244,238,.76);
+  font-size:12px;
+}
+
+.kaddu-admin-logo-mini img{
+  width:26px;
+  height:26px;
+  object-fit:contain;
+}
+
+.kaddu-admin-logo-mini strong{
+  color:var(--kaddu-gold-2);
+  font-family:'Playfair Display', Georgia, serif;
+  font-size:15px;
+  font-weight:500;
+}
+
+/* Placeholder / newly created pages */
+.kaddu-page{
+  min-height:100vh;
+  padding:34px 34px 48px;
+}
+
+.kaddu-page-inner{
+  max-width:1480px;
+  margin:0 auto;
+}
+
+.kaddu-page-header{
+  display:flex;
+  justify-content:space-between;
+  gap:24px;
+  align-items:flex-start;
+  padding:8px 0 28px;
+  border-bottom:1px solid rgba(191,150,80,.18);
+  margin-bottom:24px;
+}
+
+.kaddu-page-eyebrow{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:6px 10px;
+  border:1px solid rgba(191,150,80,.2);
+  border-radius:999px;
+  color:var(--kaddu-gold-2);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  background:rgba(191,150,80,.06);
+}
+
+.kaddu-page-title{
+  margin:14px 0 8px;
+  font-family:'Playfair Display', Georgia, serif;
+  font-size:58px;
+  line-height:.96;
+  font-weight:500;
+  letter-spacing:-.035em;
+  color:var(--kaddu-text);
+}
+
+.kaddu-page-title em{
+  color:var(--kaddu-gold);
+  font-style:italic;
+}
+
+.kaddu-page-sub{
+  max-width:780px;
+  margin:0;
+  color:rgba(248,244,238,.68);
+  font-size:17px;
+  line-height:1.75;
+}
+
+.kaddu-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.kaddu-lux-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:13px 16px;
+  border-radius:10px;
+  border:1px solid rgba(191,150,80,.22);
+  background:rgba(255,255,255,.03);
+  color:var(--kaddu-text);
+  text-decoration:none;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.kaddu-lux-btn.primary{
+  background:linear-gradient(135deg,var(--kaddu-gold-2),var(--kaddu-gold));
+  color:#151008;
+}
+
+.kaddu-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.kaddu-lux-card{
+  border:1px solid rgba(191,150,80,.18);
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018));
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 16px 48px rgba(0,0,0,.18);
+}
+
+.kaddu-lux-card.highlight{
+  border-color:rgba(191,150,80,.55);
+  box-shadow:0 0 0 1px rgba(191,150,80,.08),0 0 34px rgba(191,150,80,.18),0 20px 70px rgba(0,0,0,.28);
+}
+
+.kaddu-k{
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--kaddu-gold);
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.kaddu-v{
+  font-family:'Playfair Display', Georgia, serif;
+  font-size:40px;
+  line-height:1;
+  color:var(--kaddu-text);
+}
+
+.kaddu-meta{
+  margin-top:8px;
+  color:rgba(248,244,238,.56);
+  font-size:13px;
+  line-height:1.55;
+}
+
+.kaddu-wide{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:16px;
+}
+
+.kaddu-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.kaddu-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid rgba(191,150,80,.12);
+}
+
+.kaddu-row:last-child{border-bottom:none}
+
+.kaddu-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 9px;
+  border-radius:999px;
+  border:1px solid rgba(191,150,80,.18);
+  color:var(--kaddu-gold-2);
+  background:rgba(191,150,80,.06);
+  font-size:12px;
+  font-weight:800;
+}
+
+.kaddu-badge.green{color:#77ffbe;border-color:rgba(0,200,117,.22);background:rgba(0,200,117,.06)}
+.kaddu-badge.red{color:#ff9b8a;border-color:rgba(255,94,69,.22);background:rgba(255,94,69,.06)}
+.kaddu-badge.blue{color:#93d4ff;border-color:rgba(83,183,255,.22);background:rgba(83,183,255,.06)}
+
+@media (max-width:980px){
+  .kaddu-grid,.kaddu-wide{grid-template-columns:1fr}
+  .kaddu-page-title{font-size:42px}
+  .kaddu-page-header{display:block}
+  .kaddu-actions{margin-top:16px}
+  .kaddu-admin-hub-return{position:static;margin:12px 12px 0}
+}

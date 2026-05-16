@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu Admin — Demandes & incidents</title>
+  <link rel="stylesheet" href="/assets/css/kaddu-admin-luxury.css">
+</head>
+<body class="kaddu-admin-luxury">
+  <main class="kaddu-page">
+    <div class="kaddu-page-inner">
+      <header class="kaddu-page-header">
+        <div>
+          <div class="kaddu-page-eyebrow">Support locataires</div>
+          <h1 class="kaddu-page-title">Demandes <em>& incidents</em></h1>
+          <p class="kaddu-page-sub">Centralisez les tickets locataires : incidents techniques, demandes administratives, urgences logement et suivi des interventions.</p>
+        </div>
+        <div class="kaddu-actions">
+          <a class="kaddu-lux-btn" href="/admin/">← Hub admin</a>
+          <button class="kaddu-lux-btn primary" type="button" onclick="alert('Module V1 prêt. Le branchement Supabase complet sera ajouté à la prochaine itération.')">Exporter</button>
+        </div>
+      </header>
+
+      <section class="kaddu-grid">
+        
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Tickets ouverts</div>
+          <div class="kaddu-v">0</div>
+          <div class="kaddu-meta">Aucun ticket critique actif</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Urgences</div>
+          <div class="kaddu-v">0</div>
+          <div class="kaddu-meta">Astreinte non déclenchée</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">SLA moyen</div>
+          <div class="kaddu-v">—</div>
+          <div class="kaddu-meta">À calculer après branchement</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Prestataires</div>
+          <div class="kaddu-v">3</div>
+          <div class="kaddu-meta">Technique, ménage, sécurité</div>
+        </div>
+      </section>
+
+      <section class="kaddu-wide">
+        <div class="kaddu-lux-card highlight">
+          <div class="kaddu-k">Activité récente</div>
+          <div class="kaddu-list">
+            
+            <div class="kaddu-row">
+              <div>
+                <strong>Fuite / plomberie</strong>
+                <div class="kaddu-meta">Workflow urgence + prestataire IF2E.</div>
+              </div>
+              <span class="kaddu-badge red">Priorité</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Badge / accès</strong>
+                <div class="kaddu-meta">Traitement standard avec historique.</div>
+              </div>
+              <span class="kaddu-badge ">Standard</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Demande administrative</strong>
+                <div class="kaddu-meta">Attestation, quittance, justificatif.</div>
+              </div>
+              <span class="kaddu-badge blue">Back-office</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Ménage / qualité</strong>
+                <div class="kaddu-meta">Contrôle qualité et photos avant/après.</div>
+              </div>
+              <span class="kaddu-badge green">Ops</span>
+            </div>
+          </div>
+        </div>
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">File de traitement</div>
+          <div class="kaddu-list">
+            
+            <div class="kaddu-row">
+              <div>
+                <strong>Créer ticket</strong>
+                <div class="kaddu-meta">Formulaire de saisie rapide à brancher Supabase.</div>
+              </div>
+              <span class="kaddu-badge ">V2</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Assigner prestataire</strong>
+                <div class="kaddu-meta">Règles par type d’incident.</div>
+              </div>
+              <span class="kaddu-badge blue">V2</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Historiser actions</strong>
+                <div class="kaddu-meta">Journal complet pour audit.</div>
+              </div>
+              <span class="kaddu-badge green">V2</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
+</body>
+</html>

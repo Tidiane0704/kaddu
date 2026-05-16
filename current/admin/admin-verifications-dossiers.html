@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kàddu Admin — Vérifications dossiers</title>
+  <link rel="stylesheet" href="/assets/css/kaddu-admin-luxury.css">
+</head>
+<body class="kaddu-admin-luxury">
+  <main class="kaddu-page">
+    <div class="kaddu-page-inner">
+      <header class="kaddu-page-header">
+        <div>
+          <div class="kaddu-page-eyebrow">Contrôles antifraude</div>
+          <h1 class="kaddu-page-title">Vérifications <em>dossiers</em></h1>
+          <p class="kaddu-page-sub">Vue opérationnelle dédiée aux vérifications documentaires, écarts structurés et décisions conseiller issues de Kàddu Shield.</p>
+        </div>
+        <div class="kaddu-actions">
+          <a class="kaddu-lux-btn" href="/admin/">← Hub admin</a>
+          <button class="kaddu-lux-btn primary" type="button" onclick="alert('Module V1 prêt. Le branchement Supabase complet sera ajouté à la prochaine itération.')">Exporter</button>
+        </div>
+      </header>
+
+      <section class="kaddu-grid">
+        
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Dossiers à vérifier</div>
+          <div class="kaddu-v">—</div>
+          <div class="kaddu-meta">Connecté à rental_dossiers</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Écarts forts</div>
+          <div class="kaddu-v">—</div>
+          <div class="kaddu-meta">Cross-check documents</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Prévalidations</div>
+          <div class="kaddu-v">—</div>
+          <div class="kaddu-meta">Score Shield ≥ seuil</div>
+        </div>
+
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">À compléter</div>
+          <div class="kaddu-v">—</div>
+          <div class="kaddu-meta">Pièces ou clarifications</div>
+        </div>
+      </section>
+
+      <section class="kaddu-wide">
+        <div class="kaddu-lux-card highlight">
+          <div class="kaddu-k">Activité récente</div>
+          <div class="kaddu-list">
+            
+            <div class="kaddu-row">
+              <div>
+                <strong>Identité ↔ documents</strong>
+                <div class="kaddu-meta">Nom, date de naissance, validité pièce.</div>
+              </div>
+              <span class="kaddu-badge ">Contrôle</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Revenus ↔ justificatifs</strong>
+                <div class="kaddu-meta">Fiches, banque, mobile money, attestations.</div>
+              </div>
+              <span class="kaddu-badge green">Contrôle</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Réseau doublons</strong>
+                <div class="kaddu-meta">Téléphone, IBAN, CNI, hash document.</div>
+              </div>
+              <span class="kaddu-badge red">Fraude</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Décision conseiller</strong>
+                <div class="kaddu-meta">Prévalider, demander pièces, refuser.</div>
+              </div>
+              <span class="kaddu-badge blue">Humain</span>
+            </div>
+          </div>
+        </div>
+        <div class="kaddu-lux-card">
+          <div class="kaddu-k">Raccourcis</div>
+          <div class="kaddu-list">
+            
+            <div class="kaddu-row">
+              <div>
+                <strong>Ouvrir dossiers locataires</strong>
+                <div class="kaddu-meta">Accéder à la vue complète dossier.</div>
+              </div>
+              <span class="kaddu-badge ">Dossiers</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Cockpit Shield</strong>
+                <div class="kaddu-meta">Gérer prompts, scoring et impacts.</div>
+              </div>
+              <span class="kaddu-badge green">Shield</span>
+            </div>
+
+            <div class="kaddu-row">
+              <div>
+                <strong>Exporter anomalies</strong>
+                <div class="kaddu-meta">Préparer reporting antifraude.</div>
+              </div>
+              <span class="kaddu-badge blue">Export</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
+</body>
+</html>
