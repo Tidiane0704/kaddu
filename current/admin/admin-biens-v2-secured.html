@@ -631,6 +631,47 @@
   }
 </style>
 
+
+<style id="biens-sidebar-logo-final-fix">
+  /* Masque le bloc logo image/slogan qui se superpose */
+  aside img,
+  .sidebar img,
+  [class*="sidebar"] img,
+  [class*="brand"] img,
+  [class*="logo"] img {
+    display: none !important;
+  }
+
+  aside [class*="tagline"],
+  .sidebar [class*="tagline"],
+  aside small,
+  .sidebar small {
+    display: none !important;
+  }
+
+  /* Crée un logo texte propre en haut de sidebar */
+  aside::before,
+  .sidebar::before {
+    content: "Kàddu";
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 34px;
+    line-height: 1;
+    color: #F8F4EE;
+    margin: 10px 0 6px 0;
+  }
+
+  aside::after,
+  .sidebar::after {
+    content: "LA PAROLE QUI ENGAGE";
+    display: block;
+    font-size: 10px;
+    letter-spacing: .22em;
+    color: rgba(248,244,238,.48);
+    margin-bottom: 34px;
+  }
+</style>
+
 </head>
 <body>
 
