@@ -957,7 +957,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
               <div class="item"><strong id="dEmail">—</strong>Email</div>
               <div class="item"><strong id="dBirth">—</strong>Date de naissance</div>
               <div class="item"><strong id="dNationality">—</strong>Nationalité</div>
-              <div class="item"><strong id="dEntry">—</strong>Date d’entrée</div>
+              <div class="item"><strong id="dEntry">—</strong>Date d\'entrée</div>
               <div class="item"><strong id="dDuration">—</strong>Durée</div>
             </div>
           </div>
@@ -1123,10 +1123,10 @@ tr.active{background:rgba(83,183,255,.055) !important;}
 
           <!-- ══ GOUVERNANCE SUPPRESSION / RGPD ══ -->
           <div class="gdpr-box" id="gdprSection">
-            <div class="title">Zone sensible — conservation & droit à l’oubli</div>
+            <div class="title">Zone sensible — conservation & droit à l\'oubli</div>
             <div class="gdpr-warning">
-              Aucune suppression définitive n’est exécutée depuis cet écran. L’admin peut uniquement créer une demande.
-              La suppression réelle doit passer par une Edge Function serveur avec vérifications métier, double validation et journal d’audit.
+              Aucune suppression définitive n\'est exécutée depuis cet écran. L\'admin peut uniquement créer une demande.
+              La suppression réelle doit passer par une Edge Function serveur avec vérifications métier, double validation et journal d\'audit.
             </div>
             <div class="gdpr-lock" id="gdprGuardStatus">Sélectionnez un dossier pour évaluer les protections.</div>
             <div class="detail-actions">
@@ -1136,7 +1136,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
               <label for="deletionReasonSelect">Motif de la demande</label>
               <select id="deletionReasonSelect">
                 <option value="">Choisir un motif</option>
-                <option value="droit_oubli">Droit à l’oubli demandé par le candidat</option>
+                <option value="droit_oubli">Droit à l\'oubli demandé par le candidat</option>
                 <option value="dossier_expire">Dossier candidat expiré / rétention dépassée</option>
                 <option value="doublon">Doublon ou erreur de saisie</option>
                 <option value="donnees_erronees">Données erronées à purger</option>
@@ -1725,7 +1725,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
           </div>
         `).join("");
       } catch(e){
-        historyList.innerHTML = "Erreur de chargement de l’historique.";
+        historyList.innerHTML = "Erreur de chargement de l\'historique.";
       }
     }
 
@@ -2028,14 +2028,14 @@ tr.active{background:rgba(83,183,255,.055) !important;}
           code: "active_candidate",
           locked: true,
           label: "Protection : candidature encore active",
-          detail: "Le dossier est encore en cours. Il faut d’abord le refuser, l’abandonner ou l’archiver avant toute demande de purge."
+          detail: "Le dossier est encore en cours. Il faut d\'abord le refuser, l\'abandonner ou l\'archiver avant toute demande de purge."
         };
       }
       return {
         code: "candidate_non_retained",
         locked: false,
         label: "Demande possible : candidat non retenu / dossier archivé",
-        detail: "Une demande de suppression peut être créée, mais l’exécution restera soumise à validation et contrôles serveur."
+        detail: "Une demande de suppression peut être créée, mais l\'exécution restera soumise à validation et contrôles serveur."
       };
     }
 
@@ -2115,7 +2115,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
       if(!res.ok){
         const txt = await res.text();
         if(txt.includes("42P01") || txt.toLowerCase().includes("deletion_requests")){
-          throw new Error("La table deletion_requests n’existe pas encore. Exécute d’abord le SQL de gouvernance suppression dans Supabase.");
+          throw new Error("La table deletion_requests n\'existe pas encore. Exécute d\'abord le SQL de gouvernance suppression dans Supabase.");
         }
         throw new Error(txt || "Impossible de créer la demande de suppression.");
       }
@@ -2131,7 +2131,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
       document.getElementById("deletionRequestForm")?.classList.remove("open");
       document.getElementById("deletionReasonSelect").value = "";
       document.getElementById("deletionRequestComment").value = "";
-      showSuccess("Demande de suppression créée. Aucune donnée n’a été supprimée.");
+      showSuccess("Demande de suppression créée. Aucune donnée n\'a été supprimée.");
       renderHistory(row.id);
     }
 
@@ -2742,13 +2742,13 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
           : 'Confirmer la régularité des revenus avec au moins une source indépendante.',
         documents: score < 10
           ? 'Redemander les documents en PDF net ou photo complète, sans recadrage ni flou.'
-          : 'Contrôler les métadonnées, l’origine du fichier et les éventuelles manipulations visibles.',
+          : 'Contrôler les métadonnées, l\'origine du fichier et les éventuelles manipulations visibles.',
         coherence: score < 10
           ? 'Clarifier les écarts entre déclarations, pièces, revenus, logement actuel et bien visé.'
           : 'Faire un appel court pour confirmer les zones encore ambiguës.',
         fiabilite: score < 10
           ? 'Vérifier les doublons, les coordonnées et les empreintes documentaires avant toute décision.'
-          : 'Conserver la vigilance réseau : même un bon dossier peut partager des signaux avec d’autres candidatures.',
+          : 'Conserver la vigilance réseau : même un bon dossier peut partager des signaux avec d\'autres candidatures.',
       };
       return conseils[key] || 'À améliorer.';
     }
@@ -3364,15 +3364,15 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       badge.className = `network-pill network-${analysis.level}`;
 
       if(!analysis.matchesByDossier.length){
-        content.innerHTML = `<div class="network-empty">Aucun doublon fort détecté parmi les dossiers actuellement chargés dans l’admin. Ce contrôle reste indicatif : il dépend des champs disponibles et des dossiers visibles côté front.</div>`;
+        content.innerHTML = `<div class="network-empty">Aucun doublon fort détecté parmi les dossiers actuellement chargés dans l\'admin. Ce contrôle reste indicatif : il dépend des champs disponibles et des dossiers visibles côté front.</div>`;
         return;
       }
 
       const intro = analysis.level === 'critical'
         ? 'Des signaux critiques de réutilisation apparaissent. À vérifier avant toute décision.'
         : analysis.level === 'high'
-          ? 'Un ou plusieurs signaux forts sont partagés avec d’autres dossiers.'
-          : 'Quelques signaux faibles ou modérés sont partagés avec d’autres dossiers.';
+          ? 'Un ou plusieurs signaux forts sont partagés avec d\'autres dossiers.'
+          : 'Quelques signaux faibles ou modérés sont partagés avec d\'autres dossiers.';
 
       content.innerHTML = `
         <div class="network-summary"><strong class="network-${analysis.level}">${intro}</strong><br>Score réseau indicatif : ${analysis.score}/100 · ${analysis.rawMatches.length} correspondance${analysis.rawMatches.length>1?'s':''} · ${analysis.matchesByDossier.length} dossier${analysis.matchesByDossier.length>1?'s':''} rapproché${analysis.matchesByDossier.length>1?'s':''}.</div>
@@ -4097,14 +4097,14 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
   });
   $('shieldAcceptV2')?.addEventListener('click', ()=>{
     document.getElementById('metierStatusSelect')?.focus();
-    alert('Utilise le bloc décision existant pour valider proprement le statut et journaliser l’action.');
+    alert('Utilise le bloc décision existant pour valider proprement le statut et journaliser l\'action.');
   });
   $('shieldAskInfoV2')?.addEventListener('click', ()=>{
     alert('Action prévue : demander un complément au locataire. Le workflow email/WhatsApp peut être branché ensuite.');
   });
   $('shieldRefuseV2')?.addEventListener('click', ()=>{
     document.getElementById('decisionReasonSelect')?.focus();
-    alert('Sélectionne un motif puis utilise la décision existante pour conserver l’historique.');
+    alert('Sélectionne un motif puis utilise la décision existante pour conserver l\'historique.');
   });
 
   // Ouverture modal V2 branchée directement dans renderTable().
