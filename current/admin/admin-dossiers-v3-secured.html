@@ -382,7 +382,91 @@
 @media(max-width:1100px){.shield-grid-v2{grid-template-columns:1fr}.shield-score-row-v2{grid-template-columns:repeat(2,1fr)}.shield-doc-grid-v2{grid-template-columns:1fr}.shield-modal-v2__card{padding:24px}.shield-modal-v2 h2{font-size:40px}}
 @media(max-width:700px){.shield-score-row-v2{grid-template-columns:1fr}.shield-mini-grid{grid-template-columns:1fr}.shield-modal-v2{padding:10px}.shield-modal-v2__card{height:94vh;width:96vw;border-radius:22px}.shield-modal-v2 h2{font-size:32px}}
 
-  </style>
+  
+
+/* ═══════════════════════════════════════════════════════════════
+   KÀDDU — DOSSIERS LOCATAIRES V2 · INTERFACE VISIBLE
+   Remplace visuellement l'ancien modèle sans casser le JS existant.
+   ═══════════════════════════════════════════════════════════════ */
+body{
+  background:
+    radial-gradient(circle at 80% 0%, rgba(191,150,80,.12), transparent 32%),
+    linear-gradient(180deg,#06111d 0%,#07182B 44%,#050d16 100%) !important;
+  color:#F8F4EE !important;
+  overflow-x:hidden !important;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25));
+}
+nav{
+  min-height:78px !important;height:auto !important;padding:18px 28px !important;
+  background:rgba(6,17,29,.88) !important;border-bottom:1px solid rgba(191,150,80,.18) !important;
+  box-shadow:0 18px 45px rgba(0,0,0,.25) !important;
+}
+.brand{font-size:36px !important;letter-spacing:-.03em !important;text-shadow:0 12px 35px rgba(191,150,80,.16)}
+.nav-actions .btn,.nav-actions .btn-ghost{
+  border-radius:14px !important;padding:13px 18px !important;border:1px solid rgba(191,150,80,.18) !important;
+  background:rgba(255,255,255,.035) !important;color:#F8F4EE !important;
+}
+.nav-actions .btn{background:linear-gradient(135deg,#BF9650,#DDB96E) !important;color:#08111d !important;box-shadow:0 16px 32px rgba(191,150,80,.18)}
+.wrap{max-width:1680px !important;padding:34px 32px 44px !important;}
+.hero{
+  align-items:flex-start !important;margin-bottom:26px !important;padding:36px 36px 18px !important;
+  border:1px solid rgba(191,150,80,.16) !important;border-radius:30px !important;
+  background:radial-gradient(circle at 92% 5%,rgba(191,150,80,.12),transparent 30%),linear-gradient(135deg,rgba(11,32,57,.66),rgba(5,13,22,.55)) !important;
+  box-shadow:0 30px 90px rgba(0,0,0,.28) !important;
+}
+.hero h1{font-size:64px !important;line-height:.95 !important;letter-spacing:-.055em !important;}
+.hero h1 em{color:#DDB96E !important;}
+.hero p{font-size:18px !important;color:rgba(248,244,238,.62) !important;max-width:980px !important;}
+.stats{grid-template-columns:repeat(5,minmax(0,1fr)) !important;gap:16px !important;margin:24px 0 !important;}
+.stat{
+  min-height:118px !important;border-radius:24px !important;padding:22px 24px !important;
+  background:linear-gradient(180deg,rgba(12,35,62,.92),rgba(9,26,46,.86)) !important;
+  border:1px solid rgba(191,150,80,.16) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 22px 45px rgba(0,0,0,.16) !important;
+}
+.stat .k{font-size:12px !important;color:#DDB96E !important;letter-spacing:.18em !important;}
+.stat .v{font-size:42px !important;}
+.toolbar{
+  display:grid !important;grid-template-columns:minmax(360px,2fr) repeat(5,minmax(160px,1fr)) !important;gap:14px !important;
+  padding:18px !important;margin-bottom:22px !important;border-radius:24px !important;
+  background:rgba(255,255,255,.025) !important;border:1px solid rgba(191,150,80,.12) !important;
+}
+input,select,textarea{
+  border-radius:14px !important;background:rgba(4,12,20,.58) !important;border:1px solid rgba(255,255,255,.08) !important;
+  color:#F8F4EE !important;box-shadow:none !important;font-size:14px !important;
+}
+input:focus,select:focus,textarea:focus{border-color:#BF9650 !important;box-shadow:0 0 0 3px rgba(191,150,80,.12) !important;}
+.layout{display:block !important;}
+.layout>.side,.card.side{display:none !important;}
+.layout>.card:first-child,.table-wrap.card{
+  width:100% !important;border-radius:26px !important;overflow:hidden !important;
+  background:linear-gradient(180deg,rgba(11,32,57,.82),rgba(8,20,34,.78)) !important;
+  border:1px solid rgba(191,150,80,.14) !important;box-shadow:0 24px 60px rgba(0,0,0,.22) !important;
+}
+table{font-size:14px !important;}
+th{
+  background:rgba(7,24,43,.98) !important;color:#DDB96E !important;padding:18px 18px !important;
+  font-size:11px !important;letter-spacing:.18em !important;border-bottom:1px solid rgba(191,150,80,.16) !important;
+}
+td{padding:20px 18px !important;border-bottom:1px solid rgba(255,255,255,.055) !important;}
+tr{transition:.18s ease !important;}
+tr:hover{background:rgba(191,150,80,.07) !important;transform:translateY(-1px);}
+tr.active{background:rgba(83,183,255,.055) !important;}
+.badge,.status,.metier-badge,.final-badge{border-radius:999px !important;padding:8px 11px !important;}
+.empty{border-radius:24px !important;border:1px dashed rgba(191,150,80,.18) !important;background:rgba(255,255,255,.02) !important;}
+/* Bouton d'ouverture implicite de la modal : meilleure affordance */
+#tbody tr td:last-child::after{content:"  ›";color:#DDB96E;font-weight:900;font-size:18px;}
+/* Modal au-dessus de tout */
+.shield-modal-v2{z-index:2147483000 !important;}
+.shield-modal-v2__card{border-radius:32px !important;}
+@media(max-width:1180px){.stats{grid-template-columns:repeat(2,1fr) !important}.toolbar{grid-template-columns:1fr 1fr !important}.hero h1{font-size:48px !important}}
+@media(max-width:760px){.wrap{padding:18px !important}.hero{padding:24px !important}.hero h1{font-size:40px !important}.stats,.toolbar{grid-template-columns:1fr !important}}
+
+</style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
   <script>
     // Kàddu Shield V2 — bridge modulaire
@@ -1128,6 +1212,9 @@
           selectedId = row.id;
           renderTable();
           renderDetail(row);
+          if (typeof window.openShieldModalV2 === "function") {
+            window.openShieldModalV2(row);
+          }
         });
         tbody.appendChild(tr);
       });
@@ -3449,26 +3536,9 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     alert('Sélectionne un motif puis utilise la décision existante pour conserver l’historique.');
   });
 
-  // Marque les clics utilisateur sur le tableau pour ouvrir la modal uniquement au clic,
-  // sans déclencher automatiquement à la première sélection réalisée par renderTable().
-  document.addEventListener('click', function(e){
-    if(e.target.closest('#tbody tr')){
-      window.__kadduDossierUserClick = true;
-      setTimeout(()=>{ window.__kadduDossierUserClick = false; }, 350);
-    }
-  }, true);
-
-  // Wrap non destructif de renderDetail : garde l’ancien panneau et ajoute la modal premium au clic.
-  if(typeof renderDetail === 'function'){
-    const oldRenderDetail = renderDetail;
-    renderDetail = function(row){
-      oldRenderDetail(row);
-      if(window.__kadduDossierUserClick){ open(row); }
-    };
-  }
+  // Ouverture modal V2 branchée directement dans renderTable().
 })();
 </script>
 
-  <script src="/assets/js/admin/kaddu-admin-shell.js" defer></script>
 </body>
 </html>
