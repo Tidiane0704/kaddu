@@ -4090,7 +4090,6 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     btn.classList.add('active');
     modal.querySelector(`[data-shield-panel="${btn.dataset.shieldTab}"]`)?.classList.add('active');
   });
-  });
 
   $('shieldAnalyzeDossierV2')?.addEventListener('click', ()=>{
     if(typeof lancerAnalyseDossier === 'function') lancerAnalyseDossier();
