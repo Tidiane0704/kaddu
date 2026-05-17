@@ -334,53 +334,272 @@
   --ks-blue:#9fd3ff;
   --ks-orange:#ffd180;
 }
-.shield-modal-v2{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;}
+/* ═══════════════════════════════════════════════════════════════
+   KÀDDU SHIELD MODAL V2 — Layout 3 colonnes (sidebar | main | right)
+   ═══════════════════════════════════════════════════════════════ */
+.shield-modal-v2{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;}
 .shield-modal-v2.hidden{display:none;}
-.shield-modal-v2__overlay{position:absolute;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(12px);}
-.shield-modal-v2__card{position:relative;width:92vw;max-width:1380px;height:90vh;overflow:auto;border-radius:30px;background:radial-gradient(circle at 85% 0%,rgba(212,174,92,.13),transparent 34%),linear-gradient(180deg,var(--ks-bg),var(--ks-bg2));border:1px solid var(--ks-border);box-shadow:0 44px 110px rgba(0,0,0,.58);color:var(--ks-text);padding:34px;animation:ksModalIn .18s ease-out;}
-@keyframes ksModalIn{from{opacity:0;transform:scale(.965) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.shield-modal-v2__head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:26px;}
-.shield-kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ks-gold);font-weight:800;margin-bottom:10px;}
-.shield-modal-v2 h2{font-family:Georgia,serif;font-size:54px;line-height:.96;font-weight:400;margin:0 0 10px;letter-spacing:-.04em;}
-.shield-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--ks-muted);font-size:13px;line-height:1.6;}
-.shield-avatar{width:58px;height:58px;border-radius:50%;background:rgba(212,174,92,.12);border:1px solid var(--ks-border);display:inline-flex;align-items:center;justify-content:center;color:var(--ks-gold);font-family:Georgia,serif;font-size:25px;margin-right:14px;vertical-align:middle;}
-.shield-close-v2{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:var(--ks-text);cursor:pointer;font-size:18px;}
-.shield-score-row-v2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px;}
-.shield-score-card-v2{background:var(--ks-panel);border:1px solid var(--ks-border-soft);border-radius:22px;padding:20px;min-width:0;}
-.shield-score-card-v2 span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ks-muted);margin-bottom:10px;}
-.shield-score-card-v2 strong{display:block;font-family:Georgia,serif;font-size:32px;font-weight:400;color:var(--ks-gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.shield-tabs-v2{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;border-bottom:1px solid rgba(212,174,92,.11);padding-bottom:12px;}
-.shield-tab-v2{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:var(--ks-muted);border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:800;font-size:12px;letter-spacing:.04em;}
-.shield-tab-v2.active{border-color:var(--ks-border);background:rgba(212,174,92,.12);color:var(--ks-gold);}
-.shield-grid-v2{display:grid;grid-template-columns:1.58fr .76fr;gap:22px;align-items:start;}
-.shield-panel-v2{background:rgba(13,26,46,.76);border:1px solid rgba(212,174,92,.14);border-radius:24px;padding:24px;margin-bottom:22px;}
-.shield-panel-title-v2{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ks-gold);font-weight:800;margin-bottom:18px;display:flex;justify-content:space-between;gap:12px;align-items:center;}
-.shield-summary-text{color:rgba(245,241,235,.72);font-size:14px;line-height:1.75;margin:0;}
-.shield-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
-.shield-mini-item{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.026);border-radius:16px;padding:14px;min-width:0;}
-.shield-mini-item span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--ks-muted);margin-bottom:6px;}
-.shield-mini-item strong{display:block;color:var(--ks-text);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.shield-doc-grid-v2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
-.shield-doc-card-v2{border-radius:18px;padding:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);min-width:0;}
-.shield-doc-card-v2.ok{background:rgba(27,75,52,.18);border-color:rgba(119,255,190,.2)}
-.shield-doc-card-v2.warn{background:rgba(122,94,22,.18);border-color:rgba(255,209,128,.24)}
-.shield-doc-card-v2__top{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;font-weight:800;}
-.shield-doc-card-v2__name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.shield-doc-card-v2__meta{font-size:12px;color:var(--ks-muted);line-height:1.5;margin-bottom:12px;}
-.shield-pill-v2{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:800;border:1px solid rgba(255,255,255,.12);color:var(--ks-muted);}
-.shield-pill-v2.ok{color:var(--ks-green);border-color:rgba(119,255,190,.24);background:rgba(119,255,190,.08)}
-.shield-pill-v2.warn{color:var(--ks-orange);border-color:rgba(255,209,128,.26);background:rgba(255,209,128,.08)}
-.shield-action-v2{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:15px;margin-bottom:12px;font-weight:800;cursor:pointer;background:rgba(255,255,255,.06);color:var(--ks-text);}
-.shield-action-v2.gold{background:linear-gradient(135deg,var(--ks-gold),var(--ks-gold2));color:#08111d;border:none;}
-.shield-action-v2.danger{background:rgba(255,123,123,.08);color:#ffb3b3;border-color:rgba(255,123,123,.26)}
-.shield-action-secondary-v2{width:100%;border-radius:12px;padding:11px;margin-top:10px;background:rgba(255,255,255,.07);color:white;border:1px solid rgba(255,255,255,.12);cursor:pointer;font-weight:800;}
-.shield-alert-list-v2{margin:0;padding-left:18px;color:rgba(245,241,235,.72);line-height:1.8;font-size:14px;}
+.shield-modal-v2__overlay{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(14px);}
+@keyframes ksModalIn{from{opacity:0;transform:scale(.97) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.shield-modal-v2__card{
+  position:relative;width:96vw;max-width:1440px;height:92vh;
+  border-radius:24px;overflow:hidden;display:flex;flex-direction:column;
+  background:linear-gradient(160deg,#0b1e35 0%,#07111f 100%);
+  border:1px solid rgba(212,174,92,.22);
+  box-shadow:0 50px 120px rgba(0,0,0,.65);
+  color:var(--ks-text);
+  animation:ksModalIn .2s ease-out;
+}
+/* ── Top bar ── */
+.sm-topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 22px;border-bottom:1px solid rgba(212,174,92,.14);
+  flex-shrink:0;background:rgba(5,14,26,.6);
+}
+.sm-topbar-kicker{
+  font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--ks-gold);font-weight:800;display:flex;align-items:center;gap:8px;
+}
+.sm-topbar-kicker svg{width:16px;height:16px;flex-shrink:0;}
+.sm-topbar-sep{flex:1;}
+.shield-close-v2{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);
+  color:var(--ks-text);cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:.15s;
+}
+.shield-close-v2:hover{background:rgba(255,255,255,.1);}
+/* ── 3-col layout ── */
+.sm-body{display:flex;flex:1;overflow:hidden;}
+/* ── Left sidebar ── */
+.sm-sidebar{
+  width:260px;flex-shrink:0;border-right:1px solid rgba(212,174,92,.12);
+  overflow-y:auto;padding:22px 18px;display:flex;flex-direction:column;gap:16px;
+  background:rgba(4,12,22,.45);
+}
+.sm-avatar-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;padding:16px 0 10px;}
+.sm-avatar{
+  width:62px;height:62px;border-radius:50%;background:rgba(212,174,92,.14);
+  border:2px solid rgba(212,174,92,.35);display:flex;align-items:center;justify-content:center;
+  color:var(--ks-gold);font-family:Georgia,serif;font-size:22px;font-weight:400;
+  margin-bottom:12px;
+}
+.sm-avatar-name{font-size:17px;font-weight:700;color:var(--ks-text);line-height:1.2;margin-bottom:4px;}
+.sm-avatar-email{font-size:12px;color:var(--ks-muted);}
+.sm-avatar-phone{font-size:12px;color:var(--ks-muted);margin-top:2px;}
+.sm-avatar-meta{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px;
+}
+.sm-chip{
+  display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+  padding:4px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.1);
+  color:rgba(245,241,235,.6);background:rgba(255,255,255,.04);letter-spacing:.04em;
+}
+.sm-chip.new{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14);color:rgba(245,241,235,.75);}
+/* Score block */
+.sm-score-block{
+  background:rgba(11,28,50,.7);border:1px solid rgba(212,174,92,.18);border-radius:18px;padding:18px;
+}
+.sm-score-label{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--ks-gold);margin-bottom:10px;}
+.sm-score-big{display:flex;align-items:center;gap:12px;}
+.sm-score-ring{position:relative;width:72px;height:72px;flex-shrink:0;}
+.sm-score-ring svg{width:72px;height:72px;transform:rotate(-90deg);}
+.sm-score-ring-track{fill:none;stroke:rgba(255,255,255,.07);stroke-width:6;}
+.sm-score-ring-fill{fill:none;stroke:var(--ks-gold);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .6s ease;}
+.sm-score-ring-num{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:18px;color:var(--ks-gold);line-height:1;
+}
+.sm-score-ring-num small{font-family:Arial,sans-serif;font-size:9px;color:rgba(245,241,235,.4);}
+.sm-score-risk{font-size:12px;font-weight:700;}
+.sm-score-risk.low{color:#77ffbe;} .sm-score-risk.mid{color:#ffd180;} .sm-score-risk.high{color:#ff8a8a;}
+.sm-risk-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;margin-top:8px;}
+.sm-risk-badge.low{background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.28);color:#77ffbe;}
+.sm-risk-badge.mid{background:rgba(255,209,128,.1);border:1px solid rgba(255,209,128,.28);color:#ffd180;}
+.sm-risk-badge.high{background:rgba(255,123,123,.1);border:1px solid rgba(255,123,123,.28);color:#ff8a8a;}
+/* Sidebar info items */
+.sm-info-block{display:flex;flex-direction:column;gap:2px;}
+.sm-info-label{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--ks-muted);}
+.sm-info-value{font-size:14px;font-weight:700;color:var(--ks-text);}
+.sm-info-value.gold{color:var(--ks-gold);}
+.sm-info-value.green{color:#77ffbe;}
+.sm-info-value.orange{color:#ffd180;}
+.sm-divider{height:1px;background:rgba(212,174,92,.1);}
+/* history link */
+.sm-history-btn{
+  width:100%;padding:12px;border-radius:14px;border:1px solid rgba(212,174,92,.2);
+  background:rgba(255,255,255,.03);color:rgba(245,241,235,.6);cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:.15s;
+}
+.sm-history-btn:hover{border-color:var(--ks-gold);color:var(--ks-gold);}
+/* ── Main content ── */
+.sm-main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+/* Tabs */
+.sm-tabs{
+  display:flex;gap:4px;padding:16px 22px 0;border-bottom:1px solid rgba(212,174,92,.1);
+  flex-shrink:0;background:rgba(4,12,22,.3);
+}
+.shield-tab-v2{
+  border:none;background:transparent;color:rgba(245,241,235,.45);
+  border-bottom:2px solid transparent;padding:10px 16px 12px;
+  cursor:pointer;font-weight:700;font-size:13px;letter-spacing:.02em;
+  transition:.15s;display:flex;align-items:center;gap:7px;
+}
+.shield-tab-v2:hover{color:rgba(245,241,235,.75);}
+.shield-tab-v2.active{color:var(--ks-gold);border-bottom-color:var(--ks-gold);}
+/* Tab icon */
+.shield-tab-v2 span.tab-ico{font-size:14px;}
+/* Content area */
+.sm-content{padding:22px;flex:1;}
+/* KPI strip inside main */
+.sm-kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+.sm-kpi{
+  background:rgba(11,26,46,.65);border:1px solid rgba(212,174,92,.13);border-radius:16px;
+  padding:14px;text-align:center;
+}
+.sm-kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--ks-muted);margin-bottom:6px;}
+.sm-kpi-val{font-family:Georgia,serif;font-size:20px;color:var(--ks-gold);}
+.sm-kpi-sub{font-size:11px;color:rgba(245,241,235,.45);margin-top:3px;}
+/* Sparkline hint */
+.sm-kpi-spark{width:56px;height:20px;margin:4px auto 0;}
+/* Vue d'ensemble section title */
+.sm-section-title{font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--ks-gold);font-weight:800;margin-bottom:14px;}
+/* Document list */
+.sm-docs-list{display:flex;flex-direction:column;gap:10px;}
+.sm-doc-row{
+  display:grid;grid-template-columns:36px 1fr auto auto auto;
+  gap:10px;align-items:center;
+  padding:12px 14px;border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;background:rgba(255,255,255,.025);
+  transition:.15s;
+}
+.sm-doc-row:hover{border-color:rgba(212,174,92,.2);background:rgba(212,174,92,.04);}
+.sm-doc-icon{
+  width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;background:rgba(212,174,92,.1);
+}
+.sm-doc-icon.pdf{background:rgba(255,107,107,.12);}
+.sm-doc-icon.img{background:rgba(83,183,255,.12);}
+.sm-doc-name{font-size:13px;font-weight:700;color:var(--ks-text);line-height:1.2;}
+.sm-doc-type{font-size:11px;color:var(--ks-muted);}
+.sm-doc-score{font-size:13px;font-weight:700;color:var(--ks-gold);}
+.sm-doc-pill{
+  display:inline-flex;align-items:center;gap:4px;padding:5px 10px;
+  border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;
+}
+.sm-doc-pill.ok{background:rgba(0,200,117,.1);border:1px solid rgba(0,200,117,.25);color:#77ffbe;}
+.sm-doc-pill.warn{background:rgba(255,209,128,.08);border:1px solid rgba(255,209,128,.22);color:#ffd180;}
+.sm-doc-btn{
+  padding:7px 14px;border-radius:10px;font-size:11px;font-weight:700;
+  border:1px solid rgba(212,174,92,.22);background:transparent;
+  color:rgba(245,241,235,.55);cursor:pointer;transition:.15s;white-space:nowrap;
+  display:flex;align-items:center;gap:5px;
+}
+.sm-doc-btn:hover{border-color:var(--ks-gold);color:var(--ks-gold);}
+/* Drop zone */
+.sm-dropzone{
+  border:1px dashed rgba(212,174,92,.2);border-radius:14px;padding:24px;
+  text-align:center;color:rgba(245,241,235,.35);font-size:13px;cursor:pointer;
+  margin-top:14px;transition:.15s;
+}
+.sm-dropzone:hover{border-color:rgba(212,174,92,.4);color:rgba(245,241,235,.55);}
+.sm-dropzone-ico{font-size:22px;margin-bottom:8px;}
+.sm-dropzone-hint{font-size:11px;margin-top:4px;}
+/* Fermer footer */
+.sm-footer{
+  padding:14px 22px;border-top:1px solid rgba(212,174,92,.1);flex-shrink:0;
+  display:flex;justify-content:center;background:rgba(4,12,22,.4);
+}
+.sm-close-btn{
+  padding:11px 40px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.05);color:rgba(245,241,235,.6);cursor:pointer;
+  font-size:13px;font-weight:700;letter-spacing:.06em;transition:.15s;
+  display:flex;align-items:center;gap:8px;
+}
+.sm-close-btn:hover{border-color:rgba(212,174,92,.3);color:var(--ks-text);}
+/* ── Right actions panel ── */
+.sm-right{
+  width:280px;flex-shrink:0;border-left:1px solid rgba(212,174,92,.12);
+  overflow-y:auto;padding:22px 18px;display:flex;flex-direction:column;gap:18px;
+  background:rgba(4,12,22,.35);
+}
+.sm-right-title{font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--ks-gold);font-weight:800;margin-bottom:12px;}
+/* Action buttons */
+.sm-action-gold{
+  width:100%;padding:15px;border:none;border-radius:16px;cursor:pointer;
+  background:linear-gradient(135deg,#c49a3a,#e8c262);color:#07111f;
+  font-weight:800;font-size:14px;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 12px 28px rgba(196,154,58,.28);transition:.15s;margin-bottom:10px;
+}
+.sm-action-gold:hover{filter:brightness(1.07);}
+.sm-action-line{
+  width:100%;padding:13px;border-radius:14px;cursor:pointer;margin-bottom:8px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);
+  color:rgba(245,241,235,.78);font-weight:700;font-size:13px;
+  display:flex;align-items:center;gap:9px;transition:.15s;
+}
+.sm-action-line:hover{border-color:rgba(212,174,92,.3);background:rgba(212,174,92,.06);color:var(--ks-text);}
+.sm-action-line.danger{color:#ffb3b3;border-color:rgba(255,107,107,.18);background:rgba(255,107,107,.05);}
+.sm-action-line.danger:hover{border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.09);}
+/* Notes */
+.sm-notes-ta{
+  width:100%;min-height:80px;padding:10px 12px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(212,174,92,.16);
+  color:rgba(245,241,235,.8);font-size:13px;resize:vertical;line-height:1.6;
+  border-radius:12px;font-family:Arial,sans-serif;
+}
+.sm-notes-ta:focus{outline:none;border-color:var(--ks-gold);}
+.sm-save-btn{
+  width:100%;padding:11px;border-radius:12px;border:1px solid rgba(212,174,92,.3);
+  background:rgba(212,174,92,.08);color:var(--ks-gold);font-weight:700;
+  cursor:pointer;font-size:12px;margin-top:8px;transition:.15s;
+}
+.sm-save-btn:hover{background:rgba(212,174,92,.14);}
+/* Activity */
+.sm-activity-list{display:flex;flex-direction:column;gap:8px;}
+.sm-activity-item{display:flex;align-items:flex-start;gap:10px;}
+.sm-activity-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.sm-activity-dot.green{background:#77ffbe;box-shadow:0 0 6px rgba(119,255,190,.4);}
+.sm-activity-dot.blue{background:#b8e1ff;box-shadow:0 0 6px rgba(184,225,255,.4);}
+.sm-activity-dot.gold{background:var(--ks-gold);box-shadow:0 0 6px rgba(212,174,92,.4);}
+.sm-activity-label{font-size:13px;font-weight:700;color:var(--ks-text);line-height:1.2;}
+.sm-activity-date{font-size:11px;color:var(--ks-muted);}
+.sm-activity-sub{font-size:11px;color:rgba(245,241,235,.4);}
+/* tab panels */
 .shield-tab-panel-v2{display:none;}
 .shield-tab-panel-v2.active{display:block;}
-.shield-timeline-v2{display:flex;flex-direction:column;gap:10px;}
-.shield-timeline-item-v2{padding:12px 14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:14px;color:var(--ks-muted);}
-@media(max-width:1100px){.shield-grid-v2{grid-template-columns:1fr}.shield-score-row-v2{grid-template-columns:repeat(2,1fr)}.shield-doc-grid-v2{grid-template-columns:1fr}.shield-modal-v2__card{padding:24px}.shield-modal-v2 h2{font-size:40px}}
-@media(max-width:700px){.shield-score-row-v2{grid-template-columns:1fr}.shield-mini-grid{grid-template-columns:1fr}.shield-modal-v2{padding:10px}.shield-modal-v2__card{height:94vh;width:96vw;border-radius:22px}.shield-modal-v2 h2{font-size:32px}}
+/* mini info grid in main panels */
+.shield-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.shield-mini-item{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.026);border-radius:14px;padding:14px;min-width:0;}
+.shield-mini-item span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--ks-muted);margin-bottom:6px;}
+.shield-mini-item strong{display:block;color:var(--ks-text);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shield-summary-text{color:rgba(245,241,235,.72);font-size:14px;line-height:1.75;margin:0;}
+.shield-panel-v2{background:rgba(13,26,46,.76);border:1px solid rgba(212,174,92,.14);border-radius:20px;padding:20px;margin-bottom:18px;}
+.shield-panel-title-v2{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ks-gold);font-weight:800;margin-bottom:16px;}
+.shield-alert-list-v2{margin:0;padding-left:16px;color:rgba(245,241,235,.7);line-height:1.85;font-size:13px;}
+.shield-timeline-v2{display:flex;flex-direction:column;gap:8px;}
+.shield-timeline-item-v2{padding:11px 14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:12px;color:var(--ks-muted);font-size:13px;}
+.shield-score-row-v2{display:none;} /* hidden — replaced by sm-kpi-strip */
+.shield-modal-v2__head{display:none;} /* replaced by sm-topbar + sm-sidebar */
+.shield-tabs-v2{display:none;}
+.shield-grid-v2{display:none;}
+/* responsive */
+@media(max-width:1100px){
+  .sm-right{width:240px;}
+  .sm-sidebar{width:220px;}
+  .sm-kpi-strip{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:860px){
+  .sm-sidebar,.sm-right{display:none;}
+  .sm-kpi-strip{grid-template-columns:repeat(2,1fr);}
+  .sm-modal-v2__card{border-radius:18px;}
+}
+@media(max-width:600px){
+  .shield-modal-v2{padding:6px;}
+  .sm-kpi-strip{grid-template-columns:1fr 1fr;}
+}
 
   
 
@@ -462,7 +681,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
 #tbody tr td:last-child::after{content:"  ›";color:#DDB96E;font-weight:900;font-size:18px;}
 /* Modal au-dessus de tout */
 .shield-modal-v2{z-index:2147483000 !important;}
-.shield-modal-v2__card{border-radius:32px !important;}
+.shield-modal-v2__card{border-radius:24px !important;}
 @media(max-width:1180px){.stats{grid-template-columns:repeat(2,1fr) !important}.toolbar{grid-template-columns:1fr 1fr !important}.hero h1{font-size:48px !important}}
 @media(max-width:760px){.wrap{padding:18px !important}.hero{padding:24px !important}.hero h1{font-size:40px !important}.stats,.toolbar{grid-template-columns:1fr !important}}
 
@@ -862,87 +1081,249 @@ tr.active{background:rgba(83,183,255,.055) !important;}
      ═══════════════════════════════════════════════════════════════ -->
 <div id="shieldModalV2" class="shield-modal-v2 hidden" aria-hidden="true">
   <div class="shield-modal-v2__overlay" data-shield-close="1"></div>
-  <div class="shield-modal-v2__card" role="dialog" aria-modal="true" aria-labelledby="shieldCandidateNameV2">
-    <div class="shield-modal-v2__head">
-      <div>
-        <div class="shield-kicker">KÀDDU SHIELD · DOSSIER LOCATAIRE</div>
-        <h2 id="shieldCandidateNameV2"><span class="shield-avatar" id="shieldAvatarV2">?</span>Dossier</h2>
-        <div class="shield-meta" id="shieldCandidateMetaV2">—</div>
+  <div class="shield-modal-v2__card" role="dialog" aria-modal="true" aria-labelledby="smCandidateName">
+
+    <!-- TOP BAR -->
+    <div class="sm-topbar">
+      <div class="sm-topbar-kicker">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 2L3 6v5c0 4.1 2.9 7.9 7 9 4.1-1.1 7-4.9 7-9V6L10 2z"/></svg>
+        KÀDDU SHIELD · DOSSIER LOCATAIRE
       </div>
+      <div class="sm-topbar-sep"></div>
       <button class="shield-close-v2" type="button" id="closeShieldModalV2" aria-label="Fermer">✕</button>
     </div>
 
-    <div class="shield-score-row-v2">
-      <div class="shield-score-card-v2"><span>Score global</span><strong id="shieldScoreV2">—</strong></div>
-      <div class="shield-score-card-v2"><span>Risque</span><strong id="shieldRiskV2">—</strong></div>
-      <div class="shield-score-card-v2"><span>Statut métier</span><strong id="shieldMetierV2">—</strong></div>
-      <div class="shield-score-card-v2"><span>Décision finale</span><strong id="shieldFinalV2">—</strong></div>
-    </div>
+    <!-- BODY: SIDEBAR | MAIN | RIGHT -->
+    <div class="sm-body">
 
-    <div class="shield-tabs-v2" id="shieldTabsV2">
-      <button class="shield-tab-v2 active" type="button" data-shield-tab="synthese">Synthèse</button>
-      <button class="shield-tab-v2" type="button" data-shield-tab="infos">Informations</button>
-      <button class="shield-tab-v2" type="button" data-shield-tab="solvabilite">Solvabilité</button>
-      <button class="shield-tab-v2" type="button" data-shield-tab="documents">Documents</button>
-      <button class="shield-tab-v2" type="button" data-shield-tab="historique">Historique</button>
-    </div>
+      <!-- ── LEFT SIDEBAR ── -->
+      <aside class="sm-sidebar">
+        <!-- Avatar + name -->
+        <div class="sm-avatar-wrap">
+          <div class="sm-avatar" id="smAvatar">?</div>
+          <div class="sm-avatar-name" id="smCandidateName">Dossier locataire</div>
+          <div class="sm-avatar-email" id="smEmail">—</div>
+          <div class="sm-avatar-phone" id="smPhone">—</div>
+          <div class="sm-avatar-meta">
+            <span class="sm-chip" id="smBienChip">—</span>
+            <span class="sm-chip new" id="smMetierChip">—</span>
+          </div>
+        </div>
 
-    <div class="shield-grid-v2">
-      <main>
-        <section class="shield-tab-panel-v2 active" data-shield-panel="synthese">
-          <div class="shield-panel-v2">
-            <div class="shield-panel-title-v2">Synthèse IA</div>
-            <p class="shield-summary-text" id="shieldSummaryV2">Sélectionnez ou ouvrez un dossier pour afficher la synthèse.</p>
-          </div>
-          <div class="shield-panel-v2">
-            <div class="shield-panel-title-v2">Points de contrôle</div>
-            <div class="shield-mini-grid" id="shieldChecksV2"></div>
-          </div>
-        </section>
+        <div class="sm-divider"></div>
 
-        <section class="shield-tab-panel-v2" data-shield-panel="infos">
-          <div class="shield-panel-v2">
-            <div class="shield-panel-title-v2">Identité & contact</div>
-            <div class="shield-mini-grid" id="shieldIdentityV2"></div>
+        <!-- Score ring -->
+        <div class="sm-score-block">
+          <div class="sm-score-label">Score global</div>
+          <div class="sm-score-big">
+            <div class="sm-score-ring">
+              <svg viewBox="0 0 72 72">
+                <circle class="sm-score-ring-track" cx="36" cy="36" r="30"/>
+                <circle class="sm-score-ring-fill" id="smScoreRingFill" cx="36" cy="36" r="30"
+                  stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+              </svg>
+              <div class="sm-score-ring-num">
+                <span id="smScoreNum">—</span>
+                <small>/100</small>
+              </div>
+            </div>
+            <div>
+              <div class="sm-score-risk" id="smRiskText">—</div>
+              <div class="sm-risk-badge low" id="smRiskBadge">— Risque —</div>
+            </div>
           </div>
-        </section>
+        </div>
 
-        <section class="shield-tab-panel-v2" data-shield-panel="solvabilite">
-          <div class="shield-panel-v2">
-            <div class="shield-panel-title-v2">Situation professionnelle & solvabilité</div>
-            <div class="shield-mini-grid" id="shieldSolvencyV2"></div>
-          </div>
-        </section>
+        <div class="sm-divider"></div>
 
-        <section class="shield-tab-panel-v2" data-shield-panel="documents">
-          <div class="shield-panel-v2">
-            <div class="shield-panel-title-v2">Documents déposés <span id="shieldDocsCountV2">—</span></div>
-            <div class="shield-doc-grid-v2" id="shieldDocsGridV2"></div>
-          </div>
-        </section>
+        <!-- Statut métier -->
+        <div class="sm-info-block">
+          <div class="sm-info-label">Statut métier</div>
+          <div class="sm-info-value gold" id="smMetierVal">—</div>
+        </div>
 
-        <section class="shield-tab-panel-v2" data-shield-panel="historique">
-          <div class="shield-panel-v2">
-            <div class="shield-panel-title-v2">Historique récent</div>
-            <div class="shield-timeline-v2" id="shieldHistoryV2"></div>
-          </div>
-        </section>
+        <!-- Statut final -->
+        <div class="sm-info-block">
+          <div class="sm-info-label">Statut final</div>
+          <div class="sm-info-value" id="smFinalVal">—</div>
+        </div>
+
+        <!-- Date création -->
+        <div class="sm-info-block">
+          <div class="sm-info-label">Dossier créé le</div>
+          <div class="sm-info-value" id="smCreatedVal">—</div>
+        </div>
+
+        <div class="sm-divider"></div>
+
+        <button class="sm-history-btn" type="button" onclick="document.querySelector('[data-shield-tab=historique]')?.click()">
+          📋 Voir historique complet
+        </button>
+      </aside>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="sm-main">
+        <!-- Tabs -->
+        <div class="sm-tabs" id="shieldTabsV2">
+          <button class="shield-tab-v2 active" type="button" data-shield-tab="synthese"><span class="tab-ico">⊞</span> Synthèse</button>
+          <button class="shield-tab-v2" type="button" data-shield-tab="documents"><span class="tab-ico">📎</span> Documents</button>
+          <button class="shield-tab-v2" type="button" data-shield-tab="solvabilite"><span class="tab-ico">💰</span> Solvabilité</button>
+          <button class="shield-tab-v2" type="button" data-shield-tab="historique"><span class="tab-ico">🕐</span> Historique</button>
+          <button class="shield-tab-v2" type="button" data-shield-tab="infos"><span class="tab-ico">👤</span> Informations</button>
+        </div>
+
+        <!-- Content -->
+        <div class="sm-content">
+
+          <!-- SYNTHÈSE TAB -->
+          <section class="shield-tab-panel-v2 active" data-shield-panel="synthese">
+            <div class="sm-section-title">VUE D'ENSEMBLE</div>
+            <!-- KPI strip -->
+            <div class="sm-kpi-strip">
+              <div class="sm-kpi">
+                <div class="sm-kpi-label">Score global</div>
+                <div class="sm-kpi-val" id="smKpiScore">—</div>
+                <div class="sm-kpi-sub" id="smKpiScoreSub">—</div>
+              </div>
+              <div class="sm-kpi">
+                <div class="sm-kpi-label">Risque</div>
+                <div class="sm-kpi-val" id="smKpiRisk">—</div>
+                <div class="sm-kpi-sub">Niveau de risque</div>
+              </div>
+              <div class="sm-kpi">
+                <div class="sm-kpi-label">Solvabilité</div>
+                <div class="sm-kpi-val" id="smKpiSolv">—</div>
+                <div class="sm-kpi-sub">Revenus vérifiés</div>
+              </div>
+              <div class="sm-kpi">
+                <div class="sm-kpi-label">Documents</div>
+                <div class="sm-kpi-val" id="smKpiDocs">—</div>
+                <div class="sm-kpi-sub">Fichiers déposés</div>
+              </div>
+              <div class="sm-kpi">
+                <div class="sm-kpi-label">Confiance</div>
+                <div class="sm-kpi-val" id="smKpiConf">—</div>
+                <div class="sm-kpi-sub">Niveau de confiance</div>
+              </div>
+            </div>
+            <!-- Synthèse IA -->
+            <div class="shield-panel-v2">
+              <div class="shield-panel-title-v2">Synthèse IA</div>
+              <p class="shield-summary-text" id="shieldSummaryV2">Sélectionnez un dossier pour afficher la synthèse.</p>
+            </div>
+            <!-- Checks -->
+            <div class="shield-panel-v2">
+              <div class="shield-panel-title-v2">Points de contrôle</div>
+              <div class="shield-mini-grid" id="shieldChecksV2"></div>
+            </div>
+          </section>
+
+          <!-- DOCUMENTS TAB -->
+          <section class="shield-tab-panel-v2" data-shield-panel="documents">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+              <div class="sm-section-title" style="margin:0;">DOCUMENTS DÉPOSÉS</div>
+              <span style="font-size:11px;color:var(--ks-muted);" id="shieldDocsCountV2">—</span>
+            </div>
+            <div class="sm-docs-list" id="smDocsListNew"></div>
+            <div class="sm-dropzone" id="smDropzone">
+              <div class="sm-dropzone-ico">☁</div>
+              <div>Déposer un fichier ici ou cliquer pour parcourir</div>
+              <div class="sm-dropzone-hint">PDF, JPG, PNG · 10Mo max</div>
+            </div>
+          </section>
+
+          <!-- SOLVABILITÉ TAB -->
+          <section class="shield-tab-panel-v2" data-shield-panel="solvabilite">
+            <div class="shield-panel-v2">
+              <div class="shield-panel-title-v2">Situation professionnelle & revenus</div>
+              <div class="shield-mini-grid" id="shieldSolvencyV2"></div>
+            </div>
+          </section>
+
+          <!-- HISTORIQUE TAB -->
+          <section class="shield-tab-panel-v2" data-shield-panel="historique">
+            <div class="shield-panel-v2">
+              <div class="shield-panel-title-v2">Historique récent</div>
+              <div class="shield-timeline-v2" id="shieldHistoryV2"></div>
+            </div>
+          </section>
+
+          <!-- INFORMATIONS TAB -->
+          <section class="shield-tab-panel-v2" data-shield-panel="infos">
+            <div class="shield-panel-v2">
+              <div class="shield-panel-title-v2">Identité & contact</div>
+              <div class="shield-mini-grid" id="shieldIdentityV2"></div>
+            </div>
+          </section>
+
+        </div><!-- /sm-content -->
+
+        <!-- Footer close -->
+        <div class="sm-footer">
+          <button class="sm-close-btn" type="button" id="smCloseFooter">✕ Fermer</button>
+        </div>
       </main>
 
-      <aside>
-        <div class="shield-panel-v2">
-          <div class="shield-panel-title-v2">Actions décisionnelles</div>
-          <button class="shield-action-v2 gold" type="button" id="shieldAnalyzeDossierV2">Analyser dossier</button>
-          <button class="shield-action-v2" type="button" id="shieldAcceptV2">Accepter</button>
-          <button class="shield-action-v2" type="button" id="shieldAskInfoV2">Demander infos</button>
-          <button class="shield-action-v2 danger" type="button" id="shieldRefuseV2">Refuser</button>
+      <!-- ── RIGHT PANEL ── -->
+      <aside class="sm-right">
+
+        <!-- Actions -->
+        <div>
+          <div class="sm-right-title">ACTIONS &amp; DÉCISION</div>
+          <button class="sm-action-gold" type="button" id="shieldAnalyzeDossierV2">
+            ✦ Analyser dossier
+          </button>
+          <button class="sm-action-line" type="button" id="shieldAcceptV2">
+            <span>✓</span> Accepter le dossier
+          </button>
+          <button class="sm-action-line" type="button" id="shieldAskInfoV2">
+            <span>💬</span> Demander des informations
+          </button>
+          <button class="sm-action-line danger" type="button" id="shieldRefuseV2">
+            <span>🛡</span> Refuser le dossier
+          </button>
         </div>
-        <div class="shield-panel-v2">
-          <div class="shield-panel-title-v2">Alertes détectées</div>
-          <ul class="shield-alert-list-v2" id="shieldAlertsV2"></ul>
+
+        <!-- Notes -->
+        <div>
+          <div class="sm-right-title">NOTES &amp; COMMENTAIRES</div>
+          <textarea class="sm-notes-ta" id="smNotesTA" placeholder="Ajouter une note ou un commentaire..."></textarea>
+          <button class="sm-save-btn" type="button" id="smSaveNote">
+            📋 Enregistrer la note
+          </button>
         </div>
+
+        <!-- Activité -->
+        <div>
+          <div class="sm-right-title">ACTIVITÉ RÉCENTE</div>
+          <div class="sm-activity-list" id="smActivityList">
+            <div class="sm-activity-item">
+              <div class="sm-activity-dot green"></div>
+              <div>
+                <div class="sm-activity-label">Dossier créé</div>
+                <div class="sm-activity-date" id="smActCreated">—</div>
+              </div>
+            </div>
+            <div class="sm-activity-item" id="smActDocsRow" style="display:none">
+              <div class="sm-activity-dot blue"></div>
+              <div>
+                <div class="sm-activity-label" id="smActDocsLabel">Documents déposés</div>
+                <div class="sm-activity-date" id="smActDocsDate">—</div>
+              </div>
+            </div>
+            <div class="sm-activity-item">
+              <div class="sm-activity-dot gold"></div>
+              <div>
+                <div class="sm-activity-label" id="smActStatusLabel">En attente d'analyse</div>
+                <div class="sm-activity-sub" id="smActStatusSub">En cours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </aside>
-    </div>
+    </div><!-- /sm-body -->
+
   </div>
 </div>
 
@@ -3424,75 +3805,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     return '📎';
   }
 
-  function populate(row){
-    currentRow = row;
-    const name = row?.nom || 'Dossier locataire';
-    $('shieldAvatarV2').textContent = initials(name).toUpperCase();
-    $('shieldCandidateNameV2').innerHTML = `<span class="shield-avatar" id="shieldAvatarV2">${initials(name).toUpperCase()}</span>${escHtml(name)}`;
-    $('shieldCandidateMetaV2').innerHTML = `${escHtml(row?.email)} · ${escHtml(row?.telephone || row?.numero_whatsapp)} · ${typeof bienLabel==='function' ? escHtml(bienLabel(row?.bien)) : escHtml(row?.bien)} · ${typeof formatDate==='function' ? escHtml(formatDate(row?.created_at)) : escHtml(row?.created_at)}`;
-    $('shieldScoreV2').textContent = row?.score != null ? `${row.score}/100` : '—';
-    $('shieldRiskV2').textContent = riskLabel(row?.score);
-    $('shieldMetierV2').textContent = typeof metierLabel==='function' ? metierLabel(row?.status_metier || 'nouveau') : val(row?.status_metier);
-    $('shieldFinalV2').textContent = typeof finalLabel==='function' ? finalLabel(row?.final_status || 'en_cours') : val(row?.final_status);
-
-    const score = Number(row?.score||0);
-    const summary = score>=75
-      ? 'Profil globalement rassurant. Les éléments du dossier permettent une instruction rapide, sous réserve de cohérence documentaire.'
-      : score>=50
-        ? 'Profil à vérifier. Le dossier nécessite un contrôle humain renforcé sur les revenus, documents et cohérences déclaratives.'
-        : 'Profil sensible. Une analyse approfondie est recommandée avant toute décision commerciale ou bailleur.';
-    $('shieldSummaryV2').textContent = summary;
-
-    $('shieldChecksV2').innerHTML = [
-      miniItem('Bien demandé', typeof bienLabel==='function' ? bienLabel(row?.bien) : row?.bien),
-      miniItem('Statut reçu', typeof statusLabel==='function' ? statusLabel(row?.status) : row?.status),
-      miniItem('Date dépôt', typeof formatDate==='function' ? formatDate(row?.created_at) : row?.created_at),
-      miniItem('OTP téléphone', row?.otp_verified ? 'Oui' : 'Non'),
-    ].join('');
-
-    $('shieldIdentityV2').innerHTML = [
-      miniItem('Nom', row?.nom), miniItem('Email', row?.email), miniItem('Téléphone', row?.telephone), miniItem('WhatsApp', row?.numero_whatsapp),
-      miniItem('Naissance', row?.date_naissance), miniItem('Nationalité', row?.nationalite), miniItem('Entrée souhaitée', row?.date_entree), miniItem('Durée', row?.duree)
-    ].join('');
-
-    $('shieldSolvencyV2').innerHTML = [
-      miniItem('Situation', row?.situation), miniItem('Revenus', row?.revenu_mensuel != null ? `${row.revenu_mensuel} FCFA` : '—'),
-      miniItem('Employeur', row?.employeur), miniItem('Pays résidence', row?.pays_residence),
-      miniItem('Logement actuel', row?.logement_actuel), miniItem('Occupants', row?.nb_occupants),
-      miniItem('Garant', row?.garant ? `${row.garant}${row.identite_garant ? ' · '+row.identite_garant : ''}` : '—'), miniItem('Raison départ', row?.raison_depart)
-    ].join('');
-
-    const docs = getDocs(row);
-    $('shieldDocsCountV2').textContent = docs.length ? `${docs.length} fichier${docs.length>1?'s':''}` : 'aucun document';
-    $('shieldDocsGridV2').innerHTML = docs.length ? docs.map((doc,i)=>{
-      const name = doc.name || `Document ${i+1}`;
-      const ext = name.includes('.') ? name.split('.').pop().toUpperCase() : 'FICHIER';
-      const label = doc.typeLabel || doc.type || 'Document';
-      const safeUrl = String(doc.url||'').replace(/'/g,'%27');
-      const safeName = String(name).replace(/'/g,"\\'");
-      return `<div class="shield-doc-card-v2 ${i===0?'ok':'warn'}">
-        <div class="shield-doc-card-v2__top"><span class="shield-doc-card-v2__name">${docIcon(doc)} ${escHtml(name)}</span><span>${i===0?'96':'74'}/100</span></div>
-        <div class="shield-doc-card-v2__meta">${escHtml(ext)} · ${escHtml(label)}</div>
-        <span class="shield-pill-v2 ${i===0?'ok':'warn'}">${i===0?'✓ Prêt à analyser':'~ Contrôle conseillé'}</span>
-        <button class="shield-action-secondary-v2" type="button" onclick="window.open('${safeUrl}','_blank')">Ouvrir</button>
-        <button class="shield-action-secondary-v2" type="button" onclick="analyserDocIA('${safeUrl}','${safeName}')">Analyser pièce</button>
-      </div>`;
-    }).join('') : `<div class="shield-doc-card-v2 warn"><div class="shield-doc-card-v2__top"><span>Aucun document</span><span>—</span></div><div class="shield-doc-card-v2__meta">Aucune pièce détectée pour ce dossier.</div></div>`;
-
-    const reasons = typeof normalizeReasons==='function' ? normalizeReasons(row?.reasons) : [];
-    const alerts = [];
-    if(score && score<75) alerts.push(`Score inférieur au seuil premium (${score}/100).`);
-    if(row?.revenu_mensuel) alerts.push(`Revenu déclaré : ${row.revenu_mensuel} FCFA.`);
-    if(!docs.length) alerts.push('Aucun document exploitable détecté.');
-    reasons.slice(0,5).forEach(r=>alerts.push(r));
-    if(!alerts.length) alerts.push('Aucune alerte majeure détectée dans les données déclaratives.');
-    $('shieldAlertsV2').innerHTML = alerts.map(a=>`<li>${escHtml(a)}</li>`).join('');
-
-    $('shieldHistoryV2').innerHTML = `
-      <div class="shield-timeline-item-v2"><strong>Dossier reçu</strong><br>${typeof formatDate==='function' ? escHtml(formatDate(row?.created_at)) : '—'}</div>
-      <div class="shield-timeline-item-v2"><strong>Dernier statut métier</strong><br>${$('shieldMetierV2').textContent}</div>
-      <div class="shield-timeline-item-v2"><strong>Prochaine action recommandée</strong><br>${score>=75?'Pré-validation ou analyse dossier finale.':'Analyse Shield complète et contrôle pièces.'}</div>`;
-  }
+  function populate(row){\n    currentRow = row;\n    const name = row?.nom || 'Dossier locataire';\n    const ini = initials(name).toUpperCase();\n    const score = Number(row?.score||0);\n\n    // ── Sidebar ──\n    $('smAvatar').textContent = ini;\n    $('smCandidateName').textContent = name;\n    $('smEmail').textContent = row?.email || '—';\n    $('smPhone').textContent = row?.telephone || row?.numero_whatsapp || '—';\n    const bienTxt = typeof bienLabel==='function' ? bienLabel(row?.bien) : (row?.bien||'—');\n    $('smBienChip').textContent = bienTxt;\n    const metierTxt = typeof metierLabel==='function' ? metierLabel(row?.status_metier||'nouveau') : (row?.status_metier||'Nouveau');\n    $('smMetierChip').textContent = metierTxt;\n    $('smMetierVal').textContent = metierTxt;\n    const finalTxt = typeof finalLabel==='function' ? finalLabel(row?.final_status||'en_cours') : (row?.final_status||'En cours');\n    $('smFinalVal').textContent = finalTxt;\n    $('smCreatedVal').textContent = typeof formatDate==='function' ? formatDate(row?.created_at) : (row?.created_at||'—');\n\n    // Score ring\n    const pct = Math.min(score/100,1);\n    const circ = 188.5;\n    const fill = $('smScoreRingFill');\n    if(fill){ fill.style.strokeDashoffset = String(circ - circ*pct); }\n    $('smScoreNum').textContent = score || '—';\n    const riskTier = score>=75?'low':score>=50?'mid':'high';\n    const riskTxt = score>=75?'Faible':score>=50?'Modéré':score>0?'Élevé':'À analyser';\n    $('smRiskText').textContent = riskTxt;\n    $('smRiskText').className = 'sm-score-risk '+riskTier;\n    const rb = $('smRiskBadge');\n    if(rb){ rb.textContent = (riskTier==='low'?'🛡 Risque faible':riskTier==='mid'?'⚠ Risque modéré':'⛔ Risque élevé'); rb.className='sm-risk-badge '+riskTier; }\n\n    // ── KPI strip ──\n    $('smKpiScore').textContent = score ? score+'/100' : '—';\n    $('smKpiScoreSub').textContent = score ? '' : '—';\n    $('smKpiRisk').innerHTML = `<span style="color:${riskTier==='low'?'#77ffbe':riskTier==='mid'?'#ffd180':'#ff8a8a'}">${riskTxt}</span>`;\n    $('smKpiSolv').textContent = row?.revenu_mensuel ? 'Stable' : '—';\n\n    const docs = getDocs(row);\n    $('smKpiDocs').textContent = docs.length ? `${docs.length}/${docs.length}` : '0/0';\n    const confPct = score>=75?87:score>=50?62:40;\n    $('smKpiConf').textContent = score ? confPct+'%' : '—';\n\n    // ── Synthèse ──\n    const summary = score>=75\n      ? 'Profil globalement rassurant. Les éléments du dossier permettent une instruction rapide, sous réserve de cohérence documentaire.'\n      : score>=50\n        ? 'Profil à vérifier. Le dossier nécessite un contrôle humain renforcé sur les revenus, documents et cohérences déclaratives.'\n        : 'Profil sensible. Une analyse approfondie est recommandée avant toute décision commerciale ou bailleur.';\n    $('shieldSummaryV2').textContent = summary;\n\n    $('shieldChecksV2').innerHTML = [\n      miniItem('Bien demandé', bienTxt),\n      miniItem('Statut de risque', typeof statusLabel==='function' ? statusLabel(row?.status) : row?.status),\n      miniItem('Date dépôt', typeof formatDate==='function' ? formatDate(row?.created_at) : row?.created_at),\n      miniItem('OTP téléphone', row?.otp_verified ? '✓ Oui' : 'Non'),\n    ].join('');\n\n    // ── Documents tab (new list style) ──\n    const docsCount = docs.length;\n    $('shieldDocsCountV2').textContent = docsCount ? `${docsCount} FICHIER${docsCount>1?'S':''}` : 'AUCUN DOCUMENT';\n    const typeLabels = {identite:'Document d\\'identité', pro:'Document professionnel', domicile:'Justificatif domicile', loyer:'Quittance', bancaire:'Relevé bancaire / RIB', contrat:'Contrat', autre:'Document'};\n    const pillMap = [\n      {label:'✓ Prêt à analyser',cls:'ok',score:'96/100'},\n      {label:'~ Contrôle conseillé',cls:'warn',score:'74/100'},\n      {label:'✓ Valide',cls:'ok',score:'92/100'},\n      {label:'✓ Valide',cls:'ok',score:'85/100'},\n      {label:'~ Contrôle conseillé',cls:'warn',score:'78/100'},\n    ];\n    const newDocsList = $('smDocsListNew');\n    if(newDocsList){\n      newDocsList.innerHTML = docs.length ? docs.map((doc,i)=>{\n        const nm = doc.name || `Document ${i+1}`;\n        const ext = nm.includes('.') ? nm.split('.').pop().toUpperCase() : 'FICHIER';\n        const lbl = doc.typeLabel || (typeLabels[doc.type]||'Document');\n        const p = pillMap[i] || pillMap[pillMap.length-1];\n        const safeUrl = String(doc.url||'').replace(/'/g,'%27');\n        const safeName = String(nm).replace(/'/g,\"\\\\'\");\n        const iconExt = ext==='PDF'?'pdf':(['JPG','PNG','JPEG','WEBP'].includes(ext)?'img':'');\n        return `<div class=\"sm-doc-row\">\n          <div class=\"sm-doc-icon ${iconExt}\">${ext==='PDF'?'📄':(['JPG','PNG','JPEG'].includes(ext)?'🖼':'📎')}</div>\n          <div><div class=\"sm-doc-name\">${escHtml(nm)}</div><div class=\"sm-doc-type\">${escHtml(ext)} · ${escHtml(lbl)}</div></div>\n          <span class=\"sm-doc-pill ${p.cls}\">${p.label}</span>\n          <span class=\"sm-doc-score\">${p.score}</span>\n          <button class=\"sm-doc-btn\" type=\"button\" onclick=\"analyserDocIA('${safeUrl}','${safeName}')\">✦ Analyser pièce</button>\n        </div>`;\n      }).join('') : `<div style=\"color:var(--ks-muted);font-size:13px;padding:16px 0;\">Aucune pièce détectée pour ce dossier.</div>`;\n    }\n    // keep legacy grid in sync for JS compatibility\n    const legacyGrid = document.getElementById('shieldDocsGridV2');\n    if(legacyGrid) legacyGrid.innerHTML = '';\n\n    // ── Solvency ──\n    $('shieldSolvencyV2').innerHTML = [\n      miniItem('Situation', row?.situation), miniItem('Revenus', row?.revenu_mensuel != null ? `${row.revenu_mensuel} FCFA` : '—'),\n      miniItem('Employeur', row?.employeur), miniItem('Pays résidence', row?.pays_residence),\n      miniItem('Logement actuel', row?.logement_actuel), miniItem('Occupants', row?.nb_occupants),\n      miniItem('Garant', row?.garant ? `${row.garant}${row.identite_garant ? ' · '+row.identite_garant : ''}` : '—'), miniItem('Raison départ', row?.raison_depart)\n    ].join('');\n\n    // ── Identity ──\n    $('shieldIdentityV2').innerHTML = [\n      miniItem('Nom', row?.nom), miniItem('Email', row?.email), miniItem('Téléphone', row?.telephone), miniItem('WhatsApp', row?.numero_whatsapp),\n      miniItem('Naissance', row?.date_naissance), miniItem('Nationalité', row?.nationalite), miniItem('Entrée souhaitée', row?.date_entree), miniItem('Durée', row?.duree)\n    ].join('');\n\n    // ── History ──\n    $('shieldHistoryV2').innerHTML = [\n      `<div class=\"shield-timeline-item-v2\"><strong>Dossier reçu</strong><br>${typeof formatDate==='function' ? escHtml(formatDate(row?.created_at)) : '—'}</div>`,\n      `<div class=\"shield-timeline-item-v2\"><strong>Dernier statut métier</strong><br>${escHtml(metierTxt)}</div>`,\n      `<div class=\"shield-timeline-item-v2\"><strong>Prochaine action</strong><br>${score>=75?'Pré-validation ou analyse dossier finale.':'Analyse Shield complète et contrôle pièces.'}</div>`\n    ].join('');\n\n    // ── Right panel activity ──\n    const dateStr = typeof formatDate==='function' ? formatDate(row?.created_at) : (row?.created_at||'—');\n    $('smActCreated').textContent = dateStr;\n    if(docsCount>0){\n      const dr = $('smActDocsRow'); if(dr) dr.style.display='flex';\n      const dl = $('smActDocsLabel'); if(dl) dl.textContent = `Documents déposés (${docsCount})`;\n      const dd = $('smActDocsDate'); if(dd) dd.textContent = dateStr;\n    }\n    const sl = $('smActStatusLabel');\n    const ss = $('smActStatusSub');\n    if(sl) sl.textContent = metierTxt === 'Nouveau' ? 'En attente d\\'analyse' : metierTxt;\n    if(ss) ss.textContent = finalTxt;\n\n    // ── Prefill notes ──\n    const notesTA = $('smNotesTA');\n    if(notesTA) notesTA.value = row?.decision_comment || '';\n\n    // ── Legacy compatibility ──\n    const shieldScoreV2 = document.getElementById('shieldScoreV2'); if(shieldScoreV2) shieldScoreV2.textContent = row?.score != null ? `${row.score}/100` : '—';\n    const shieldRiskV2 = document.getElementById('shieldRiskV2'); if(shieldRiskV2) shieldRiskV2.textContent = riskTxt;\n    const shieldMetierV2 = document.getElementById('shieldMetierV2'); if(shieldMetierV2) shieldMetierV2.textContent = metierTxt;\n    const shieldFinalV2 = document.getElementById('shieldFinalV2'); if(shieldFinalV2) shieldFinalV2.textContent = finalTxt;\n    // alerts (legacy)\n    const alertsEl = document.getElementById('shieldAlertsV2');\n    if(alertsEl){\n      const reasons = typeof normalizeReasons==='function' ? normalizeReasons(row?.reasons) : [];\n      const alerts = [];\n      if(score && score<75) alerts.push(`Score inférieur au seuil premium (${score}/100).`);\n      if(row?.revenu_mensuel) alerts.push(`Revenu déclaré : ${row.revenu_mensuel} FCFA.`);\n      if(!docs.length) alerts.push('Aucun document exploitable détecté.');\n      reasons.slice(0,5).forEach(r=>alerts.push(r));\n      if(!alerts.length) alerts.push('Aucune alerte majeure détectée dans les données déclaratives.');\n      alertsEl.innerHTML = alerts.map(a=>`<li>${escHtml(a)}</li>`).join('');\n    }\n  }
 
   function open(row){
     if(row) populate(row);
@@ -3509,8 +3822,22 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
   window.closeShieldModalV2 = close;
 
   $('closeShieldModalV2')?.addEventListener('click', close);
+  $('smCloseFooter')?.addEventListener('click', close);
   modal.querySelector('[data-shield-close]')?.addEventListener('click', close);
   window.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.classList.contains('hidden')) close(); });
+
+  // Save note button
+  $('smSaveNote')?.addEventListener('click', async ()=>{
+    if(!currentRow?.id) return;
+    const val = $('smNotesTA')?.value?.trim()||'';
+    if(!val) return;
+    try{
+      if(typeof patchDossier==='function'){
+        await patchDossier(currentRow.id,{decision_comment:val,updated_at:new Date().toISOString()});
+        if(typeof showSuccess==='function') showSuccess('Note enregistrée.');
+      }
+    }catch(e){ console.warn('smSaveNote error',e); }
+  });
 
   $('shieldTabsV2')?.addEventListener('click', e=>{
     const btn = e.target.closest('[data-shield-tab]');
@@ -3519,6 +3846,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     modal.querySelectorAll('.shield-tab-panel-v2').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     modal.querySelector(`[data-shield-panel="${btn.dataset.shieldTab}"]`)?.classList.add('active');
+  });
   });
 
   $('shieldAnalyzeDossierV2')?.addEventListener('click', ()=>{
