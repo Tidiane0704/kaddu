@@ -776,52 +776,34 @@ tr.active{background:rgba(83,183,255,.055) !important;}
 
 
 /* ═══════════════════════════════════════════════════════════════
-   KÀDDU SHIELD — INTELLIGENCE LAYER SPRINT 1
-   Ajout non destructif sur la modal dossier existante.
+   KÀDDU SHIELD — SPRINT 1.1
+   Branchement réel du bouton modal vers Claude / Edge Function.
    ═══════════════════════════════════════════════════════════════ */
-.ksm-action-gold,
-#shieldAnalyzeDossierV2{
+#shieldAnalyzeDossierV2,
+.ksm-action-gold{
   border-radius:18px!important;
-  min-height:54px!important;
+  min-height:52px!important;
   padding:13px 18px!important;
   font-size:14px!important;
-  letter-spacing:.01em!important;
   box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 16px 38px rgba(191,150,80,.24)!important;
-  transition:transform .18s ease, filter .18s ease, box-shadow .18s ease!important;
 }
-.ksm-action-gold:hover,
-#shieldAnalyzeDossierV2:hover{
-  transform:translateY(-1px)!important;
-  filter:brightness(1.05)!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 22px 48px rgba(191,150,80,.32)!important;
-}
-.ksm-action-gold.ks-loading{
+#shieldAnalyzeDossierV2.ks-real-loading{
   pointer-events:none!important;
   opacity:.92!important;
   background:linear-gradient(135deg,#b98b34,#f0cf7d)!important;
 }
-.ksm-action-gold.ks-done{
+#shieldAnalyzeDossierV2.ks-real-done{
   background:linear-gradient(135deg,#0a6a45,#77ffbe)!important;
   color:#06111d!important;
 }
-.ksm-action-row{
-  opacity:.86!important;
-}
-.ksm-action-row:hover{
-  opacity:1!important;
-}
-.ks-intel-panel{
-  border:1px solid rgba(191,150,80,.17);
-  background:radial-gradient(circle at 100% 0%,rgba(191,150,80,.08),transparent 34%),rgba(255,255,255,.028);
+.ks-real-panel{
+  border:1px solid rgba(191,150,80,.16);
+  background:rgba(255,255,255,.03);
   border-radius:16px;
   padding:16px;
   margin-top:16px;
 }
-.ks-intel-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+.ks-real-title{
   color:#BF9650;
   font-size:10px;
   font-weight:800;
@@ -829,120 +811,35 @@ tr.active{background:rgba(83,183,255,.055) !important;}
   text-transform:uppercase;
   margin-bottom:12px;
 }
-.ks-progress-track{
-  height:8px;
-  border-radius:999px;
-  overflow:hidden;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.05);
-}
-.ks-progress-fill{
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  background:linear-gradient(90deg,#BF9650,#f0cf7d);
-  transition:width .42s ease;
-}
-.ks-steps{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-top:12px;
-}
-.ks-step{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  font-size:12px;
-  color:rgba(245,241,235,.52);
-}
-.ks-step-dot{
-  width:9px;height:9px;border-radius:50%;
-  border:1px solid rgba(245,241,235,.22);
-  background:rgba(255,255,255,.06);
-  flex-shrink:0;
-}
-.ks-step.active{color:#f0cf7d;}
-.ks-step.active .ks-step-dot{background:#f0cf7d;box-shadow:0 0 12px rgba(240,207,125,.55);}
-.ks-step.done{color:#77ffbe;}
-.ks-step.done .ks-step-dot{background:#77ffbe;box-shadow:0 0 10px rgba(119,255,190,.45);}
-.ks-analysis-card{
-  border:1px solid rgba(119,255,190,.14);
+.ks-real-steps{display:flex;flex-direction:column;gap:8px}
+.ks-real-step{display:flex;align-items:center;gap:9px;font-size:12px;color:rgba(245,241,235,.52)}
+.ks-real-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12)}
+.ks-real-step.active{color:#f0cf7d}.ks-real-step.active .ks-real-dot{background:#f0cf7d;box-shadow:0 0 12px rgba(240,207,125,.55)}
+.ks-real-step.done{color:#77ffbe}.ks-real-step.done .ks-real-dot{background:#77ffbe;box-shadow:0 0 10px rgba(119,255,190,.45)}
+.ks-real-result{
+  border:1px solid rgba(119,255,190,.16);
   background:rgba(0,200,117,.045);
   border-radius:16px;
   padding:16px;
-  margin:16px 0;
+  margin-top:16px;
+  display:none;
 }
-.ks-analysis-grid{
+.ks-real-result-grid{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
+  margin-bottom:12px;
 }
-.ks-analysis-metric{
+.ks-real-metric{
   border:1px solid rgba(255,255,255,.07);
   background:rgba(255,255,255,.025);
   border-radius:14px;
   padding:12px;
 }
-.ks-analysis-metric span{
-  display:block;
-  font-size:10px;
-  color:rgba(245,241,235,.42);
-  letter-spacing:.08em;
-  margin-bottom:7px;
-}
-.ks-analysis-metric strong{
-  display:block;
-  color:#77ffbe;
-  font-size:18px;
-}
-.ks-gap-table{
-  width:100%;
-  border-collapse:separate;
-  border-spacing:0 8px;
-  font-size:12px;
-}
-.ks-gap-table th{
-  position:static!important;
-  background:transparent!important;
-  border:none!important;
-  padding:0 10px 5px!important;
-  color:rgba(245,241,235,.34)!important;
-  font-size:10px!important;
-}
-.ks-gap-table td{
-  border:none!important;
-  background:rgba(255,255,255,.028);
-  padding:10px!important;
-}
-.ks-gap-table td:first-child{border-radius:10px 0 0 10px;}
-.ks-gap-table td:last-child{border-radius:0 10px 10px 0;}
-.ks-sev-low{color:#77ffbe;font-weight:800;}
-.ks-sev-mid{color:#ffd180;font-weight:800;}
-.ks-sev-high{color:#ffb3b3;font-weight:800;}
-.ks-live-timeline{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.ks-live-event{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-  color:rgba(245,241,235,.64);
-  font-size:12px;
-}
-.ks-live-event b{color:#f5f1eb;}
-.ks-live-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:#77ffbe;
-  margin-top:3px;
-  box-shadow:0 0 12px rgba(119,255,190,.5);
-  flex-shrink:0;
-}
-@media(max-width:980px){
-  .ks-analysis-grid{grid-template-columns:repeat(2,1fr);}
-}
+.ks-real-metric span{display:block;font-size:10px;color:rgba(245,241,235,.42);letter-spacing:.08em;margin-bottom:7px}
+.ks-real-metric strong{display:block;color:#77ffbe;font-size:18px}
+.ks-real-text{font-size:13px;line-height:1.65;color:rgba(245,241,235,.72);max-height:220px;overflow:auto}
+@media(max-width:980px){.ks-real-result-grid{grid-template-columns:repeat(2,1fr)}}
 
 </style>
   <script src="/assets/js/kaddu-supabase-config.js"></script>
@@ -1599,6 +1496,52 @@ tr.active{background:rgba(83,183,255,.055) !important;}
     let filteredRows = [];
     let selectedId = null;
     let _currentDossier = null;
+
+    // ══ SPRINT 1.2.1 — PROTECTION RATE LIMIT / DOUBLE-CLIC ══
+    window.__kadduDossierAnalysisRunning = false;
+    window.__kadduBulkDocsAnalysisRunning = false;
+    window.__kadduDocumentAnalysisRunning = new Set();
+
+    function kadduToast(message, type = "info"){
+      let el = document.getElementById("kadduToast");
+      if(!el){
+        el = document.createElement("div");
+        el.id = "kadduToast";
+        el.style.cssText = "position:fixed;right:22px;bottom:22px;z-index:2147483600;max-width:420px;padding:13px 16px;border-radius:14px;border:1px solid rgba(191,150,80,.28);background:rgba(7,24,43,.96);color:#F8F4EE;box-shadow:0 18px 48px rgba(0,0,0,.38);font-size:13px;line-height:1.45;display:none";
+        document.body.appendChild(el);
+      }
+      const colors = {
+        info: "rgba(191,150,80,.28)",
+        success: "rgba(0,200,117,.35)",
+        warning: "rgba(245,166,35,.38)",
+        error: "rgba(255,107,107,.42)"
+      };
+      el.style.borderColor = colors[type] || colors.info;
+      el.textContent = message;
+      el.style.display = "block";
+      clearTimeout(kadduToast._timer);
+      kadduToast._timer = setTimeout(()=>{ el.style.display = "none"; }, 4200);
+    }
+
+    function kadduFriendlyAiError(err){
+      const raw = String(err?.message || err || "");
+      if(/rate limit|tokens per minute|too many requests|429/i.test(raw)){
+        return "Serveur IA momentanément occupé : l’analyse précédente consomme encore le quota Claude. Réessayez dans quelques secondes, ou analysez un seul document à la fois.";
+      }
+      if(/maximum context|context length|input tokens|prompt length/i.test(raw)){
+        return "Document trop volumineux pour une seule analyse IA. Lancez l’analyse document par document, ou réduisez le nombre de pages transmises.";
+      }
+      return raw || "Erreur IA inconnue.";
+    }
+
+    function setDocsAnalyzeButtonsDisabled(disabled){
+      document.querySelectorAll(".doc-admin-analyse").forEach(btn => {
+        btn.disabled = !!disabled;
+        btn.style.opacity = disabled ? ".55" : "";
+        btn.style.pointerEvents = disabled ? "none" : "";
+      });
+    }
+    // ══ FIN SPRINT 1.2.1 ══════════════════════════════════════
 
     function formatDate(value){
       if(!value) return "—";
@@ -2718,31 +2661,52 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
 
     async function callShieldAnalyze(payload){
       const endpoint = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1/shield-analyze-dossier`;
+      const safePayload = {
+        ...payload,
+        // Sprint 1.2.1 : garde-fou coût/tokens côté front.
+        maxTokens: Math.min(Number(payload?.maxTokens || 1200), 1400)
+      };
+
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: getAuthHeaders(),
-        body: JSON.stringify(payload)
+        headers: getAuthHeaders({
+          "X-Kaddu-Client": "admin-dossiers-sprint-1-2-1",
+          "X-Kaddu-Analysis-Mode": safePayload.mode || "unknown"
+        }),
+        body: JSON.stringify(safePayload)
       });
 
       const data = await res.json().catch(() => ({}));
       if(!res.ok || data?.ok === false){
         const msg = data?.error || data?.message || `Erreur Edge Function (${res.status})`;
-        throw new Error(msg);
+        const e = new Error(msg);
+        e.status = res.status;
+        e.raw = data;
+        throw e;
       }
       return data;
     }
 
     async function lancerAnalyseDossier(){
+      if(window.__kadduDossierAnalysisRunning){
+        kadduToast("Analyse dossier déjà en cours. Attendez la fin avant de relancer.", "warning");
+        return;
+      }
       const context = document.getElementById("afContextTa").value.trim();
-      if(!context){ alert("Le contexte du dossier est vide."); return; }
+      if(!context){ kadduToast("Le contexte du dossier est vide.", "warning"); return; }
 
       const btn = document.getElementById("afAnalyseBtn");
       const loader = document.getElementById("afLoaderRow");
       const result = document.getElementById("afResultWrap");
+      const oldBtnHtml = btn ? btn.innerHTML : "";
 
-      btn.disabled = true;
+      window.__kadduDossierAnalysisRunning = true;
+      if(btn){ btn.disabled = true; btn.innerHTML = "⏳ Analyse en cours…"; }
       loader.classList.add("visible");
       result.classList.remove("visible");
+      if(_currentDossier?.id){
+        createDossierEvent({ dossierId:_currentDossier.id, eventType:"analysis_started", newValue:"dossier", comment:"Analyse dossier IA lancée" }).catch(()=>{});
+      }
 
       try {
         const data = await callShieldAnalyze({
@@ -2787,13 +2751,23 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         // ── Sauvegarder la synthèse en base ──────────────────
         if(_currentDossier?.id){
           sauvegarderSynthese(_currentDossier.id, displayText, scoreData?.score||null).catch(()=>{});
+          createDossierEvent({ dossierId:_currentDossier.id, eventType:"analysis_finished", newValue:"dossier", comment:`Analyse dossier terminée · score ${scoreData?.score ?? "—"}/100` }).catch(()=>{});
         }
+        kadduToast("Analyse dossier terminée.", "success");
 
       } catch(err){
-        alert("Erreur lors de l'analyse :\n" + err.message);
+        const friendly = kadduFriendlyAiError(err);
+        kadduToast(friendly, /occupé|volumineux|quota/i.test(friendly) ? "warning" : "error");
+        if(_currentDossier?.id){
+          createDossierEvent({ dossierId:_currentDossier.id, eventType:"analysis_failed", newValue:"dossier", comment:friendly }).catch(()=>{});
+        }
       } finally {
-        btn.disabled = false;
-        loader.classList.remove("visible");
+        window.__kadduDossierAnalysisRunning = false;
+        if(btn){
+          btn.disabled = false;
+          btn.innerHTML = oldBtnHtml || "Analyser ce dossier →";
+        }
+        if(loader) loader.classList.remove("visible");
       }
     }
 
@@ -3641,7 +3615,39 @@ UTILISATION : ces métadonnées sont des indices, pas des preuves. Utilise-les p
     }
     // ══ FIN PHASE 2 ════════════════════════════════════════════
 
+    async function findCachedDocumentExtraction(dossierId, sha256){
+      if(!dossierId || !sha256) return null;
+      try{
+        const url = `${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/dossier_document_extractions?rental_dossier_id=eq.${encodeURIComponent(dossierId)}&sha256=eq.${encodeURIComponent(sha256)}&select=*&order=created_at.desc&limit=1`;
+        const res = await fetch(url, { headers:getAuthHeaders() });
+        if(!res.ok) return null;
+        const rows = await res.json();
+        return Array.isArray(rows) ? rows[0] : null;
+      }catch(_){ return null; }
+    }
+
+    function renderCachedDocumentExtraction(cached, name){
+      const vigEl = document.getElementById('afVigBadge');
+      const resultWrap = document.getElementById('afResultWrap');
+      if(vigEl){ vigEl.textContent = 'Analyse en cache'; vigEl.className = 'af-vig af-vig-low'; }
+      const html = `
+        <div class="af-synthese-header"><span>✓ Analyse réutilisée depuis le cache documentaire</span></div>
+        ${renderDocExtractionPanel(cached?.extraction || {}, [], 'Extraction structurée — cache')}
+        ${cached?.raw_text ? renderAfMd(`## Analyse — ${name || cached.document_name || 'Document'}
+
+${cached.raw_text}`) : ''}`;
+      document.getElementById('afResultBody').innerHTML = html;
+      resultWrap.classList.add('visible');
+      document.getElementById('afSection')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+
     async function analyserTousDocsIA(){
+      if(window.__kadduBulkDocsAnalysisRunning){
+        kadduToast("Analyse groupée déjà en cours. Attendez la fin avant de relancer.", "warning");
+        return;
+      }
+      window.__kadduBulkDocsAnalysisRunning = true;
+      setDocsAnalyzeButtonsDisabled(true);
       const row = _currentDossier;
       // Chercher docs_fournis : colonne directe OU dans payload
       let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
@@ -3667,7 +3673,12 @@ UTILISATION : ces métadonnées sont des indices, pas des preuves. Utilise-les p
           type: typeByName[name] || 'autre'
         }));
       }
-      if(!docs.length){ alert('Aucun document à analyser.'); return; }
+      if(!docs.length){
+        window.__kadduBulkDocsAnalysisRunning = false;
+        setDocsAnalyzeButtonsDisabled(false);
+        kadduToast('Aucun document à analyser.', 'warning');
+        return;
+      }
 
       const btn = document.getElementById('btnAnalyseAll');
       if(btn){ btn.disabled = true; btn.textContent = `⏳ Chargement des ${docs.length} documents…`; }
@@ -3756,6 +3767,7 @@ KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_val
         }));
 
         if(!loaded){ throw new Error('Impossible de charger les documents depuis le Storage.'); }
+        if(row?.id){ createDossierEvent({ dossierId:row.id, eventType:'analysis_started', newValue:'documents', comment:`Analyse groupée lancée · ${loaded} document(s)` }).catch(()=>{}); }
 
         // Ajouter le prompt à la fin
         contentParts.push({type:'text', text: PROMPT_GROUPE});
@@ -3804,14 +3816,25 @@ KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_val
         }
 
       }catch(err){
-        alert('Erreur : '+err.message);
+        const friendly = kadduFriendlyAiError(err);
+        kadduToast(friendly, /occupé|volumineux|quota/i.test(friendly) ? 'warning' : 'error');
         if(btn){ btn.disabled=false; btn.textContent='🔍 Analyser tous les documents + cross-check'; }
+        if(row?.id){ createDossierEvent({ dossierId:row.id, eventType:'analysis_failed', newValue:'documents', comment:friendly }).catch(()=>{}); }
       }finally{
+        window.__kadduBulkDocsAnalysisRunning = false;
+        setDocsAnalyzeButtonsDisabled(false);
         if(loader) loader.classList.remove('visible');
       }
     }
 
     async function analyserDocIA(url, name){
+      const analysisKey = String((_currentDossier?.id || 'dossier') + '|' + (url || name || 'document'));
+      if(window.__kadduDocumentAnalysisRunning.has(analysisKey)){
+        kadduToast("Ce document est déjà en cours d’analyse.", "warning");
+        return;
+      }
+      window.__kadduDocumentAnalysisRunning.add(analysisKey);
+      setDocsAnalyzeButtonsDisabled(true);
       // Récupérer le contexte déclaré du dossier pour le cross-check
       const row = _currentDossier;
 
@@ -3824,7 +3847,25 @@ KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_val
         mediaType = blob.type || 'application/pdf';
         technicalMeta = await getDocumentTechnicalMeta(blob, {name, url});
         base64Data = await blobToBase64(blob);
-      }catch(e){ alert('Impossible de charger le document : '+e.message); return; }
+      }catch(e){
+        window.__kadduDocumentAnalysisRunning.delete(analysisKey);
+        setDocsAnalyzeButtonsDisabled(false);
+        kadduToast('Impossible de charger le document : '+e.message, 'error');
+        return;
+      }
+
+      // Cache documentaire Sprint 1.2.1 : si le hash existe, ne pas rappeler Claude.
+      if(row?.id && technicalMeta?.sha256){
+        const cached = await findCachedDocumentExtraction(row.id, technicalMeta.sha256);
+        if(cached){
+          renderCachedDocumentExtraction(cached, name);
+          createDossierEvent({ dossierId:row.id, eventType:'analysis_cache_hit', newValue:'document', comment:`Cache documentaire utilisé · ${name}` }).catch(()=>{});
+          window.__kadduDocumentAnalysisRunning.delete(analysisKey);
+          setDocsAnalyzeButtonsDisabled(false);
+          kadduToast('Analyse déjà disponible : résultat récupéré depuis le cache.', 'success');
+          return;
+        }
+      }
 
       // Déterminer le prompt selon le type de document
       let documentMeta = (row?.docs_fournis||[]).find(d=>d.name===name) || null;
@@ -3867,8 +3908,10 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       const resultWrap = document.getElementById('afResultWrap');
       const loader = document.getElementById('afLoaderRow');
       const btn = document.getElementById('afAnalyseBtn');
+      const oldBtnHtml = btn ? btn.innerHTML : '';
 
-      btn.disabled = true;
+      if(btn){ btn.disabled = true; btn.innerHTML = '⏳ Analyse document…'; }
+      if(row?.id){ createDossierEvent({ dossierId:row.id, eventType:'analysis_started', newValue:'document', comment:`Analyse document lancée · ${name}` }).catch(()=>{}); }
       loader.classList.add('visible');
       resultWrap.classList.remove('visible');
       document.getElementById('afSection')?.scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -3996,12 +4039,20 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
         const finalHtml = extractedHtml + structuredPanel + renderAfMd(`## Analyse — ${name}\n\n${displayText}`);
         document.getElementById('afResultBody').innerHTML = finalHtml;
         resultWrap.classList.add('visible');
-        if(row?.id){ renderSavedDocumentExtractions(row).catch(()=>{}); }
+        if(row?.id){
+          renderSavedDocumentExtractions(row).catch(()=>{});
+          createDossierEvent({ dossierId:row.id, eventType:'analysis_finished', newValue:'document', comment:`Analyse document terminée · ${name}` }).catch(()=>{});
+        }
+        kadduToast(`Analyse terminée · ${name}`, 'success');
 
       }catch(err){
-        alert('Erreur : '+err.message);
+        const friendly = kadduFriendlyAiError(err);
+        kadduToast(friendly, /occupé|volumineux|quota/i.test(friendly) ? 'warning' : 'error');
+        if(row?.id){ createDossierEvent({ dossierId:row.id, eventType:'analysis_failed', newValue:'document', comment:`${name} · ${friendly}` }).catch(()=>{}); }
       }finally{
-        btn.disabled=false;
+        window.__kadduDocumentAnalysisRunning.delete(analysisKey);
+        setDocsAnalyzeButtonsDisabled(false);
+        if(btn){ btn.disabled=false; btn.innerHTML = oldBtnHtml || 'Analyser ce dossier →'; }
         loader.classList.remove('visible');
       }
     }
@@ -4281,218 +4332,404 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
 </script>
 
 
-<script id="kaddu-shield-intelligence-sprint1">
+<script id="kaddu-shield-sprint1-1-real-claude">
 (function(){
   const steps = [
-    "Initialisation analyse…",
-    "OCR des documents…",
-    "Contrôle cohérence…",
-    "Détection anomalies…",
-    "Calcul score risque…",
-    "Analyse terminée"
+    "Préparation du contexte dossier…",
+    "Envoi sécurisé à Kàddu Shield…",
+    "Analyse Claude / OCR logique…",
+    "Extraction score & vigilance…",
+    "Mise à jour de la synthèse…"
   ];
 
   function qs(s,root=document){return root.querySelector(s)}
   function qsa(s,root=document){return Array.from(root.querySelectorAll(s))}
 
-  function ensureRightProgressPanel(){
+  function ensurePanel(){
     const right = qs(".ksm-right");
-    if(!right || qs("#ksIntelProgressPanel")) return;
+    if(!right || qs("#ksRealClaudePanel")) return;
 
     const panel = document.createElement("div");
-    panel.id = "ksIntelProgressPanel";
-    panel.className = "ks-intel-panel";
+    panel.id = "ksRealClaudePanel";
+    panel.className = "ks-real-panel";
     panel.innerHTML = `
-      <div class="ks-intel-title">
-        <span>Analyse en cours</span>
-        <span id="ksIntelPct">0%</span>
-      </div>
-      <div class="ks-progress-track"><div class="ks-progress-fill" id="ksIntelFill"></div></div>
-      <div class="ks-steps" id="ksIntelSteps">
-        ${steps.map((s,i)=>`<div class="ks-step" data-step="${i}"><span class="ks-step-dot"></span><span>${s}</span></div>`).join("")}
+      <div class="ks-real-title">Analyse réelle Claude</div>
+      <div class="ks-real-steps" id="ksRealSteps">
+        ${steps.map((x,i)=>`<div class="ks-real-step" data-real-step="${i}"><span class="ks-real-dot"></span><span>${x}</span></div>`).join("")}
       </div>
     `;
 
-    const firstBlock = right.firstElementChild;
-    if(firstBlock) firstBlock.appendChild(panel);
+    const actionBlock = right.firstElementChild;
+    if(actionBlock) actionBlock.appendChild(panel);
+    else right.appendChild(panel);
   }
 
-  function ensureAnalysisPanel(){
+  function ensureResultPanel(){
     const synth = qs('[data-shield-panel="synthese"]');
-    if(!synth || qs("#ksShieldResultPanel")) return;
+    if(!synth || qs("#ksRealResultPanel")) return;
 
     const panel = document.createElement("div");
-    panel.id = "ksShieldResultPanel";
-    panel.className = "ks-analysis-card";
-    panel.style.display = "none";
+    panel.id = "ksRealResultPanel";
+    panel.className = "ks-real-result";
     panel.innerHTML = `
-      <div class="ks-intel-title">
-        <span>Analyse Kàddu Shield</span>
-        <span id="ksShieldVerdict">Pré-validation possible</span>
+      <div class="ks-real-title">Résultat Kàddu Shield — Claude</div>
+      <div class="ks-real-result-grid">
+        <div class="ks-real-metric"><span>Score Claude</span><strong id="ksRealScore">—</strong></div>
+        <div class="ks-real-metric"><span>Vigilance</span><strong id="ksRealVigilance">—</strong></div>
+        <div class="ks-real-metric"><span>Décision</span><strong id="ksRealDecision">—</strong></div>
+        <div class="ks-real-metric"><span>Source</span><strong>Claude</strong></div>
       </div>
-      <div class="ks-analysis-grid">
-        <div class="ks-analysis-metric"><span>Risque global</span><strong>Faible</strong></div>
-        <div class="ks-analysis-metric"><span>Confiance dossier</span><strong>88%</strong></div>
-        <div class="ks-analysis-metric"><span>Cohérence revenus</span><strong>Élevée</strong></div>
-        <div class="ks-analysis-metric"><span>Fraude documentaire</span><strong>Faible</strong></div>
-      </div>
-      <div style="margin-top:14px;color:rgba(245,241,235,.68);font-size:13px;line-height:1.65">
-        Dossier globalement cohérent. Les documents principaux sont exploitables.
-        Un contrôle humain reste conseillé sur les pièces professionnelles à score intermédiaire.
-      </div>
+      <div class="ks-real-text" id="ksRealText">Analyse non lancée.</div>
     `;
 
-    const firstPanel = qs(".ksm-panel", synth);
-    if(firstPanel) synth.insertBefore(panel, firstPanel);
+    const first = qs(".ksm-panel", synth);
+    if(first) synth.insertBefore(panel, first);
     else synth.appendChild(panel);
-
-    const gaps = document.createElement("div");
-    gaps.id = "ksGapPanel";
-    gaps.className = "ksm-panel";
-    gaps.style.display = "none";
-    gaps.innerHTML = `
-      <div class="ksm-panel-title">Moteur d’écarts structurés</div>
-      <table class="ks-gap-table">
-        <thead>
-          <tr><th>Vérification</th><th>Résultat</th><th>Gravité</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Nom pièce = dossier</td><td>OK</td><td class="ks-sev-low">Faible</td></tr>
-          <tr><td>Revenus déclarés vs justificatifs</td><td>Écart +3%</td><td class="ks-sev-low">Faible</td></tr>
-          <tr><td>Employeur cohérent</td><td>À confirmer</td><td class="ks-sev-mid">Moyenne</td></tr>
-          <tr><td>OCR lisibilité KBIS</td><td>74/100</td><td class="ks-sev-mid">Moyenne</td></tr>
-          <tr><td>Expiration pièce d’identité</td><td>Valide</td><td class="ks-sev-low">Aucune</td></tr>
-        </tbody>
-      </table>
-    `;
-    synth.appendChild(gaps);
-  }
-
-  function ensureTimelinePanel(){
-    const right = qs(".ksm-right");
-    if(!right || qs("#ksLiveTimelinePanel")) return;
-
-    const panel = document.createElement("div");
-    panel.id = "ksLiveTimelinePanel";
-    panel.className = "ks-intel-panel";
-    panel.innerHTML = `
-      <div class="ks-intel-title"><span>Timeline intelligente</span></div>
-      <div class="ks-live-timeline" id="ksLiveTimeline">
-        <div class="ks-live-event"><span class="ks-live-dot"></span><div><b>Dossier créé</b><br><span>Initialisé par le locataire</span></div></div>
-        <div class="ks-live-event"><span class="ks-live-dot"></span><div><b>Documents reçus</b><br><span>Pièces disponibles pour analyse</span></div></div>
-      </div>
-    `;
-    right.appendChild(panel);
-  }
-
-  function enhanceDocumentRows(){
-    qsa(".ksm-doc-row").forEach((row,idx)=>{
-      if(row.dataset.ksEnhanced) return;
-      row.dataset.ksEnhanced = "1";
-      const name = qs(".ksm-doc-name",row)?.textContent || "Document";
-      const score = qs(".ksm-doc-score",row)?.textContent || "";
-      row.title = `Analyse documentaire : ${name} — score ${score}`;
-    });
   }
 
   function setStep(index){
-    qsa(".ks-step").forEach((el,i)=>{
+    qsa(".ks-real-step").forEach((el,i)=>{
       el.classList.toggle("done", i < index);
       el.classList.toggle("active", i === index);
     });
-    const pct = Math.round((index)/(steps.length-1)*100);
-    const fill = qs("#ksIntelFill");
-    const label = qs("#ksIntelPct");
-    if(fill) fill.style.width = pct + "%";
-    if(label) label.textContent = pct + "%";
   }
 
-  function addTimelineEvent(title, subtitle, colorClass="green"){
-    const tl = qs("#ksLiveTimeline");
-    if(!tl) return;
-    const ev = document.createElement("div");
-    ev.className = "ks-live-event";
-    ev.innerHTML = `<span class="ks-live-dot"></span><div><b>${title}</b><br><span>${subtitle||""}</span></div>`;
-    tl.appendChild(ev);
+  function parseScoreFromDom(){
+    const txt = qs("#afResultBody")?.innerText || "";
+    const scoreText = qs("#afScoreNum")?.textContent || "";
+    const score = parseInt(scoreText,10);
+    let vigilance = qs("#afVigBadge")?.textContent || "—";
+    let decision = qs("#afDecisionBadge")?.textContent || "—";
+    return { txt, score: Number.isFinite(score) ? score : null, vigilance, decision };
   }
 
-  function startIntelligenceAnalysis(){
-    ensureRightProgressPanel();
-    ensureAnalysisPanel();
-    ensureTimelinePanel();
+  function updateModalResult(){
+    ensureResultPanel();
+    const res = parseScoreFromDom();
+    const panel = qs("#ksRealResultPanel");
+    if(panel) panel.style.display = "block";
+    if(qs("#ksRealScore")) qs("#ksRealScore").textContent = res.score !== null ? res.score + "/100" : "—";
+    if(qs("#ksRealVigilance")) qs("#ksRealVigilance").textContent = res.vigilance || "—";
+    if(qs("#ksRealDecision")) qs("#ksRealDecision").textContent = res.decision || "—";
+    if(qs("#ksRealText")) qs("#ksRealText").textContent = res.txt || "Analyse terminée. Consultez aussi le bloc de synthèse Kàddu Shield historique.";
+  }
+
+  async function runRealAnalysis(){
+    ensurePanel();
+    ensureResultPanel();
 
     const btn = qs("#shieldAnalyzeDossierV2");
     if(btn){
-      btn.classList.remove("ks-done");
-      btn.classList.add("ks-loading");
-      btn.textContent = "Analyse en cours…";
+      btn.classList.remove("ks-real-done");
+      btn.classList.add("ks-real-loading");
+      btn.textContent = "Analyse Claude en cours…";
     }
 
-    const result = qs("#ksShieldResultPanel");
-    const gaps = qs("#ksGapPanel");
-    if(result) result.style.display = "none";
-    if(gaps) gaps.style.display = "none";
-
-    let i = 0;
+    qsa(".ks-real-step").forEach(el=>el.classList.remove("active","done"));
     setStep(0);
-    addTimelineEvent("Analyse IA lancée", "Kàddu Shield prépare le contrôle du dossier");
 
     const timer = setInterval(()=>{
-      i++;
-      setStep(i);
-      if(i === 1) addTimelineEvent("OCR documents", "Lecture des pièces déposées");
-      if(i === 2) addTimelineEvent("Contrôle cohérence", "Comparaison documents ↔ déclarations");
-      if(i === 3) addTimelineEvent("Anomalies structurées", "Évaluation gravité et impact");
-      if(i === 4) addTimelineEvent("Score risque", "Calcul du niveau de confiance");
-      if(i >= steps.length-1){
-        clearInterval(timer);
-        if(btn){
-          btn.classList.remove("ks-loading");
-          btn.classList.add("ks-done");
-          btn.textContent = "Analyse terminée";
-          setTimeout(()=>{ btn.classList.remove("ks-done"); btn.textContent = "✦ Analyser dossier"; }, 1800);
-        }
-        if(result) result.style.display = "block";
-        if(gaps) gaps.style.display = "block";
-        addTimelineEvent("Analyse terminée", "Pré-validation possible · contrôle humain ciblé");
+      const current = qsa(".ks-real-step").findIndex(el=>el.classList.contains("active"));
+      const next = current < 0 ? 0 : Math.min(current+1, steps.length-1);
+      setStep(next);
+    }, 700);
+
+    try{
+      if(typeof window.lancerAnalyseDossier !== "function"){
+        throw new Error("Fonction lancerAnalyseDossier introuvable : le moteur Shield existant n'est pas chargé.");
       }
-    }, 650);
+
+      // Appel réel : cette fonction appelle callShieldAnalyze()
+      // puis /functions/v1/shield-analyze-dossier côté Supabase,
+      // qui utilise la clé IA côté serveur et le prompt AF_SYSTEM_PROMPT.
+      await window.lancerAnalyseDossier();
+
+      clearInterval(timer);
+      setStep(steps.length-1);
+      updateModalResult();
+
+      if(btn){
+        btn.classList.remove("ks-real-loading");
+        btn.classList.add("ks-real-done");
+        btn.textContent = "Analyse terminée";
+        setTimeout(()=>{
+          btn.classList.remove("ks-real-done");
+          btn.textContent = "✦ Analyser dossier";
+        }, 1800);
+      }
+    }catch(err){
+      clearInterval(timer);
+      if(btn){
+        btn.classList.remove("ks-real-loading");
+        btn.textContent = "✦ Analyser dossier";
+      }
+      alert("Erreur analyse réelle Kàddu Shield :\n" + (err?.message || err));
+    }
+  }
+
+  function bind(){
+    ensurePanel();
+    ensureResultPanel();
+    const btn = qs("#shieldAnalyzeDossierV2");
+    if(btn && !btn.dataset.ksRealClaude){
+      btn.dataset.ksRealClaude = "1";
+      btn.textContent = "✦ Analyser dossier";
+      btn.addEventListener("click", function(ev){
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+        runRealAnalysis();
+      }, true);
+    }
   }
 
   function init(){
-    ensureRightProgressPanel();
-    ensureAnalysisPanel();
-    ensureTimelinePanel();
-    enhanceDocumentRows();
-
-    const btn = qs("#shieldAnalyzeDossierV2");
-    if(btn && !btn.dataset.ksSprint1){
-      btn.dataset.ksSprint1 = "1";
-      btn.textContent = "✦ Analyser dossier";
-      btn.addEventListener("click", function(e){
-        startIntelligenceAnalysis();
-      }, true);
-    }
-
-    const observer = new MutationObserver(()=>{
-      ensureRightProgressPanel();
-      ensureAnalysisPanel();
-      ensureTimelinePanel();
-      enhanceDocumentRows();
-      const b = qs("#shieldAnalyzeDossierV2");
-      if(b && !b.dataset.ksSprint1){
-        b.dataset.ksSprint1 = "1";
-        b.textContent = "✦ Analyser dossier";
-        b.addEventListener("click", startIntelligenceAnalysis, true);
-      }
-    });
-    observer.observe(document.body,{childList:true,subtree:true});
+    bind();
+    const obs = new MutationObserver(bind);
+    obs.observe(document.body,{childList:true,subtree:true});
   }
 
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  window.KADDU_SHIELD_SPRINT1 = { startIntelligenceAnalysis };
+  window.KADDU_SHIELD_SPRINT_1_1 = { runRealAnalysis };
+})();
+</script>
+
+
+
+<script id="kaddu-shield-sprint-1-2-js">
+/* ═══════════════════════════════════════════════════════════════
+   KÀDDU SHIELD — SPRINT 1.2
+   Vrais écarts structurés + sauvegarde Supabase + timeline réelle
+   Ajout non destructif : se branche par-dessus Sprint 1.1.
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  const cfg = window.KADDU_SUPABASE || {};
+  const SUPA = String(cfg.url || '').replace(/\/$/, '');
+  const state = { row:null };
+  const nowIso = () => new Date().toISOString();
+  const safeJson = (v, fallback=null) => { try { return typeof v === 'string' ? JSON.parse(v) : (v ?? fallback); } catch(_) { return fallback; } };
+  const headers = () => {
+    if (typeof window.getAuthHeaders === 'function') return window.getAuthHeaders();
+    return { apikey: cfg.anonKey, Authorization: 'Bearer ' + cfg.anonKey, 'Content-Type':'application/json' };
+  };
+  async function rest(path, options={}){
+    const res = await fetch(`${SUPA}/rest/v1/${path}`, { ...options, headers:{ ...headers(), ...(options.headers||{}) } });
+    const text = await res.text();
+    let data = null; try{ data = text ? JSON.parse(text) : null; }catch(_){ data = text; }
+    if(!res.ok){ throw new Error(typeof data === 'string' ? data : (data?.message || data?.error || text || `HTTP ${res.status}`)); }
+    return data;
+  }
+  async function createEvent(type, data={}){
+    const row = data.row || state.row;
+    const dossierId = data.dossierId || row?.id;
+    if(!SUPA || !dossierId) return;
+    try{
+      await rest('dossier_events', {
+        method:'POST',
+        headers:{ Prefer:'return=minimal' },
+        body: JSON.stringify({
+          dossier_id: dossierId,
+          event_type: type,
+          old_value: data.oldValue ?? null,
+          new_value: data.newValue ?? null,
+          comment: data.comment ?? null,
+          metadata: data.metadata || {},
+          created_by: (window.currentSession?.user?.email || 'admin')
+        })
+      });
+    }catch(e){ console.warn('[Sprint 1.2] timeline non enregistrée', type, e.message); }
+  }
+  function getText(id){ return (document.getElementById(id)?.innerText || document.getElementById(id)?.textContent || '').trim(); }
+  function parseChecksFromText(text){
+    const m = String(text||'').match(/KADDU_CHECKS:\s*(\[[\s\S]*?\])\s*(?:$|\n[A-Z_]+:)/);
+    if(!m) return [];
+    try{ const arr = JSON.parse(m[1]); return Array.isArray(arr) ? arr : []; }catch(_){ return []; }
+  }
+  function parseDocsFromText(text){
+    const mArr = String(text||'').match(/KADDU_DOCS:\s*(\[[\s\S]*?\])\s*(?:$|\n[A-Z_]+:)/);
+    if(mArr){ try{ const arr=JSON.parse(mArr[1]); return Array.isArray(arr)?arr:[]; }catch(_){} }
+    const mOne = String(text||'').match(/KADDU_DOC:\s*(\{[\s\S]*?\})\s*(?:$|\n[A-Z_]+:)/);
+    if(mOne){ try{ return [JSON.parse(mOne[1])]; }catch(_){} }
+    return [];
+  }
+  function normalizeCheck(c, dossierId, extractionId, documentName){
+    return {
+      rental_dossier_id: dossierId,
+      extraction_id: extractionId || null,
+      document_name: documentName || c.document_name || null,
+      control_code: c.control_code || c.code || null,
+      label: c.label || c.nom || c.control_code || 'Contrôle',
+      declared_value: c.declared_value == null ? null : String(c.declared_value),
+      extracted_value: c.extracted_value == null ? null : String(c.extracted_value),
+      result: ['ok','warning','ko','unknown'].includes(c.result) ? c.result : 'unknown',
+      severity: ['low','medium','high','critical'].includes(c.severity) ? c.severity : (c.result === 'ko' ? 'high' : 'medium'),
+      score_impact: Number(c.score_impact || 0),
+      explanation: c.explanation || c.commentaire || null,
+      payload: c,
+      created_by: (window.currentSession?.user?.email || 'admin')
+    };
+  }
+  async function saveExtractionAndChecks({row, response, requestPayload}){
+    row = row || state.row;
+    const dossierId = requestPayload?.dossierId || row?.id;
+    if(!SUPA || !dossierId || !response) return;
+
+    const raw = response.rawText || response.displayText || '';
+    const checks = Array.isArray(response.checks) ? response.checks : parseChecksFromText(raw);
+    const docs = response.docData ? [response.docData] : (Array.isArray(response.docsData) ? response.docsData : parseDocsFromText(raw));
+    const documentMeta = requestPayload?.documentMeta || null;
+    const documentsMeta = Array.isArray(requestPayload?.documentsMeta) ? requestPayload.documentsMeta : [];
+
+    // Cas analyse dossier : sauvegarde synthèse + checks éventuels sans extraction.
+    if(requestPayload?.mode === 'dossier'){
+      const score = response.scoreData?.score ?? parseInt(getText('afScoreNum'),10);
+      const decision = response.scoreData?.decision || getText('afDecisionBadge') || null;
+      const vigilance = getText('afVigBadge') || null;
+      await rest(`rental_dossiers?id=eq.${dossierId}`, {
+        method:'PATCH',
+        headers:{ Prefer:'return=minimal' },
+        body: JSON.stringify({
+          af_synthese: response.displayText || raw || getText('afResultBody'),
+          af_synthese_at: nowIso(),
+          af_score: Number.isFinite(Number(score)) ? Number(score) : null,
+          af_decision: decision,
+          af_vigilance: vigilance,
+          af_checks: checks,
+          af_last_analysis_by: (window.currentSession?.user?.email || 'admin'),
+          updated_at: nowIso()
+        })
+      }).catch(e => console.warn('[Sprint 1.2] patch dossier analyse', e.message));
+      await createEvent('analyse_terminee', { dossierId, newValue: String(score || '—'), comment:'Analyse dossier Claude terminée', metadata:{ mode:'dossier', decision, vigilance, checks_count:checks.length } });
+      return;
+    }
+
+    let firstExtractionId = null;
+    for(let i=0; i<docs.length; i++){
+      const doc = docs[i] || {};
+      const meta = documentMeta || documentsMeta[i] || {};
+      const inserted = await rest('dossier_document_extractions', {
+        method:'POST',
+        headers:{ Prefer:'return=representation' },
+        body: JSON.stringify({
+          rental_dossier_id: dossierId,
+          locataire_id: requestPayload?.locataireId || row?.locataire_id || null,
+          locataire_email: requestPayload?.locataireEmail || row?.email || null,
+          document_name: meta.name || doc.document_name || doc.nom_fichier || null,
+          document_url: meta.url || null,
+          document_key: meta.key || meta.type || null,
+          type_detected: doc.type_document || doc.type_detected || meta.type || null,
+          sha256: doc.sha256 || meta.sha256 || meta.phase2_meta?.sha256 || null,
+          extraction: doc,
+          raw_text: raw ? String(raw).slice(0, 12000) : null,
+          source: 'claude',
+          created_by: (window.currentSession?.user?.email || 'admin')
+        })
+      });
+      const extractionId = Array.isArray(inserted) ? inserted[0]?.id : inserted?.id;
+      if(!firstExtractionId) firstExtractionId = extractionId;
+
+      const related = checks.filter(c => !c.document_name || !meta.name || c.document_name === meta.name || c.document_name === doc.document_name);
+      const rows = related.map(c => normalizeCheck(c, dossierId, extractionId, meta.name || doc.document_name));
+      if(rows.length){
+        await rest('dossier_document_crosschecks', {
+          method:'POST',
+          headers:{ Prefer:'return=minimal' },
+          body: JSON.stringify(rows)
+        });
+      }
+    }
+
+    if(checks.length && !docs.length){
+      await rest('dossier_document_crosschecks', {
+        method:'POST',
+        headers:{ Prefer:'return=minimal' },
+        body: JSON.stringify(checks.map(c => normalizeCheck(c, dossierId, null, documentMeta?.name || null)))
+      });
+    }
+
+    await rest(`rental_dossiers?id=eq.${dossierId}`, {
+      method:'PATCH',
+      headers:{ Prefer:'return=minimal' },
+      body: JSON.stringify({ af_checks: checks, updated_at: nowIso() })
+    }).catch(()=>{});
+
+    await createEvent('analyse_document_terminee', {
+      dossierId,
+      newValue: `${docs.length || 0} extraction(s), ${checks.length || 0} écart(s)`,
+      comment: requestPayload?.mode === 'documents' ? 'Analyse documentaire groupée terminée' : 'Analyse documentaire terminée',
+      metadata:{ mode:requestPayload?.mode, checks_count:checks.length, docs_count:docs.length, extraction_id:firstExtractionId }
+    });
+
+    if(typeof window.renderSavedDocumentExtractions === 'function' && row){
+      window.renderSavedDocumentExtractions(row).catch(()=>{});
+    }
+  }
+
+  // Capture du dossier courant à chaque ouverture/rendu détail.
+  const originalRenderDetail = window.renderDetail;
+  if(typeof originalRenderDetail === 'function' && !originalRenderDetail.__ks12){
+    window.renderDetail = function(row){
+      state.row = row || state.row;
+      return originalRenderDetail.apply(this, arguments);
+    };
+    window.renderDetail.__ks12 = true;
+  }
+  const originalOpenModal = window.openShieldModalV2;
+  if(typeof originalOpenModal === 'function' && !originalOpenModal.__ks12){
+    window.openShieldModalV2 = function(row){
+      state.row = row || state.row;
+      return originalOpenModal.apply(this, arguments);
+    };
+    window.openShieldModalV2.__ks12 = true;
+  }
+
+  // Interception centrale : tout appel Claude est journalisé et persisté.
+  const originalCall = window.callShieldAnalyze;
+  if(typeof originalCall === 'function' && !originalCall.__ks12){
+    window.callShieldAnalyze = async function(payload){
+      const dossierId = payload?.dossierId || state.row?.id || null;
+      await createEvent(payload?.mode === 'dossier' ? 'analyse_lancee' : 'analyse_document_lancee', {
+        dossierId,
+        comment: payload?.mode === 'dossier' ? 'Analyse dossier Claude lancée' : 'Analyse document Claude lancée',
+        metadata:{ mode:payload?.mode, document_name:payload?.documentMeta?.name || null, documents_count:payload?.documentsMeta?.length || null }
+      });
+      try{
+        const data = await originalCall.apply(this, arguments);
+        await saveExtractionAndChecks({ row:state.row, response:data, requestPayload:payload });
+        return data;
+      }catch(e){
+        await createEvent('analyse_erreur', { dossierId, comment:e.message || String(e), metadata:{ mode:payload?.mode } });
+        throw e;
+      }
+    };
+    window.callShieldAnalyze.__ks12 = true;
+  }
+
+  // Timeline modal : remplace les événements figés par les vrais dossier_events quand disponibles.
+  async function refreshModalTimeline(row){
+    row = row || state.row;
+    const box = document.getElementById('shieldHistoryV2');
+    if(!box || !row?.id || !SUPA) return;
+    try{
+      const events = await rest(`dossier_events?dossier_id=eq.${row.id}&select=*&order=created_at.desc&limit=12`, { method:'GET' });
+      if(!Array.isArray(events) || !events.length) return;
+      const labels = {
+        dossier_created:'Dossier créé', doc_received:'Document reçu', analyse_lancee:'Analyse lancée', analyse_terminee:'Analyse terminée', analyse_document_lancee:'Analyse document lancée', analyse_document_terminee:'Analyse document terminée', status_metier_changed:'Décision prise', dossier_converted:'Dossier loué', deletion_request_created:'Demande RGPD créée', analyse_erreur:'Erreur analyse'
+      };
+      box.innerHTML = events.map(ev => `<div class="ksm-timeline-item"><strong>${labels[ev.event_type] || ev.event_type}</strong><br><span class="muted">${new Date(ev.created_at).toLocaleString('fr-FR')}</span>${ev.comment ? `<br>${String(ev.comment).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}` : ''}</div>`).join('');
+    }catch(e){ console.warn('[Sprint 1.2] timeline modal non chargée', e.message); }
+  }
+  const originalPopulate = window.KADDU_SHIELD_MODAL_POPULATE;
+  // Fallback : observer l'ouverture de la modal et recharge la timeline.
+  const obs = new MutationObserver(()=>{
+    const modal = document.getElementById('shieldModalV2');
+    if(modal && !modal.classList.contains('hidden')) refreshModalTimeline(state.row);
+  });
+  if(document.body) obs.observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
+
+  window.KADDU_SHIELD_SPRINT_1_2 = { createEvent, saveExtractionAndChecks, refreshModalTimeline, state };
+  console.info('[Kàddu Shield] Sprint 1.2 chargé : écarts structurés + Supabase + timeline réelle.');
 })();
 </script>
 
