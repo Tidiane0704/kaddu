@@ -894,6 +894,106 @@ tr.active{background:rgba(83,183,255,.055) !important;}
     });
   </script>
   <link rel="stylesheet" href="/assets/css/kaddu-admin-luxury.css">
+
+  <style id="kaddu-sprint-1-2-7-doc-names-fix">
+    /* Kàddu Sprint 1.2.7 — correction cascade : noms des pièces toujours visibles */
+    #ksmDocList .ksm-doc-row{
+      display:grid!important;
+      grid-template-columns:56px minmax(260px,1fr) 170px 155px minmax(230px,260px)!important;
+      gap:14px!important;
+      align-items:center!important;
+      min-height:96px!important;
+      overflow:visible!important;
+    }
+    #ksmDocList .ksm-doc-main{
+      display:block!important;
+      visibility:visible!important;
+      opacity:1!important;
+      min-width:0!important;
+      overflow:hidden!important;
+      grid-column:auto!important;
+    }
+    #ksmDocList .ksm-doc-name{
+      display:block!important;
+      visibility:visible!important;
+      opacity:1!important;
+      color:#f5f1eb!important;
+      font-size:15px!important;
+      font-weight:850!important;
+      line-height:1.22!important;
+      white-space:nowrap!important;
+      overflow:hidden!important;
+      text-overflow:ellipsis!important;
+      max-width:100%!important;
+    }
+    #ksmDocList .ksm-doc-type{
+      display:block!important;
+      visibility:visible!important;
+      opacity:1!important;
+      color:rgba(245,241,235,.45)!important;
+      font-size:12px!important;
+      margin-top:4px!important;
+      white-space:nowrap!important;
+      overflow:hidden!important;
+      text-overflow:ellipsis!important;
+    }
+    #ksmDocList .ks-doc-status-dot,
+    #ksmDocList .ksm-doc-pill{
+      justify-self:start!important;
+      max-width:165px!important;
+      white-space:nowrap!important;
+      overflow:hidden!important;
+      text-overflow:ellipsis!important;
+    }
+    #ksmDocList .ksm-doc-score{
+      justify-self:start!important;
+      white-space:nowrap!important;
+      font-size:13px!important;
+    }
+    #ksmDocList .ksm-doc-actions{
+      display:grid!important;
+      grid-template-columns:1fr 1fr!important;
+      gap:8px!important;
+      width:100%!important;
+      justify-self:stretch!important;
+      align-self:center!important;
+    }
+    #ksmDocList .ksm-doc-btn{
+      min-width:0!important;
+      width:100%!important;
+      min-height:38px!important;
+      padding:8px 9px!important;
+      font-size:11px!important;
+      overflow:hidden!important;
+      text-overflow:ellipsis!important;
+    }
+    #ksmDocList .ksm-doc-actions .ksm-doc-btn[data-ks-view-result]{
+      grid-column:1 / -1!important;
+    }
+    @media(max-width:1180px){
+      #ksmDocList .ksm-doc-row{
+        grid-template-columns:52px minmax(220px,1fr) 155px 130px minmax(200px,220px)!important;
+        gap:10px!important;
+      }
+      #ksmDocList .ksm-doc-name{font-size:14px!important;}
+      #ksmDocList .ksm-doc-actions{grid-template-columns:1fr!important;}
+      #ksmDocList .ksm-doc-actions .ksm-doc-btn[data-ks-view-result]{grid-column:auto!important;}
+    }
+    @media(max-width:860px){
+      #ksmDocList .ksm-doc-row{
+        grid-template-columns:46px minmax(0,1fr)!important;
+      }
+      #ksmDocList .ksm-doc-main,
+      #ksmDocList .ks-doc-status-dot,
+      #ksmDocList .ksm-doc-pill,
+      #ksmDocList .ksm-doc-score,
+      #ksmDocList .ksm-doc-actions{
+        grid-column:2!important;
+      }
+      #ksmDocList .ksm-doc-actions{grid-template-columns:1fr 1fr!important;}
+      #ksmDocList .ksm-doc-actions .ksm-doc-btn[data-ks-view-result]{grid-column:1 / -1!important;}
+    }
+  </style>
 </head>
 <body>
   <nav>
