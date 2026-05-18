@@ -4655,5 +4655,322 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
 })();
 </script>
 
+<script id="kaddu-shield-sprint-1-2-4-audit-trail">
+/* ═══════════════════════════════════════════════════════════════
+   KÀDDU SHIELD — SPRINT 1.2.4
+   Restitution Analyse & Audit Trail
+   - Dernière analyse visible sans relancer
+   - Statut analysé/cross-checké par pièce
+   - KADDU_CHECKS en tableau fonctionnel + JSON brut + exports
+   - Ajout non destructif par-dessus Sprint 1.2.x
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+  if(window.KADDU_SHIELD_SPRINT_1_2_4?.loaded) return;
+
+  const cfg = window.KADDU_SUPABASE || {};
+  const SUPA = String(cfg.url || '').replace(/\/$/, '');
+  const state = { row:null, audit:null, checks:[], extractions:[] };
+
+  const $ = (id)=>document.getElementById(id);
+  const esc = (s)=>String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt = (v)=>{ try{ return v ? new Date(v).toLocaleString('fr-FR') : '—'; }catch(_){ return v || '—'; } };
+  const headers = ()=> typeof window.getAuthHeaders === 'function'
+    ? window.getAuthHeaders()
+    : { apikey: cfg.anonKey, Authorization:'Bearer ' + cfg.anonKey, 'Content-Type':'application/json' };
+
+  async function rest(path, options={}){
+    if(!SUPA) throw new Error('Configuration Supabase absente.');
+    const res = await fetch(`${SUPA}/rest/v1/${path}`, { ...options, headers:{ ...headers(), ...(options.headers || {}) } });
+    const text = await res.text();
+    let data = null;
+    try{ data = text ? JSON.parse(text) : null; }catch(_){ data = text; }
+    if(!res.ok){ throw new Error(typeof data === 'string' ? data : (data?.message || data?.error || text || `HTTP ${res.status}`)); }
+    return data;
+  }
+
+  function normName(v){ return String(v || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' '); }
+  function resultLabel(r){ return r === 'ok' ? '✅ OK' : r === 'ko' ? '❌ Écart fort' : r === 'warning' ? '⚠ À vérifier' : '— Inconnu'; }
+  function severityLabel(s){ return ({low:'Faible',medium:'Moyenne',high:'Haute',critical:'Critique'}[s] || '—'); }
+  function badgeClassFromChecks(checks){
+    if(!checks?.length) return {cls:'unknown', label:'Analysé · 0 écart'};
+    if(checks.some(c => ['ko'].includes(c.result) || ['critical','high'].includes(c.severity))) return {cls:'ko', label:`⚠ ${checks.length} contrôle${checks.length>1?'s':''}`};
+    if(checks.some(c => c.result === 'warning' || c.severity === 'medium')) return {cls:'warn', label:`~ ${checks.length} contrôle${checks.length>1?'s':''}`};
+    return {cls:'ok', label:`✓ Cross-check OK`};
+  }
+
+  function extractDocs(row){
+    let docs = Array.isArray(row?.docs_fournis) ? row.docs_fournis : [];
+    if(!docs.length){
+      try{ const p = typeof row?.payload === 'string' ? JSON.parse(row.payload) : (row?.payload || {}); if(Array.isArray(p.docs_fournis)) docs = p.docs_fournis; }catch(_){ }
+    }
+    if(!docs.length && row?.transmission){
+      const names = String(row.transmission).split(',').map(s=>s.trim()).filter(Boolean);
+      docs = names.map((name,i)=>({ name, key:`legacy_${i}`, url:`${SUPA}/storage/v1/object/public/rental-documents/${encodeURIComponent(name)}` }));
+    }
+    return docs;
+  }
+
+  function injectCss(){
+    if($('kadduSprint124Css')) return;
+    const style = document.createElement('style');
+    style.id = 'kadduSprint124Css';
+    style.textContent = `
+      .ks-audit-card{border:1px solid rgba(191,150,80,.18);background:rgba(191,150,80,.045);border-radius:16px;padding:16px;margin:0 0 16px;}
+      .ks-audit-title{font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:#BF9650;font-weight:800;margin-bottom:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+      .ks-audit-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px;}
+      .ks-audit-metric{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:12px;padding:10px;}
+      .ks-audit-metric span{display:block;font-size:10px;color:rgba(245,241,235,.42);margin-bottom:5px;}
+      .ks-audit-metric strong{display:block;font-size:15px;color:#f5f1eb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+      .ks-audit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+      .ks-audit-btn{padding:7px 11px;border-radius:10px;border:1px solid rgba(191,150,80,.24);background:rgba(255,255,255,.035);color:rgba(245,241,235,.72);cursor:pointer;font-size:11px;font-weight:700;}
+      .ks-audit-btn:hover{border-color:#BF9650;color:#BF9650;}
+      .ks-check-table{width:100%;border-collapse:separate;border-spacing:0 7px;font-size:12px;}
+      .ks-check-table th{position:static;background:transparent!important;color:#BF9650!important;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:6px 8px!important;border:none!important;}
+      .ks-check-table td{background:rgba(255,255,255,.025);border-top:1px solid rgba(255,255,255,.06)!important;border-bottom:1px solid rgba(255,255,255,.06)!important;padding:10px 8px!important;vertical-align:top;}
+      .ks-check-table td:first-child{border-left:1px solid rgba(255,255,255,.06)!important;border-radius:10px 0 0 10px;}
+      .ks-check-table td:last-child{border-right:1px solid rgba(255,255,255,.06)!important;border-radius:0 10px 10px 0;}
+      .ks-check-ok{color:#77ffbe}.ks-check-warning{color:#ffd180}.ks-check-ko{color:#ffb3b3}.ks-check-unknown{color:rgba(245,241,235,.5)}
+      .ks-json-box{display:none;margin-top:12px;max-height:280px;overflow:auto;border:1px solid rgba(83,183,255,.18);background:rgba(4,12,20,.72);border-radius:12px;padding:12px;color:#b8e1ff;font-size:11px;line-height:1.5;white-space:pre-wrap;}
+      .ks-json-box.open{display:block;}
+      .ks-doc-status-dot{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.1);}
+      .ks-doc-status-dot.ok{color:#77ffbe;background:rgba(0,200,117,.09);border-color:rgba(0,200,117,.25)}
+      .ks-doc-status-dot.warn{color:#ffd180;background:rgba(255,209,128,.08);border-color:rgba(255,209,128,.24)}
+      .ks-doc-status-dot.ko{color:#ffb3b3;background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.24)}
+      .ks-doc-status-dot.unknown{color:rgba(245,241,235,.5);background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+      .ks-audit-empty{color:rgba(245,241,235,.48);font-size:13px;line-height:1.65;}
+      @media(max-width:900px){.ks-audit-grid{grid-template-columns:repeat(2,1fr)}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function ensureAuditPanels(){
+    injectCss();
+    const synthPanel = document.querySelector('[data-shield-panel="synthese"]');
+    if(synthPanel && !$('ksAuditLastAnalysis')){
+      const card = document.createElement('div');
+      card.id = 'ksAuditLastAnalysis';
+      card.className = 'ks-audit-card';
+      card.innerHTML = '<div class="ks-audit-title">Dernière analyse Kàddu Shield</div><div class="ks-audit-empty">Chargement…</div>';
+      const after = synthPanel.querySelector('.ksm-kpi-strip');
+      if(after?.parentNode) after.parentNode.insertBefore(card, after.nextSibling); else synthPanel.prepend(card);
+    }
+    if(synthPanel && !$('ksAuditChecksPanel')){
+      const card = document.createElement('div');
+      card.id = 'ksAuditChecksPanel';
+      card.className = 'ks-audit-card';
+      card.innerHTML = '<div class="ks-audit-title">Écarts structurés & KADDU_CHECKS</div><div class="ks-audit-empty">Aucun contrôle chargé.</div>';
+      synthPanel.appendChild(card);
+    }
+    const docPanel = document.querySelector('[data-shield-panel="documents"]');
+    if(docPanel && !$('ksAuditDocsLegend')){
+      const legend = document.createElement('div');
+      legend.id = 'ksAuditDocsLegend';
+      legend.className = 'ks-audit-card';
+      legend.style.marginBottom = '12px';
+      legend.innerHTML = '<div class="ks-audit-title">Statut d’analyse des pièces</div><div class="ks-audit-empty">Les statuts se chargent depuis Supabase : jamais analysé, analysé, cross-check OK, écart détecté.</div>';
+      const list = $('ksmDocList');
+      if(list?.parentNode) list.parentNode.insertBefore(legend, list); else docPanel.prepend(legend);
+    }
+  }
+
+  async function loadAudit(row){
+    if(!row?.id) return null;
+    const [rd, ex, ck, ev] = await Promise.all([
+      rest(`rental_dossiers?id=eq.${encodeURIComponent(row.id)}&select=id,af_synthese,af_synthese_at,af_score,af_decision,af_vigilance,af_checks,af_last_analysis_by,updated_at&limit=1`, {method:'GET'}).catch(()=>[]),
+      rest(`dossier_document_extractions?rental_dossier_id=eq.${encodeURIComponent(row.id)}&select=*&order=created_at.desc&limit=50`, {method:'GET'}).catch(()=>[]),
+      rest(`dossier_document_crosschecks?rental_dossier_id=eq.${encodeURIComponent(row.id)}&select=*&order=created_at.desc&limit=200`, {method:'GET'}).catch(()=>[]),
+      rest(`dossier_events?dossier_id=eq.${encodeURIComponent(row.id)}&select=*&order=created_at.desc&limit=20`, {method:'GET'}).catch(()=>[])
+    ]);
+    const audit = { dossier: Array.isArray(rd) ? rd[0] : null, extractions:Array.isArray(ex)?ex:[], checks:Array.isArray(ck)?ck:[], events:Array.isArray(ev)?ev:[] };
+    state.audit = audit; state.checks = audit.checks; state.extractions = audit.extractions;
+    return audit;
+  }
+
+  function renderLastAnalysis(audit){
+    const host = $('ksAuditLastAnalysis');
+    if(!host) return;
+    const d = audit?.dossier || {};
+    const evDone = (audit?.events || []).find(e => ['analyse_terminee','analyse_document_terminee'].includes(e.event_type));
+    const has = d.af_synthese || audit?.extractions?.length || audit?.checks?.length || evDone;
+    if(!has){
+      host.innerHTML = `<div class="ks-audit-title">Dernière analyse Kàddu Shield</div><div class="ks-audit-empty">Aucune analyse sauvegardée pour ce dossier. Tu peux lancer une analyse sans risque, elle sera ensuite visible ici.</div>`;
+      return;
+    }
+    const score = d.af_score ?? '—';
+    const vigilance = d.af_vigilance || '—';
+    const decision = d.af_decision || '—';
+    const date = d.af_synthese_at || evDone?.created_at || d.updated_at;
+    const by = d.af_last_analysis_by || evDone?.created_by || '—';
+    const summary = String(d.af_synthese || '').replace(/KADDU_SCORE:[\s\S]*$/,'').slice(0,520);
+    host.innerHTML = `
+      <div class="ks-audit-title"><span>Dernière analyse Kàddu Shield</span><span>${esc(fmt(date))}</span></div>
+      <div class="ks-audit-grid">
+        <div class="ks-audit-metric"><span>Score</span><strong>${esc(score)}/100</strong></div>
+        <div class="ks-audit-metric"><span>Vigilance</span><strong>${esc(vigilance)}</strong></div>
+        <div class="ks-audit-metric"><span>Décision</span><strong>${esc(decision)}</strong></div>
+        <div class="ks-audit-metric"><span>Analysé par</span><strong>${esc(by)}</strong></div>
+      </div>
+      ${summary ? `<div style="font-size:13px;line-height:1.7;color:rgba(245,241,235,.68);max-height:130px;overflow:auto">${esc(summary)}</div>` : '<div class="ks-audit-empty">Analyse documentaire disponible. Voir les contrôles structurés ci-dessous.</div>'}
+      <div class="ks-audit-actions">
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_2_4.showRawAnalysis()">Voir JSON dossier</button>
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_2_4.downloadAuditJson()">Télécharger JSON</button>
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_2_4.downloadChecksCsv()">Télécharger CSV checks</button>
+      </div>
+      <pre class="ks-json-box" id="ksAuditRawAnalysisJson"></pre>`;
+  }
+
+  function renderChecks(audit){
+    const host = $('ksAuditChecksPanel');
+    if(!host) return;
+    let checks = audit?.checks || [];
+    const dossierChecks = Array.isArray(audit?.dossier?.af_checks) ? audit.dossier.af_checks : [];
+    if(!checks.length && dossierChecks.length){
+      checks = dossierChecks.map(c=>({ ...c, document_name:c.document_name || 'Analyse dossier' }));
+    }
+    if(!checks.length){
+      host.innerHTML = `<div class="ks-audit-title">Écarts structurés & KADDU_CHECKS</div><div class="ks-audit-empty">Aucun KADDU_CHECK sauvegardé. Les prochaines analyses devront produire et persister les contrôles structurés.</div>`;
+      return;
+    }
+    const rows = checks.map(c=>{
+      const cls = 'ks-check-' + (['ok','warning','ko'].includes(c.result) ? c.result : 'unknown');
+      return `<tr>
+        <td><strong>${esc(c.label || c.control_code || 'Contrôle')}</strong><br><span class="muted">${esc(c.control_code || '')}${c.document_name ? ' · ' + esc(c.document_name) : ''}</span></td>
+        <td class="${cls}">${esc(resultLabel(c.result))}</td>
+        <td>${esc(severityLabel(c.severity))}</td>
+        <td>${Number(c.score_impact || 0)}</td>
+        <td><strong>Déclaré :</strong> ${esc(c.declared_value ?? '—')}<br><strong>Extrait :</strong> ${esc(c.extracted_value ?? '—')}</td>
+        <td>${esc(c.explanation || '—')}</td>
+      </tr>`;
+    }).join('');
+    host.innerHTML = `
+      <div class="ks-audit-title"><span>Écarts structurés & KADDU_CHECKS</span><span>${checks.length} contrôle${checks.length>1?'s':''}</span></div>
+      <div style="overflow:auto">
+        <table class="ks-check-table">
+          <thead><tr><th>Contrôle</th><th>Résultat</th><th>Gravité</th><th>Impact</th><th>Valeurs</th><th>Explication métier</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="ks-audit-actions">
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_2_4.toggleChecksJson()">Voir JSON brut</button>
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_2_4.downloadChecksJson()">Télécharger JSON checks</button>
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_2_4.downloadChecksCsv()">Télécharger CSV checks</button>
+      </div>
+      <pre class="ks-json-box" id="ksAuditChecksJson">${esc(JSON.stringify(checks, null, 2))}</pre>`;
+  }
+
+  function renderDocStatuses(row, audit){
+    const docs = extractDocs(row);
+    const extractions = audit?.extractions || [];
+    const checks = audit?.checks || [];
+    const legend = $('ksAuditDocsLegend');
+    if(legend){
+      const analysed = extractions.length;
+      const checked = new Set(checks.map(c => normName(c.document_name)).filter(Boolean)).size;
+      legend.innerHTML = `<div class="ks-audit-title"><span>Statut d’analyse des pièces</span><span>${analysed}/${docs.length || 0} analysée${analysed>1?'s':''}</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="ks-doc-status-dot ok">✓ Cross-check OK</span>
+          <span class="ks-doc-status-dot warn">⚠ Contrôle conseillé</span>
+          <span class="ks-doc-status-dot ko">❌ Écart fort</span>
+          <span class="ks-doc-status-dot unknown">— Jamais analysé</span>
+        </div>
+        <div class="ks-audit-empty" style="margin-top:8px">${checked} pièce${checked>1?'s':''} avec cross-check structuré sauvegardé.</div>`;
+    }
+    const rows = Array.from(document.querySelectorAll('#ksmDocList .ksm-doc-row'));
+    rows.forEach((el, idx)=>{
+      const doc = docs[idx] || {};
+      const name = normName(doc.name || el.querySelector('.ksm-doc-name')?.textContent || '');
+      const ex = extractions.find(e => normName(e.document_name) === name || normName(e.document_key) === normName(doc.key));
+      const docChecks = checks.filter(c => normName(c.document_name) === name || (ex?.id && c.extraction_id === ex.id));
+      const status = ex ? badgeClassFromChecks(docChecks) : {cls:'unknown', label:'— Jamais analysé'};
+      const oldPill = el.querySelector('.ksm-doc-pill');
+      if(oldPill){ oldPill.outerHTML = `<span class="ks-doc-status-dot ${status.cls}">${esc(status.label)}</span>`; }
+      const score = el.querySelector('.ksm-doc-score');
+      if(score){ score.textContent = ex ? fmt(ex.created_at).replace(/:\d\d$/,'') : '—'; }
+      const actions = el.querySelector('div[style*="justify-content:flex-end"]') || el.lastElementChild;
+      if(actions && doc.url && !actions.querySelector('[data-ks-open-doc]')){
+        const btn = document.createElement('button');
+        btn.className = 'ksm-doc-btn'; btn.type = 'button'; btn.dataset.ksOpenDoc = '1'; btn.textContent = '👁 Ouvrir';
+        btn.onclick = ()=>window.open(doc.url, '_blank', 'noopener,noreferrer');
+        actions.insertBefore(btn, actions.firstChild);
+      }
+      if(ex && actions && !actions.querySelector('[data-ks-view-result]')){
+        const btn = document.createElement('button');
+        btn.className = 'ksm-doc-btn'; btn.type = 'button'; btn.dataset.ksViewResult = '1'; btn.textContent = '📊 Résultat';
+        btn.onclick = ()=>{ document.querySelector('[data-shield-tab="synthese"]')?.click(); setTimeout(()=>$('ksAuditChecksPanel')?.scrollIntoView({behavior:'smooth',block:'start'}),100); };
+        actions.appendChild(btn);
+      }
+    });
+  }
+
+  function download(filename, content, mime='text/plain;charset=utf-8'){
+    const blob = new Blob([content], {type:mime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  }
+  function currentBaseName(){ return `kaddu_audit_${(state.row?.nom || state.row?.id || 'dossier').toString().replace(/[^a-z0-9_-]+/gi,'_')}`; }
+  function checksForExport(){
+    return state.checks?.length ? state.checks : (Array.isArray(state.audit?.dossier?.af_checks) ? state.audit.dossier.af_checks : []);
+  }
+  function toCsv(rows){
+    const cols = ['document_name','control_code','label','result','severity','score_impact','declared_value','extracted_value','explanation'];
+    const cell = v => '"' + String(v ?? '').replace(/"/g,'""') + '"';
+    return [cols.join(';')].concat(rows.map(r => cols.map(c => cell(r[c])).join(';'))).join('\n');
+  }
+
+  async function refresh(row){
+    state.row = row || state.row || window.KADDU_SHIELD_SPRINT_1_2?.state?.row || window._currentDossier;
+    if(!state.row?.id) return;
+    ensureAuditPanels();
+    try{
+      const audit = await loadAudit(state.row);
+      renderLastAnalysis(audit);
+      renderChecks(audit);
+      renderDocStatuses(state.row, audit);
+    }catch(e){
+      console.warn('[Kàddu Shield 1.2.4] audit non chargé', e.message);
+      if($('ksAuditLastAnalysis')) $('ksAuditLastAnalysis').innerHTML = `<div class="ks-audit-title">Dernière analyse Kàddu Shield</div><div class="ks-audit-empty">Impossible de charger l’audit trail : ${esc(e.message)}</div>`;
+    }
+  }
+
+  function wrap(name){
+    const original = window[name];
+    if(typeof original !== 'function' || original.__ks124) return;
+    window[name] = function(row){
+      state.row = row || state.row;
+      const ret = original.apply(this, arguments);
+      setTimeout(()=>refresh(row || state.row), 250);
+      return ret;
+    };
+    window[name].__ks124 = true;
+  }
+  wrap('renderDetail');
+  wrap('openShieldModalV2');
+
+  const obs = new MutationObserver(()=>{
+    const modal = $('shieldModalV2');
+    if(modal && !modal.classList.contains('hidden')) setTimeout(()=>refresh(state.row), 300);
+  });
+  if(document.body) obs.observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
+
+  window.KADDU_SHIELD_SPRINT_1_2_4 = {
+    loaded:true,
+    refresh,
+    state,
+    toggleChecksJson(){ $('ksAuditChecksJson')?.classList.toggle('open'); },
+    showRawAnalysis(){
+      const el = $('ksAuditRawAnalysisJson'); if(!el) return;
+      el.textContent = JSON.stringify(state.audit?.dossier || {}, null, 2); el.classList.toggle('open');
+    },
+    downloadAuditJson(){ download(`${currentBaseName()}_audit.json`, JSON.stringify(state.audit || {}, null, 2), 'application/json;charset=utf-8'); },
+    downloadChecksJson(){ download(`${currentBaseName()}_checks.json`, JSON.stringify(checksForExport(), null, 2), 'application/json;charset=utf-8'); },
+    downloadChecksCsv(){ download(`${currentBaseName()}_checks.csv`, toCsv(checksForExport()), 'text/csv;charset=utf-8'); }
+  };
+
+  document.addEventListener('DOMContentLoaded', ()=>setTimeout(()=>refresh(window._currentDossier), 1000));
+  console.info('[Kàddu Shield] Sprint 1.2.4 chargé : restitution analyses + audit trail + exports.');
+})();
+</script>
+
 </body>
 </html>
