@@ -2701,6 +2701,7 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       const oldBtnHtml = btn ? btn.innerHTML : "";
 
       window.__kadduDossierAnalysisRunning = true;
+      if(window.kadduMarkClaudeCallStarted) window.kadduMarkClaudeCallStarted("Analyse dossier envoyée à Claude…");
       if(btn){ btn.disabled = true; btn.innerHTML = "⏳ Analyse en cours…"; }
       loader.classList.add("visible");
       result.classList.remove("visible");
@@ -2742,6 +2743,8 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
         renderAfScoreInline(scoreData);
         document.getElementById("afResultBody").innerHTML = renderAfMd(displayText);
         result.classList.add("visible");
+        if(window.kadduShowShieldResultInModal) window.kadduShowShieldResultInModal({ title:"Analyse dossier", score: scoreData?.score ? scoreData.score + "/100" : "—", html: document.getElementById("afResultBody").innerHTML });
+        if(window.kadduMarkClaudeCallFinished) window.kadduMarkClaudeCallFinished(true, "Analyse dossier terminée.");
 
         // ── Persister dans le Passeport Locatif ──────────────
         if(scoreData && _currentDossier){
@@ -2758,6 +2761,7 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       } catch(err){
         const friendly = kadduFriendlyAiError(err);
         kadduToast(friendly, /occupé|volumineux|quota/i.test(friendly) ? "warning" : "error");
+        if(window.kadduMarkClaudeCallFinished) window.kadduMarkClaudeCallFinished(false, friendly);
         if(_currentDossier?.id){
           createDossierEvent({ dossierId:_currentDossier.id, eventType:"analysis_failed", newValue:"dossier", comment:friendly }).catch(()=>{});
         }
@@ -3910,6 +3914,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       const btn = document.getElementById('afAnalyseBtn');
       const oldBtnHtml = btn ? btn.innerHTML : '';
 
+      if(window.kadduMarkClaudeCallStarted) window.kadduMarkClaudeCallStarted('Analyse pièce envoyée à Claude…');
       if(btn){ btn.disabled = true; btn.innerHTML = '⏳ Analyse document…'; }
       if(row?.id){ createDossierEvent({ dossierId:row.id, eventType:'analysis_started', newValue:'document', comment:`Analyse document lancée · ${name}` }).catch(()=>{}); }
       loader.classList.add('visible');
@@ -4039,6 +4044,8 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
         const finalHtml = extractedHtml + structuredPanel + renderAfMd(`## Analyse — ${name}\n\n${displayText}`);
         document.getElementById('afResultBody').innerHTML = finalHtml;
         resultWrap.classList.add('visible');
+        if(window.kadduShowShieldResultInModal) window.kadduShowShieldResultInModal({ title:'Analyse pièce — ' + name, vigilance: vigEl?.textContent || '—', html: finalHtml });
+        if(window.kadduMarkClaudeCallFinished) window.kadduMarkClaudeCallFinished(true, 'Analyse pièce terminée.');
         if(row?.id){
           renderSavedDocumentExtractions(row).catch(()=>{});
           createDossierEvent({ dossierId:row.id, eventType:'analysis_finished', newValue:'document', comment:`Analyse document terminée · ${name}` }).catch(()=>{});
@@ -4048,6 +4055,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       }catch(err){
         const friendly = kadduFriendlyAiError(err);
         kadduToast(friendly, /occupé|volumineux|quota/i.test(friendly) ? 'warning' : 'error');
+        if(window.kadduMarkClaudeCallFinished) window.kadduMarkClaudeCallFinished(false, friendly);
         if(row?.id){ createDossierEvent({ dossierId:row.id, eventType:'analysis_failed', newValue:'document', comment:`${name} · ${friendly}` }).catch(()=>{}); }
       }finally{
         window.__kadduDocumentAnalysisRunning.delete(analysisKey);
@@ -4215,7 +4223,10 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
           <div><div class="ksm-doc-name">${escHtml(nm)}</div><div class="ksm-doc-type">${escHtml(ext)} · ${escHtml(lbl)}</div></div>
           <span class="ksm-doc-pill ${p.cls}">${p.label}</span>
           <span class="ksm-doc-score">${p.scores}/100</span>
-          <button class="ksm-doc-btn" type="button" onclick="analyserDocIA('${safeUrl}','${safeName}')">✦ Analyser pièce</button>
+          <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
+            ${safeUrl ? `<button class="ksm-doc-btn" type="button" onclick="window.open('${safeUrl}','_blank','noopener,noreferrer')">👁 Ouvrir</button>` : ''}
+            <button class="ksm-doc-btn" type="button" onclick="analyserDocIA('${safeUrl}','${safeName}')">✦ Analyser pièce</button>
+          </div>
         </div>`;
       }).join('') : `<div style="color:rgba(245,241,235,.4);font-size:13px;padding:12px 0;">Aucune pièce détectée pour ce dossier.</div>`;
     }
@@ -4332,170 +4343,81 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
 </script>
 
 
-<script id="kaddu-shield-sprint1-1-real-claude">
+
+<!-- Sprint 1.2.2: ancien pont visuel Sprint 1.1 supprimé pour éviter les progressions simulées. -->
+
+
+
+
+
+<script id="kaddu-shield-sprint-1-2-2-real-results">
 (function(){
-  const steps = [
-    "Préparation du contexte dossier…",
-    "Envoi sécurisé à Kàddu Shield…",
-    "Analyse Claude / OCR logique…",
-    "Extraction score & vigilance…",
-    "Mise à jour de la synthèse…"
-  ];
+  function $(id){ return document.getElementById(id); }
+  function esc(v){ return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-  function qs(s,root=document){return root.querySelector(s)}
-  function qsa(s,root=document){return Array.from(root.querySelectorAll(s))}
+  window.kadduShowShieldResultInModal = function kadduShowShieldResultInModal(opts = {}){
+    const panelHost = document.querySelector('[data-shield-panel="synthese"]');
+    if(!panelHost) return;
 
-  function ensurePanel(){
-    const right = qs(".ksm-right");
-    if(!right || qs("#ksRealClaudePanel")) return;
+    let panel = $('ksmRealClaudeResult122');
+    if(!panel){
+      panel = document.createElement('div');
+      panel.id = 'ksmRealClaudeResult122';
+      panel.className = 'ksm-panel';
+      panel.style.borderColor = 'rgba(119,255,190,.22)';
+      panel.style.background = 'rgba(0,200,117,.035)';
+      const first = panelHost.querySelector('.ksm-panel');
+      if(first) panelHost.insertBefore(panel, first);
+      else panelHost.appendChild(panel);
+    }
 
-    const panel = document.createElement("div");
-    panel.id = "ksRealClaudePanel";
-    panel.className = "ks-real-panel";
+    const score = opts.score ?? $('afScoreNum')?.textContent ?? '—';
+    const vigilance = opts.vigilance ?? $('afVigBadge')?.textContent ?? '—';
+    const decision = opts.decision ?? $('afDecisionBadge')?.textContent ?? '—';
+    const source = opts.source || 'Claude réel';
+    const title = opts.title || 'Résultat analyse IA';
+    const html = opts.html || $('afResultBody')?.innerHTML || '<div class="muted">Aucun résultat disponible.</div>';
+
     panel.innerHTML = `
-      <div class="ks-real-title">Analyse réelle Claude</div>
-      <div class="ks-real-steps" id="ksRealSteps">
-        ${steps.map((x,i)=>`<div class="ks-real-step" data-real-step="${i}"><span class="ks-real-dot"></span><span>${x}</span></div>`).join("")}
+      <div class="ksm-panel-title" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <span>🧠 ${esc(title)}</span>
+        <span style="font-size:10px;color:#77ffbe;letter-spacing:.12em">${esc(source)}</span>
       </div>
+      <div class="ks-real-result-grid" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px">
+        <div class="ks-real-metric"><span>Score Claude</span><strong>${esc(score)}</strong></div>
+        <div class="ks-real-metric"><span>Vigilance</span><strong>${esc(vigilance)}</strong></div>
+        <div class="ks-real-metric"><span>Décision</span><strong>${esc(decision)}</strong></div>
+        <div class="ks-real-metric"><span>Statut</span><strong>Terminé</strong></div>
+      </div>
+      <div class="ks-real-text" style="max-height:360px;overflow:auto;color:rgba(245,241,235,.76);font-size:13px;line-height:1.7">${html}</div>
     `;
 
-    const actionBlock = right.firstElementChild;
-    if(actionBlock) actionBlock.appendChild(panel);
-    else right.appendChild(panel);
-  }
+    // Basculer automatiquement sur l'onglet Synthèse pour rendre le résultat visible.
+    document.querySelectorAll('.ksm-tab').forEach(b => b.classList.toggle('active', b.dataset.shieldTab === 'synthese'));
+    document.querySelectorAll('.shield-tab-panel-v2').forEach(p => p.classList.toggle('active', p.dataset.shieldPanel === 'synthese'));
+  };
 
-  function ensureResultPanel(){
-    const synth = qs('[data-shield-panel="synthese"]');
-    if(!synth || qs("#ksRealResultPanel")) return;
-
-    const panel = document.createElement("div");
-    panel.id = "ksRealResultPanel";
-    panel.className = "ks-real-result";
-    panel.innerHTML = `
-      <div class="ks-real-title">Résultat Kàddu Shield — Claude</div>
-      <div class="ks-real-result-grid">
-        <div class="ks-real-metric"><span>Score Claude</span><strong id="ksRealScore">—</strong></div>
-        <div class="ks-real-metric"><span>Vigilance</span><strong id="ksRealVigilance">—</strong></div>
-        <div class="ks-real-metric"><span>Décision</span><strong id="ksRealDecision">—</strong></div>
-        <div class="ks-real-metric"><span>Source</span><strong>Claude</strong></div>
-      </div>
-      <div class="ks-real-text" id="ksRealText">Analyse non lancée.</div>
-    `;
-
-    const first = qs(".ksm-panel", synth);
-    if(first) synth.insertBefore(panel, first);
-    else synth.appendChild(panel);
-  }
-
-  function setStep(index){
-    qsa(".ks-real-step").forEach((el,i)=>{
-      el.classList.toggle("done", i < index);
-      el.classList.toggle("active", i === index);
-    });
-  }
-
-  function parseScoreFromDom(){
-    const txt = qs("#afResultBody")?.innerText || "";
-    const scoreText = qs("#afScoreNum")?.textContent || "";
-    const score = parseInt(scoreText,10);
-    let vigilance = qs("#afVigBadge")?.textContent || "—";
-    let decision = qs("#afDecisionBadge")?.textContent || "—";
-    return { txt, score: Number.isFinite(score) ? score : null, vigilance, decision };
-  }
-
-  function updateModalResult(){
-    ensureResultPanel();
-    const res = parseScoreFromDom();
-    const panel = qs("#ksRealResultPanel");
-    if(panel) panel.style.display = "block";
-    if(qs("#ksRealScore")) qs("#ksRealScore").textContent = res.score !== null ? res.score + "/100" : "—";
-    if(qs("#ksRealVigilance")) qs("#ksRealVigilance").textContent = res.vigilance || "—";
-    if(qs("#ksRealDecision")) qs("#ksRealDecision").textContent = res.decision || "—";
-    if(qs("#ksRealText")) qs("#ksRealText").textContent = res.txt || "Analyse terminée. Consultez aussi le bloc de synthèse Kàddu Shield historique.";
-  }
-
-  async function runRealAnalysis(){
-    ensurePanel();
-    ensureResultPanel();
-
-    const btn = qs("#shieldAnalyzeDossierV2");
-    if(btn){
-      btn.classList.remove("ks-real-done");
-      btn.classList.add("ks-real-loading");
-      btn.textContent = "Analyse Claude en cours…";
+  window.kadduMarkClaudeCallStarted = function(label){
+    const host = document.querySelector('.ksm-right');
+    if(!host) return;
+    let box = $('ksmClaudeLiveStatus122');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'ksmClaudeLiveStatus122';
+      box.className = 'ksm-panel';
+      box.style.marginTop = '8px';
+      host.insertBefore(box, host.firstChild?.nextSibling || host.firstChild);
     }
+    box.innerHTML = `<div class="ksm-right-title">APPEL CLAUDE RÉEL</div><div style="color:#ffd180;font-size:13px;line-height:1.7">⏳ ${esc(label || 'Analyse IA en cours…')}<br><span style="color:rgba(245,241,235,.45)">Le résultat s’affichera dans l’onglet Synthèse.</span></div>`;
+  };
 
-    qsa(".ks-real-step").forEach(el=>el.classList.remove("active","done"));
-    setStep(0);
-
-    const timer = setInterval(()=>{
-      const current = qsa(".ks-real-step").findIndex(el=>el.classList.contains("active"));
-      const next = current < 0 ? 0 : Math.min(current+1, steps.length-1);
-      setStep(next);
-    }, 700);
-
-    try{
-      if(typeof window.lancerAnalyseDossier !== "function"){
-        throw new Error("Fonction lancerAnalyseDossier introuvable : le moteur Shield existant n'est pas chargé.");
-      }
-
-      // Appel réel : cette fonction appelle callShieldAnalyze()
-      // puis /functions/v1/shield-analyze-dossier côté Supabase,
-      // qui utilise la clé IA côté serveur et le prompt AF_SYSTEM_PROMPT.
-      await window.lancerAnalyseDossier();
-
-      clearInterval(timer);
-      setStep(steps.length-1);
-      updateModalResult();
-
-      if(btn){
-        btn.classList.remove("ks-real-loading");
-        btn.classList.add("ks-real-done");
-        btn.textContent = "Analyse terminée";
-        setTimeout(()=>{
-          btn.classList.remove("ks-real-done");
-          btn.textContent = "✦ Analyser dossier";
-        }, 1800);
-      }
-    }catch(err){
-      clearInterval(timer);
-      if(btn){
-        btn.classList.remove("ks-real-loading");
-        btn.textContent = "✦ Analyser dossier";
-      }
-      alert("Erreur analyse réelle Kàddu Shield :\n" + (err?.message || err));
-    }
-  }
-
-  function bind(){
-    ensurePanel();
-    ensureResultPanel();
-    const btn = qs("#shieldAnalyzeDossierV2");
-    if(btn && !btn.dataset.ksRealClaude){
-      btn.dataset.ksRealClaude = "1";
-      btn.textContent = "✦ Analyser dossier";
-      btn.addEventListener("click", function(ev){
-        ev.preventDefault();
-        ev.stopImmediatePropagation();
-        runRealAnalysis();
-      }, true);
-    }
-  }
-
-  function init(){
-    bind();
-    const obs = new MutationObserver(bind);
-    obs.observe(document.body,{childList:true,subtree:true});
-  }
-
-  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
-  else init();
-
-  window.KADDU_SHIELD_SPRINT_1_1 = { runRealAnalysis };
+  window.kadduMarkClaudeCallFinished = function(ok, label){
+    const box = $('ksmClaudeLiveStatus122');
+    if(!box) return;
+    box.innerHTML = `<div class="ksm-right-title">APPEL CLAUDE RÉEL</div><div style="color:${ok ? '#77ffbe' : '#ffb3b3'};font-size:13px;line-height:1.7">${ok ? '✓' : '⚠'} ${esc(label || (ok ? 'Analyse terminée.' : 'Analyse échouée.'))}</div>`;
+  };
 })();
 </script>
-
-
 
 <script id="kaddu-shield-sprint-1-2-js">
 /* ═══════════════════════════════════════════════════════════════
