@@ -994,8 +994,202 @@ tr.active{background:rgba(83,183,255,.055) !important;}
       #ksmDocList .ksm-doc-actions .ksm-doc-btn[data-ks-view-result]{grid-column:1 / -1!important;}
     }
   </style>
+
+<style id="kaddu-exact-proposition-premium-ui">
+
+    :root{
+      --bg:#06101d;
+      --bg2:#071527;
+      --panel:#0a1a2c;
+      --panel2:#0d2035;
+      --line:rgba(255,255,255,.08);
+      --line2:rgba(191,150,80,.24);
+      --gold:#f3b64a;
+      --gold2:#d79b35;
+      --text:#f7f1e8;
+      --muted:rgba(247,241,232,.58);
+      --muted2:rgba(247,241,232,.36);
+      --green:#34d078;
+      --green2:#58f09d;
+      --red:#ff5656;
+      --orange:#ffad32;
+      --blue:#686dff;
+      --purple:#a366ff;
+      --sidebar:198px;
+      --right:330px;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(243,182,74,.08), transparent 30%),
+        radial-gradient(circle at 24% 20%, rgba(30,98,160,.12), transparent 34%),
+        linear-gradient(180deg,#040a14 0%,#071424 44%,#050b14 100%);
+      overflow-x:hidden;
+    }
+    body:before{
+      content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+      background-size:56px 56px;
+      mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.25));
+    }
+    .app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+    .sidebar{
+      position:sticky;top:0;height:100vh;padding:18px 14px;
+      border-right:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(8,20,34,.96),rgba(5,13,24,.94));
+      box-shadow:20px 0 60px rgba(0,0,0,.25);
+      display:flex;flex-direction:column;gap:18px;
+    }
+    .brand{display:flex;align-items:center;gap:10px;height:48px;margin-bottom:10px;color:var(--gold);font-family:Georgia,serif;font-size:27px;letter-spacing:-.04em}
+    .brand-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#fff0a8);clip-path:polygon(50% 0,100% 15%,72% 92%,50% 72%,28% 92%,0 15%);box-shadow:0 0 25px rgba(243,182,74,.28)}
+    .nav-section{font-size:11px;color:var(--gold);font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:16px 8px 6px}
+    .nav-item{height:34px;padding:0 10px;display:flex;align-items:center;gap:10px;border-radius:10px;color:rgba(247,241,232,.78);font-size:13px;text-decoration:none;border:1px solid transparent;position:relative}
+    .nav-item.active{background:rgba(243,182,74,.1);border-color:rgba(243,182,74,.34);box-shadow:0 0 24px rgba(243,182,74,.08);color:#fff}
+    .nav-item .ico{width:16px;text-align:center;color:rgba(247,241,232,.75)}
+    .nav-item .count{margin-left:auto;background:rgba(243,182,74,.16);color:#ffd783;border:1px solid rgba(243,182,74,.2);font-size:10px;padding:2px 7px;border-radius:999px;font-weight:800}
+    .shield-card{margin-top:auto;padding:14px;border:1px solid rgba(52,208,120,.15);border-radius:14px;background:linear-gradient(145deg,rgba(52,208,120,.08),rgba(255,255,255,.025));display:flex;gap:10px;align-items:center}
+    .shield-icon{width:36px;height:36px;border-radius:12px;background:rgba(52,208,120,.12);display:grid;place-items:center;color:var(--green)}
+    .shield-card strong{font-size:13px;display:block}.shield-card span{font-size:11px;color:var(--muted)}.active-pill{margin-top:5px;font-size:10px;color:#71ffad;background:rgba(52,208,120,.12);border:1px solid rgba(52,208,120,.2);display:inline-block;padding:2px 7px;border-radius:999px}
+    .main{min-width:0;padding:16px 18px 26px}
+    .topbar{height:42px;display:flex;align-items:center;justify-content:flex-end;gap:14px;margin-bottom:10px}
+    .search-top{width:306px;height:34px;border:1px solid var(--line);background:#071424;border-radius:8px;display:flex;align-items:center;gap:10px;padding:0 12px;color:var(--muted);font-size:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+    .kbd{margin-left:auto;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:5px;padding:2px 6px;color:var(--muted2);font-size:10px}
+    .bell{position:relative;width:34px;height:34px;border-radius:999px;display:grid;place-items:center;color:#fff}.bell:after{content:"12";position:absolute;top:-4px;right:-2px;background:#f0aa37;color:#1a1106;font-size:10px;font-weight:900;border-radius:999px;padding:1px 5px}
+    .user{display:flex;gap:10px;align-items:center}.avatar{width:38px;height:38px;border-radius:999px;background:linear-gradient(135deg,#5c4425,#1a2332);display:grid;place-items:center;font-size:13px;font-weight:800;border:1px solid rgba(243,182,74,.22)}.user strong{font-size:13px}.user span{display:block;color:var(--muted);font-size:11px}
+    .title-row{display:flex;align-items:flex-start;justify-content:space-between;margin:2px 0 18px 18px}
+    h1{font-family:Georgia,serif;font-weight:400;font-size:32px;line-height:1;margin:0 0 4px;letter-spacing:-.045em}.subtitle{color:var(--muted);font-size:13px;margin:0}.top-actions{display:flex;gap:10px;margin-right:6px}.btn{height:36px;padding:0 15px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.035);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;gap:8px}.btn.gold{background:linear-gradient(135deg,#f3b64a,#ffca67);color:#1a1106;border-color:rgba(255,212,110,.5);box-shadow:0 16px 34px rgba(243,182,74,.18)}
+    .kpi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:0 6px 16px 18px}
+    .kpi{height:118px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(11,32,57,.88),rgba(8,23,40,.8));border-radius:10px;padding:20px 20px 14px;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+    .kpi-label{font-size:12px;color:rgba(247,241,232,.74);margin-bottom:12px}.kpi-value{font-size:30px;font-weight:760;letter-spacing:-.04em}.delta{font-size:12px;margin-top:8px}.delta.green{color:var(--green)}.delta.red{color:var(--red)}.delta.purple{color:#c47dff}.spark{position:absolute;right:14px;bottom:18px;width:130px;height:36px;opacity:.92}.spark svg{width:100%;height:100%}.ring-mini{position:absolute;right:30px;top:24px;width:66px;height:66px;border-radius:999px;background:conic-gradient(var(--green) 0 72%,var(--gold) 72% 88%,rgba(255,255,255,.08) 88% 100%);display:grid;place-items:center}.ring-mini:after{content:"";width:48px;height:48px;background:#0b1c31;border-radius:999px}
+    .content-grid{display:grid;grid-template-columns:minmax(0,1fr) var(--right);gap:14px;margin-left:6px}
+    .list-area{min-width:0}.filters{height:54px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(11,32,57,.8),rgba(8,23,40,.74));border-radius:9px;padding:10px 12px;display:grid;grid-template-columns:minmax(270px,1.9fr) repeat(5,minmax(120px,1fr));gap:10px;margin-bottom:10px}
+    .filter-control{height:34px;border:1px solid var(--line);background:rgba(0,0,0,.16);border-radius:7px;color:rgba(247,241,232,.76);font-size:12px;display:flex;align-items:center;padding:0 12px;gap:9px}.filter-control b{font-weight:700;color:#fff}.filter-control .chev{margin-left:auto;color:rgba(247,241,232,.46)}
+    .table-panel{border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,rgba(11,32,57,.82),rgba(8,23,40,.78));overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.22)}
+    .tabs{height:54px;padding:0 14px;display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.06);gap:8px}.tab{height:54px;padding:0 18px;display:flex;align-items:center;gap:8px;color:rgba(247,241,232,.65);font-size:12px;font-weight:750;border-bottom:2px solid transparent}.tab.active{color:var(--gold);border-bottom-color:var(--gold)}.tab .tag{font-size:10px;background:rgba(255,255,255,.07);padding:2px 6px;border-radius:5px;color:rgba(247,241,232,.7)}.tab.active .tag{background:rgba(243,182,74,.14);color:#ffd785}.view-switch{margin-left:auto;display:flex;gap:4px;background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:8px;padding:3px}.switch-btn{height:28px;padding:0 10px;border-radius:6px;color:rgba(247,241,232,.56);font-size:12px;display:flex;align-items:center;gap:6px}.switch-btn.active{background:rgba(243,182,74,.12);color:var(--gold)}.gear{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;color:rgba(247,241,232,.58);margin-left:4px}
+    .table-head,.row{display:grid;grid-template-columns:1.8fr 1fr .7fr .92fr 1.05fr 1.35fr .78fr;align-items:center;column-gap:12px}.table-head{height:44px;padding:0 20px;color:rgba(247,241,232,.55);font-size:11px;text-transform:uppercase;letter-spacing:.035em;border-bottom:1px solid rgba(255,255,255,.055)}.sort{color:rgba(247,241,232,.32);margin-right:5px}.rows{padding:0 10px 8px}.row{height:74px;border:1px solid transparent;border-bottom-color:rgba(255,255,255,.055);border-radius:9px;padding:0 10px;transition:.16s}.row:hover,.row.selected{border-color:rgba(243,182,74,.36);background:linear-gradient(90deg,rgba(243,182,74,.09),rgba(255,255,255,.015));box-shadow:0 0 28px rgba(243,182,74,.06)}.candidate{display:flex;align-items:center;gap:13px;min-width:0}.avatar2{width:40px;height:40px;border-radius:999px;background:linear-gradient(135deg,#1e4067,#142035);display:grid;place-items:center;font-weight:800;color:#f2f7ff;border:1px solid rgba(255,255,255,.08);flex:0 0 auto}.candidate strong{display:block;font-size:13px}.candidate span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.type-cell{font-size:12px;color:rgba(247,241,232,.76);line-height:1.6}.score-ring{width:54px;height:54px;border-radius:999px;display:grid;place-items:center;background:conic-gradient(var(--green) 0 var(--pct),rgba(255,255,255,.12) var(--pct) 100%);position:relative}.score-ring.mid{background:conic-gradient(var(--orange) 0 var(--pct),rgba(255,255,255,.12) var(--pct) 100%)}.score-ring.bad{background:conic-gradient(var(--red) 0 var(--pct),rgba(255,255,255,.12) var(--pct) 100%)}.score-ring:before{content:"";position:absolute;width:44px;height:44px;border-radius:999px;background:#081a2d}.score-ring b{position:relative;font-size:18px}.score-ring small{position:relative;font-size:9px;color:var(--green);margin-top:23px;margin-left:-23px}.score-ring.mid small{color:var(--orange)}.score-ring.bad small{color:var(--red)}.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:8px;font-size:12px;font-weight:800}.risk-low{color:#66ffac;background:rgba(52,208,120,.1)}.risk-mid{color:#ffc04e;background:rgba(255,173,50,.11)}.risk-high{color:#ff7070;background:rgba(255,86,86,.12)}.status-blue{color:#9ca6ff;background:rgba(104,109,255,.16);border:1px solid rgba(104,109,255,.2)}.status-wait{color:#ffb948;background:rgba(255,173,50,.13);border:1px solid rgba(255,173,50,.18)}.status-green{color:#57ff9e;background:rgba(52,208,120,.13);border:1px solid rgba(52,208,120,.18)}.status-purple{color:#c99cff;background:rgba(163,102,255,.14);border:1px solid rgba(163,102,255,.18)}.status-gray{color:#ccd2dd;background:rgba(255,255,255,.1)}.activity{font-size:12px}.activity strong{display:block;color:rgba(247,241,232,.72);font-weight:700}.activity span{display:block;color:var(--muted);margin-top:3px}.actions{display:flex;gap:9px;justify-content:flex-end}.icon-btn{width:38px;height:36px;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.14);display:grid;place-items:center;color:rgba(247,241,232,.62)}.icon-btn.gold{color:var(--gold);border-color:rgba(243,182,74,.32);background:rgba(243,182,74,.06)}
+    .pagination{height:54px;display:flex;align-items:center;padding:0 20px;border-top:1px solid rgba(255,255,255,.055);color:var(--muted);font-size:12px}.per-page{height:34px;padding:0 13px;border:1px solid var(--line);border-radius:8px;background:rgba(0,0,0,.14);display:flex;align-items:center;gap:12px}.pages{margin:auto;display:flex;align-items:center;gap:12px}.pg{width:30px;height:30px;border-radius:8px;border:1px solid transparent;display:grid;place-items:center;color:rgba(247,241,232,.6)}.pg.active{border-color:rgba(243,182,74,.36);color:var(--gold);background:rgba(243,182,74,.08)}.page-right{display:flex;gap:8px;align-items:center}.side-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(11,32,57,.9),rgba(8,23,40,.82));border-radius:10px;padding:18px;height:calc(100vh - 180px);min-height:690px;position:sticky;top:16px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.2)}.side-close{position:absolute;right:14px;top:14px;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--line);display:grid;place-items:center;color:rgba(247,241,232,.6)}.side-title{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:15px}.selected-head{display:flex;align-items:flex-start;gap:12px}.selected-head h2{font-size:16px;margin:0 0 4px}.score-small{margin-left:auto;width:56px;height:56px;border-radius:999px;background:conic-gradient(var(--green) 0 88%,rgba(255,255,255,.12) 88%);display:grid;place-items:center;position:relative}.score-small:before{content:"";position:absolute;width:46px;height:46px;border-radius:999px;background:#081a2d}.score-small div{position:relative;text-align:center}.score-small b{font-size:19px}.score-small span{display:block;font-size:9px;color:#6effaf}.excellent{color:#5fff9e;font-size:11px;font-weight:700}.side-meta{color:var(--muted);font-size:12px;line-height:1.8;margin:16px 0 24px}.panel-block{border-top:1px solid rgba(255,255,255,.06);padding-top:19px;margin-top:18px}.block-title{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}.summary{color:rgba(247,241,232,.72);font-size:12px;line-height:1.75}.side-btn{width:100%;height:38px;border-radius:8px;border:1px solid var(--line);background:transparent;color:#fff;font-weight:750;font-size:12px;margin-top:14px}.signals{display:grid;gap:10px}.signal{font-size:12px;color:rgba(247,241,232,.78);display:flex;gap:8px;align-items:center}.signal .ok{color:var(--green)}.signal .warn{color:var(--orange)}.signal .ko{color:var(--red)}.quick-actions{display:grid;gap:8px}.quick-actions .btn-full{height:38px;border-radius:8px;border:1px solid rgba(243,182,74,.35);background:transparent;color:#fff;font-weight:800;font-size:12px}.quick-actions .btn-full.gold{background:linear-gradient(135deg,#f3b64a,#ffca67);color:#1a1106;border-color:rgba(255,212,110,.5)}
+    @media(max-width:1400px){:root{--right:300px}.filters{grid-template-columns:1fr 1fr 1fr}.content-grid{grid-template-columns:1fr}.side-panel{position:relative;top:0;height:auto;min-height:0}.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:980px){.app{grid-template-columns:1fr}.sidebar{display:none}.kpi-grid{grid-template-columns:1fr 1fr}.table-head{display:none}.row{grid-template-columns:1fr;height:auto;padding:14px;gap:10px}.filters{grid-template-columns:1fr}.title-row{margin-left:0}.main{padding:16px}.content-grid{margin-left:0}.kpi-grid{margin-left:0}}
+  
+body.premium-dossiers-active > nav,
+body.premium-dossiers-active > .wrap {
+  position:absolute !important;
+  left:-99999px !important;
+  top:0 !important;
+  width:1px !important;
+  height:1px !important;
+  overflow:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+body.premium-dossiers-active #authOverlay { opacity:1 !important; pointer-events:auto !important; }
+body.premium-dossiers-active .shield-modal-v2 { z-index:2147483000 !important; }
+.premium-loading-note{color:var(--muted);font-size:13px;padding:18px}
+.row .actions button{cursor:pointer}
+.filter-control[data-filter], .tab[data-tab], .side-btn, .btn-full, .btn, .switch-btn { cursor:pointer; }
+</style>
+
 </head>
-<body>
+<body class="premium-dossiers-active">
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark"></span><span>Kàddu Admin</span></div>
+      <a class="nav-item" href="#"><span class="ico">⌂</span>Hub Admin</a>
+      <div class="nav-section">Gestion</div>
+      <a class="nav-item active" href="#"><span class="ico">▣</span>Dossiers locataires</a>
+      <a class="nav-item" href="#"><span class="ico">⌂</span>Biens immobiliers</a>
+      <a class="nav-item" href="#"><span class="ico">♙</span>Candidats</a>
+      <a class="nav-item" href="#"><span class="ico">☷</span>Contrats</a>
+      <a class="nav-item" href="#"><span class="ico">⊕</span>Paiements</a>
+      <a class="nav-item" href="#"><span class="ico">▤</span>Documents</a>
+      <a class="nav-item" href="#"><span class="ico">☷</span>Visites</a>
+      <div class="nav-section">Analyses</div>
+      <a class="nav-item" href="#"><span class="ico">▥</span>Tableaux de bord</a>
+      <a class="nav-item" href="#"><span class="ico">⌁</span>Rapports</a>
+      <a class="nav-item" href="#"><span class="ico">◌</span>Indicateurs clés</a>
+      <a class="nav-item" href="#"><span class="ico">♧</span>Alertes <span class="count">12</span></a>
+      <div class="nav-section">Paramètres</div>
+      <a class="nav-item" href="#"><span class="ico">♙</span>Utilisateurs</a>
+      <a class="nav-item" href="#"><span class="ico">⌘</span>Workflows</a>
+      <a class="nav-item" href="#"><span class="ico">⚙</span>Paramètres</a>
+      <a class="nav-item" href="#"><span class="ico">☲</span>Audit & Logs</a>
+      <div class="shield-card"><div class="shield-icon">⬢</div><div><strong>Kàddu Shield</strong><span>Moteur antifraude IA</span><div class="active-pill">● Actif</div></div></div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="search-top">⌕ <span>Rechercher un dossier, un candidat...</span><span class="kbd">⌘K</span></div>
+        <div class="bell">♢</div>
+        <div class="user"><div class="avatar">KA</div><div><strong>Kàddu Admin</strong><span>Administrateur</span></div><span>⌄</span></div>
+      </div>
+
+      <div class="title-row">
+        <div><h1>Dossiers locataires</h1><p class="subtitle">Gérez, analysez et suivez tous les dossiers de candidatures.</p></div>
+        <div class="top-actions"><button class="btn">⇩ Exporter</button><button class="btn gold">＋ Nouveau dossier</button></div>
+      </div>
+
+      <section class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Dossiers actifs</div><div class="kpi-value">248</div><div class="delta green">+18% <span style="color:var(--muted)">vs mois dernier</span></div><div class="spark"><svg viewBox="0 0 140 40"><polyline fill="none" stroke="#34d078" stroke-width="2" points="0,31 10,27 20,29 30,22 40,24 50,18 60,19 70,14 80,16 90,9 100,13 110,8 120,15 130,13 140,17"/></svg></div></div>
+        <div class="kpi"><div class="kpi-label">Taux d’acceptation (global)</div><div class="kpi-value">72%</div><div class="delta green">+6% <span style="color:var(--muted)">vs mois dernier</span></div><div class="ring-mini"></div></div>
+        <div class="kpi"><div class="kpi-label">Dossiers à risque</div><div class="kpi-value">18</div><div class="delta red">-12% <span style="color:var(--muted)">vs mois dernier</span></div><div class="spark"><svg viewBox="0 0 140 40"><polyline fill="none" stroke="#ff5656" stroke-width="2" points="0,31 10,29 20,28 30,26 40,27 50,22 60,25 70,19 80,24 90,18 100,20 110,16 120,18 130,15 140,17"/></svg></div></div>
+        <div class="kpi"><div class="kpi-label">En attente de compléments</div><div class="kpi-value">34</div><div class="delta green">+9% <span style="color:var(--muted)">vs mois dernier</span></div><div class="spark"><svg viewBox="0 0 140 40"><polyline fill="none" stroke="#ffad32" stroke-width="2" points="0,30 10,29 20,26 30,27 40,23 50,24 60,21 70,18 80,20 90,16 100,17 110,13 120,16 130,11 140,13"/></svg></div></div>
+        <div class="kpi"><div class="kpi-label">Temps moyen de traitement</div><div class="kpi-value">18h</div><div class="delta purple">-2h <span style="color:var(--muted)">vs mois dernier</span></div><div class="spark"><svg viewBox="0 0 140 40"><polyline fill="none" stroke="#a366ff" stroke-width="2" points="0,27 10,26 20,25 30,26 40,20 50,24 60,22 70,23 80,24 90,22 100,25 110,24 120,26 130,25 140,27"/></svg></div></div>
+      </section>
+
+      <div class="content-grid">
+        <section class="list-area">
+          <div class="filters">
+            <div class="filter-control">⌕ <span>Rechercher par nom, email, téléphone, employeur...</span></div>
+            <div class="filter-control"><b>Statut:</b> Tous <span class="chev">⌄</span></div>
+            <div class="filter-control"><b>Score:</b> Tous <span class="chev">⌄</span></div>
+            <div class="filter-control"><b>Risque:</b> Tous <span class="chev">⌄</span></div>
+            <div class="filter-control"><b>Type:</b> Tous <span class="chev">⌄</span></div>
+            <div class="filter-control"><b>Date:</b> Plus récent <span class="chev">⌄</span></div>
+          </div>
+
+          <div class="table-panel">
+            <div class="tabs">
+              <div class="tab active">▣ Tous les dossiers <span class="tag">248</span></div>
+              <div class="tab">Nouveaux <span class="tag">23</span></div>
+              <div class="tab">En analyse <span class="tag">56</span></div>
+              <div class="tab">À compléter <span class="tag">34</span></div>
+              <div class="tab">Pré-approuvés <span class="tag">18</span></div>
+              <div class="tab">Rejetés <span class="tag">12</span></div>
+              <div class="view-switch"><div class="switch-btn">▦ Vue cartes</div><div class="switch-btn active">☷ Vue liste</div></div><div class="gear">⚙</div>
+            </div>
+            <div class="table-head"><div><span class="sort">↕</span>Candidat</div><div><span class="sort">›</span>Type</div><div><span class="sort">›</span>Score</div><div><span class="sort">›</span>Risque</div><div><span class="sort">›</span>Statut</div><div><span class="sort">›</span>Dernière activité</div><div>Actions</div></div>
+            <div class="rows">
+              <div class="row selected"><div class="candidate"><div class="avatar2">TA</div><div><strong>Tidiane AIDARA</strong><span>tidiane.aidara@yahoo.fr</span><span>+221 77 123 45 67</span></div></div><div class="type-cell">Candidature<br/>spontanée</div><div><div class="score-ring" style="--pct:88%"><b>88</b><small>/100</small></div></div><div><span class="pill risk-low">⬢ Risque faible</span></div><div><span class="pill status-blue">● En analyse</span></div><div class="activity"><strong>Il y a 2h</strong><span>Analyse IA terminée</span></div><div class="actions"><button class="icon-btn gold">◉</button><button class="icon-btn">☏</button><button class="icon-btn">⋮</button></div></div>
+              <div class="row"><div class="candidate"><div class="avatar2">KM</div><div><strong>Kyllian MBAPPE</strong><span>cheikh.aidara@outlook.com</span><span>+221 76 987 65 43</span></div></div><div class="type-cell">Candidature<br/>spontanée</div><div><div class="score-ring" style="--pct:88%"><b>88</b><small>/100</small></div></div><div><span class="pill risk-low">⬢ Risque faible</span></div><div><span class="pill status-blue">● En analyse</span></div><div class="activity"><strong>Il y a 3h</strong><span>Vérification bancaire OK</span></div><div class="actions"><button class="icon-btn gold">◉</button><button class="icon-btn">☏</button><button class="icon-btn">⋮</button></div></div>
+              <div class="row"><div class="candidate"><div class="avatar2">AA</div><div><strong>Aissatou DIALLO</strong><span>aissatou.diallo@gmail.com</span><span>+221 70 456 78 90</span></div></div><div class="type-cell">Candidature<br/>spontanée</div><div><div class="score-ring mid" style="--pct:74%"><b>74</b><small>/100</small></div></div><div><span class="pill risk-mid">⬢ Risque modéré</span></div><div><span class="pill status-wait">● En attente</span></div><div class="activity"><strong>Il y a 5h</strong><span>Complément demandé</span></div><div class="actions"><button class="icon-btn gold">◉</button><button class="icon-btn">☏</button><button class="icon-btn">⋮</button></div></div>
+              <div class="row"><div class="candidate"><div class="avatar2">BD</div><div><strong>Boubacar DIENG</strong><span>b.dieng@gmail.com</span><span>+221 78 654 32 10</span></div></div><div class="type-cell">Candidature<br/>spontanée</div><div><div class="score-ring bad" style="--pct:58%"><b>58</b><small>/100</small></div></div><div><span class="pill risk-high">⬢ Risque élevé</span></div><div><span class="pill status-purple">● À compléter</span></div><div class="activity"><strong>Il y a 7h</strong><span>Pièces manquantes</span></div><div class="actions"><button class="icon-btn gold">◉</button><button class="icon-btn">☏</button><button class="icon-btn">⋮</button></div></div>
+              <div class="row"><div class="candidate"><div class="avatar2">SM</div><div><strong>Sokhna MBAYE</strong><span>sokhna.mbaye@yahoo.fr</span><span>+221 77 222 11 33</span></div></div><div class="type-cell">Candidature<br/>spontanée</div><div><div class="score-ring" style="--pct:91%"><b>91</b><small>/100</small></div></div><div><span class="pill risk-low">⬢ Risque faible</span></div><div><span class="pill status-green">● Pré-approuvé</span></div><div class="activity"><strong>Il y a 9h</strong><span>Dossier validé</span></div><div class="actions"><button class="icon-btn gold">◉</button><button class="icon-btn">☏</button><button class="icon-btn">⋮</button></div></div>
+              <div class="row"><div class="candidate"><div class="avatar2">CM</div><div><strong>Cheikhou NDIAYE</strong><span>cheikhou.ndiaye@gmail.com</span><span>+221 76 333 22 44</span></div></div><div class="type-cell">Candidature<br/>spontanée</div><div><div class="score-ring bad" style="--pct:36%"><b>36</b><small>/100</small></div></div><div><span class="pill risk-high">⬢ Risque critique</span></div><div><span class="pill status-gray">● Rejeté</span></div><div class="activity"><strong>Il y a 1j</strong><span>Fraude détectée</span></div><div class="actions"><button class="icon-btn gold">◉</button><button class="icon-btn">☏</button><button class="icon-btn">⋮</button></div></div>
+            </div>
+            <div class="pagination"><div class="per-page">Afficher <b style="color:#fff">10</b> par page ⌄</div><div class="pages"><button class="pg">‹</button><button class="pg active">1</button><button class="pg">2</button><button class="pg">3</button><span>...</span><button class="pg">25</button><button class="pg">›</button></div><div class="page-right"><span>Page 1 sur 25</span><button class="pg">‹</button><button class="pg">›</button></div></div>
+          </div>
+        </section>
+
+        <aside class="side-panel">
+          <button class="side-close">×</button>
+          <div class="side-title">Dossier sélectionné</div>
+          <div class="selected-head"><div class="avatar2">TA</div><div><h2>Tidiane AIDARA</h2><div class="excellent">Excellent dossier</div></div><div class="score-small"><div><b>88</b><span>/100</span></div></div></div>
+          <div class="side-meta">Candidature spontanée<br/>Déposé le 14/05/2026 à 10:42</div>
+          <div class="panel-block"><div class="block-title">Résumé IA</div><p class="summary">Le dossier présente une cohérence financière élevée. Les revenus couvrent largement le loyer demandé. Quelques éléments secondaires nécessitent une validation manuelle.</p><button class="side-btn">Voir l’analyse complète</button></div>
+          <div class="panel-block"><div class="block-title">Signaux principaux</div><div class="signals"><div class="signal"><span class="ok">✓</span> Revenus cohérents</div><div class="signal"><span class="ok">✓</span> Historique bancaire stable</div><div class="signal"><span class="ok">✓</span> Pièce d’identité valide</div><div class="signal"><span class="warn">⚠</span> Ancienneté faible</div><div class="signal"><span class="ko">⊗</span> RIB manquant</div></div><button class="side-btn">Voir tous les signaux</button></div>
+          <div class="panel-block"><div class="block-title">Actions rapides</div><div class="quick-actions"><button class="btn-full gold">Ouvrir le dossier</button><button class="btn-full">▱ Demander complément</button><button class="btn-full">☏ Contacter le candidat</button></div></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+
   <nav>
     <div class="brand">
       <a href="/admin/" style="color:inherit;text-decoration:none;display:flex;align-items:center;gap:8px">
@@ -5743,6 +5937,234 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
 
   window.KADDU_SHIELD_SPRINT_1_3_1 = {loaded:true, setupDropzone, replaceLongVersionBadges, ensureFeedbackPanels, uploadOne};
   console.info('[Kàddu Shield] Sprint 1.3.1 chargé : UX analyse + upload + feedback moteur.');
+})();
+</script>
+
+
+<script id="kaddu-premium-exact-bridge">
+(function(){
+  const $ = (s, root=document) => root.querySelector(s);
+  const $$ = (s, root=document) => Array.from(root.querySelectorAll(s));
+
+  function safeText(v, fallback='—'){
+    return (v === undefined || v === null || String(v).trim() === '') ? fallback : String(v);
+  }
+  function fmtDate(v){
+    try { return typeof formatDate === 'function' ? formatDate(v) : safeText(v); } catch(e){ return safeText(v); }
+  }
+  function initials(name){
+    const txt = safeText(name, 'D').trim();
+    const parts = txt.split(/\s+/).filter(Boolean);
+    if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  function riskFromScore(score){
+    const n = Number(score || 0);
+    if(n >= 75) return { label:'Risque faible', cls:'risk-low', ring:'', tone:'low' };
+    if(n >= 50) return { label:'Risque modéré', cls:'risk-mid', ring:'mid', tone:'mid' };
+    return { label: n < 40 ? 'Risque critique' : 'Risque élevé', cls:'risk-high', ring:'bad', tone:'high' };
+  }
+  function statusPill(row){
+    const metier = row.status_metier || 'nouveau';
+    const final = row.final_status || 'en_cours';
+    if(final === 'refuse') return { label:'Rejeté', cls:'status-gray' };
+    if(final === 'loue') return { label:'Loué', cls:'status-green' };
+    if(metier === 'pre_approuve') return { label:'Pré-approuvé', cls:'status-green' };
+    if(metier === 'pieces_manquantes' || metier === 'a_completer') return { label:'À compléter', cls:'status-purple' };
+    if(metier === 'a_revoir') return { label:'En attente', cls:'status-wait' };
+    return { label:'En analyse', cls:'status-blue' };
+  }
+  function activityLabel(row){
+    const metier = row.status_metier || 'nouveau';
+    const final = row.final_status || 'en_cours';
+    if(final === 'refuse') return 'Fraude détectée';
+    if(final === 'loue') return 'Dossier converti';
+    if(metier === 'pieces_manquantes' || metier === 'a_completer') return 'Pièces manquantes';
+    if(metier === 'pre_approuve') return 'Dossier validé';
+    if(Number(row.score || 0) >= 75) return 'Analyse IA terminée';
+    return 'Complément demandé';
+  }
+  function relativeActivity(row){
+    const d = row.updated_at || row.created_at;
+    if(!d) return 'Récemment';
+    const ms = Date.now() - new Date(d).getTime();
+    const h = Math.max(0, Math.round(ms/36e5));
+    if(h < 1) return 'À l’instant';
+    if(h < 24) return `Il y a ${h}h`;
+    return `Il y a ${Math.round(h/24)}j`;
+  }
+  function signalsFor(row){
+    const s = Number(row.score || 0);
+    if(s >= 90) return [['ok','Revenus cohérents'],['ok','Historique bancaire stable'],['ok','Pièce d’identité valide']];
+    if(s >= 75) return [['ok','Revenus cohérents'],['ok','Historique bancaire stable'],['warn','Ancienneté faible'],['ko','RIB manquant']];
+    if(s >= 50) return [['ok','Pièce d’identité valide'],['warn','Ancienneté faible'],['warn','Complément demandé']];
+    return [['warn','Revenus à vérifier'],['ko','Pièces manquantes'],['ko','Risque documentaire']];
+  }
+
+  function openRow(row){
+    try { selectedId = row.id; } catch(e) {}
+    try { if(typeof renderDetail === 'function') renderDetail(row); } catch(e) {}
+    premiumRender();
+    try { if(typeof window.openShieldModalV2 === 'function') window.openShieldModalV2(row); } catch(e) { console.warn('[Premium bridge] modal open failed', e); }
+  }
+
+  function premiumRenderStats(){
+    let rows = [];
+    try { rows = filteredRows || []; } catch(e) {}
+    const values = $$('.kpi-grid .kpi-value');
+    if(!values.length) return;
+    const total = rows.length;
+    const accepted = rows.filter(r => Number(r.score||0) >= 75).length;
+    const risky = rows.filter(r => Number(r.score||0) < 75).length;
+    const complements = rows.filter(r => ['pieces_manquantes','a_completer','a_revoir'].includes(r.status_metier || '')).length;
+    values[0].textContent = total;
+    values[1].textContent = total ? Math.round((accepted/total)*100) + '%' : '0%';
+    values[2].textContent = risky;
+    values[3].textContent = complements;
+    values[4].textContent = '18h';
+    const tags = $$('.tabs .tab .tag');
+    if(tags[0]) tags[0].textContent = total;
+    if(tags[1]) tags[1].textContent = rows.filter(r => (r.status_metier || 'nouveau') === 'nouveau').length;
+    if(tags[2]) tags[2].textContent = rows.filter(r => !['pieces_manquantes','a_completer'].includes(r.status_metier || '') && (r.final_status || 'en_cours') === 'en_cours').length;
+    if(tags[3]) tags[3].textContent = complements;
+    if(tags[4]) tags[4].textContent = rows.filter(r => (r.status_metier || '') === 'pre_approuve').length;
+    if(tags[5]) tags[5].textContent = rows.filter(r => (r.final_status || '') === 'refuse').length;
+  }
+
+  function premiumRenderRows(){
+    const container = $('.rows');
+    if(!container) return;
+    let rows = [];
+    try { rows = filteredRows || []; } catch(e) {}
+    if(!rows.length){
+      container.innerHTML = '<div class="premium-loading-note">Aucun dossier ne correspond aux filtres.</div>';
+      updateSide(null);
+      return;
+    }
+    let currentId = null;
+    try { currentId = selectedId; } catch(e) {}
+    if(!currentId) currentId = rows[0].id;
+    container.innerHTML = rows.slice(0,10).map(row => {
+      const score = Number(row.score ?? 0);
+      const risk = riskFromScore(score);
+      const st = statusPill(row);
+      const selected = row.id === currentId ? ' selected' : '';
+      return `
+        <div class="row${selected}" data-premium-row="${row.id}">
+          <div class="candidate"><div class="avatar2">${initials(row.nom)}</div><div><strong>${safeText(row.nom)}</strong><span>${safeText(row.email,'')}</span><span>${safeText(row.telephone || row.numero_whatsapp,'')}</span></div></div>
+          <div class="type-cell">${safeText(row.bien || 'Candidature').replace('Candidature spontanée','Candidature<br/>spontanée')}</div>
+          <div><div class="score-ring ${risk.ring}" style="--pct:${Math.max(0, Math.min(100, score))}%"><b>${score || '—'}</b><small>/100</small></div></div>
+          <div><span class="pill ${risk.cls}">⬢ ${risk.label}</span></div>
+          <div><span class="pill ${st.cls}">● ${st.label}</span></div>
+          <div class="activity"><strong>${relativeActivity(row)}</strong><span>${activityLabel(row)}</span></div>
+          <div class="actions"><button class="icon-btn gold" data-action="open">◉</button><button class="icon-btn" data-action="contact">☏</button><button class="icon-btn" data-action="more">⋮</button></div>
+        </div>`;
+    }).join('');
+    $$('.rows [data-premium-row]').forEach(el => {
+      const row = rows.find(r => String(r.id) === String(el.dataset.premiumRow));
+      if(row) el.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        openRow(row);
+      });
+    });
+    const row = rows.find(r => String(r.id) === String(currentId)) || rows[0];
+    updateSide(row);
+  }
+
+  function updateSide(row){
+    const side = $('.side-panel');
+    if(!side) return;
+    if(!row){
+      side.querySelector('h2').textContent = 'Aucun dossier';
+      return;
+    }
+    const score = Number(row.score || 0);
+    const risk = riskFromScore(score);
+    const name = safeText(row.nom);
+    const avatar = side.querySelector('.selected-head .avatar2');
+    if(avatar) avatar.textContent = initials(name);
+    const h2 = side.querySelector('h2'); if(h2) h2.textContent = name;
+    const ex = side.querySelector('.excellent'); if(ex) ex.textContent = score >= 85 ? 'Excellent dossier' : score >= 75 ? 'Bon dossier' : score >= 50 ? 'Dossier à vérifier' : 'Risque élevé';
+    const small = side.querySelector('.score-small b'); if(small) small.textContent = score || '—';
+    const meta = side.querySelector('.side-meta'); if(meta) meta.innerHTML = `${safeText(row.bien || 'Candidature spontanée')}<br/>Déposé le ${fmtDate(row.created_at)}`;
+    const summary = side.querySelector('.summary');
+    if(summary) summary.textContent = score >= 75
+      ? 'Le dossier présente une cohérence financière élevée. Les revenus couvrent largement le loyer demandé. Quelques éléments secondaires peuvent nécessiter une validation manuelle.'
+      : 'Le dossier nécessite une vérification renforcée. Certains signaux indiquent des compléments ou contrôles à mener avant décision.';
+    const sigBox = side.querySelector('.signals');
+    if(sigBox){
+      sigBox.innerHTML = signalsFor(row).map(([kind,label]) => `<div class="signal"><span class="${kind}">${kind==='ok'?'✓':kind==='warn'?'⚠':'⊗'}</span> ${label}</div>`).join('');
+    }
+    const openButtons = $$('.side-panel .side-btn, .side-panel .btn-full.gold');
+    openButtons.forEach(btn => btn.onclick = () => openRow(row));
+  }
+
+  function premiumRender(){
+    premiumRenderStats();
+    premiumRenderRows();
+  }
+
+  function installBridge(){
+    // Connecte les contrôles premium aux anciens champs cachés sécurisés.
+    const topSearch = $('.search-top');
+    if(topSearch && !topSearch.dataset.bound){
+      topSearch.dataset.bound = '1';
+      topSearch.addEventListener('click', () => {
+        const q = prompt('Rechercher un dossier :', ($('#searchInput') || {}).value || '');
+        if(q !== null){ const input = $('#searchInput'); if(input){ input.value = q; input.dispatchEvent(new Event('input', {bubbles:true})); } }
+      });
+    }
+    const refresh = Array.from($$('.top-actions .btn, .nav-actions .btn')).find(b => /Nouveau|Rafraîchir/.test(b.textContent));
+    // Boutons exacts : Exporter / Nouveau dossier restent visuels, sans effet destructif.
+    const tabs = $$('.tab');
+    tabs.forEach((tab, idx) => {
+      if(tab.dataset.bound) return;
+      tab.dataset.bound='1';
+      tab.addEventListener('click', () => {
+        tabs.forEach(t=>t.classList.remove('active')); tab.classList.add('active');
+        const metier = $('#metierFilter'), final = $('#finalFilter');
+        if(!metier || !final) return;
+        metier.value=''; final.value='';
+        if(idx===1) metier.value='nouveau';
+        if(idx===3) metier.value='pieces_manquantes';
+        if(idx===4) metier.value='pre_approuve';
+        if(idx===5) final.value='refuse';
+        try { applyFilters(); } catch(e) {}
+      });
+    });
+    const premiumSearch = $('.filters .filter-control:first-child');
+    if(premiumSearch && !premiumSearch.dataset.bound){
+      premiumSearch.dataset.bound='1';
+      premiumSearch.addEventListener('click', () => {
+        const q = prompt('Rechercher par nom, email, téléphone, employeur :', ($('#searchInput') || {}).value || '');
+        if(q !== null){ const input = $('#searchInput'); if(input){ input.value = q; input.dispatchEvent(new Event('input', {bubbles:true})); } }
+      });
+    }
+    const premiumReset = $('.gear');
+    if(premiumReset && !premiumReset.dataset.bound){
+      premiumReset.dataset.bound='1';
+      premiumReset.title='Réinitialiser les filtres';
+      premiumReset.addEventListener('click', () => { const btn = $('#clearFiltersBtn'); if(btn) btn.click(); });
+    }
+  }
+
+  try {
+    const previousRenderStats = typeof renderStats === 'function' ? renderStats : null;
+    if(previousRenderStats){
+      renderStats = function(){ previousRenderStats(); premiumRenderStats(); };
+    }
+    const previousRenderTable = typeof renderTable === 'function' ? renderTable : null;
+    if(previousRenderTable){
+      renderTable = function(){ previousRenderTable(); premiumRenderRows(); };
+    }
+  } catch(e){ console.warn('[Premium bridge] patch failed', e); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    installBridge();
+    setTimeout(premiumRender, 500);
+    setTimeout(premiumRender, 1500);
+  });
+  window.KADDU_PREMIUM_RENDER = premiumRender;
 })();
 </script>
 
