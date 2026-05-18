@@ -949,6 +949,48 @@
       line-height:1.45;
     }
 
+  
+    /* ══ KÀDDU V12 — Connexion temps réel UI ⇄ moteur ══ */
+    .kaddu-live-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(0,200,117,.10);
+      border:1px solid rgba(0,200,117,.22);
+      color:#8cffc9;
+      font-size:.68rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:800;
+      margin-top:10px;
+    }
+    .kaddu-live-chip::before{
+      content:"";
+      width:7px;height:7px;border-radius:50%;
+      background:#00C875;
+      box-shadow:0 0 0 4px rgba(0,200,117,.12);
+    }
+    .kaddu-live-chip.pending{
+      background:rgba(191,150,80,.10);
+      border-color:rgba(191,150,80,.25);
+      color:#DDB96E;
+    }
+    .kaddu-live-chip.pending::before{
+      background:#BF9650;
+      box-shadow:0 0 0 4px rgba(191,150,80,.12);
+    }
+    .kaddu-live-chip.error{
+      background:rgba(255,107,107,.10);
+      border-color:rgba(255,107,107,.25);
+      color:#ffb3b3;
+    }
+    .kaddu-live-chip.error::before{
+      background:#ff6b6b;
+      box-shadow:0 0 0 4px rgba(255,107,107,.12);
+    }
+
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
   <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
@@ -2872,7 +2914,217 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 </script>
+<script>
 
+// ══ KÀDDU V12 — Bridge temps réel UI ⇄ estimation ⇄ profils ⇄ offre ⇄ promo ══
+(function(){
+  if(window.__KADDU_ULTRA_CONNECTED__) return;
+  window.__KADDU_ULTRA_CONNECTED__ = true;
+
+  let refreshTimer = null;
+  let refreshRunning = false;
+
+  function kdDebounceRefresh(reason){
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => window.KADDU_REFRESH(reason || "ui_change"), 180);
+  }
+
+  function kdFirst(selectorList){
+    for(const s of selectorList){
+      const el = document.querySelector(s);
+      if(el) return el;
+    }
+    return null;
+  }
+
+  function kdNormalizeMeuble(v){
+    const s = String(v || "").toLowerCase();
+    if(s === "true" || s === "meuble" || s.includes("meublé") || s.includes("meuble")) return "meuble";
+    if(s === "false" || s === "non" || s.includes("non meubl")) return "non";
+    return v || "";
+  }
+
+  function kdNormalizePieces(v){
+    const s = String(v || "").toLowerCase();
+    if(s.includes("studio")) return "studio";
+    if(s.includes("5")) return "5+";
+    if(s.includes("4")) return "4";
+    if(s.includes("3")) return "3";
+    if(s.includes("2")) return "2";
+    if(s.includes("1")) return "1";
+    return v || "";
+  }
+
+  function kdEnsureD(){
+    window.D = window.D || {};
+    return window.D;
+  }
+
+  function kdSyncFromUI(){
+    const D = kdEnsureD();
+
+    const addr = kdFirst([
+      "#addrIn","#adresse","#address","input[name='adresse']",
+      "input[placeholder*='Quartier']","input[placeholder*='adresse']","input[placeholder*='Almadies']"
+    ]);
+    if(addr && addr.value.trim()) D.adresse = addr.value.trim();
+
+    const surface = kdFirst([
+      "#surface","#bien-surface","#surf","input[name='surface']",
+      "input[placeholder*='35']","input[placeholder*='Surface']"
+    ]);
+    if(surface && Number(surface.value) > 0) D.surface = Number(surface.value);
+
+    const loyer = kdFirst(["#loyer","#loyer-input","#loyerSouhaite","input[name='loyer']"]);
+    if(loyer && Number(loyer.value) > 0) D.loyer = Number(loyer.value);
+
+    const activeEls = [...document.querySelectorAll("button,.bcard,.pill,.choice,.opt,.offer-tab")]
+      .filter(el => el.classList.contains("on") || el.classList.contains("active") || el.classList.contains("selected"));
+
+    const activeText = activeEls.map(el => (el.textContent || "").trim()).join(" ");
+
+    if(activeText){
+      const p = kdNormalizePieces(activeText);
+      if(p) D.pieces = p;
+      const m = kdNormalizeMeuble(activeText);
+      if(m === "meuble" || m === "non") D.meuble = m;
+    }
+
+    return D;
+  }
+
+  function kdSetLiveStatus(state, text){
+    let chip = document.getElementById("kadduLiveChip");
+    const target = document.querySelector(".step-hd") || document.querySelector("#step1") || document.querySelector("main");
+    if(!target) return;
+
+    if(!chip){
+      chip = document.createElement("div");
+      chip.id = "kadduLiveChip";
+      chip.className = "kaddu-live-chip pending";
+      target.appendChild(chip);
+    }
+
+    chip.className = "kaddu-live-chip " + (state || "pending");
+    chip.textContent = text || "Moteur Kàddu connecté";
+  }
+
+  async function kdRunEstimation(D){
+    if(!D.adresse || !D.pieces || !D.meuble) return false;
+    if(typeof window.updateFourchette === "function"){
+      await window.updateFourchette(D.adresse);
+      return true;
+    }
+    return false;
+  }
+
+  function kdRunSidePanels(D){
+    if(typeof window.renderPersonas === "function"){
+      try{ window.renderPersonas(D.adresse); }catch(e){ console.warn("[Kàddu live] renderPersonas", e); }
+    }
+    if(typeof window.renderOwnerScoreV1 === "function"){
+      try{ window.renderOwnerScoreV1(); }catch(e){ console.warn("[Kàddu live] renderOwnerScoreV1", e); }
+    }
+    if(typeof window.updateKadduOfferSimulation === "function"){
+      try{ window.updateKadduOfferSimulation(); }catch(e){ console.warn("[Kàddu live] updateKadduOfferSimulation", e); }
+    }
+  }
+
+  async function kdRunPromoEngine(){
+    if(window.KadduPromoEngine && typeof window.KadduPromoEngine.run === "function"){
+      try{ return await window.KadduPromoEngine.run(); }
+      catch(e){ console.warn("[Kàddu live] PromoEngine", e); }
+    }
+    return null;
+  }
+
+  window.KADDU_REFRESH = async function(reason){
+    if(refreshRunning) return;
+    refreshRunning = true;
+
+    const D = kdSyncFromUI();
+
+    try{
+      kdSetLiveStatus("pending", "Mise à jour Kàddu…");
+
+      const estimated = await kdRunEstimation(D);
+
+      kdSyncFromUI();
+      kdRunSidePanels(D);
+
+      await kdRunPromoEngine();
+
+      kdSyncFromUI();
+      kdRunSidePanels(D);
+
+      if(D.adresse || D.pieces || D.meuble || D.loyer){
+        kdSetLiveStatus("ok", "Moteur Kàddu connecté");
+      }else{
+        kdSetLiveStatus("pending", "En attente des informations du bien");
+      }
+
+      return { ok:true, estimated, D, reason };
+    }catch(e){
+      console.warn("[Kàddu live] refresh failed", e);
+      kdSetLiveStatus("error", "Moteur à actualiser");
+      return { ok:false, error:e };
+    }finally{
+      refreshRunning = false;
+    }
+  };
+
+  function kdPatchFunction(name){
+    const original = window[name];
+    if(typeof original !== "function" || original.__kadduPatched) return;
+
+    const patched = function(){
+      const result = original.apply(this, arguments);
+      kdDebounceRefresh(name);
+      return result;
+    };
+    patched.__kadduPatched = true;
+    window[name] = patched;
+  }
+
+  function kdAttachListeners(){
+    document.querySelectorAll("input, select, textarea").forEach(el => {
+      if(el.__kadduLiveBound) return;
+      el.__kadduLiveBound = true;
+      el.addEventListener("input", () => kdDebounceRefresh("input"));
+      el.addEventListener("change", () => kdDebounceRefresh("change"));
+      el.addEventListener("blur", () => kdDebounceRefresh("blur"));
+    });
+
+    document.querySelectorAll("button,.bcard,.choice,.opt,.offer-tab,.factor-card-v9").forEach(el => {
+      if(el.__kadduClickBound) return;
+      el.__kadduClickBound = true;
+      el.addEventListener("click", () => kdDebounceRefresh("click"));
+    });
+  }
+
+  function kdStart(){
+    ["onAddr","selPieces","selMeuble","selCard","adjLoyer","selectKadduOffer","showStep"].forEach(kdPatchFunction);
+    kdAttachListeners();
+    kdSetLiveStatus("pending", "En attente des informations du bien");
+    kdDebounceRefresh("init");
+
+    let n = 0;
+    const timer = setInterval(() => {
+      kdAttachListeners();
+      kdDebounceRefresh("interval");
+      n++;
+      if(n > 8) clearInterval(timer);
+    }, 700);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", kdStart);
+  }else{
+    kdStart();
+  }
+})();
+
+</script>
 <script src="/assets/js/kaddu-promo-engine-v1.js"></script>
 </body>
 </html>
