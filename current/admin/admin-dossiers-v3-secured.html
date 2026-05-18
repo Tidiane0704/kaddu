@@ -1107,7 +1107,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
             <div class="af-apikey-row">
               <div class="af-apikey-input" style="display:flex;align-items:center;gap:8px;color:#77ffbe;border-color:rgba(0,200,117,.25);background:rgba(0,200,117,.06)">
                 <span>🔐</span>
-                <span>Kàddu Shield sécurisé — clé IA côté serveur</span>
+                <span>Kàddu Shield sécurisé — clé sécurisée côté serveur</span>
               </div>
               <button class="af-btn-sm" onclick="toggleAfContext()">Ajuster le contexte ↓</button>
             </div>
@@ -1366,7 +1366,7 @@ tr.active{background:rgba(83,183,255,.055) !important;}
             </div>
           </div>
           <div class="ksm-panel">
-            <div class="ksm-panel-title">Synthèse IA</div>
+            <div class="ksm-panel-title">Synthèse Kàddu Shield</div>
             <p class="ksm-summary-text" id="shieldSummaryV2">Sélectionnez un dossier pour afficher la synthèse.</p>
           </div>
           <div class="ksm-panel">
@@ -1529,12 +1529,12 @@ tr.active{background:rgba(83,183,255,.055) !important;}
         return "Connexion impossible avec le service d’analyse Kàddu Shield. Vérifiez que l’Edge Function shield-analyze-dossier est bien déployée et que les règles CORS sont compatibles.";
       }
       if(/rate limit|tokens per minute|too many requests|429/i.test(raw)){
-        return "Serveur IA momentanément occupé : l’analyse précédente consomme encore le quota IA. Réessayez dans quelques secondes, ou analysez un seul document à la fois.";
+        return "Service d’analyse momentanément occupé : l’analyse précédente consomme encore le quota d’analyse. Réessayez dans quelques secondes, ou analysez un seul document à la fois.";
       }
       if(/maximum context|context length|input tokens|prompt length/i.test(raw)){
-        return "Document trop volumineux pour une seule analyse IA. Lancez l’analyse document par document, ou réduisez le nombre de pages transmises.";
+        return "Document trop volumineux pour une seule analyse. Lancez l’analyse document par document, ou réduisez le nombre de pages transmises.";
       }
-      return raw || "Erreur IA inconnue.";
+      return raw || "Erreur d’analyse inconnue.";
     }
 
     function setDocsAnalyzeButtonsDisabled(disabled){
@@ -2706,7 +2706,7 @@ RÈGLES : Ne jamais accuser, ne jamais écrire "faux" ou "fraudeur", toujours la
       loader.classList.add("visible");
       result.classList.remove("visible");
       if(_currentDossier?.id){
-        createDossierEvent({ dossierId:_currentDossier.id, eventType:"analysis_started", newValue:"dossier", comment:"Analyse dossier IA lancée" }).catch(()=>{});
+        createDossierEvent({ dossierId:_currentDossier.id, eventType:"analysis_started", newValue:"dossier", comment:"Analyse dossier lancée" }).catch(()=>{});
       }
 
       try {
@@ -3831,6 +3831,92 @@ KADDU_CHECKS:[{"control_code":"","label":"","declared_value":null,"extracted_val
       }
     }
 
+
+    async function persistDocumentAnalysisClientSide(row, documentMeta, docData, checks, rawText, technicalMeta){
+      if(!row?.id) return null;
+      if(!docData && (!Array.isArray(checks) || !checks.length)) return null;
+
+      const safeName = documentMeta?.name || documentMeta?.filename || 'Document';
+      const sha = technicalMeta?.sha256 || documentMeta?.sha256 || null;
+      let extractionId = null;
+
+      try{
+        let query = null;
+        if(sha){
+          query = `${SUPABASE_URL}/rest/v1/dossier_document_extractions?rental_dossier_id=eq.${encodeURIComponent(row.id)}&sha256=eq.${encodeURIComponent(sha)}&select=id&limit=1`;
+        } else {
+          query = `${SUPABASE_URL}/rest/v1/dossier_document_extractions?rental_dossier_id=eq.${encodeURIComponent(row.id)}&document_name=eq.${encodeURIComponent(safeName)}&select=id&limit=1`;
+        }
+        const existingRes = await fetch(query, { headers:getAuthHeaders() });
+        const existing = existingRes.ok ? await existingRes.json() : [];
+        extractionId = existing?.[0]?.id || null;
+
+        if(!extractionId){
+          const exPayload = {
+            rental_dossier_id: row.id,
+            locataire_id: row.locataire_id || null,
+            locataire_email: row.email || null,
+            document_name: safeName,
+            document_url: documentMeta?.url || null,
+            document_key: documentMeta?.key || documentMeta?.type || null,
+            type_detected: docData?.type_document || documentMeta?.type || null,
+            sha256: sha,
+            extraction: docData || {},
+            raw_text: String(rawText || '').slice(0, 12000),
+            source: 'kaddu_shield',
+            created_by: currentSession?.user?.email || 'admin'
+          };
+          const exRes = await fetch(`${SUPABASE_URL}/rest/v1/dossier_document_extractions`, {
+            method:'POST',
+            headers:{...getAuthHeaders(), 'Prefer':'return=representation'},
+            body: JSON.stringify(exPayload)
+          });
+          if(exRes.ok){
+            const rows = await exRes.json().catch(()=>[]);
+            extractionId = rows?.[0]?.id || null;
+          } else {
+            console.warn('[Kàddu Shield] sauvegarde extraction impossible', await exRes.text());
+          }
+        }
+
+        if(Array.isArray(checks) && checks.length){
+          let already = [];
+          if(extractionId){
+            const chkRes = await fetch(`${SUPABASE_URL}/rest/v1/dossier_document_crosschecks?extraction_id=eq.${encodeURIComponent(extractionId)}&select=id,control_code`, {headers:getAuthHeaders()});
+            already = chkRes.ok ? await chkRes.json() : [];
+          }
+          const existingCodes = new Set((already||[]).map(x=>String(x.control_code||'')));
+          const toInsert = checks.filter(c => !existingCodes.has(String(c.control_code||''))).map(c => ({
+            rental_dossier_id: row.id,
+            extraction_id: extractionId,
+            document_name: safeName,
+            control_code: c.control_code || null,
+            label: c.label || null,
+            declared_value: c.declared_value == null ? null : String(c.declared_value),
+            extracted_value: c.extracted_value == null ? null : String(c.extracted_value),
+            result: c.result || null,
+            severity: c.severity || null,
+            score_impact: Number(c.score_impact || 0),
+            explanation: c.explanation || null,
+            payload: c,
+            created_by: currentSession?.user?.email || 'admin'
+          }));
+          if(toInsert.length){
+            const ckRes = await fetch(`${SUPABASE_URL}/rest/v1/dossier_document_crosschecks`, {
+              method:'POST',
+              headers:{...getAuthHeaders(), 'Prefer':'return=minimal'},
+              body: JSON.stringify(toInsert)
+            });
+            if(!ckRes.ok) console.warn('[Kàddu Shield] sauvegarde checks impossible', await ckRes.text());
+          }
+        }
+        return extractionId;
+      }catch(e){
+        console.warn('[Kàddu Shield] audit client non persisté', e.message);
+        return extractionId;
+      }
+    }
+
     async function analyserDocIA(url, name){
       const analysisKey = String((_currentDossier?.id || 'dossier') + '|' + (url || name || 'document'));
       if(window.__kadduDocumentAnalysisRunning.has(analysisKey)){
@@ -4047,7 +4133,9 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
         if(window.kadduShowShieldResultInModal) window.kadduShowShieldResultInModal({ title:'Analyse pièce — ' + name, vigilance: vigEl?.textContent || '—', html: finalHtml });
         if(window.kadduMarkClaudeCallFinished) window.kadduMarkClaudeCallFinished(true, 'Analyse pièce terminée.');
         if(row?.id){
+          await persistDocumentAnalysisClientSide(row, documentMeta, docData, checks, displayText || rawText, technicalMeta);
           renderSavedDocumentExtractions(row).catch(()=>{});
+          if(window.KADDU_SHIELD_SPRINT_1_2_4?.refresh){ window.KADDU_SHIELD_SPRINT_1_2_4.refresh(row).catch(()=>{}); }
           createDossierEvent({ dossierId:row.id, eventType:'analysis_finished', newValue:'document', comment:`Analyse document terminée · ${name}` }).catch(()=>{});
         }
         kadduToast(`Analyse terminée · ${name}`, 'success');
@@ -4224,7 +4312,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
           <span class="ksm-doc-pill ${p.cls}">${p.label}</span>
           <span class="ksm-doc-score">${p.scores}/100</span>
           <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
-            ${safeUrl ? `<button class="ksm-doc-btn" type="button" onclick="window.open('${safeUrl}','_blank','noopener,noreferrer')">👁 Ouvrir</button>` : ''}
+            ${safeUrl ? `<button class="ksm-doc-btn" type="button" data-ks-open-doc="1" onclick="window.open('${safeUrl}','_blank','noopener,noreferrer')">👁 Ouvrir</button>` : ''}
             <button class="ksm-doc-btn" type="button" onclick="analyserDocIA('${safeUrl}','${safeName}')">✦ Analyser pièce</button>
           </div>
         </div>`;
@@ -4375,7 +4463,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     const vigilance = opts.vigilance ?? $('afVigBadge')?.textContent ?? '—';
     const decision = opts.decision ?? $('afDecisionBadge')?.textContent ?? '—';
     const source = 'Kàddu Shield IA';
-    const title = opts.title || 'Résultat analyse IA';
+    const title = opts.title || 'Résultat analyse';
     const html = opts.html || $('afResultBody')?.innerHTML || '<div class="muted">Aucun résultat disponible.</div>';
 
     panel.innerHTML = `
@@ -4384,7 +4472,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
         <span style="font-size:10px;color:#77ffbe;letter-spacing:.12em">${esc(source)}</span>
       </div>
       <div class="ks-real-result-grid" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px">
-        <div class="ks-real-metric"><span>Score IA</span><strong>${esc(score)}</strong></div>
+        <div class="ks-real-metric"><span>Score Kàddu</span><strong>${esc(score)}</strong></div>
         <div class="ks-real-metric"><span>Vigilance</span><strong>${esc(vigilance)}</strong></div>
         <div class="ks-real-metric"><span>Décision</span><strong>${esc(decision)}</strong></div>
         <div class="ks-real-metric"><span>Statut</span><strong>Terminé</strong></div>
@@ -4408,13 +4496,13 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       box.style.marginTop = '8px';
       host.insertBefore(box, host.firstChild?.nextSibling || host.firstChild);
     }
-    box.innerHTML = `<div class="ksm-right-title">ANALYSE IA KÀDDU SHIELD</div><div style="color:#ffd180;font-size:13px;line-height:1.7">⏳ ${esc(label || 'Analyse IA en cours…')}<br><span style="color:rgba(245,241,235,.45)">Le résultat s’affichera dans l’onglet Synthèse.</span></div>`;
+    box.innerHTML = `<div class="ksm-right-title">ANALYSE KÀDDU SHIELD</div><div style="color:#ffd180;font-size:13px;line-height:1.7">⏳ ${esc(label || 'Analyse en cours…')}<br><span style="color:rgba(245,241,235,.45)">Le résultat s’affichera dans l’onglet Synthèse.</span></div>`;
   };
 
   window.kadduMarkClaudeCallFinished = function(ok, label){
     const box = $('ksmClaudeLiveStatus122');
     if(!box) return;
-    box.innerHTML = `<div class="ksm-right-title">ANALYSE IA KÀDDU SHIELD</div><div style="color:${ok ? '#77ffbe' : '#ffb3b3'};font-size:13px;line-height:1.7">${ok ? '✓' : '⚠'} ${esc(label || (ok ? 'Analyse terminée.' : 'Analyse échouée.'))}</div>`;
+    box.innerHTML = `<div class="ksm-right-title">ANALYSE KÀDDU SHIELD</div><div style="color:${ok ? '#77ffbe' : '#ffb3b3'};font-size:13px;line-height:1.7">${ok ? '✓' : '⚠'} ${esc(label || (ok ? 'Analyse terminée.' : 'Analyse échouée.'))}</div>`;
   };
 })();
 </script>
@@ -4887,7 +4975,7 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
       const score = el.querySelector('.ksm-doc-score');
       if(score){ score.textContent = ex ? fmt(ex.created_at).replace(/:\d\d$/,'') : '—'; }
       const actions = el.querySelector('div[style*="justify-content:flex-end"]') || el.lastElementChild;
-      if(actions && doc.url && !actions.querySelector('[data-ks-open-doc]')){
+      if(actions && doc.url && !actions.querySelector('[data-ks-open-doc]') && !Array.from(actions.querySelectorAll('button,a')).some(x=>/ouvrir/i.test(x.textContent||''))){
         const btn = document.createElement('button');
         btn.className = 'ksm-doc-btn'; btn.type = 'button'; btn.dataset.ksOpenDoc = '1'; btn.textContent = '👁 Ouvrir';
         btn.onclick = ()=>window.open(doc.url, '_blank', 'noopener,noreferrer');
