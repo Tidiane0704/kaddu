@@ -5186,5 +5186,252 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     KÀDDU SHIELD — SPRINT 1.3
+     Cache intelligent + réanalyse forcée + versioning traçable
+     ═══════════════════════════════════════════════════════════════ -->
+<style>
+  .ks-version-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;border:1px solid rgba(191,150,80,.25);background:rgba(191,150,80,.07);color:#DDB96E;font-size:11px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+  .ks-version-box{border:1px solid rgba(191,150,80,.16);background:rgba(255,255,255,.025);border-radius:14px;padding:12px 14px;margin-top:10px;color:rgba(245,241,235,.68);font-size:12px;line-height:1.55}
+  .ks-version-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .ks-force-btn{padding:8px 12px;border-radius:10px;border:1px solid rgba(245,166,35,.36);background:rgba(245,166,35,.08);color:#ffd180;font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap}
+  .ks-force-btn:hover{border-color:#ffd180;background:rgba(245,166,35,.14)}
+  .ks-cache-valid{color:#77ffbe}.ks-cache-stale{color:#ffd180}.ks-cache-force{color:#ffb3b3}
+  .ksm-doc-actions .ks-force-btn{width:100%;grid-column:1 / -1;text-align:center;display:flex;align-items:center;justify-content:center;min-height:38px}
+</style>
+<script>
+(function(){
+  'use strict';
+  if(window.KADDU_SHIELD_SPRINT_1_3?.loaded) return;
+
+  const $ = (id)=>document.getElementById(id);
+  const esc = (v)=>String(v ?? '').replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const SUPA = (window.KADDU_SUPABASE?.url || '').replace(/\/$/, '');
+  const state = { forceDocument:false, forceDossier:false, lastForceReason:null };
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function stamp(d=new Date()){
+    return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  }
+  function dayStamp(d=new Date()){ return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`; }
+  function cleanSlug(v, len=22){ return String(v||'DOSSIER').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,len) || 'DOSSIER'; }
+  function shortId(v, len=8){ return String(v||'').replace(/[^a-zA-Z0-9]/g,'').slice(0,len).toUpperCase() || Math.random().toString(36).slice(2,10).toUpperCase(); }
+  function getRow(){ return window._currentDossier || window.KADDU_SHIELD_SPRINT_1_2_4?.state?.row || window.KADDU_SHIELD_SPRINT_1_2?.state?.row || null; }
+
+  function dossierRef(row=getRow()){
+    const created = row?.created_at ? new Date(row.created_at) : new Date();
+    const d = isNaN(created.getTime()) ? new Date() : created;
+    return `KD-DOS-${dayStamp(d)}-${shortId(row?.id)}-${cleanSlug(row?.nom,18)}`;
+  }
+  function analysisRef({mode='dossier', row=getRow(), documentName='', sha256='', version=null}={}){
+    const type = mode === 'document' || mode === 'documents' ? 'DOC' : 'DOS';
+    const doc = type === 'DOC' ? '-' + cleanSlug(documentName || sha256 || 'DOCUMENT', 18) : '';
+    const v = version ? `-V${String(version).padStart(2,'0')}` : '';
+    return `KD-AN-${stamp()}-${shortId(row?.id)}-${type}${doc}${v}`;
+  }
+  function nextVersionFromAudit(mode='dossier', docName=''){
+    const audit = window.KADDU_SHIELD_SPRINT_1_2_4?.state?.audit || {};
+    if(mode === 'dossier'){
+      const evs = (audit.events||[]).filter(e => String(e.event_type||'').includes('analyse') && !String(e.event_type||'').includes('document'));
+      return evs.length + 1;
+    }
+    const n = String(docName||'').toLowerCase().trim();
+    const xs = (audit.extractions||[]).filter(e => String(e.document_name||'').toLowerCase().trim() === n);
+    return xs.length + 1;
+  }
+
+  async function rest(path, options={}){
+    if(!SUPA) throw new Error('Configuration Supabase absente.');
+    const headers = typeof window.getAuthHeaders === 'function'
+      ? window.getAuthHeaders(options.headers || {})
+      : {'Content-Type':'application/json', ...(options.headers||{})};
+    const res = await fetch(`${SUPA}/rest/v1/${path}`, {...options, headers});
+    if(!res.ok){ throw new Error(await res.text() || `HTTP ${res.status}`); }
+    if((options.headers?.Prefer||'').includes('return=minimal')) return null;
+    const txt = await res.text();
+    return txt ? JSON.parse(txt) : null;
+  }
+
+  async function saveVersionRow({payload, data, ref, version, cacheStatus}){
+    const row = getRow();
+    if(!row?.id) return;
+    try{
+      await rest('kaddu_analysis_versions', {
+        method:'POST',
+        headers:{Prefer:'return=minimal'},
+        body: JSON.stringify({
+          analysis_ref: ref,
+          dossier_ref: dossierRef(row),
+          rental_dossier_id: row.id,
+          locataire_id: row.locataire_id || null,
+          locataire_email: row.email || null,
+          mode: payload?.mode || 'dossier',
+          document_name: payload?.documentMeta?.name || payload?.documentsMeta?.[0]?.name || null,
+          document_sha256: payload?.documentMeta?.sha256 || payload?.documentMeta?.phase2_meta?.sha256 || payload?.documentsMeta?.[0]?.sha256 || payload?.documentsMeta?.[0]?.phase2_meta?.sha256 || null,
+          version_number: version,
+          cache_status: cacheStatus || (payload?.forceReanalysis ? 'forced' : 'fresh'),
+          score: data?.scoreData?.score || null,
+          decision: data?.scoreData?.decision || null,
+          vigilance: $('afVigBadge')?.textContent || null,
+          summary: data?.displayText || data?.rawText || null,
+          checks: Array.isArray(data?.checks) ? data.checks : null,
+          payload: { request_meta:{mode:payload?.mode, maxTokens:payload?.maxTokens}, response_keys:Object.keys(data||{}) },
+          created_by: window.currentSession?.user?.email || 'admin'
+        })
+      });
+    }catch(e){ console.warn('[Kàddu Sprint 1.3] version non sauvegardée', e.message); }
+  }
+
+  function decorateLastAnalysis(){
+    const host = $('ksAuditLastAnalysis');
+    const row = getRow();
+    if(!host || !row || host.querySelector('[data-ks13-version-box]')) return;
+    const audit = window.KADDU_SHIELD_SPRINT_1_2_4?.state?.audit || {};
+    const d = audit.dossier || row;
+    const ver = d.af_analysis_version || nextVersionFromAudit('dossier');
+    const ref = d.af_analysis_ref || `Dernier dossier : ${dossierRef(row)}`;
+    const box = document.createElement('div');
+    box.className = 'ks-version-box';
+    box.dataset.ks13VersionBox = '1';
+    box.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <span class="ks-version-pill">🧾 ${esc(dossierRef(row))}</span>
+        <span class="ks-version-pill">Version dossier V${String(ver).padStart(2,'0')}</span>
+      </div>
+      <div style="margin-top:8px">Référence analyse : <strong>${esc(ref)}</strong></div>
+      <div class="ks-version-actions">
+        <button class="ks-force-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_3.forceDossierReanalysis()">↻ Nouvelle analyse dossier</button>
+        <button class="ks-audit-btn" type="button" onclick="window.KADDU_SHIELD_SPRINT_1_3.downloadVersionIndex()">Télécharger index versions</button>
+      </div>`;
+    host.appendChild(box);
+  }
+
+  function decorateDocRows(){
+    const row = getRow();
+    const audit = window.KADDU_SHIELD_SPRINT_1_2_4?.state?.audit || {};
+    const extractions = audit.extractions || [];
+    document.querySelectorAll('#ksmDocList .ksm-doc-row').forEach((el)=>{
+      const name = el.querySelector('.ksm-doc-name')?.textContent?.trim() || '';
+      const actions = el.querySelector('.ksm-doc-actions');
+      if(!actions || actions.querySelector('[data-ks13-force]')) return;
+      const exList = extractions.filter(e => String(e.document_name||'').trim().toLowerCase() === name.toLowerCase());
+      const ex = exList[0];
+      if(ex){
+        const meta = document.createElement('div');
+        meta.className = 'ks-version-pill';
+        meta.style.justifyContent = 'center';
+        meta.style.gridColumn = '1 / -1';
+        meta.textContent = `V${String(ex.version_number || exList.length || 1).padStart(2,'0')} · ${ex.analysis_ref || 'analyse sauvegardée'}`;
+        actions.appendChild(meta);
+        const btn = document.createElement('button');
+        btn.className = 'ks-force-btn';
+        btn.type = 'button';
+        btn.dataset.ks13Force = '1';
+        btn.textContent = '↻ Nouvelle analyse';
+        btn.onclick = ()=>window.KADDU_SHIELD_SPRINT_1_3.forceDocumentReanalysis(name);
+        actions.appendChild(btn);
+      }
+    });
+  }
+
+  function decorate(){ decorateLastAnalysis(); decorateDocRows(); }
+
+  // Cache : si l'admin force une nouvelle analyse, on ignore le cache document.
+  const originalFindCache = window.findCachedDocumentExtraction;
+  if(typeof originalFindCache === 'function' && !originalFindCache.__ks13){
+    window.findCachedDocumentExtraction = async function(dossierId, sha256){
+      if(state.forceDocument){
+        console.info('[Kàddu Shield] Cache ignoré : nouvelle analyse demandée par admin.');
+        return null;
+      }
+      return originalFindCache.apply(this, arguments);
+    };
+    window.findCachedDocumentExtraction.__ks13 = true;
+  }
+
+  // Appel central : enrichit chaque requête avec ref, version, dossierRef et forceReanalysis.
+  const originalCall = window.callShieldAnalyze;
+  if(typeof originalCall === 'function' && !originalCall.__ks13){
+    window.callShieldAnalyze = async function(payload={}){
+      const row = getRow();
+      const isDoc = payload.mode === 'document' || payload.mode === 'documents';
+      const docName = payload?.documentMeta?.name || payload?.documentsMeta?.[0]?.name || '';
+      const force = isDoc ? state.forceDocument : state.forceDossier;
+      const version = nextVersionFromAudit(isDoc ? 'document' : 'dossier', docName);
+      const ref = analysisRef({mode:isDoc?'document':'dossier', row, documentName:docName, version});
+      const enriched = {
+        ...payload,
+        forceReanalysis: !!force,
+        forceReason: force ? (state.lastForceReason || 'admin_forced_reanalysis') : null,
+        dossierRef: dossierRef(row),
+        analysisRef: ref,
+        analysisVersion: version
+      };
+      try{
+        const data = await originalCall.call(this, enriched);
+        await saveVersionRow({payload:enriched, data, ref, version, cacheStatus:force?'forced':'fresh'});
+        return data;
+      }finally{
+        if(isDoc){ state.forceDocument = false; }
+        else { state.forceDossier = false; }
+        state.lastForceReason = null;
+        setTimeout(()=>window.KADDU_SHIELD_SPRINT_1_2_4?.refresh?.(row), 800);
+      }
+    };
+    window.callShieldAnalyze.__ks13 = true;
+  }
+
+  window.KADDU_SHIELD_SPRINT_1_3 = {
+    loaded:true,
+    dossierRef,
+    analysisRef,
+    forceDocumentReanalysis(name){
+      state.forceDocument = true;
+      state.lastForceReason = 'admin_document_changed_or_manual_refresh';
+      const row = getRow();
+      const docRow = Array.from(document.querySelectorAll('#ksmDocList .ksm-doc-row')).find(el => (el.querySelector('.ksm-doc-name')?.textContent || '').trim() === name);
+      const btn = docRow?.querySelector('.ksm-doc-actions button[onclick*="analyserDocIA"]');
+      if(btn){ btn.click(); }
+      else { alert('Bouton Analyser introuvable pour ce document.'); }
+      setTimeout(()=>window.KADDU_SHIELD_SPRINT_1_2_4?.refresh?.(row), 1200);
+    },
+    forceDossierReanalysis(){
+      state.forceDossier = true;
+      state.lastForceReason = 'admin_dossier_changed_or_manual_refresh';
+      const btn = $('shieldAnalyzeDossierV2') || $('afAnalyseBtn');
+      if(btn){ btn.click(); }
+      else if(typeof window.lancerAnalyseDossier === 'function'){ window.lancerAnalyseDossier(); }
+      else { alert('Bouton Analyser dossier introuvable.'); }
+    },
+    downloadVersionIndex(){
+      const row = getRow();
+      const audit = window.KADDU_SHIELD_SPRINT_1_2_4?.state?.audit || {};
+      const payload = { dossier_ref:dossierRef(row), dossier:row, versions:{ dossier:audit.dossier, extractions:audit.extractions||[], events:audit.events||[] } };
+      const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `${dossierRef(row)}_versions.json`; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    },
+    decorate
+  };
+
+  const oldRefresh = window.KADDU_SHIELD_SPRINT_1_2_4?.refresh;
+  if(typeof oldRefresh === 'function' && !oldRefresh.__ks13){
+    window.KADDU_SHIELD_SPRINT_1_2_4.refresh = async function(){
+      const ret = await oldRefresh.apply(this, arguments);
+      setTimeout(decorate, 120);
+      return ret;
+    };
+    window.KADDU_SHIELD_SPRINT_1_2_4.refresh.__ks13 = true;
+  }
+  const obs = new MutationObserver(()=>setTimeout(decorate, 150));
+  if(document.body) obs.observe(document.body, {childList:true, subtree:true});
+  document.addEventListener('DOMContentLoaded', ()=>setTimeout(decorate, 1200));
+  console.info('[Kàddu Shield] Sprint 1.3 chargé : cache intelligent + réanalyse forcée + versioning.');
+})();
+</script>
+
 </body>
 </html>
