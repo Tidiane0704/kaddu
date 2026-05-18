@@ -5433,5 +5433,318 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
 })();
 </script>
 
+
+<!-- ═══════════════════════════════════════════════════════════════
+     KÀDDU SHIELD — SPRINT 1.3.1
+     UX analyse + upload + feedback moteur
+     - références d'analyse lisibles
+     - dropzone réellement branchée
+     - feedback qualité analyse sauvegardé
+     ═══════════════════════════════════════════════════════════════ -->
+<style>
+  /* Référence courte : on garde l'ID long en audit, pas dans la ligne document */
+  .ks-analysis-short-card{
+    grid-column:1 / -1;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    min-height:36px;padding:7px 10px;border-radius:12px;
+    border:1px solid rgba(191,150,80,.18);background:rgba(191,150,80,.045);
+    color:rgba(245,241,235,.64);font-size:11px;font-weight:800;letter-spacing:.03em;
+  }
+  .ks-analysis-short-card strong{color:#DDB96E;font-size:12px}
+  .ks-analysis-audit-link{border:none;background:transparent;color:rgba(245,241,235,.42);cursor:pointer;font-weight:800;font-size:11px;text-decoration:underline;text-underline-offset:3px}
+  .ks-analysis-audit-link:hover{color:#DDB96E}
+  .ksm-doc-actions .ks-version-pill{display:none!important}
+
+  /* Dropzone active */
+  .ksm-dropzone.ks-upload-ready{cursor:pointer;position:relative}
+  .ksm-dropzone.ks-upload-ready::after{
+    content:'Upload sécurisé Kàddu';position:absolute;right:14px;top:12px;
+    padding:4px 9px;border-radius:999px;border:1px solid rgba(119,255,190,.22);
+    background:rgba(0,200,117,.07);color:#77ffbe;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .ksm-dropzone.ks-upload-over{border-color:#DDB96E!important;background:rgba(191,150,80,.08)!important;color:#F8F4EE!important}
+  .ks-upload-progress{margin-top:10px;font-size:12px;color:#DDB96E;font-weight:800}
+
+  /* Feedback analyse */
+  .ks-feedback-panel{
+    margin-top:12px;border:1px solid rgba(191,150,80,.18);background:rgba(255,255,255,.025);
+    border-radius:14px;padding:12px 14px;color:rgba(245,241,235,.68)
+  }
+  .ks-feedback-title{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#DDB96E;font-weight:900;margin-bottom:10px}
+  .ks-feedback-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .ks-feedback-choice{
+    padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.035);color:rgba(245,241,235,.68);cursor:pointer;font-weight:800;font-size:12px
+  }
+  .ks-feedback-choice.good{border-color:rgba(0,200,117,.25);color:#77ffbe;background:rgba(0,200,117,.06)}
+  .ks-feedback-choice.mid{border-color:rgba(245,166,35,.28);color:#ffd180;background:rgba(245,166,35,.06)}
+  .ks-feedback-choice.bad{border-color:rgba(255,107,107,.26);color:#ffb3b3;background:rgba(255,107,107,.05)}
+  .ks-feedback-choice.active{box-shadow:0 0 0 2px rgba(191,150,80,.20) inset;filter:brightness(1.12)}
+  .ks-feedback-note{width:100%;min-height:62px;border-radius:12px;margin-top:8px;font-size:13px}
+  .ks-feedback-submit{margin-top:8px;padding:9px 14px;border-radius:12px;border:1px solid rgba(191,150,80,.28);background:rgba(191,150,80,.10);color:#DDB96E;font-weight:900;cursor:pointer}
+  .ks-feedback-submit:hover{background:rgba(191,150,80,.16)}
+  .ks-feedback-saved{display:none;margin-top:8px;color:#77ffbe;font-size:12px;font-weight:800}
+  .ks-feedback-saved.visible{display:block}
+</style>
+<script>
+(function(){
+  'use strict';
+  if(window.KADDU_SHIELD_SPRINT_1_3_1?.loaded) return;
+
+  const $ = (id)=>document.getElementById(id);
+  const SUPA = (window.KADDU_SUPABASE?.url || '').replace(/\/$/, '');
+  const BUCKET = 'rental-documents';
+  const esc = (v)=>String(v ?? '').replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+  function getRow(){ return window._currentDossier || window.KADDU_SHIELD_SPRINT_1_2_4?.state?.row || window.KADDU_SHIELD_SPRINT_1_2?.state?.row || null; }
+  function headers(extra={}){ return typeof window.getAuthHeaders === 'function' ? window.getAuthHeaders(extra) : {'Content-Type':'application/json', ...extra}; }
+  function fmtDate(v){ try{ const d=new Date(v); if(!isNaN(d.getTime())) return d.toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(_){} return 'date inconnue'; }
+  function shortVersion(ex){ return 'V' + String(ex?.version_number || 1).padStart(2,'0'); }
+  function auditId(ex){ return ex?.analysis_ref || ex?.id || ''; }
+  function cleanFileName(name){ return String(name||'document.pdf').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/-+/g,'-').slice(0,120); }
+
+  function replaceLongVersionBadges(){
+    const audit = window.KADDU_SHIELD_SPRINT_1_2_4?.state?.audit || {};
+    const extractions = audit.extractions || [];
+    document.querySelectorAll('#ksmDocList .ksm-doc-row').forEach((rowEl)=>{
+      const name = (rowEl.querySelector('.ksm-doc-name')?.textContent || '').trim();
+      if(!name) return;
+      const actions = rowEl.querySelector('.ksm-doc-actions');
+      if(!actions || actions.querySelector('[data-ks131-short-ref]')) return;
+      const exList = extractions.filter(e => String(e.document_name||'').trim().toLowerCase() === name.toLowerCase());
+      const ex = exList[0];
+      if(!ex) return;
+      const longRef = auditId(ex);
+      const card = document.createElement('div');
+      card.className = 'ks-analysis-short-card';
+      card.dataset.ks131ShortRef = '1';
+      card.title = longRef ? ('Référence complète : ' + longRef) : 'Référence audit';
+      card.innerHTML = `<span><strong>Analyse ${esc(shortVersion(ex))}</strong> · ${esc(fmtDate(ex.created_at))}</span><button class="ks-analysis-audit-link" type="button">ID audit</button>`;
+      card.querySelector('button').onclick = ()=>{
+        const txt = longRef || JSON.stringify(ex, null, 2);
+        navigator.clipboard?.writeText(txt).then(()=>{
+          if(typeof window.showSuccess === 'function') window.showSuccess('Référence audit copiée.');
+          else alert('Référence audit copiée.');
+        }).catch(()=>alert(txt));
+      };
+      const forceBtn = actions.querySelector('[data-ks13-force]');
+      if(forceBtn) actions.insertBefore(card, forceBtn);
+      else actions.appendChild(card);
+    });
+  }
+
+  async function patchDocsFournis(row, docs){
+    const res = await fetch(`${SUPA}/rest/v1/rental_dossiers?id=eq.${encodeURIComponent(row.id)}`, {
+      method:'PATCH',
+      headers: headers({'Prefer':'return=minimal'}),
+      body: JSON.stringify({ docs_fournis: docs, updated_at: new Date().toISOString() })
+    });
+    if(!res.ok) throw new Error(await res.text() || 'Mise à jour dossier impossible.');
+  }
+
+  function extractDocs(row){
+    if(Array.isArray(row?.docs_fournis)) return row.docs_fournis.slice();
+    try{ const p = typeof row?.payload === 'string' ? JSON.parse(row.payload) : (row?.payload||{}); if(Array.isArray(p.docs_fournis)) return p.docs_fournis.slice(); }catch(_){}
+    return [];
+  }
+
+  async function uploadOne(file){
+    const row = getRow();
+    if(!row?.id) throw new Error('Aucun dossier sélectionné.');
+    const safe = cleanFileName(file.name);
+    const path = `${row.id}/${Date.now()}-${safe}`;
+    const uploadHeaders = headers({'Content-Type': file.type || 'application/octet-stream', 'x-upsert':'false'});
+    const res = await fetch(`${SUPA}/storage/v1/object/${BUCKET}/${encodeURIComponent(path).replace(/%2F/g,'/')}`, {
+      method:'POST', headers: uploadHeaders, body:file
+    });
+    if(!res.ok){
+      const txt = await res.text();
+      throw new Error(txt || 'Upload Storage impossible. Vérifie le bucket rental-documents et les policies Storage.');
+    }
+    const publicUrl = `${SUPA}/storage/v1/object/public/${BUCKET}/${encodeURIComponent(path).replace(/%2F/g,'/')}`;
+    const doc = {
+      name: file.name,
+      key: path,
+      path,
+      url: publicUrl,
+      type: inferDocType(file.name),
+      typeLabel: inferDocLabel(file.name),
+      size: file.size,
+      mime_type: file.type || null,
+      uploaded_at: new Date().toISOString(),
+      analysis_status: 'never_analyzed'
+    };
+    const docs = extractDocs(row);
+    docs.push(doc);
+    await patchDocsFournis(row, docs);
+    row.docs_fournis = docs;
+    return doc;
+  }
+
+  function inferDocType(name){
+    const n = String(name||'').toLowerCase();
+    if(/rib|iban|bank|banque/.test(n)) return 'bancaire';
+    if(/cni|passport|passeport|identite|identity/.test(n)) return 'identite';
+    if(/paie|salaire|bulletin/.test(n)) return 'fiches_paie';
+    if(/contrat|kbis|registre|ninea|rccm/.test(n)) return 'pro';
+    if(/loyer|quittance|domicile|facture/.test(n)) return 'domicile';
+    return 'autre';
+  }
+  function inferDocLabel(name){
+    const t = inferDocType(name);
+    return ({bancaire:'Document bancaire', identite:'Pièce d’identité', fiches_paie:'Justificatif revenus', pro:'Justificatif professionnel', domicile:'Justificatif domicile', autre:'Document'})[t] || 'Document';
+  }
+
+  function setupDropzone(){
+    document.querySelectorAll('.ksm-dropzone').forEach((dz)=>{
+      if(dz.dataset.ks131UploadReady) return;
+      dz.dataset.ks131UploadReady = '1';
+      dz.classList.add('ks-upload-ready');
+      dz.setAttribute('role','button');
+      dz.setAttribute('tabindex','0');
+      const input = document.createElement('input');
+      input.type = 'file'; input.multiple = true; input.accept = '.pdf,.jpg,.jpeg,.png,.webp,application/pdf,image/*'; input.style.display = 'none';
+      dz.appendChild(input);
+      const progress = document.createElement('div'); progress.className = 'ks-upload-progress'; progress.style.display = 'none'; dz.appendChild(progress);
+
+      async function handleFiles(files){
+        const arr = Array.from(files || []);
+        if(!arr.length) return;
+        progress.style.display = 'block';
+        try{
+          for(let i=0;i<arr.length;i++){
+            progress.textContent = `Upload ${i+1}/${arr.length} — ${arr[i].name}`;
+            await uploadOne(arr[i]);
+          }
+          progress.textContent = '✓ Fichier(s) ajouté(s). Actualisation…';
+          if(typeof window.renderDocsAdmin === 'function') window.renderDocsAdmin(getRow());
+          if(window.KADDU_SHIELD_SPRINT_1_2_4?.refresh) await window.KADDU_SHIELD_SPRINT_1_2_4.refresh(getRow());
+          setTimeout(()=>{ progress.style.display='none'; progress.textContent=''; }, 1800);
+        }catch(e){
+          progress.textContent = 'Erreur upload : ' + e.message;
+          alert('Erreur upload : ' + e.message);
+        }
+      }
+      dz.addEventListener('click', (e)=>{ if(e.target === input) return; input.click(); });
+      dz.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); input.click(); } });
+      input.addEventListener('change', ()=>handleFiles(input.files));
+      dz.addEventListener('dragover', (e)=>{ e.preventDefault(); dz.classList.add('ks-upload-over'); });
+      dz.addEventListener('dragleave', ()=>dz.classList.remove('ks-upload-over'));
+      dz.addEventListener('drop', (e)=>{ e.preventDefault(); dz.classList.remove('ks-upload-over'); handleFiles(e.dataTransfer.files); });
+    });
+  }
+
+  function feedbackPanelHtml(kind='dossier', ref=''){
+    return `<div class="ks-feedback-panel" data-ks131-feedback-panel="1" data-kind="${esc(kind)}" data-ref="${esc(ref)}">
+      <div class="ks-feedback-title">Qualité de l’analyse — amélioration du moteur</div>
+      <div class="ks-feedback-row">
+        <button class="ks-feedback-choice good" type="button" data-verdict="bonne">✅ Bonne</button>
+        <button class="ks-feedback-choice mid" type="button" data-verdict="moyenne">⚠ Moyenne</button>
+        <button class="ks-feedback-choice bad" type="button" data-verdict="mauvaise">❌ Mauvaise</button>
+      </div>
+      <textarea class="ks-feedback-note" placeholder="Commentaire facultatif : ce qui est juste, incomplet ou à corriger…"></textarea>
+      <button class="ks-feedback-submit" type="button">Enregistrer l’avis</button>
+      <div class="ks-feedback-saved">✓ Avis enregistré. Il servira à améliorer les contrôles.</div>
+    </div>`;
+  }
+
+  function attachFeedbackHandlers(root=document){
+    root.querySelectorAll('[data-ks131-feedback-panel]').forEach((panel)=>{
+      if(panel.dataset.bound) return; panel.dataset.bound = '1';
+      let verdict = null;
+      panel.querySelectorAll('[data-verdict]').forEach(btn=>btn.addEventListener('click', ()=>{
+        verdict = btn.dataset.verdict;
+        panel.querySelectorAll('[data-verdict]').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        panel.querySelector('.ks-feedback-saved')?.classList.remove('visible');
+      }));
+      panel.querySelector('.ks-feedback-submit')?.addEventListener('click', async ()=>{
+        if(!verdict){ alert('Choisis Bonne, Moyenne ou Mauvaise.'); return; }
+        const row = getRow();
+        const submit = panel.querySelector('.ks-feedback-submit');
+        submit.disabled = true; submit.textContent = 'Enregistrement…';
+        try{
+          const payload = {
+            dossier_id: row?.id || null,
+            dossier_nom: row?.nom || null,
+            bien: row?.bien || null,
+            verdict,
+            decision_reelle: null,
+            commentaire: panel.querySelector('.ks-feedback-note')?.value?.trim() || null,
+            analysis_kind: panel.dataset.kind || 'dossier',
+            analysis_ref: panel.dataset.ref || null,
+            conseiller_email: window.currentSession?.user?.email || null,
+            created_at: new Date().toISOString()
+          };
+          const res = await fetch(`${SUPA}/rest/v1/af_feedback`, {method:'POST', headers:headers({'Prefer':'return=minimal'}), body:JSON.stringify(payload)});
+          if(!res.ok) throw new Error(await res.text() || 'Sauvegarde impossible.');
+          panel.querySelector('.ks-feedback-saved')?.classList.add('visible');
+        }catch(e){ alert('Avis non enregistré : ' + e.message); }
+        finally{ submit.disabled=false; submit.textContent='Enregistrer l’avis'; }
+      });
+    });
+  }
+
+  function ensureFeedbackPanels(){
+    // Dossier / synthèse
+    const last = $('ksAuditLastAnalysis');
+    if(last && !last.querySelector('[data-ks131-feedback-panel]')){
+      const row = getRow();
+      const ref = row?.af_analysis_ref || row?.af_synthese_at || '';
+      last.insertAdjacentHTML('beforeend', feedbackPanelHtml('dossier', ref));
+    }
+    // Résultat analyse dans bloc historique/restauration
+    const checks = $('ksAuditChecksPanel');
+    if(checks && !checks.querySelector('[data-ks131-feedback-panel]')){
+      checks.insertAdjacentHTML('beforeend', feedbackPanelHtml('document_checks', 'checks-current'));
+    }
+    attachFeedbackHandlers(document);
+  }
+
+  function decorateAll(){
+    setupDropzone();
+    replaceLongVersionBadges();
+    ensureFeedbackPanels();
+  }
+
+  // Après appel Kàddu Shield, injecter l’avis automatiquement dans le résultat visible.
+  const originalCall = window.callShieldAnalyze;
+  if(typeof originalCall === 'function' && !originalCall.__ks131Feedback){
+    window.callShieldAnalyze = async function(payload={}){
+      const data = await originalCall.apply(this, arguments);
+      setTimeout(()=>{
+        const body = $('afResultBody');
+        const ref = payload.analysisRef || data?.analysisRef || '';
+        if(body && !body.parentElement?.querySelector('[data-ks131-feedback-panel]')){
+          body.parentElement.insertAdjacentHTML('beforeend', feedbackPanelHtml(payload.mode || 'analyse', ref));
+          attachFeedbackHandlers(body.parentElement);
+        }
+        decorateAll();
+      }, 250);
+      return data;
+    };
+    window.callShieldAnalyze.__ks131Feedback = true;
+  }
+
+  const oldRefresh = window.KADDU_SHIELD_SPRINT_1_2_4?.refresh;
+  if(typeof oldRefresh === 'function' && !oldRefresh.__ks131){
+    window.KADDU_SHIELD_SPRINT_1_2_4.refresh = async function(){
+      const ret = await oldRefresh.apply(this, arguments);
+      setTimeout(decorateAll, 150);
+      return ret;
+    };
+    window.KADDU_SHIELD_SPRINT_1_2_4.refresh.__ks131 = true;
+  }
+
+  const obs = new MutationObserver(()=>setTimeout(decorateAll, 120));
+  if(document.body) obs.observe(document.body, {childList:true, subtree:true});
+  document.addEventListener('DOMContentLoaded', ()=>setTimeout(decorateAll, 800));
+  setTimeout(decorateAll, 1000);
+
+  window.KADDU_SHIELD_SPRINT_1_3_1 = {loaded:true, setupDropzone, replaceLongVersionBadges, ensureFeedbackPanels, uploadOne};
+  console.info('[Kàddu Shield] Sprint 1.3.1 chargé : UX analyse + upload + feedback moteur.');
+})();
+</script>
+
 </body>
 </html>
