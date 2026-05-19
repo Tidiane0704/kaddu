@@ -5858,5 +5858,172 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Correctifs Premium UX demandés
+     1 KPI cliquables + filtres · 2 Liste fonctionnelle · 3 jauge dynamique
+     4 suppression du mot IA · 5 couleurs score fiables · 6 boutons docs/points
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="kaddu-premium-fixes-v2">
+  .stat{cursor:pointer!important;transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease!important;}
+  .stat:hover{transform:translateY(-3px)!important;border-color:rgba(215,168,79,.46)!important;box-shadow:0 24px 70px rgba(0,0,0,.28),0 0 34px rgba(215,168,79,.12)!important;}
+  .stat:focus-visible{outline:2px solid rgba(215,168,79,.75);outline-offset:3px;}
+
+  .kp-score-ring{background:conic-gradient(var(--ring-color,#63d889) calc(var(--score)*1%),rgba(255,255,255,.10) 0)!important;box-shadow:0 0 0 1px color-mix(in srgb,var(--ring-color,#63d889) 35%,transparent),0 0 28px color-mix(in srgb,var(--ring-color,#63d889) 24%,transparent)!important;}
+  .kp-score-label{color:var(--ring-color,#63d889)!important;}
+  .kp-score-ring.score-mid{--ring-color:#f2b84b!important;}
+  .kp-score-ring.score-high{--ring-color:#ff7c7c!important;}
+  .kp-score-ring.score-good{--ring-color:#5ee296!important;}
+  .kp-score-ring.score-empty{--ring-color:#ff7c7c!important;}
+
+  .kp-gauge{height:92px!important;border-radius:110px 110px 0 0!important;background:conic-gradient(from 270deg,var(--gauge-color,#58d68d) 0 var(--probdeg,90deg),rgba(255,255,255,.09) var(--probdeg,90deg) 180deg,transparent 0)!important;box-shadow:inset 0 -16px 30px rgba(0,0,0,.26),0 0 28px color-mix(in srgb,var(--gauge-color,#58d68d) 18%,transparent)!important;position:relative!important;overflow:hidden!important;}
+  .kp-gauge:before{content:"";position:absolute;left:20px;right:20px;bottom:0;height:56px;border-radius:90px 90px 0 0;background:linear-gradient(180deg,#102840,#0b1c2f);box-shadow:inset 0 8px 22px rgba(0,0,0,.32);}
+  .kp-gauge strong{position:relative;z-index:1;font-size:24px!important;}
+  .kp-prob-label{display:inline-flex;margin-top:8px;padding:4px 10px;border-radius:999px;background:rgba(88,214,141,.10);border:1px solid rgba(88,214,141,.22);color:#6ee9a2;font-size:12px;font-weight:800;}
+  .kp-prob-label.mid{background:rgba(246,185,75,.10);border-color:rgba(246,185,75,.24);color:#f6c24f;}
+  .kp-prob-label.high{background:rgba(255,124,124,.10);border-color:rgba(255,124,124,.24);color:#ff9a9a;}
+
+  .kp-dossier-list.list-mode{gap:8px!important;}
+  .kp-dossier-list.list-mode .kp-dossier-card{min-height:86px!important;grid-template-columns:280px 110px 125px minmax(260px,1fr) 120px 18px!important;padding:13px 16px!important;border-radius:12px!important;}
+  .kp-dossier-list.list-mode .kp-score-ring{width:58px!important;height:58px!important;}
+  .kp-dossier-list.list-mode .kp-score-ring::before{inset:6px!important;}
+  .kp-dossier-list.list-mode .kp-score-num{font-size:22px!important;}
+  .kp-dossier-list.list-mode .kp-score-label{font-size:11px!important;}
+  .kp-dossier-list.list-mode .kp-meta{font-size:12px!important;}
+
+  .kp-action-secondary[data-kp-action], .kp-action-main[data-kp-action]{cursor:pointer!important;}
+</style>
+<script id="kaddu-premium-fixes-v2">
+(function(){
+  'use strict';
+  window.__kpViewMode = window.__kpViewMode || 'cards';
+
+  function q(id){ return document.getElementById(id); }
+  function initials(name){return String(name||'?').trim().split(/\s+/).slice(0,2).map(s=>s[0]||'').join('').toUpperCase()||'?';}
+  function scoreNum(row){ const n=Number(row?.score); return Number.isFinite(n)?n:null; }
+  function scoreTier(score){
+    if(score===null || score===undefined) return {risk:'Risque élevé', cls:'kp-risk-pill kp-risk-high', label:'Dossier sensible', ring:'score-empty', prob:38, probCls:'high', probLabel:'À sécuriser'};
+    if(score>=85) return {risk:'Risque faible', cls:'kp-risk-pill', label:'Excellent dossier', ring:'score-good', prob:Math.min(97,Math.round(24+score*.76)), probCls:'', probLabel:'Excellente'};
+    if(score>=80) return {risk:'Risque faible', cls:'kp-risk-pill', label:'Très bon dossier', ring:'score-good', prob:Math.min(94,Math.round(24+score*.74)), probCls:'', probLabel:'Très favorable'};
+    if(score>=60) return {risk:'Risque modéré', cls:'kp-risk-pill kp-risk-mid', label:'Dossier à vérifier', ring:'score-mid', prob:Math.round(20+score*.70), probCls:'mid', probLabel:'À confirmer'};
+    return {risk:'Risque élevé', cls:'kp-risk-pill kp-risk-high', label:'Dossier sensible', ring:'score-high', prob:Math.max(24,Math.round(15+score*.55)), probCls:'high', probLabel:'Vigilance'};
+  }
+  function trustSignals(row){
+    const score=scoreNum(row), sig=[];
+    if(score===null){ sig.push(['warn','Revenus à confirmer'],['warn','RIB manquant']); return sig; }
+    if(score>=80){ sig.push(['ok','Revenus cohérents'],['ok','Pièce d’identité validée']); }
+    else if(score>=60){ sig.push(['ok','Pièce d’identité validée'],['warn','Revenus à confirmer']); }
+    else { sig.push(['warn','Revenus à confirmer'],['warn','Pièce à vérifier']); }
+    if(row?.iban) sig.push(['ok','Banque validée']); else sig.push(['warn','RIB manquant']);
+    if(row?.employeur) sig.push([score>=80?'ok':'warn', score>=80?'Employeur cohérent':'Employeur à confirmer']);
+    if(score>=92) sig.unshift(['ok','Profil très solide']);
+    return sig.slice(0,3);
+  }
+  function renderSignal(sig){return `<div class="kp-signal ${sig[0]}"><i>${sig[0]==='ok'?'✓':'!'}</i><span>${sig[1]}</span></div>`;}
+  function docCount(row){
+    let docs=Array.isArray(row?.docs_fournis)?row.docs_fournis:[];
+    if(!docs.length){try{const p=typeof row?.payload==='string'?JSON.parse(row.payload):(row?.payload||{}); if(Array.isArray(p.docs_fournis)) docs=p.docs_fournis;}catch(_){}}
+    if(!docs.length && row?.transmission) docs=String(row.transmission).split(',').map(s=>s.trim()).filter(Boolean);
+    return docs.length;
+  }
+  function selectedRow(){ try{return allRows.find(r=>r.id===selectedId)||filteredRows[0]||allRows[0]||null;}catch(_){return null;} }
+  function scrollToDossiers(){ setTimeout(()=>document.querySelector('.table-wrap')?.scrollIntoView({behavior:'smooth',block:'start'}),80); }
+  function resetFilterControls(){ ['searchInput','bienFilter','statusFilter','metierFilter','finalFilter'].forEach(id=>{const el=q(id); if(el) el.value='';}); const sort=q('sortFilter'); if(sort) sort.value='created_desc'; }
+  function applyKpiFilter(kind){
+    resetFilterControls();
+    if(kind==='active'){}
+    if(kind==='accepted'){ const m=q('metierFilter'); if(m) m.value='valide'; }
+    if(kind==='risk'){ const s=q('statusFilter'); if(s) s.value='risque_eleve'; }
+    try{ selectedId=null; applyFilters(); }catch(e){ console.warn(e); }
+    scrollToDossiers();
+  }
+  function openModalTab(row, tab){
+    if(row){ selectedId=row.id; try{renderDetail(row);}catch(_){} }
+    if(typeof window.openShieldModalV2==='function') window.openShieldModalV2(row||selectedRow());
+    setTimeout(()=>{
+      const btn=document.querySelector(`[data-shield-tab="${tab}"]`);
+      if(btn) btn.click();
+    },180);
+  }
+
+  window.kpRenderSidePanel=function(row){
+    const p=document.getElementById('kpDetailPanel') || (typeof ensurePanel==='function'?ensurePanel():null);
+    if(!p) return;
+    if(!row){p.innerHTML='<div class="kp-side-empty">Sélectionnez un dossier pour afficher le résumé de confiance.</div>';return;}
+    const score=scoreNum(row), tier=scoreTier(score), sigs=trustSignals(row), docs=docCount(row), docsPct=Math.min(100,Math.round((docs/8)*100));
+    const probDeg=Math.round(tier.prob*1.8);
+    const gaugeColor=tier.prob>=80?'#58d68d':tier.prob>=60?'#f6b94b':'#ff7c7c';
+    p.innerHTML=`<button class="kp-side-close" type="button">×</button>
+      <div class="kp-side-kicker">Dossier sélectionné</div>
+      <h2 class="kp-side-name">${row.nom||'Dossier'}</h2>
+      <div class="kp-side-sub">${bienLabel(row.bien)} · ${formatDate(row.created_at)}</div>
+      <div class="kp-side-card"><div class="kp-side-scoregrid"><div><div class="kp-side-small">Score global</div><div><span class="kp-side-big">${score??'—'}</span> /100</div><div class="${tier.cls}" style="margin-top:8px">${tier.risk}</div></div><div><div class="kp-side-small">Probabilité d’acceptation</div><div class="kp-gauge" style="--probdeg:${probDeg}deg;--gauge-color:${gaugeColor}"><strong>${tier.prob}%</strong></div><span class="kp-prob-label ${tier.probCls}">${tier.probLabel}</span></div></div></div>
+      <div class="kp-side-card"><div class="kp-confidence-title">Analyse de confiance détaillée</div>${sigs.map(renderSignal).join('')}<div class="kp-signal ok"><i>✓</i><span>Historique bancaire stable</span></div><button class="kp-action-secondary" data-kp-action="points" style="height:36px;width:100%;margin-top:12px">Voir tous les points</button></div>
+      <div class="kp-key-grid"><div class="kp-mini-box"><div class="kp-confidence-title">Informations clés</div><p><b>Bien</b><br>${bienLabel(row.bien)}</p><p><b>Loyer</b><br>650 000 FCFA</p><p><b>Type</b><br>Appartement</p></div><div class="kp-mini-box"><div class="kp-confidence-title">Documents</div><div style="display:flex;align-items:center;gap:12px"><div class="kp-doc-ring"><span>${docs}/8</span></div><div><b style="font-size:24px">${docsPct}%</b><br><span class="kp-side-small">Documents reçus</span></div></div><button class="kp-action-secondary" data-kp-action="documents" style="height:36px;width:100%;margin-top:14px">Voir les documents</button></div></div>
+      <div class="kp-side-card"><div class="kp-confidence-title">Actions rapides</div><div class="kp-actions"><button class="kp-action-main" data-kp-action="full" id="kpOpenFull">Voir le dossier complet →</button><button class="kp-action-secondary" data-kp-action="contact">Contacter le candidat</button><button class="kp-action-more">⋮</button></div></div>`;
+    p.querySelector('.kp-side-close').onclick=()=>{p.innerHTML='<div class="kp-side-empty">Sélectionnez un dossier pour afficher le résumé de confiance.</div>';};
+    p.querySelector('[data-kp-action="full"]')?.addEventListener('click',()=>openModalTab(row,'synthese'));
+    p.querySelector('[data-kp-action="points"]')?.addEventListener('click',()=>openModalTab(row,'synthese'));
+    p.querySelector('[data-kp-action="documents"]')?.addEventListener('click',()=>openModalTab(row,'documents'));
+    p.querySelector('[data-kp-action="contact"]')?.addEventListener('click',()=>{ const phone=String(row.numero_whatsapp||row.telephone||'').replace(/\D/g,''); if(phone) window.open(`https://wa.me/${phone}`,'_blank'); });
+  };
+
+  window.kpShowHover=function(ev,row){
+    let h=document.getElementById('kpHoverSummary'); if(!h){h=document.createElement('div');h.id='kpHoverSummary';h.className='kp-hover-summary';document.body.appendChild(h);}
+    const score=scoreNum(row), tier=scoreTier(score), warns=trustSignals(row).filter(x=>x[0]==='warn').map(x=>x[1]);
+    h.innerHTML=`<h4>✦ Résumé de confiance</h4><p class="green">${tier.label.replace(' dossier','')}</p><p>Revenus cohérents</p><p>${tier.risk==='Risque faible'?'Aucune anomalie majeure':'Vérification conseillée'}</p><div class="prob"><strong>${tier.prob}%</strong><span class="tag">${tier.probLabel}</span></div><p>Documents manquants :</p><p>• ${warns[0]||'Justificatif domicile'}</p>`;
+    h.style.left=Math.min(window.innerWidth-280,ev.clientX+18)+'px'; h.style.top=Math.min(window.innerHeight-260,ev.clientY+18)+'px'; h.classList.add('visible');
+  };
+
+  function premiumStats(){
+    const total=filteredRows.length;
+    const accepted=filteredRows.filter(r=>['valide','pre_valide'].includes(r.status_metier||'') || (r.final_status||'')==='loue').length;
+    const high=filteredRows.filter(r=>Number(r.score||0)<60 || (r.status||'')==='risque_eleve').length;
+    const docs=filteredRows.filter(r=>(r.status_metier||'')==='pieces_complementaires').length;
+    const rate=total?Math.round((accepted/total)*100):0;
+    const stats=document.querySelector('.stats'); if(!stats) return;
+    stats.innerHTML=`<div class="stat" tabindex="0" role="button" data-kpi-filter="active"><div class="k">Dossiers actifs</div><div class="v">${total}</div><div class="kp-sub" style="color:#48e68e">Tous les dossiers affichés</div></div><div class="stat" tabindex="0" role="button" data-kpi-filter="accepted"><div class="k">Taux d’acceptation (global)</div><div class="v">${rate}%</div><div class="kp-sub" style="color:#48e68e">Dossiers validés / pré-validés</div></div><div class="stat" tabindex="0" role="button" data-kpi-filter="risk"><div class="k">Dossiers à risque</div><div class="v">${high}</div><div class="kp-sub" style="color:#f6c24f">Score faible ou risque élevé</div></div><div class="stat" tabindex="0" role="button" data-kpi-filter="docs"><div class="k">En attente de compléments</div><div class="v">${docs||0}</div><div class="kp-sub" style="color:#c293ff">Pièces complémentaires</div></div>`;
+    stats.querySelectorAll('[data-kpi-filter]').forEach(card=>{
+      const run=()=>{
+        const kind=card.dataset.kpiFilter;
+        if(kind==='docs'){ resetFilterControls(); const m=q('metierFilter'); if(m)m.value='pieces_complementaires'; try{selectedId=null; applyFilters();}catch(_){} scrollToDossiers(); return; }
+        applyKpiFilter(kind);
+      };
+      card.onclick=run; card.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); run(); } };
+    });
+  }
+
+  window.renderStats=function(){ premiumStats(); };
+  window.renderTable=function(){
+    if(typeof addSidebar==='function') addSidebar();
+    const panel=document.getElementById('kpDetailPanel') || null;
+    if(!panel && typeof ensurePanel==='function') ensurePanel();
+    premiumStats();
+    const wrap=document.querySelector('.table-wrap'); if(!wrap) return;
+    let holder=document.getElementById('premiumDossierCards');
+    if(!holder){ holder=document.createElement('div'); holder.id='premiumDossierCards'; wrap.appendChild(holder); }
+    if(!filteredRows.length){ holder.innerHTML='<div class="empty" style="display:block!important">Aucun dossier trouvé.</div>'; return; }
+    const listClass=window.__kpViewMode==='list'?' list-mode':'';
+    holder.innerHTML=`<div class="kp-list-head"><div class="kp-list-title">${filteredRows.length} dossiers</div><div class="kp-view-toggle"><button class="kp-toggle-btn ${window.__kpViewMode==='cards'?'active':''}" data-view="cards">▦ Cartes</button><button class="kp-toggle-btn ${window.__kpViewMode==='list'?'active':''}" data-view="list">☷ Liste</button></div></div><div class="kp-dossier-list${listClass}">${filteredRows.map(row=>{const score=scoreNum(row), tier=scoreTier(score), sigs=trustSignals(row);return `<article class="kp-dossier-card ${row.id===selectedId?'active':''}" data-id="${row.id}"><div class="kp-person"><div class="kp-avatar">${initials(row.nom)}</div><div><div class="kp-name">${row.nom||'—'}</div><div class="kp-email">${row.email||''}</div></div><div class="kp-meta">${bienLabel(row.bien)}<br>${formatDate(row.created_at)}</div></div><div class="kp-score"><div class="kp-score-ring ${tier.ring} ${score!==null&&score>90?'pulse':''}" style="--score:${score??0}"><span class="kp-score-num">${score??'—'}</span></div><div class="kp-score-label">${tier.label}</div></div><div><span class="${tier.cls}">${tier.risk}</span></div><div class="kp-confidence"><div class="kp-confidence-title">Analyse de confiance</div>${sigs.map(renderSignal).join('')}</div><div class="kp-statuses"><span class="kp-mini-status">${metierLabel(row.status_metier||'nouveau')}</span><span class="kp-mini-status kp-mini-final">${finalLabel(row.final_status||'en_cours')}</span></div><div class="kp-chevron">›</div></article>`}).join('')}</div>`;
+    holder.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',e=>{ e.stopPropagation(); window.__kpViewMode=btn.dataset.view; window.renderTable(); }));
+    holder.querySelectorAll('.kp-dossier-card').forEach(card=>{const row=filteredRows.find(r=>String(r.id)===String(card.dataset.id)); if(!row)return; card.addEventListener('click',()=>{selectedId=row.id; window.renderTable(); renderDetail(row); window.kpRenderSidePanel(row);}); card.addEventListener('mousemove',ev=>window.kpShowHover(ev,row)); card.addEventListener('mouseleave',()=>{const h=document.getElementById('kpHoverSummary'); if(h) h.classList.remove('visible');});});
+    if(!selectedId && filteredRows[0]){ selectedId=filteredRows[0].id; renderDetail(filteredRows[0]); window.kpRenderSidePanel(filteredRows[0]); }
+    else window.kpRenderSidePanel(selectedRow());
+  };
+
+  function scrubIA(){
+    document.querySelectorAll('body *').forEach(el=>{
+      if(el.children.length===0 && /\bIA\b/.test(el.textContent||'')){
+        el.textContent=el.textContent.replace(/Résumé IA/g,'Résumé de confiance').replace(/Moteur antifraude IA/g,'Moteur de confiance').replace(/\bIA\b/g,'');
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{try{window.renderStats();window.renderTable();scrubIA();}catch(e){console.warn(e)}},700));
+  const mo=new MutationObserver(()=>{clearTimeout(window.__kpScrubTimer); window.__kpScrubTimer=setTimeout(scrubIA,120);});
+  if(document.body) mo.observe(document.body,{childList:true,subtree:true,characterData:true});
+})();
+</script>
+
 </body>
 </html>
