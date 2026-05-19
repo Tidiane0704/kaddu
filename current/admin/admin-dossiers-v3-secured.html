@@ -6025,5 +6025,174 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Correctifs Premium V3
+     1 Arc premium Stripe Radar · 2 Cartes 2/ligne + liste · 3 filtre risque fiable
+     4 Documents modal anti-chevauchement · 5 scroll gauche/droite indépendants
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="kaddu-premium-fixes-v3">
+  /* Scroll indépendants : page stable, liste à gauche, panneau à droite */
+  html,body{height:100%!important;overflow:hidden!important;}
+  nav{position:fixed!important;top:0!important;right:0!important;height:72px!important;z-index:9997!important;}
+  .kp-sidebar{overflow-y:auto!important;overscroll-behavior:contain!important;}
+  .wrap{height:calc(100vh - 72px)!important;margin-top:72px!important;overflow:hidden!important;padding-bottom:20px!important;}
+  .layout{height:calc(100vh - 238px)!important;min-height:560px!important;}
+  .layout>.card:first-child{height:100%!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;scrollbar-gutter:stable!important;}
+  .kp-detail-panel{position:relative!important;top:auto!important;height:100%!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;scrollbar-gutter:stable!important;}
+
+  /* Mode cartes : 2 cartes par ligne, plus premium et lisible */
+  .kp-dossier-list:not(.list-mode){display:grid!important;grid-template-columns:repeat(2,minmax(420px,1fr))!important;gap:14px!important;align-items:stretch!important;}
+  .kp-dossier-list:not(.list-mode) .kp-dossier-card{
+    min-height:178px!important;
+    grid-template-columns:1.05fr 106px!important;
+    grid-template-rows:auto auto auto!important;
+    gap:12px 16px!important;
+    padding:18px 18px!important;
+    align-items:start!important;
+  }
+  .kp-dossier-list:not(.list-mode) .kp-person{grid-column:1;grid-row:1;}
+  .kp-dossier-list:not(.list-mode) .kp-score{grid-column:2;grid-row:1 / span 2;align-self:center;}
+  .kp-dossier-list:not(.list-mode) .kp-dossier-card>div:nth-child(3){grid-column:1;grid-row:2;align-self:center;}
+  .kp-dossier-list:not(.list-mode) .kp-confidence{grid-column:1 / -1;grid-row:3;border-left:0!important;border-top:1px solid rgba(255,255,255,.07);padding-left:0!important;padding-top:12px!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px 14px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-confidence-title{grid-column:1 / -1;margin-bottom:2px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-statuses{grid-column:2;grid-row:3;align-self:end;justify-self:end;min-width:96px;}
+  .kp-dossier-list:not(.list-mode) .kp-chevron{position:absolute;right:16px;top:50%;transform:translateY(-50%);}
+  .kp-dossier-list:not(.list-mode) .kp-score-ring{width:96px!important;height:96px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-score-ring::before{inset:9px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-score-num{font-size:34px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-score-label{text-align:center!important;}
+
+  /* Mode liste : pleine largeur, une ligne compacte */
+  .kp-dossier-list.list-mode{display:flex!important;flex-direction:column!important;}
+  .kp-dossier-list.list-mode .kp-dossier-card{width:100%!important;}
+
+  /* KPI sélectionné */
+  .stat.kp-filter-active{border-color:rgba(215,168,79,.72)!important;box-shadow:0 24px 70px rgba(0,0,0,.30),0 0 0 1px rgba(215,168,79,.20),0 0 34px rgba(215,168,79,.16)!important;}
+
+  /* Arc premium “Stripe Radar” */
+  .kp-radar-wrap{position:relative;width:174px;height:96px;margin-top:6px;}
+  .kp-radar-arc{position:absolute;inset:0;border-radius:174px 174px 0 0;overflow:hidden;background:rgba(255,255,255,.035);box-shadow:inset 0 -18px 32px rgba(0,0,0,.34),0 18px 38px rgba(0,0,0,.20);}
+  .kp-radar-arc::before{content:"";position:absolute;inset:0;background:conic-gradient(from 270deg,var(--radar-color,#58d68d) 0 var(--radar-deg,90deg),rgba(255,255,255,.085) var(--radar-deg,90deg) 180deg,transparent 0);filter:drop-shadow(0 0 16px color-mix(in srgb,var(--radar-color,#58d68d) 42%,transparent));}
+  .kp-radar-arc::after{content:"";position:absolute;left:21px;right:21px;bottom:0;height:64px;border-radius:130px 130px 0 0;background:linear-gradient(180deg,rgba(14,37,60,.96),rgba(7,20,34,.98));box-shadow:inset 0 12px 28px rgba(0,0,0,.42);}
+  .kp-radar-tick{position:absolute;bottom:2px;width:2px;height:11px;background:rgba(255,255,255,.16);transform-origin:0 84px;left:86px;z-index:2;}
+  .kp-radar-tick.t1{transform:rotate(-72deg)}.kp-radar-tick.t2{transform:rotate(-36deg)}.kp-radar-tick.t3{transform:rotate(0deg)}.kp-radar-tick.t4{transform:rotate(36deg)}.kp-radar-tick.t5{transform:rotate(72deg)}
+  .kp-radar-needle{position:absolute;z-index:3;left:86px;bottom:8px;width:72px;height:4px;background:linear-gradient(90deg,rgba(255,255,255,.10),var(--radar-color,#58d68d));border-radius:999px;transform-origin:0 50%;transform:rotate(calc(var(--radar-deg,90deg) - 90deg));box-shadow:0 0 16px color-mix(in srgb,var(--radar-color,#58d68d) 50%,transparent);}
+  .kp-radar-center{position:absolute;z-index:4;left:50%;bottom:-2px;transform:translateX(-50%);width:78px;height:54px;border-radius:54px 54px 0 0;background:linear-gradient(180deg,#102941,#08192b);display:flex;align-items:flex-start;justify-content:center;padding-top:13px;box-shadow:0 -8px 20px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.04);}
+  .kp-radar-center strong{font-size:24px;color:#fff;line-height:1;font-weight:900;}
+  .kp-radar-label{display:inline-flex;margin-top:8px;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--radar-color,#58d68d) 16%,transparent);border:1px solid color-mix(in srgb,var(--radar-color,#58d68d) 36%,transparent);color:var(--radar-color,#58d68d);font-size:12px;font-weight:850;}
+  .kp-gauge{display:none!important;} /* ancien graphique masqué */
+
+  /* Modal documents : empêcher les chevauchements et supprimer le scroll horizontal moche */
+  .shield-modal-v2__card{max-width:1440px!important;}
+  .ksm-main{min-width:0!important;}
+  .ksm-content{overflow-y:auto!important;overflow-x:hidden!important;}
+  #ksmDocList .ksm-doc-row{
+    grid-template-columns:50px minmax(210px,1fr) 130px 110px 170px!important;
+    gap:10px!important;
+    min-height:104px!important;
+    padding:14px!important;
+    overflow:hidden!important;
+  }
+  #ksmDocList .ksm-doc-name{font-size:14px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+  #ksmDocList .ksm-doc-type{font-size:11px!important;}
+  #ksmDocList .ksm-doc-pill{max-width:128px!important;font-size:10px!important;padding:6px 8px!important;}
+  #ksmDocList .ksm-doc-score{font-size:12px!important;white-space:normal!important;line-height:1.35!important;}
+  #ksmDocList .ksm-doc-actions{grid-template-columns:1fr!important;gap:7px!important;min-width:0!important;}
+  #ksmDocList .ksm-doc-actions .ksm-doc-btn[data-ks-view-result]{grid-column:auto!important;}
+  #ksmDocList .ksm-doc-btn{min-height:34px!important;font-size:10.5px!important;padding:7px 8px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+  .ksm-dropzone{margin-bottom:12px!important;}
+  @media(max-width:1320px){.kp-dossier-list:not(.list-mode){grid-template-columns:1fr!important}.layout{grid-template-columns:minmax(0,1fr) 400px!important}}
+  @media(max-width:1120px){#ksmDocList .ksm-doc-row{grid-template-columns:46px minmax(0,1fr)!important}#ksmDocList .ksm-doc-main,#ksmDocList .ksm-doc-pill,#ksmDocList .ksm-doc-score,#ksmDocList .ksm-doc-actions{grid-column:2!important}.ksm-doc-actions{grid-template-columns:1fr 1fr!important}}
+</style>
+<script id="kaddu-premium-fixes-v3">
+(function(){
+  'use strict';
+  let activeKpiFilter = null;
+  function q(id){return document.getElementById(id)}
+  function setActiveKpi(kind){activeKpiFilter=kind;document.querySelectorAll('.stat').forEach(s=>s.classList.toggle('kp-filter-active',s.dataset.kpiFilter===kind));}
+  function scoreNum(row){const n=Number(row?.score);return Number.isFinite(n)?n:null;}
+  function isRiskRow(row){const s=scoreNum(row);return (row?.status||'')==='risque_eleve' || s===null || s<60;}
+  function isDocsRow(row){return (row?.status_metier||'')==='pieces_complementaires';}
+  function isAcceptedRow(row){return ['valide','pre_valide'].includes(row?.status_metier||'') || (row?.final_status||'')==='loue';}
+  function resetFilterControls(){['searchInput','bienFilter','statusFilter','metierFilter','finalFilter'].forEach(id=>{const el=q(id);if(el)el.value='';});const sort=q('sortFilter');if(sort)sort.value='created_desc';}
+  function scrollToDossiers(){setTimeout(()=>document.querySelector('.table-wrap')?.scrollTo({top:0,behavior:'smooth'}),60);}
+  function renderRadar(prob,label,cls){
+    const color=prob>=80?'#58d68d':prob>=60?'#f6b94b':'#ff7c7c';
+    const deg=Math.max(8,Math.min(172,Math.round(prob*1.8)));
+    const labelClass=cls==='high'?' high':cls==='mid'?' mid':'';
+    return `<div class="kp-radar-wrap" style="--radar-deg:${deg}deg;--radar-color:${color}"><div class="kp-radar-arc"></div><span class="kp-radar-tick t1"></span><span class="kp-radar-tick t2"></span><span class="kp-radar-tick t3"></span><span class="kp-radar-tick t4"></span><span class="kp-radar-tick t5"></span><div class="kp-radar-needle"></div><div class="kp-radar-center"><strong>${prob}%</strong></div></div><span class="kp-radar-label">${label}</span>`;
+  }
+  function scoreTier(score){
+    if(score===null || score===undefined) return {risk:'Risque élevé', cls:'kp-risk-pill kp-risk-high', label:'Dossier sensible', ring:'score-empty', prob:38, probCls:'high', probLabel:'À sécuriser'};
+    if(score>=85) return {risk:'Risque faible', cls:'kp-risk-pill', label:'Excellent dossier', ring:'score-good', prob:Math.min(97,Math.round(24+score*.76)), probCls:'', probLabel:'Excellente'};
+    if(score>=80) return {risk:'Risque faible', cls:'kp-risk-pill', label:'Très bon dossier', ring:'score-good', prob:Math.min(94,Math.round(24+score*.74)), probCls:'', probLabel:'Très favorable'};
+    if(score>=60) return {risk:'Risque modéré', cls:'kp-risk-pill kp-risk-mid', label:'Dossier à vérifier', ring:'score-mid', prob:Math.round(20+score*.70), probCls:'mid', probLabel:'À confirmer'};
+    return {risk:'Risque élevé', cls:'kp-risk-pill kp-risk-high', label:'Dossier sensible', ring:'score-high', prob:Math.max(24,Math.round(15+score*.55)), probCls:'high', probLabel:'Vigilance'};
+  }
+
+  /* KPI : appliquer un filtre métier réel, pas seulement la valeur du select */
+  function applyKpiFilter(kind){
+    resetFilterControls(); setActiveKpi(kind);
+    try{
+      if(kind==='active'){ filteredRows = [...allRows]; }
+      else if(kind==='risk'){ filteredRows = allRows.filter(isRiskRow); }
+      else if(kind==='docs'){ filteredRows = allRows.filter(isDocsRow); const m=q('metierFilter'); if(m)m.value='pieces_complementaires'; }
+      else if(kind==='accepted'){ filteredRows = allRows.filter(isAcceptedRow); }
+      else { applyFilters(); return; }
+      const sort=q('sortFilter')?.value || 'created_desc';
+      if(sort==='score_desc') filteredRows.sort((a,b)=>Number(b.score||0)-Number(a.score||0));
+      else if(sort==='score_asc') filteredRows.sort((a,b)=>Number(a.score||0)-Number(b.score||0));
+      else filteredRows.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+      selectedId = filteredRows[0]?.id || null;
+      window.renderStats(); window.renderTable(); if(filteredRows[0]){renderDetail(filteredRows[0]); window.kpRenderSidePanel?.(filteredRows[0]);}
+    }catch(e){console.warn(e)}
+    scrollToDossiers();
+  }
+
+  /* Remplacer le rendu du panneau droit pour utiliser l’arc Stripe Radar */
+  const oldPanel = window.kpRenderSidePanel;
+  window.kpRenderSidePanel=function(row){
+    if(typeof oldPanel==='function') oldPanel(row);
+    const p=document.getElementById('kpDetailPanel'); if(!p || !row) return;
+    const score=scoreNum(row), tier=scoreTier(score);
+    const gaugeHolder=[...p.querySelectorAll('.kp-side-card')][0]?.querySelector('.kp-side-scoregrid > div:nth-child(2)');
+    if(gaugeHolder){
+      gaugeHolder.innerHTML = `<div class="kp-side-small">Probabilité d’acceptation</div>${renderRadar(tier.prob,tier.probLabel,tier.probCls)}`;
+    }
+  };
+
+  /* Patch stats pour compter le risque de la même manière que le filtre */
+  const oldStats=window.renderStats;
+  window.renderStats=function(){
+    if(typeof oldStats==='function') oldStats();
+    const stats=document.querySelector('.stats'); if(!stats) return;
+    const base = (activeKpiFilter ? allRows : filteredRows) || [];
+    const total = activeKpiFilter ? filteredRows.length : base.length;
+    const accepted = base.filter(isAcceptedRow).length;
+    const high = base.filter(isRiskRow).length;
+    const docs = base.filter(isDocsRow).length;
+    const rate = base.length ? Math.round((accepted/base.length)*100) : 0;
+    stats.innerHTML=`<div class="stat" tabindex="0" role="button" data-kpi-filter="active"><div class="k">Dossiers actifs</div><div class="v">${activeKpiFilter==='active'?total:base.length}</div><div class="kp-sub" style="color:#48e68e">Tous les dossiers affichés</div></div><div class="stat" tabindex="0" role="button" data-kpi-filter="accepted"><div class="k">Taux d’acceptation (global)</div><div class="v">${rate}%</div><div class="kp-sub" style="color:#48e68e">Dossiers validés / pré-validés</div></div><div class="stat" tabindex="0" role="button" data-kpi-filter="risk"><div class="k">Dossiers à risque</div><div class="v">${high}</div><div class="kp-sub" style="color:#f6c24f">Score faible ou risque élevé</div></div><div class="stat" tabindex="0" role="button" data-kpi-filter="docs"><div class="k">En attente de compléments</div><div class="v">${docs}</div><div class="kp-sub" style="color:#c293ff">Pièces complémentaires</div></div>`;
+    stats.querySelectorAll('[data-kpi-filter]').forEach(card=>{card.classList.toggle('kp-filter-active',card.dataset.kpiFilter===activeKpiFilter);const run=()=>applyKpiFilter(card.dataset.kpiFilter);card.onclick=run;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();run();}}});
+  };
+
+  /* Quand l’utilisateur change un filtre manuel, on retire le mode KPI spécial */
+  ['searchInput','bienFilter','statusFilter','metierFilter','finalFilter','sortFilter'].forEach(id=>{
+    document.addEventListener('change',e=>{if(e.target&&e.target.id===id){activeKpiFilter=null;setTimeout(()=>window.renderStats?.(),80);}},true);
+    document.addEventListener('input',e=>{if(e.target&&e.target.id===id){activeKpiFilter=null;setTimeout(()=>window.renderStats?.(),80);}},true);
+  });
+
+  /* Après ouverture de modal, forcer onglets documents propres */
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-kp-action="documents"],[data-shield-tab="documents"]');
+    if(btn) setTimeout(()=>{const c=document.querySelector('.ksm-content'); if(c)c.scrollTop=0;},220);
+  },true);
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{window.renderStats?.();window.kpRenderSidePanel?.((window.filteredRows||[]).find(r=>r.id===window.selectedId)||window.filteredRows?.[0]||window.allRows?.[0]);},900));
+})();
+</script>
+
 </body>
 </html>
