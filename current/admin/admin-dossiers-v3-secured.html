@@ -1094,12 +1094,42 @@ body.premium-dossiers-active .shield-modal-v2 { z-index:2147483000 !important; }
 .filter-control[data-filter], .tab[data-tab], .side-btn, .btn-full, .btn, .switch-btn { cursor:pointer; }
 </style>
 
+
+
+<style id="kaddu-light-premium-sprint">
+  /* Sprint UI allégée — KPI premium sans graphes + priorités dynamiques */
+  .brand-logo{height:58px;margin-bottom:8px;gap:8px;align-items:flex-start;flex-direction:column;justify-content:center}
+  .brand-logo img{width:118px;max-height:42px;object-fit:contain;display:block;filter:drop-shadow(0 14px 28px rgba(243,182,74,.16))}
+  .brand-logo .brand-logo-text{font-family:Inter,Arial,sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:rgba(247,241,232,.55);margin-left:2px;margin-top:-4px}
+  .brand-mark{display:none!important}
+
+  .kpi-grid{gap:14px!important;margin-bottom:12px!important}
+  .kpi{height:96px!important;padding:16px 18px!important;border-radius:14px!important;overflow:hidden!important;background:linear-gradient(180deg,rgba(13,36,63,.86),rgba(8,22,38,.78))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 18px 46px rgba(0,0,0,.18)!important}
+  .kpi:before{content:"";position:absolute;right:16px;top:16px;width:34px;height:34px;border-radius:12px;background:rgba(243,182,74,.08);border:1px solid rgba(243,182,74,.13)}
+  .kpi:nth-child(1):after{content:"▣"}.kpi:nth-child(2):after{content:"◌"}.kpi:nth-child(3):after{content:"⚠"}.kpi:nth-child(4):after{content:"◷"}.kpi:nth-child(5):after{content:"↯"}
+  .kpi:after{position:absolute;right:25px;top:23px;color:rgba(255,211,126,.9);font-size:15px;font-weight:900}
+  .kpi-label{font-size:11px!important;color:rgba(247,241,232,.66)!important;margin-bottom:9px!important;max-width:70%}
+  .kpi-value{font-size:32px!important;line-height:1!important;letter-spacing:-.05em!important}
+  .delta{font-size:11px!important;margin-top:7px!important;color:rgba(247,241,232,.55)!important}
+  .spark,.ring-mini{display:none!important}
+
+  .priority-strip{margin:0 6px 14px 18px;border:1px solid rgba(243,182,74,.16);border-radius:14px;background:linear-gradient(90deg,rgba(243,182,74,.075),rgba(9,27,46,.76));display:grid;grid-template-columns:minmax(260px,1fr) repeat(3,170px);gap:10px;align-items:center;padding:13px 14px;box-shadow:0 18px 48px rgba(0,0,0,.18)}
+  .priority-main{display:flex;flex-direction:column;gap:2px;min-width:0}.priority-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.18em;font-weight:900;color:var(--gold)}.priority-main strong{font-size:15px}.priority-main small{font-size:11px;color:var(--muted)}
+  .priority-card{height:56px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.035);display:flex;flex-direction:column;align-items:center;justify-content:center}.priority-card span{font-size:22px;font-weight:850;line-height:1}.priority-card small{font-size:10px;color:rgba(247,241,232,.62);margin-top:4px;text-align:center}.priority-card.danger span{color:#ff7070}.priority-card.warning span{color:#ffc04e}.priority-card.info span{color:#9ca6ff}
+
+  .side-panel{padding:18px!important}.side-panel .panel-block{padding:15px!important}.block-title{letter-spacing:.16em!important}.summary{font-size:12px!important;line-height:1.7!important}
+  .quick-actions .btn-full:not(.gold){display:none!important}.btn-full.gold{margin-top:0!important}
+
+  @media(max-width:1280px){.priority-strip{grid-template-columns:1fr 1fr 1fr 1fr}.priority-card{min-width:0}.brand-logo img{width:105px}.kpi{height:92px!important}}
+  @media(max-width:900px){.priority-strip{grid-template-columns:1fr 1fr;margin-left:0}.kpi-grid{grid-template-columns:repeat(2,1fr)!important}.brand-logo{align-items:center}.brand-logo img{width:96px}}
+</style>
+
 </head>
 <body class="premium-dossiers-active">
 
   <div class="app">
     <aside class="sidebar">
-      <div class="brand"><span class="brand-mark"></span><span>Kàddu Admin</span></div>
+      <div class="brand brand-logo"><img src="/assets/img/logo-kaddu.svg" alt="Kàddu Admin" /><span class="brand-logo-text">Admin</span></div>
       <a class="nav-item" href="#"><span class="ico">⌂</span>Hub Admin</a>
       <div class="nav-section">Gestion</div>
       <a class="nav-item active" href="#"><span class="ico">▣</span>Dossiers locataires</a>
@@ -1142,6 +1172,26 @@ body.premium-dossiers-active .shield-modal-v2 { z-index:2147483000 !important; }
         <div class="kpi"><div class="kpi-label">Temps moyen de traitement</div><div class="kpi-value">18h</div><div class="delta purple">-2h <span style="color:var(--muted)">vs mois dernier</span></div><div class="spark"><svg viewBox="0 0 140 40"><polyline fill="none" stroke="#a366ff" stroke-width="2" points="0,27 10,26 20,25 30,26 40,20 50,24 60,22 70,23 80,24 90,22 100,25 110,24 120,26 130,25 140,27"/></svg></div></div>
       </section>
 
+      <section class="priority-strip" id="kadduPriorityStrip" aria-label="Priorités du jour">
+        <div class="priority-main">
+          <span class="priority-kicker">Priorités du jour</span>
+          <strong id="prioTotal">0 action prioritaire</strong>
+          <small>Calculé automatiquement depuis les dossiers affichés</small>
+        </div>
+        <div class="priority-card danger">
+          <span id="prioRisk">0</span>
+          <small>Dossiers à risque</small>
+        </div>
+        <div class="priority-card warning">
+          <span id="prioComplements">0</span>
+          <small>Compléments / pièces</small>
+        </div>
+        <div class="priority-card info">
+          <span id="prioAnalyze">0</span>
+          <small>Analyses à suivre</small>
+        </div>
+      </section>
+
       <div class="content-grid">
         <section class="list-area">
           <div class="filters">
@@ -1181,7 +1231,7 @@ body.premium-dossiers-active .shield-modal-v2 { z-index:2147483000 !important; }
           <div class="side-title">Dossier sélectionné</div>
           <div class="selected-head"><div class="avatar2">TA</div><div><h2>Tidiane AIDARA</h2><div class="excellent">Excellent dossier</div></div><div class="score-small"><div><b>88</b><span>/100</span></div></div></div>
           <div class="side-meta">Candidature spontanée<br/>Déposé le 14/05/2026 à 10:42</div>
-          <div class="panel-block"><div class="block-title">Résumé IA</div><p class="summary">Le dossier présente une cohérence financière élevée. Les revenus couvrent largement le loyer demandé. Quelques éléments secondaires nécessitent une validation manuelle.</p><button class="side-btn">Voir l’analyse complète</button></div>
+          <div class="panel-block"><div class="block-title">Analyse Kàddu</div><p class="summary">Le dossier présente une cohérence financière élevée. Les revenus couvrent largement le loyer demandé. Quelques éléments secondaires nécessitent une validation manuelle.</p><button class="side-btn">Voir l’analyse complète</button></div>
           <div class="panel-block"><div class="block-title">Signaux principaux</div><div class="signals"><div class="signal"><span class="ok">✓</span> Revenus cohérents</div><div class="signal"><span class="ok">✓</span> Historique bancaire stable</div><div class="signal"><span class="ok">✓</span> Pièce d’identité valide</div><div class="signal"><span class="warn">⚠</span> Ancienneté faible</div><div class="signal"><span class="ko">⊗</span> RIB manquant</div></div><button class="side-btn">Voir tous les signaux</button></div>
           <div class="panel-block"><div class="block-title">Actions rapides</div><div class="quick-actions"><button class="btn-full gold">Ouvrir le dossier</button><button class="btn-full">▱ Demander complément</button><button class="btn-full">☏ Contacter le candidat</button></div></div>
         </aside>
@@ -6165,6 +6215,58 @@ Si des données du document diffèrent de ce qui est déclaré, mentionne-le exp
     setTimeout(premiumRender, 1500);
   });
   window.KADDU_PREMIUM_RENDER = premiumRender;
+})();
+</script>
+
+
+
+<script id="kaddu-light-premium-sprint-js">
+(function(){
+  function text(el){ return (el && el.textContent || '').toLowerCase(); }
+  function intFrom(el){ const m=(el&&el.textContent||'').match(/\d+/); return m?parseInt(m[0],10):0; }
+  function updateLightPremiumUI(){
+    const rows = Array.from(document.querySelectorAll('.rows .row'));
+    if(!rows.length) return;
+
+    let highRisk=0, complements=0, analyse=0, rejected=0, preApproved=0, good=0, scoreSum=0, scoreCount=0;
+    rows.forEach(row=>{
+      const t=text(row);
+      const score=intFrom(row.querySelector('.score-ring b'));
+      if(score){ scoreSum+=score; scoreCount++; if(score>=80) good++; }
+      if(/risque élevé|risque critique|fraude détectée/.test(t)) highRisk++;
+      if(/à compléter|complément|pièces manquantes|en attente/.test(t)) complements++;
+      if(/en analyse|analyse ia terminée|vérification/.test(t)) analyse++;
+      if(/rejeté/.test(t)) rejected++;
+      if(/pré-approuvé|pré-approuv/.test(t)) preApproved++;
+    });
+
+    const total=rows.length;
+    const acceptance = total ? Math.round((good / total) * 100) : 0;
+    const kpis = document.querySelectorAll('.kpi-grid .kpi');
+    const setKpi=(i,value,delta)=>{ if(kpis[i]){ const v=kpis[i].querySelector('.kpi-value'); const d=kpis[i].querySelector('.delta'); if(v) v.textContent=value; if(d) d.innerHTML=delta; } };
+    setKpi(0, String(total), '<span style="color:var(--green)">Dossiers affichés</span>');
+    setKpi(1, acceptance + '%', '<span style="color:var(--green)">Score ≥ 80</span>');
+    setKpi(2, String(highRisk), '<span style="color:var(--red)">Risque élevé / critique</span>');
+    setKpi(3, String(complements), '<span style="color:#ffc04e">Compléments requis</span>');
+
+    const prioTotal = highRisk + complements + analyse;
+    const prioTotalEl=document.getElementById('prioTotal');
+    if(prioTotalEl) prioTotalEl.textContent = prioTotal + (prioTotal>1 ? ' actions prioritaires' : ' action prioritaire');
+    const ids={prioRisk:highRisk, prioComplements:complements, prioAnalyze:analyse};
+    Object.entries(ids).forEach(([id,val])=>{ const el=document.getElementById(id); if(el) el.textContent=val; });
+
+    document.querySelectorAll('.block-title').forEach(el=>{
+      if(el.textContent.trim().toLowerCase()==='résumé ia') el.textContent='Analyse Kàddu';
+    });
+  }
+
+  window.KADDU_UPDATE_LIGHT_PREMIUM_UI = updateLightPremiumUI;
+  document.addEventListener('DOMContentLoaded',()=>{
+    updateLightPremiumUI();
+    const rows=document.querySelector('.rows');
+    if(rows){ new MutationObserver(()=>setTimeout(updateLightPremiumUI,30)).observe(rows,{childList:true,subtree:true,characterData:true}); }
+    ['click','change','input'].forEach(evt=>document.addEventListener(evt,()=>setTimeout(updateLightPremiumUI,80),true));
+  });
 })();
 </script>
 
