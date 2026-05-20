@@ -1012,6 +1012,12 @@ tr.active{background:rgba(83,183,255,.055) !important;}
   </nav>
 
   <div class="wrap">
+    <section class="kp-page-title" aria-label="Titre de la page dossiers locataires">
+      <div>
+        <h1>Dossiers locataires <em>&amp; confiance</em></h1>
+        <p>Pilotez les candidatures, les risques et les décisions locatives en temps réel <span>la parole qui engage</span></p>
+      </div>
+    </section>
     <section class="hero">
       <div>
         <h1>Dossiers <em>locataires</em></h1>
@@ -5773,7 +5779,7 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
         <a class="kp-nav-item" href="/admin/"><span class="kp-nav-ico">⌂</span>Hub Admin</a>
         <div class="kp-group-title">Gestion</div>
         <a class="kp-nav-item active" href="#"><span class="kp-nav-ico">▣</span>Dossiers locataires</a>
-        <a class="kp-nav-item" href="/admin/biens.html"><span class="kp-nav-ico">⌂</span>Biens immobiliers</a>
+        <a class="kp-nav-item" href="https://kaddu-delta.vercel.app/admin/admin-biens-v2-secured.html"><span class="kp-nav-ico">⌂</span>Biens immobiliers</a>
         <a class="kp-nav-item" href="#"><span class="kp-nav-ico">♙</span>Candidats</a>
         <a class="kp-nav-item" href="#"><span class="kp-nav-ico">☷</span>Contrats</a>
         <a class="kp-nav-item" href="#"><span class="kp-nav-ico">◎</span>Paiements</a>
@@ -6607,367 +6613,47 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Corrections ciblées V5
+     1 Titre premium de page
+     2 Couleur du libellé score selon gravité
+     3 Lien Biens immobiliers corrigé
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="kaddu-v5-corrections-ciblees">
+  .kp-page-title{
+    display:flex!important;align-items:flex-end!important;justify-content:space-between!important;
+    margin:4px 0 20px!important;padding:16px 0 2px!important;
+    background:transparent!important;border:0!important;box-shadow:none!important;
+  }
+  .kp-page-title h1{
+    margin:0!important;font-family:Georgia,'Times New Roman',serif!important;
+    font-size:clamp(42px,4.2vw,76px)!important;line-height:.94!important;font-weight:400!important;
+    letter-spacing:-.06em!important;color:#f8f4ee!important;text-shadow:0 16px 48px rgba(0,0,0,.25)!important;
+  }
+  .kp-page-title h1 em{
+    font-style:italic!important;color:#d7a84f!important;font-weight:400!important;
+  }
+  .kp-page-title p{
+    margin:10px 0 0!important;color:rgba(248,244,238,.78)!important;font-size:16px!important;line-height:1.55!important;
+  }
+  .kp-page-title p span{
+    margin-left:18px!important;font-family:Georgia,'Times New Roman',serif!important;font-style:italic!important;
+    color:#d7a84f!important;white-space:nowrap!important;
+  }
+  /* Le bloc hero historique reste masqué : on utilise le nouveau titre premium uniquement. */
+  .hero{display:none!important;}
+  /* Libellés score : couleur selon gravité, synchronisée avec la classe du cercle. */
+  .kp-score-ring.score-good + .kp-score-label{color:#65e29a!important;text-shadow:0 0 14px rgba(101,226,154,.16)!important;}
+  .kp-score-ring.score-mid + .kp-score-label{color:#f6b94b!important;text-shadow:0 0 14px rgba(246,185,75,.14)!important;}
+  .kp-score-ring.score-high + .kp-score-label,
+  .kp-score-ring.score-empty + .kp-score-label{color:#ff8a8a!important;text-shadow:0 0 14px rgba(255,124,124,.14)!important;}
+  @media(max-width:980px){
+    .kp-page-title h1{font-size:40px!important;}
+    .kp-page-title p span{display:block!important;margin-left:0!important;margin-top:4px!important;}
+  }
+</style>
+
 </body>
 </html>
-
-<!-- ═══════════════════════════════════════════════════════════════
-     Kàddu — Correctifs V6
-     - Titre page premium
-     - Libellé score aligné avec la flèche + couleur gravité
-     - Lien Biens immobiliers corrigé
-     ═══════════════════════════════════════════════════════════════ -->
-<style id="kaddu-premium-fixes-v6">
-  /* 1) Titre premium de l'objet, inspiré du bloc “Vérification & confiance” */
-  .kp-page-hero{
-    margin: 4px 0 22px !important;
-    padding: 6px 2px 2px !important;
-  }
-  .kp-page-hero h1{
-    margin:0 !important;
-    font-family: Georgia, 'Times New Roman', serif !important;
-    font-size: clamp(42px, 4.6vw, 76px) !important;
-    line-height:.92 !important;
-    letter-spacing:-.055em !important;
-    font-weight:500 !important;
-    color:#fff8ed !important;
-    text-shadow:0 20px 55px rgba(0,0,0,.34) !important;
-  }
-  .kp-page-hero h1 em{
-    color:#d7a84f !important;
-    font-style:italic !important;
-    font-weight:400 !important;
-  }
-  .kp-page-hero p{
-    margin:14px 0 0 !important;
-    font-size:16px !important;
-    color:rgba(247,242,234,.84) !important;
-    letter-spacing:.01em !important;
-  }
-  .kp-page-hero p strong{
-    margin-left:16px !important;
-    color:#d7a84f !important;
-    font-family:Georgia,'Times New Roman',serif !important;
-    font-style:italic !important;
-    font-weight:400 !important;
-  }
-
-  /* Le bandeau doit rester sous le titre, sans être mangé par la nav sticky */
-  .wrap{padding-top:24px!important;}
-  .stats{margin-top:4px!important;}
-
-  /* 2) Score label aligné sur la ligne de la flèche */
-  .kp-dossier-card{
-    position:relative!important;
-    padding-right:82px!important;
-  }
-  .kp-dossier-card .kp-chevron{
-    position:absolute!important;
-    right:22px!important;
-    top:50%!important;
-    transform:translateY(-50%)!important;
-    z-index:4!important;
-    font-size:30px!important;
-    line-height:1!important;
-  }
-  .kp-dossier-card .kp-score{
-    position:relative!important;
-    min-width:132px!important;
-    padding-right:0!important;
-  }
-  .kp-dossier-card .kp-score-label{
-    position:absolute!important;
-    left:calc(100% + 12px)!important;
-    top:50%!important;
-    transform:translateY(-50%)!important;
-    width:120px!important;
-    max-width:120px!important;
-    text-align:left!important;
-    margin:0!important;
-    padding:0!important;
-    white-space:normal!important;
-    line-height:1.15!important;
-    font-size:13px!important;
-    font-weight:850!important;
-    z-index:5!important;
-    text-shadow:0 8px 22px rgba(0,0,0,.32)!important;
-    pointer-events:none!important;
-  }
-  .kp-dossier-card .kp-statuses{
-    margin-right:10px!important;
-  }
-
-  /* Couleurs du texte selon gravité du score */
-  .kp-dossier-card:has(.kp-score-ring.score-good) .kp-score-label{
-    color:#6ff0a3!important;
-  }
-  .kp-dossier-card:has(.kp-score-ring.score-mid) .kp-score-label{
-    color:#f7bd55!important;
-  }
-  .kp-dossier-card:has(.kp-score-ring.score-high),
-  .kp-dossier-card:has(.kp-score-ring.score-empty) .kp-score-label{
-    color:#ff8f8f!important;
-  }
-  .kp-dossier-card:has(.kp-score-ring.score-high) .kp-score-label,
-  .kp-dossier-card:has(.kp-score-ring.score-empty) .kp-score-label{
-    color:#ff8f8f!important;
-  }
-
-  /* En mode 2 cartes par ligne : éviter que le libellé score gêne les statuts */
-  .kp-dossier-list:not(.is-list) .kp-dossier-card{
-    padding-right:58px!important;
-  }
-  .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score-label{
-    left:auto!important;
-    right:38px!important;
-    top:50%!important;
-    transform:translateY(-50%)!important;
-    width:112px!important;
-    max-width:112px!important;
-    text-align:right!important;
-  }
-  .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score{
-    padding-right:98px!important;
-  }
-
-  /* Mode liste : conserver alignement propre et lisible */
-  .kp-dossier-list.is-list .kp-dossier-card .kp-score-label{
-    left:calc(100% + 10px)!important;
-    right:auto!important;
-    text-align:left!important;
-  }
-
-  @media(max-width:1380px){
-    .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score-label{
-      position:static!important;
-      transform:none!important;
-      width:auto!important;
-      max-width:none!important;
-      text-align:center!important;
-      margin-top:6px!important;
-    }
-    .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score{
-      padding-right:0!important;
-    }
-  }
-
-  /* Sidebar wording sans IA */
-  .kp-shield span::after{content:''!important;}
-</style>
-
-<script id="kaddu-premium-fixes-v6-js">
-(function(){
-  function addPageHero(){
-    const wrap = document.querySelector('.wrap');
-    if(!wrap || document.getElementById('kpPageHero')) return;
-    const hero = document.createElement('section');
-    hero.id = 'kpPageHero';
-    hero.className = 'kp-page-hero';
-    hero.innerHTML = '<h1>Dossiers locataires <em>&amp; confiance</em></h1><p>Pilotez les candidatures, les risques et les décisions locatives en temps réel <strong>la parole qui engage</strong></p>';
-    const stats = wrap.querySelector('.stats');
-    wrap.insertBefore(hero, stats || wrap.firstChild);
-  }
-
-  function fixSidebarLinksAndWording(){
-    document.querySelectorAll('.kp-nav-item').forEach(a => {
-      const txt = (a.textContent || '').trim().toLowerCase();
-      if(txt.includes('biens immobiliers')){
-        a.href = 'https://kaddu-delta.vercel.app/admin/admin-biens-v2-secured.html';
-      }
-    });
-    document.querySelectorAll('.kp-shield span').forEach(el => {
-      el.textContent = 'Moteur de confiance';
-    });
-    document.querySelectorAll('*').forEach(el => {
-      if(el.childNodes.length === 1 && el.childNodes[0].nodeType === 3){
-        const t = el.textContent || '';
-        if(/\bIA\b|antifraude IA/i.test(t)){
-          el.textContent = t.replace(/Moteur antifraude IA/g, 'Moteur de confiance').replace(/Résumé IA/g, 'Résumé de confiance').replace(/\bIA\b/g, '').trim();
-        }
-      }
-    });
-  }
-
-  /* Renforce les classes score si une ancienne fonction rend sans classe complète */
-  function normalizeScoreClasses(){
-    document.querySelectorAll('.kp-dossier-card').forEach(card => {
-      const ring = card.querySelector('.kp-score-ring');
-      const num = Number(card.querySelector('.kp-score-num')?.textContent || 0);
-      if(!ring) return;
-      ring.classList.remove('score-good','score-mid','score-high','score-empty');
-      if(!Number.isFinite(num) || num <= 0) ring.classList.add('score-empty');
-      else if(num >= 75) ring.classList.add('score-good');
-      else if(num >= 50) ring.classList.add('score-mid');
-      else ring.classList.add('score-high');
-    });
-  }
-
-  const oldRender = window.renderTable;
-  if(typeof oldRender === 'function' && !oldRender.__kadduV6){
-    window.renderTable = function(){
-      const ret = oldRender.apply(this, arguments);
-      setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 30);
-      return ret;
-    };
-    window.renderTable.__kadduV6 = true;
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 250);
-    setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 900);
-  });
-  new MutationObserver(()=>{
-    clearTimeout(window.__kadduV6Timer);
-    window.__kadduV6Timer = setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 120);
-  }).observe(document.documentElement,{childList:true,subtree:true});
-})();
-</script>
-
-<!-- ═══════════════════════════════════════════════════════════════
-     Kàddu — Correctifs V7
-     - Titre compact dans la barre haute, au niveau KPI/actions
-     - Libellé score à droite du cercle, aligné avec la flèche
-     ═══════════════════════════════════════════════════════════════ -->
-<style id="kaddu-premium-fixes-v7">
-  /* Titre compact dans le bandeau haut : plus de gros bloc sous la nav */
-  #kpPageHero{display:none!important;}
-  nav{
-    height:72px!important;
-    min-height:72px!important;
-    display:flex!important;
-    align-items:center!important;
-    gap:18px!important;
-  }
-  .kp-nav-title{
-    flex:1!important;
-    min-width:0!important;
-    display:flex!important;
-    align-items:baseline!important;
-    gap:14px!important;
-    overflow:hidden!important;
-  }
-  .kp-nav-title h1{
-    margin:0!important;
-    font-family:Georgia,'Times New Roman',serif!important;
-    font-size:clamp(30px,3.05vw,52px)!important;
-    line-height:.9!important;
-    letter-spacing:-.055em!important;
-    font-weight:500!important;
-    color:#fff8ed!important;
-    white-space:nowrap!important;
-  }
-  .kp-nav-title h1 em{
-    color:#d7a84f!important;
-    font-style:italic!important;
-    font-weight:400!important;
-  }
-  .kp-nav-title p{
-    margin:0!important;
-    color:rgba(247,242,234,.78)!important;
-    font-size:14px!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-  .kp-nav-title strong{
-    color:#d7a84f!important;
-    font-family:Georgia,'Times New Roman',serif!important;
-    font-style:italic!important;
-    font-weight:400!important;
-    margin-left:8px!important;
-  }
-  .nav-actions{flex:0 0 auto!important;margin-left:auto!important;}
-  .wrap{margin-top:72px!important;padding-top:24px!important;}
-  .stats{margin-top:0!important;}
-
-  /* Cartes : le texte du score est à droite du cercle, avant la flèche */
-  .kp-dossier-list:not(.list-mode) .kp-dossier-card{
-    grid-template-columns:minmax(0,1fr) minmax(230px,250px)!important;
-    padding-right:54px!important;
-    overflow:hidden!important;
-  }
-  .kp-dossier-list:not(.list-mode) .kp-score,
-  .kp-dossier-list.list-mode .kp-score{
-    display:flex!important;
-    flex-direction:row!important;
-    align-items:center!important;
-    justify-content:flex-start!important;
-    gap:13px!important;
-    min-width:224px!important;
-    padding-right:0!important;
-  }
-  .kp-dossier-list:not(.list-mode) .kp-score-label,
-  .kp-dossier-list.list-mode .kp-score-label,
-  .kp-dossier-card .kp-score-label{
-    position:static!important;
-    left:auto!important;
-    right:auto!important;
-    top:auto!important;
-    transform:none!important;
-    display:block!important;
-    width:112px!important;
-    max-width:112px!important;
-    text-align:left!important;
-    white-space:normal!important;
-    line-height:1.14!important;
-    margin:0!important;
-    font-size:13px!important;
-    font-weight:850!important;
-    z-index:2!important;
-    pointer-events:none!important;
-  }
-  .kp-dossier-list:not(.list-mode) .kp-chevron,
-  .kp-dossier-card .kp-chevron{
-    position:absolute!important;
-    right:18px!important;
-    top:50%!important;
-    transform:translateY(-50%)!important;
-    z-index:6!important;
-    font-size:30px!important;
-    line-height:1!important;
-  }
-  .kp-dossier-list:not(.list-mode) .kp-statuses{margin-right:4px!important;}
-
-  /* Couleur du libellé selon le score */
-  .kp-score-ring.score-good ~ .kp-score-label{color:#6ff0a3!important;}
-  .kp-score-ring.score-mid ~ .kp-score-label{color:#f7bd55!important;}
-  .kp-score-ring.score-high ~ .kp-score-label,
-  .kp-score-ring.score-empty ~ .kp-score-label{color:#ff8f8f!important;}
-
-  /* Si l'espace se réduit : on repasse le libellé sous le cercle pour éviter tout chevauchement */
-  @media(max-width:1450px){
-    .kp-dossier-list:not(.list-mode){grid-template-columns:1fr!important;}
-    .kp-dossier-list:not(.list-mode) .kp-dossier-card{grid-template-columns:minmax(0,1fr) minmax(240px,260px)!important;}
-  }
-  @media(max-width:920px){
-    .kp-nav-title h1{font-size:28px!important;}
-    .kp-nav-title p{display:none!important;}
-    .kp-dossier-list:not(.list-mode) .kp-score{flex-direction:column!important;min-width:110px!important;gap:7px!important;}
-    .kp-dossier-list:not(.list-mode) .kp-score-label{text-align:center!important;width:110px!important;}
-  }
-</style>
-<script id="kaddu-premium-fixes-v7-js">
-(function(){
-  function ensureNavTitle(){
-    const nav=document.querySelector('nav');
-    if(!nav || document.getElementById('kpNavTitle')) return;
-    const title=document.createElement('div');
-    title.id='kpNavTitle';
-    title.className='kp-nav-title';
-    title.innerHTML='<h1>Dossiers locataires <em>&amp; confiance</em></h1><p>Pilotez les candidatures, les risques et les décisions locatives en temps réel <strong>la parole qui engage</strong></p>';
-    const actions=nav.querySelector('.nav-actions');
-    nav.insertBefore(title, actions || nav.firstChild);
-  }
-  function removeLargeHero(){
-    const h=document.getElementById('kpPageHero');
-    if(h) h.style.display='none';
-  }
-  function run(){ensureNavTitle();removeLargeHero();}
-  document.addEventListener('DOMContentLoaded',()=>{setTimeout(run,50);setTimeout(run,500);setTimeout(run,1200);});
-  const old=window.renderTable;
-  if(typeof old==='function' && !old.__kadduV7){
-    window.renderTable=function(){const r=old.apply(this,arguments);setTimeout(run,30);return r;};
-    window.renderTable.__kadduV7=true;
-  }
-  new MutationObserver(()=>{clearTimeout(window.__kadduV7Timer);window.__kadduV7Timer=setTimeout(run,80);}).observe(document.documentElement,{childList:true,subtree:true});
-})();
-</script>
