@@ -6609,3 +6609,215 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
 
 </body>
 </html>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Correctifs V6
+     - Titre page premium
+     - Libellé score aligné avec la flèche + couleur gravité
+     - Lien Biens immobiliers corrigé
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="kaddu-premium-fixes-v6">
+  /* 1) Titre premium de l'objet, inspiré du bloc “Vérification & confiance” */
+  .kp-page-hero{
+    margin: 4px 0 22px !important;
+    padding: 6px 2px 2px !important;
+  }
+  .kp-page-hero h1{
+    margin:0 !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+    font-size: clamp(42px, 4.6vw, 76px) !important;
+    line-height:.92 !important;
+    letter-spacing:-.055em !important;
+    font-weight:500 !important;
+    color:#fff8ed !important;
+    text-shadow:0 20px 55px rgba(0,0,0,.34) !important;
+  }
+  .kp-page-hero h1 em{
+    color:#d7a84f !important;
+    font-style:italic !important;
+    font-weight:400 !important;
+  }
+  .kp-page-hero p{
+    margin:14px 0 0 !important;
+    font-size:16px !important;
+    color:rgba(247,242,234,.84) !important;
+    letter-spacing:.01em !important;
+  }
+  .kp-page-hero p strong{
+    margin-left:16px !important;
+    color:#d7a84f !important;
+    font-family:Georgia,'Times New Roman',serif !important;
+    font-style:italic !important;
+    font-weight:400 !important;
+  }
+
+  /* Le bandeau doit rester sous le titre, sans être mangé par la nav sticky */
+  .wrap{padding-top:24px!important;}
+  .stats{margin-top:4px!important;}
+
+  /* 2) Score label aligné sur la ligne de la flèche */
+  .kp-dossier-card{
+    position:relative!important;
+    padding-right:82px!important;
+  }
+  .kp-dossier-card .kp-chevron{
+    position:absolute!important;
+    right:22px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    z-index:4!important;
+    font-size:30px!important;
+    line-height:1!important;
+  }
+  .kp-dossier-card .kp-score{
+    position:relative!important;
+    min-width:132px!important;
+    padding-right:0!important;
+  }
+  .kp-dossier-card .kp-score-label{
+    position:absolute!important;
+    left:calc(100% + 12px)!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:120px!important;
+    max-width:120px!important;
+    text-align:left!important;
+    margin:0!important;
+    padding:0!important;
+    white-space:normal!important;
+    line-height:1.15!important;
+    font-size:13px!important;
+    font-weight:850!important;
+    z-index:5!important;
+    text-shadow:0 8px 22px rgba(0,0,0,.32)!important;
+    pointer-events:none!important;
+  }
+  .kp-dossier-card .kp-statuses{
+    margin-right:10px!important;
+  }
+
+  /* Couleurs du texte selon gravité du score */
+  .kp-dossier-card:has(.kp-score-ring.score-good) .kp-score-label{
+    color:#6ff0a3!important;
+  }
+  .kp-dossier-card:has(.kp-score-ring.score-mid) .kp-score-label{
+    color:#f7bd55!important;
+  }
+  .kp-dossier-card:has(.kp-score-ring.score-high),
+  .kp-dossier-card:has(.kp-score-ring.score-empty) .kp-score-label{
+    color:#ff8f8f!important;
+  }
+  .kp-dossier-card:has(.kp-score-ring.score-high) .kp-score-label,
+  .kp-dossier-card:has(.kp-score-ring.score-empty) .kp-score-label{
+    color:#ff8f8f!important;
+  }
+
+  /* En mode 2 cartes par ligne : éviter que le libellé score gêne les statuts */
+  .kp-dossier-list:not(.is-list) .kp-dossier-card{
+    padding-right:58px!important;
+  }
+  .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score-label{
+    left:auto!important;
+    right:38px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:112px!important;
+    max-width:112px!important;
+    text-align:right!important;
+  }
+  .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score{
+    padding-right:98px!important;
+  }
+
+  /* Mode liste : conserver alignement propre et lisible */
+  .kp-dossier-list.is-list .kp-dossier-card .kp-score-label{
+    left:calc(100% + 10px)!important;
+    right:auto!important;
+    text-align:left!important;
+  }
+
+  @media(max-width:1380px){
+    .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score-label{
+      position:static!important;
+      transform:none!important;
+      width:auto!important;
+      max-width:none!important;
+      text-align:center!important;
+      margin-top:6px!important;
+    }
+    .kp-dossier-list:not(.is-list) .kp-dossier-card .kp-score{
+      padding-right:0!important;
+    }
+  }
+
+  /* Sidebar wording sans IA */
+  .kp-shield span::after{content:''!important;}
+</style>
+
+<script id="kaddu-premium-fixes-v6-js">
+(function(){
+  function addPageHero(){
+    const wrap = document.querySelector('.wrap');
+    if(!wrap || document.getElementById('kpPageHero')) return;
+    const hero = document.createElement('section');
+    hero.id = 'kpPageHero';
+    hero.className = 'kp-page-hero';
+    hero.innerHTML = '<h1>Dossiers locataires <em>&amp; confiance</em></h1><p>Pilotez les candidatures, les risques et les décisions locatives en temps réel <strong>la parole qui engage</strong></p>';
+    const stats = wrap.querySelector('.stats');
+    wrap.insertBefore(hero, stats || wrap.firstChild);
+  }
+
+  function fixSidebarLinksAndWording(){
+    document.querySelectorAll('.kp-nav-item').forEach(a => {
+      const txt = (a.textContent || '').trim().toLowerCase();
+      if(txt.includes('biens immobiliers')){
+        a.href = 'https://kaddu-delta.vercel.app/admin/admin-biens-v2-secured.html';
+      }
+    });
+    document.querySelectorAll('.kp-shield span').forEach(el => {
+      el.textContent = 'Moteur de confiance';
+    });
+    document.querySelectorAll('*').forEach(el => {
+      if(el.childNodes.length === 1 && el.childNodes[0].nodeType === 3){
+        const t = el.textContent || '';
+        if(/\bIA\b|antifraude IA/i.test(t)){
+          el.textContent = t.replace(/Moteur antifraude IA/g, 'Moteur de confiance').replace(/Résumé IA/g, 'Résumé de confiance').replace(/\bIA\b/g, '').trim();
+        }
+      }
+    });
+  }
+
+  /* Renforce les classes score si une ancienne fonction rend sans classe complète */
+  function normalizeScoreClasses(){
+    document.querySelectorAll('.kp-dossier-card').forEach(card => {
+      const ring = card.querySelector('.kp-score-ring');
+      const num = Number(card.querySelector('.kp-score-num')?.textContent || 0);
+      if(!ring) return;
+      ring.classList.remove('score-good','score-mid','score-high','score-empty');
+      if(!Number.isFinite(num) || num <= 0) ring.classList.add('score-empty');
+      else if(num >= 75) ring.classList.add('score-good');
+      else if(num >= 50) ring.classList.add('score-mid');
+      else ring.classList.add('score-high');
+    });
+  }
+
+  const oldRender = window.renderTable;
+  if(typeof oldRender === 'function' && !oldRender.__kadduV6){
+    window.renderTable = function(){
+      const ret = oldRender.apply(this, arguments);
+      setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 30);
+      return ret;
+    };
+    window.renderTable.__kadduV6 = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 250);
+    setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 900);
+  });
+  new MutationObserver(()=>{
+    clearTimeout(window.__kadduV6Timer);
+    window.__kadduV6Timer = setTimeout(()=>{addPageHero();fixSidebarLinksAndWording();normalizeScoreClasses();}, 120);
+  }).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
