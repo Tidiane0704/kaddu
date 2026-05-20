@@ -6194,5 +6194,228 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Correctifs Premium UX V4
+     1 Scroll gauche/droite indépendant + fond lisible bas de page
+     2 Score label ne chevauche plus la flèche
+     3 Icônes bandeau agrandies en style Duotone Premium
+     4 Filtre biens dynamique : appartements du site + fallback complet
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="kaddu-premium-fixes-v4">
+  /* ── Scroll indépendant : colonne dossiers + panneau droit ── */
+  html, body{height:100%!important;overflow:hidden!important;}
+  .wrap{height:calc(100vh - 66px)!important;overflow:hidden!important;padding-bottom:18px!important;}
+  .layout{
+    height:calc(100vh - 245px)!important;
+    min-height:520px!important;
+    overflow:hidden!important;
+    align-items:stretch!important;
+  }
+  .layout>.card:first-child{
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding-bottom:120px!important;
+    scrollbar-gutter:stable!important;
+    overscroll-behavior:contain!important;
+  }
+  .kp-detail-panel{
+    position:relative!important;
+    top:auto!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    padding-bottom:120px!important;
+    scrollbar-gutter:stable!important;
+    overscroll-behavior:contain!important;
+  }
+  .kp-dossier-list{padding-bottom:90px!important;}
+  .kp-detail-panel::after,
+  .layout>.card:first-child::after{
+    content:"";display:block;height:70px;flex:0 0 70px;
+  }
+  .kp-detail-panel::-webkit-scrollbar,
+  .layout>.card:first-child::-webkit-scrollbar{width:10px!important;}
+  .kp-detail-panel::-webkit-scrollbar-track,
+  .layout>.card:first-child::-webkit-scrollbar-track{background:rgba(255,255,255,.035)!important;border-radius:999px!important;}
+  .kp-detail-panel::-webkit-scrollbar-thumb,
+  .layout>.card:first-child::-webkit-scrollbar-thumb{background:rgba(215,168,79,.32)!important;border-radius:999px!important;border:2px solid rgba(7,22,38,.9)!important;}
+  .kp-detail-panel::-webkit-scrollbar-thumb:hover,
+  .layout>.card:first-child::-webkit-scrollbar-thumb:hover{background:rgba(215,168,79,.48)!important;}
+
+  /* ── Cartes : éviter le chevauchement score / flèche ── */
+  .kp-dossier-card{padding-right:48px!important;overflow:visible!important;}
+  .kp-chevron{right:18px!important;width:18px!important;text-align:center!important;z-index:3!important;}
+  .kp-dossier-list:not(.list-mode) .kp-chevron{right:18px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-score{padding-right:12px!important;min-width:118px!important;}
+  .kp-score-label{
+    display:block!important;
+    width:120px!important;
+    max-width:120px!important;
+    text-align:center!important;
+    line-height:1.22!important;
+    white-space:normal!important;
+    word-break:normal!important;
+  }
+  .kp-dossier-list:not(.list-mode) .kp-score-label{margin-right:8px!important;}
+  .kp-dossier-list:not(.list-mode) .kp-dossier-card{
+    grid-template-columns:minmax(0,1fr) 134px!important;
+  }
+  .kp-dossier-list.list-mode .kp-dossier-card{overflow:hidden!important;padding-right:42px!important;}
+
+  /* ── Bandeau KPI : icônes Duotone Premium plus visibles ── */
+  .stat{padding-right:92px!important;}
+  .stat::after{
+    width:62px!important;height:62px!important;right:18px!important;top:20px!important;border-radius:18px!important;
+    background:
+      radial-gradient(circle at 34% 28%,rgba(255,255,255,.18),transparent 28%),
+      linear-gradient(145deg,rgba(215,168,79,.18),rgba(215,168,79,.055))!important;
+    border:1px solid rgba(215,168,79,.38)!important;
+    box-shadow:0 16px 36px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.09), 0 0 22px rgba(215,168,79,.08)!important;
+  }
+  .stat::before{
+    right:37px!important;top:35px!important;font-size:27px!important;line-height:1!important;font-weight:900!important;
+    text-shadow:0 0 18px rgba(215,168,79,.55),0 1px 0 rgba(0,0,0,.35)!important;
+    filter:drop-shadow(0 0 8px rgba(215,168,79,.35));
+  }
+  .stat:nth-child(1)::before{content:"▰"!important;color:#e9bb5a!important;transform:skewX(-8deg);}
+  .stat:nth-child(2)::before{content:"△"!important;color:#ff8585!important;font-size:30px!important;top:33px!important;}
+  .stat:nth-child(3)::before{content:"!"!important;color:#ffcb61!important;font-size:30px!important;top:31px!important;right:41px!important;}
+  .stat:nth-child(4)::before{content:"◴"!important;color:#efb54b!important;font-size:30px!important;top:32px!important;}
+
+  /* ── Modal documents : plus d’espace horizontal, aucune action superposée ── */
+  .shield-modal-v2{padding:16px!important;}
+  .shield-modal-v2__card{width:97vw!important;max-width:1560px!important;grid-template-columns:300px minmax(0,1fr) 280px!important;}
+  .ksm-content{padding-bottom:96px!important;}
+  #ksmDocList .ksm-doc-row{
+    grid-template-columns:48px minmax(230px,1fr) minmax(120px,150px) minmax(110px,135px) minmax(160px,190px)!important;
+    gap:12px!important;
+    align-items:center!important;
+  }
+  #ksmDocList .ksm-doc-actions{width:100%!important;min-width:0!important;}
+  #ksmDocList .ksm-doc-btn{max-width:100%!important;}
+  @media(max-width:1280px){
+    .shield-modal-v2__card{grid-template-columns:280px minmax(0,1fr) 250px!important;}
+    #ksmDocList .ksm-doc-row{grid-template-columns:46px minmax(190px,1fr) 125px 110px 150px!important;gap:9px!important;}
+  }
+</style>
+<script id="kaddu-premium-fixes-v4">
+(function(){
+  'use strict';
+  const SUPA = String(window.KADDU_SUPABASE?.url || '').replace(/\/$/, '');
+  const q = id => document.getElementById(id);
+  const norm = v => String(v||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/le petit\s+/i,'').replace(/[^a-z0-9]/g,'');
+
+  const FALLBACK_BIENS = [
+    'Bantukay','Nopalukay','Suxalikay',
+    'Appartement 1','Appartement 2','Appartement 3','Appartement 4','Appartement 5'
+  ];
+
+  function getAuthHeadersSafe(){
+    if(typeof window.getAuthHeaders === 'function') return window.getAuthHeaders();
+    const cfg=window.KADDU_SUPABASE||{};
+    return { apikey:cfg.anonKey, Authorization:'Bearer '+cfg.anonKey, 'Content-Type':'application/json' };
+  }
+
+  function optionLabelFromBien(b){
+    if(!b) return '';
+    if(typeof window.bienLabel === 'function'){
+      const lbl = window.bienLabel(b);
+      if(lbl && lbl !== '—') return lbl;
+    }
+    return String(b);
+  }
+
+  function setBienOptions(names){
+    const select=q('bienFilter'); if(!select) return;
+    const previous=select.value;
+    const map=new Map();
+    [...FALLBACK_BIENS, ...(names||[])].forEach(v=>{
+      const label=optionLabelFromBien(v).trim();
+      if(!label || label==='—') return;
+      const key=norm(label);
+      if(!map.has(key)) map.set(key,label);
+    });
+    select.innerHTML='<option value="">Tous les biens</option>'+[...map.values()].sort((a,b)=>a.localeCompare(b,'fr')).map(label=>`<option value="${label.replace(/"/g,'&quot;')}">${label}</option>`).join('');
+    if([...select.options].some(o=>o.value===previous)) select.value=previous;
+  }
+
+  async function loadAllSiteBiens(){
+    const fromDossiers = [];
+    try{ (window.allRows||[]).forEach(r=>{ if(r?.bien) fromDossiers.push(r.bien); }); }catch(_){}
+    setBienOptions(fromDossiers);
+
+    if(!SUPA) return;
+    const tableCandidates=['biens','properties','appartements'];
+    for(const table of tableCandidates){
+      try{
+        const res=await fetch(`${SUPA}/rest/v1/${table}?select=*&limit=200`,{headers:getAuthHeadersSafe()});
+        if(!res.ok) continue;
+        const rows=await res.json();
+        if(!Array.isArray(rows) || !rows.length) continue;
+        const names=rows.map(r=>r.nom||r.name||r.titre||r.title||r.libelle||r.slug||r.id).filter(Boolean);
+        if(names.length){ setBienOptions([...fromDossiers,...names]); return; }
+      }catch(_){}
+    }
+  }
+
+  /* rendre le filtre biens compatible avec toutes les options dynamiques */
+  const oldApply = window.applyFilters;
+  if(typeof oldApply === 'function' && !oldApply.__kpV4){
+    window.applyFilters = function(){
+      const select=q('bienFilter');
+      const selectedLabel=select?.value || '';
+      oldApply.apply(this, arguments);
+      if(selectedLabel){
+        try{
+          window.filteredRows = (window.allRows||[]).filter(row=>{
+            const qv=(q('searchInput')?.value||'').trim().toLowerCase();
+            const status=q('statusFilter')?.value||'';
+            const metier=q('metierFilter')?.value||'';
+            const finalStatus=q('finalFilter')?.value||'';
+            const hay=[row.nom,row.email,row.telephone,row.employeur,row.bien,row.numero_whatsapp,row.pays_residence].join(' ').toLowerCase();
+            const okSearch=!qv || hay.includes(qv);
+            const okBien=norm(row.bien)===norm(selectedLabel) || norm(optionLabelFromBien(row.bien))===norm(selectedLabel);
+            const okStatus=!status || row.status===status;
+            const okMetier=!metier || (row.status_metier||'nouveau')===metier;
+            const okFinal=!finalStatus || (row.final_status||'en_cours')===finalStatus;
+            return okSearch && okBien && okStatus && okMetier && okFinal;
+          });
+          const sort=q('sortFilter')?.value||'created_desc';
+          if(sort==='score_desc') filteredRows.sort((a,b)=>Number(b.score||0)-Number(a.score||0));
+          else if(sort==='score_asc') filteredRows.sort((a,b)=>Number(a.score||0)-Number(b.score||0));
+          else filteredRows.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+          window.renderStats?.(); window.renderTable?.();
+        }catch(e){console.warn('[Kàddu biens filter]', e);}
+      }
+    };
+    window.applyFilters.__kpV4=true;
+  }
+
+  /* Après chaque chargement des dossiers, enrichir le select biens */
+  const oldInit=window.init;
+  if(typeof oldInit==='function' && !oldInit.__kpV4){
+    window.init=async function(){
+      const res=await oldInit.apply(this, arguments);
+      setTimeout(loadAllSiteBiens,250);
+      return res;
+    };
+    window.init.__kpV4=true;
+  }
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(loadAllSiteBiens,1200));
+
+  /* Corriger le scroll quand on change de vue ou de filtre */
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.kp-toggle-btn,.stat,[data-kpi-filter]')){
+      setTimeout(()=>{ const left=document.querySelector('.layout>.card:first-child'); if(left) left.scrollTop=0; },160);
+    }
+  },true);
+})();
+</script>
+
 </body>
 </html>
