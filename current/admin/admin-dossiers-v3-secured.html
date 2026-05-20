@@ -1012,12 +1012,6 @@ tr.active{background:rgba(83,183,255,.055) !important;}
   </nav>
 
   <div class="wrap">
-    <section class="kp-page-title" aria-label="Titre de la page dossiers locataires">
-      <div>
-        <h1>Dossiers locataires <em>&amp; confiance</em></h1>
-        <p>Pilotez les candidatures, les risques et les décisions locatives en temps réel <span>la parole qui engage</span></p>
-      </div>
-    </section>
     <section class="hero">
       <div>
         <h1>Dossiers <em>locataires</em></h1>
@@ -5779,7 +5773,7 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
         <a class="kp-nav-item" href="/admin/"><span class="kp-nav-ico">⌂</span>Hub Admin</a>
         <div class="kp-group-title">Gestion</div>
         <a class="kp-nav-item active" href="#"><span class="kp-nav-ico">▣</span>Dossiers locataires</a>
-        <a class="kp-nav-item" href="https://kaddu-delta.vercel.app/admin/admin-biens-v2-secured.html"><span class="kp-nav-ico">⌂</span>Biens immobiliers</a>
+        <a class="kp-nav-item" href="/admin/biens.html"><span class="kp-nav-ico">⌂</span>Biens immobiliers</a>
         <a class="kp-nav-item" href="#"><span class="kp-nav-ico">♙</span>Candidats</a>
         <a class="kp-nav-item" href="#"><span class="kp-nav-ico">☷</span>Contrats</a>
         <a class="kp-nav-item" href="#"><span class="kp-nav-ico">◎</span>Paiements</a>
@@ -6612,48 +6606,6 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
   document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{ window.__kpPage=1; resetScrolls(); window.renderTable?.(); },900));
 })();
 </script>
-
-
-
-<!-- ═══════════════════════════════════════════════════════════════
-     Kàddu — Corrections ciblées V5
-     1 Titre premium de page
-     2 Couleur du libellé score selon gravité
-     3 Lien Biens immobiliers corrigé
-     ═══════════════════════════════════════════════════════════════ -->
-<style id="kaddu-v5-corrections-ciblees">
-  .kp-page-title{
-    display:flex!important;align-items:flex-end!important;justify-content:space-between!important;
-    margin:4px 0 20px!important;padding:16px 0 2px!important;
-    background:transparent!important;border:0!important;box-shadow:none!important;
-  }
-  .kp-page-title h1{
-    margin:0!important;font-family:Georgia,'Times New Roman',serif!important;
-    font-size:clamp(42px,4.2vw,76px)!important;line-height:.94!important;font-weight:400!important;
-    letter-spacing:-.06em!important;color:#f8f4ee!important;text-shadow:0 16px 48px rgba(0,0,0,.25)!important;
-  }
-  .kp-page-title h1 em{
-    font-style:italic!important;color:#d7a84f!important;font-weight:400!important;
-  }
-  .kp-page-title p{
-    margin:10px 0 0!important;color:rgba(248,244,238,.78)!important;font-size:16px!important;line-height:1.55!important;
-  }
-  .kp-page-title p span{
-    margin-left:18px!important;font-family:Georgia,'Times New Roman',serif!important;font-style:italic!important;
-    color:#d7a84f!important;white-space:nowrap!important;
-  }
-  /* Le bloc hero historique reste masqué : on utilise le nouveau titre premium uniquement. */
-  .hero{display:none!important;}
-  /* Libellés score : couleur selon gravité, synchronisée avec la classe du cercle. */
-  .kp-score-ring.score-good + .kp-score-label{color:#65e29a!important;text-shadow:0 0 14px rgba(101,226,154,.16)!important;}
-  .kp-score-ring.score-mid + .kp-score-label{color:#f6b94b!important;text-shadow:0 0 14px rgba(246,185,75,.14)!important;}
-  .kp-score-ring.score-high + .kp-score-label,
-  .kp-score-ring.score-empty + .kp-score-label{color:#ff8a8a!important;text-shadow:0 0 14px rgba(255,124,124,.14)!important;}
-  @media(max-width:980px){
-    .kp-page-title h1{font-size:40px!important;}
-    .kp-page-title p span{display:block!important;margin-left:0!important;margin-top:4px!important;}
-  }
-</style>
 
 </body>
 </html>
