@@ -795,7 +795,7 @@
     <div class="modules-grid fade-up" id="modulesGrid">
 
       <!-- MODULE 1 : BIENS -->
-      <a class="module-card" href="admin-biens-v2-secured.html">
+      <a class="module-card" href="/admin/admin-biens-v2-secured.html">
         <div class="module-top">
           <div class="module-icon">🏠</div>
           <div class="module-badges">
@@ -817,7 +817,7 @@
       </a>
 
       <!-- MODULE 2 : DOSSIERS -->
-      <a class="module-card" href="admin-dossiers-v3-secured.html">
+      <a class="module-card" href="/admin/admin-dossiers-v3-secured.html">
         <div class="module-top">
           <div class="module-icon">📋</div>
           <div class="module-badges">
@@ -841,7 +841,7 @@
 
 
       <!-- MODULE : VÉRIFICATION & CONFIANCE -->
-      <a class="module-card" href="admin-verification-confiance.html">
+      <a class="module-card" href="/admin/admin-verification-confiance.html">
         <div class="module-top">
           <div class="module-icon">🛡️</div>
           <div class="module-badges">
@@ -865,7 +865,7 @@
 
 
       <!-- MODULE 3 : KPIs -->
-      <a class="module-card" href="dashboard-kaddu-kpi-secured.html">
+      <a class="module-card" href="/admin/dashboard-kaddu-kpi-secured.html">
         <div class="module-top">
           <div class="module-icon">📊</div>
           <div class="module-badges">
@@ -889,7 +889,7 @@
 
 
       <!-- MODULE 4 : MARCHÉ LOCATIF -->
-      <a class="module-card" href="admin-marche-locatif.html">
+      <a class="module-card" href="/admin/admin-marche-locatif.html">
         <div class="module-top">
           <div class="module-icon">📍</div>
           <div class="module-badges">
@@ -912,7 +912,7 @@
       </a>
 
       <!-- MODULE 5 : MARKETING & OPÉRATIONS -->
-      <a class="module-card" href="admin-marketing-operations.html">
+      <a class="module-card" href="/admin/admin-marketing-operations.html">
         <div class="module-top">
           <div class="module-icon">🧩</div>
           <div class="module-badges">
@@ -958,7 +958,7 @@
       </a>
 
       <!-- MODULE : VÉRIFICATION DOSSIERS (antifraude) -->
-      <a class="module-card" href="admin-verifications-dossiers.html">
+      <a class="module-card" href="/admin/admin-verifications-dossiers.html">
         <div class="module-top">
           <div class="module-icon">🛡️</div>
           <div class="module-badges">
@@ -983,7 +983,7 @@
 
 
       <!-- MODULE : DEMANDES & INCIDENTS LOCATAIRES -->
-      <a class="module-card" href="admin-demandes-incidents.html">
+      <a class="module-card" href="/admin/admin-demandes-incidents.html">
         <div class="module-top">
           <div class="module-icon">🛠️</div>
           <div class="module-badges"><span class="mbadge mbadge-active">Actif</span><span class="mbadge mbadge-new">Priorité</span></div>
@@ -1000,7 +1000,7 @@
       </a>
 
       <!-- MODULE : PARTENAIRES & SERVICES -->
-      <a class="module-card" href="admin-partenaires-services.html">
+      <a class="module-card" href="/admin/admin-partenaires-services.html">
         <div class="module-top">
           <div class="module-icon">🤝</div>
           <div class="module-badges"><span class="mbadge mbadge-active">Actif</span><span class="mbadge mbadge-new">Nouveau</span></div>
@@ -1017,7 +1017,7 @@
       </a>
 
       <!-- MODULE : CRM LOCATAIRES -->
-      <a class="module-card" href="admin-crm-locataires.html">
+      <a class="module-card" href="/admin/admin-crm-locataires.html">
         <div class="module-top">
           <div class="module-icon">👤</div>
           <div class="module-badges"><span class="mbadge mbadge-active">Actif</span></div>
@@ -1110,19 +1110,19 @@
           <div class="activity-item">
             <div class="activity-dot dot-ok"></div>
             <div class="activity-text">
-              <a href="admin-biens-v2-secured.html" style="color:var(--or)">Ajouter un nouveau bien</a>
+              <a href="/admin/admin-biens-v2-secured.html" style="color:var(--or)">Ajouter un nouveau bien</a>
             </div>
           </div>
           <div class="activity-item">
             <div class="activity-dot dot-info"></div>
             <div class="activity-text">
-              <a href="admin-dossiers-v3-secured.html" style="color:#53b7ff">Voir les dossiers en attente</a>
+              <a href="/admin/admin-dossiers-v3-secured.html" style="color:#53b7ff">Voir les dossiers en attente</a>
             </div>
           </div>
           <div class="activity-item">
             <div class="activity-dot dot-warn"></div>
             <div class="activity-text">
-              <a href="dashboard-kaddu-kpi-secured.html" style="color:var(--or)">Tableau de bord KPIs</a>
+              <a href="/admin/dashboard-kaddu-kpi-secured.html" style="color:var(--or)">Tableau de bord KPIs</a>
             </div>
           </div>
           <div class="activity-item">
@@ -1460,16 +1460,16 @@ document.addEventListener("keydown", e => {
   if(e.key==="Escape") closeFaqManager();
   if(e.key==="g"||e.key==="G"){ gPressed=true; setTimeout(()=>gPressed=false,1200); return; }
   if(gPressed){
-    if(e.key==="b"||e.key==="B") location.href="admin-biens-v2-secured.html";
-    if(e.key==="d"||e.key==="D") location.href="admin-dossiers-v3-secured.html";
-    if(e.key==="t"||e.key==="T") location.href="admin-verification-confiance.html";
-    if(e.key==="k"||e.key==="K") location.href="dashboard-kaddu-kpi-secured.html";
-    if(e.key==="m"||e.key==="M") location.href="admin-marche-locatif.html";
-    if(e.key==="o"||e.key==="O") location.href="admin-marketing-operations.html";
+    if(e.key==="b"||e.key==="B") location.href="/admin/admin-biens-v2-secured.html";
+    if(e.key==="d"||e.key==="D") location.href="/admin/admin-dossiers-v3-secured.html";
+    if(e.key==="t"||e.key==="T") location.href="/admin/admin-verification-confiance.html";
+    if(e.key==="k"||e.key==="K") location.href="/admin/dashboard-kaddu-kpi-secured.html";
+    if(e.key==="m"||e.key==="M") location.href="/admin/admin-marche-locatif.html";
+    if(e.key==="o"||e.key==="O") location.href="/admin/admin-marketing-operations.html";
     if(e.key==="f"||e.key==="F") openFaqManager();
-    if(e.key==="i"||e.key==="I") location.href="admin-demandes-incidents.html";
-    if(e.key==="p"||e.key==="P") location.href="admin-partenaires-services.html";
-    if(e.key==="c"||e.key==="C") location.href="admin-crm-locataires.html";
+    if(e.key==="i"||e.key==="I") location.href="/admin/admin-demandes-incidents.html";
+    if(e.key==="p"||e.key==="P") location.href="/admin/admin-partenaires-services.html";
+    if(e.key==="c"||e.key==="C") location.href="/admin/admin-crm-locataires.html";
   }
 });
 
