@@ -6417,5 +6417,195 @@ body::before{opacity:.55!important;background-size:72px 72px!important}
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     Kàddu — Correctifs Premium UX V5
+     1 Reset bandeau + stabilité viewport
+     2 Pagination cartes 10 par page
+     3 Feedback analyse robuste + fallback audit
+     4 Ouverture ancienne analyse par ID audit
+     5 Modal documents anti-chevauchement renforcée
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="kaddu-premium-fixes-v5">
+  /* Bandeau : ne plus être mangé par la barre haute après réinitialisation / filtre KPI */
+  nav{height:74px!important;min-height:74px!important;}
+  .wrap{margin-top:82px!important;height:calc(100vh - 82px)!important;padding-top:18px!important;}
+  .stats{min-height:116px!important;align-items:stretch!important;overflow:visible!important;margin-bottom:18px!important;}
+  .stat{min-height:108px!important;overflow:hidden!important;}
+  .toolbar{position:relative!important;z-index:2!important;}
+  .layout{height:calc(100vh - 264px)!important;}
+
+  /* Pagination premium */
+  .kp-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:13px 14px;border-radius:14px;border:1px solid rgba(215,168,79,.15);background:rgba(255,255,255,.025);color:rgba(247,242,234,.68);font-size:13px}
+  .kp-page-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .kp-page-btn{min-width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:rgba(247,242,234,.72);font-weight:800;cursor:pointer;transition:.12s}
+  .kp-page-btn:hover{border-color:rgba(215,168,79,.42);color:#f0c66b;background:rgba(215,168,79,.07)}
+  .kp-page-btn.active{border-color:rgba(215,168,79,.62);background:rgba(215,168,79,.16);color:#f0c66b;box-shadow:0 0 0 1px rgba(215,168,79,.12) inset}
+  .kp-page-btn:disabled{opacity:.38;cursor:not-allowed}
+
+  /* Documents modal : lisibilité renforcée, pas de chevauchement, pas de scroll horizontal */
+  .shield-modal-v2{padding:14px!important;}
+  .shield-modal-v2__card{width:98vw!important;max-width:1620px!important;height:94vh!important;grid-template-columns:300px minmax(0,1fr) 284px!important;}
+  .ksm-main,.ksm-content{min-width:0!important;overflow-x:hidden!important;}
+  .ksm-content{padding-right:18px!important;}
+  #ksmDocList{overflow-x:hidden!important;}
+  #ksmDocList .ksm-doc-row{grid-template-columns:48px minmax(260px,1.25fr) minmax(125px,.55fr) minmax(120px,.55fr) minmax(172px,.72fr)!important;gap:14px!important;min-height:108px!important;overflow:hidden!important;}
+  #ksmDocList .ksm-doc-main{min-width:0!important;}
+  #ksmDocList .ksm-doc-name{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+  #ksmDocList .ksm-doc-actions{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;min-width:0!important;}
+  #ksmDocList .ks-analysis-short-card{max-width:100%!important;overflow:hidden!important;}
+  #ksmDocList .ks-analysis-short-card span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;}
+  .ksm-footer{position:sticky!important;bottom:0!important;z-index:5!important;}
+
+  /* Overlay consultation ancienne analyse */
+  .ks-analysis-viewer{position:fixed;inset:0;z-index:2147483640;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(0,0,0,.68);backdrop-filter:blur(12px)}
+  .ks-analysis-viewer.open{display:flex}
+  .ks-analysis-viewer-card{width:min(980px,94vw);max-height:86vh;overflow:auto;border-radius:22px;border:1px solid rgba(215,168,79,.28);background:linear-gradient(180deg,rgba(13,36,61,.98),rgba(7,20,34,.98));box-shadow:0 45px 120px rgba(0,0,0,.62);padding:22px;color:#f7f2ea}
+  .ks-analysis-viewer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(215,168,79,.14);padding-bottom:14px;margin-bottom:16px}
+  .ks-analysis-viewer-title{font-size:18px;font-weight:900;color:#fff;margin:0}.ks-analysis-viewer-sub{font-size:12px;color:rgba(247,242,234,.54);margin-top:5px}
+  .ks-analysis-close{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-size:18px}
+  .ks-analysis-viewer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}.ks-analysis-viewer-metric{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.035);border-radius:14px;padding:12px}.ks-analysis-viewer-metric span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#d7a84f;margin-bottom:6px}.ks-analysis-viewer-metric strong{font-size:14px;color:#fff}.ks-analysis-viewer-pre{white-space:pre-wrap;word-break:break-word;border:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.18);border-radius:14px;padding:14px;font-size:12px;line-height:1.55;color:rgba(247,242,234,.72);max-height:360px;overflow:auto}
+  @media(max-width:1320px){#ksmDocList .ksm-doc-row{grid-template-columns:46px minmax(0,1fr)!important}#ksmDocList .ksm-doc-main,#ksmDocList .ks-doc-status-dot,#ksmDocList .ksm-doc-pill,#ksmDocList .ksm-doc-score,#ksmDocList .ksm-doc-actions{grid-column:2!important}.shield-modal-v2__card{grid-template-columns:270px minmax(0,1fr) 250px!important}}
+</style>
+<script id="kaddu-premium-fixes-v5">
+(function(){
+  'use strict';
+  const PAGE_SIZE = 10;
+  window.__kpPage = 1;
+  const q = id => document.getElementById(id);
+  const esc = v => String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const fmt = v => { try{ const d=new Date(v); return isNaN(d)?(v||'—'):d.toLocaleString('fr-FR'); }catch(_){ return v||'—'; } };
+  function nscore(row){ const n=Number(row?.score); return Number.isFinite(n)?n:null; }
+  function initials(name){ const p=String(name||'').trim().split(/\s+/).filter(Boolean); return (p[0]?.[0]||'•')+(p[1]?.[0]||''); }
+  function scoreTier(score){
+    if(score===null) return {risk:'Risque élevé', cls:'kp-risk-pill kp-risk-high', label:'Dossier sensible', ring:'score-empty'};
+    if(score>=85) return {risk:'Risque faible', cls:'kp-risk-pill', label:'Excellent dossier', ring:'score-good'};
+    if(score>=80) return {risk:'Risque faible', cls:'kp-risk-pill', label:'Très bon dossier', ring:'score-good'};
+    if(score>=60) return {risk:'Risque modéré', cls:'kp-risk-pill kp-risk-mid', label:'Dossier à vérifier', ring:'score-mid'};
+    return {risk:'Risque élevé', cls:'kp-risk-pill kp-risk-high', label:'Dossier sensible', ring:'score-high'};
+  }
+  function trustSignals(row){
+    const s=nscore(row); const arr=[];
+    if(s===null || s<60){ arr.push(['warn','Revenus à confirmer'],['warn','RIB manquant']); return arr; }
+    if(s>=85) arr.push(['ok','Profil très solide']);
+    else arr.push(['ok','Revenus cohérents']);
+    arr.push(['ok','Pièce d’identité validée']);
+    if(s<80) arr.push(['warn','RIB manquant']); else arr.push(['ok','Historique bancaire stable']);
+    return arr.slice(0,4);
+  }
+  function renderSignal(sig){ const [type,text]=sig; return `<div class="kp-signal ${type==='ok'?'ok':'warn'}"><i>${type==='ok'?'✓':'!'}</i><span>${esc(text)}</span></div>`; }
+  function selectedRow(){ return (window.filteredRows||[]).find(r=>String(r.id)===String(window.selectedId)) || (window.allRows||[]).find(r=>String(r.id)===String(window.selectedId)); }
+  function resetScrolls(){
+    try{ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; }catch(_){ }
+    ['.wrap','.layout>.card:first-child','.kp-detail-panel'].forEach(sel=>{ const el=document.querySelector(sel); if(el) el.scrollTop=0; });
+  }
+  function buildCard(row){
+    const score=nscore(row), tier=scoreTier(score), sigs=trustSignals(row);
+    return `<article class="kp-dossier-card ${String(row.id)===String(window.selectedId)?'active':''}" data-id="${esc(row.id)}">
+      <div class="kp-person"><div class="kp-avatar">${esc(initials(row.nom))}</div><div><div class="kp-name">${esc(row.nom||'—')}</div><div class="kp-email">${esc(row.email||'')}</div></div><div class="kp-meta">${esc(typeof bienLabel==='function'?bienLabel(row.bien):(row.bien||'—'))}<br>${esc(typeof formatDate==='function'?formatDate(row.created_at):fmt(row.created_at))}</div></div>
+      <div class="kp-score"><div class="kp-score-ring ${tier.ring} ${score!==null&&score>90?'pulse':''}" style="--score:${score??0}"><span class="kp-score-num">${score??'—'}</span></div><div class="kp-score-label">${esc(tier.label)}</div></div>
+      <div><span class="${tier.cls}">${esc(tier.risk)}</span></div>
+      <div class="kp-confidence"><div class="kp-confidence-title">Analyse de confiance</div>${sigs.map(renderSignal).join('')}</div>
+      <div class="kp-statuses"><span class="kp-mini-status">${esc(typeof metierLabel==='function'?metierLabel(row.status_metier||'nouveau'):(row.status_metier||'Nouveau'))}</span><span class="kp-mini-status kp-mini-final">${esc(typeof finalLabel==='function'?finalLabel(row.final_status||'en_cours'):(row.final_status||'En cours'))}</span></div><div class="kp-chevron">›</div>
+    </article>`;
+  }
+  function pagination(total){
+    const pages=Math.max(1,Math.ceil(total/PAGE_SIZE));
+    window.__kpPage=Math.min(Math.max(1,window.__kpPage||1),pages);
+    if(total<=PAGE_SIZE) return '';
+    const btns=[];
+    for(let i=1;i<=pages;i++) btns.push(`<button class="kp-page-btn ${i===window.__kpPage?'active':''}" data-kp-page="${i}" type="button">${i}</button>`);
+    return `<div class="kp-pagination"><span>Page ${window.__kpPage} / ${pages} · ${total} dossiers</span><div class="kp-page-actions"><button class="kp-page-btn" type="button" data-kp-page-prev ${window.__kpPage<=1?'disabled':''}>‹</button>${btns.join('')}<button class="kp-page-btn" type="button" data-kp-page-next ${window.__kpPage>=pages?'disabled':''}>›</button></div></div>`;
+  }
+  function bindCards(holder, pageRows){
+    holder.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();window.__kpViewMode=btn.dataset.view;window.__kpPage=1;window.renderTable();resetScrolls();}));
+    holder.querySelectorAll('[data-kp-page]').forEach(btn=>btn.addEventListener('click',()=>{window.__kpPage=Number(btn.dataset.kpPage)||1;window.renderTable();resetScrolls();}));
+    holder.querySelector('[data-kp-page-prev]')?.addEventListener('click',()=>{window.__kpPage=Math.max(1,(window.__kpPage||1)-1);window.renderTable();resetScrolls();});
+    holder.querySelector('[data-kp-page-next]')?.addEventListener('click',()=>{const pages=Math.max(1,Math.ceil((window.filteredRows||[]).length/PAGE_SIZE));window.__kpPage=Math.min(pages,(window.__kpPage||1)+1);window.renderTable();resetScrolls();});
+    holder.querySelectorAll('.kp-dossier-card').forEach(card=>{const row=pageRows.find(r=>String(r.id)===String(card.dataset.id)); if(!row)return; card.addEventListener('click',()=>{window.selectedId=row.id; window.renderTable(); if(typeof renderDetail==='function') renderDetail(row); window.kpRenderSidePanel?.(row);}); card.addEventListener('mousemove',ev=>window.kpShowHover?.(ev,row)); card.addEventListener('mouseleave',()=>{const h=q('kpHoverSummary'); if(h) h.classList.remove('visible');});});
+  }
+  const prevRenderTable = window.renderTable;
+  window.renderTable = function(){
+    const wrap=document.querySelector('.table-wrap');
+    if(!wrap || !Array.isArray(window.filteredRows)){ return typeof prevRenderTable==='function'?prevRenderTable.apply(this,arguments):undefined; }
+    if(typeof addSidebar==='function') addSidebar();
+    if(!q('kpDetailPanel') && typeof ensurePanel==='function') ensurePanel();
+    try{ window.renderStats?.(); }catch(_){ }
+    let holder=q('premiumDossierCards'); if(!holder){ holder=document.createElement('div'); holder.id='premiumDossierCards'; wrap.appendChild(holder); }
+    const rows=window.filteredRows||[];
+    if(!rows.length){ holder.innerHTML='<div class="empty" style="display:block!important">Aucun dossier trouvé.</div>'; return; }
+    const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE)); window.__kpPage=Math.min(Math.max(1,window.__kpPage||1),pages);
+    const start=(window.__kpPage-1)*PAGE_SIZE; const pageRows=rows.slice(start,start+PAGE_SIZE);
+    const listClass=window.__kpViewMode==='list'?' list-mode':'';
+    holder.innerHTML=`<div class="kp-list-head"><div class="kp-list-title">${rows.length} dossiers <span style="color:rgba(247,242,234,.42);letter-spacing:0;text-transform:none">· ${Math.min(start+1,rows.length)}-${Math.min(start+PAGE_SIZE,rows.length)}</span></div><div class="kp-view-toggle"><button class="kp-toggle-btn ${window.__kpViewMode!=='list'?'active':''}" data-view="cards" type="button">▦ Cartes</button><button class="kp-toggle-btn ${window.__kpViewMode==='list'?'active':''}" data-view="list" type="button">☷ Liste</button></div></div><div class="kp-dossier-list${listClass}">${pageRows.map(buildCard).join('')}</div>${pagination(rows.length)}`;
+    bindCards(holder,pageRows);
+    if(!window.selectedId && rows[0]){ window.selectedId=rows[0].id; if(typeof renderDetail==='function') renderDetail(rows[0]); window.kpRenderSidePanel?.(rows[0]); }
+    else window.kpRenderSidePanel?.(selectedRow()||rows[0]);
+  };
+
+  // Réinitialiser sans couper le bandeau
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#clearFiltersBtn')){ window.__kpPage=1; setTimeout(()=>{resetScrolls(); window.renderStats?.(); window.renderTable?.();},120); setTimeout(resetScrolls,420); }
+    if(e.target.closest('.stat,[data-kpi-filter]')){ window.__kpPage=1; setTimeout(resetScrolls,180); }
+  },true);
+  ['searchInput','bienFilter','statusFilter','metierFilter','finalFilter','sortFilter'].forEach(id=>{
+    document.addEventListener('change',e=>{ if(e.target?.id===id){ window.__kpPage=1; setTimeout(resetScrolls,100); }},true);
+    document.addEventListener('input',e=>{ if(e.target?.id===id){ window.__kpPage=1; }},true);
+  });
+
+  // Feedback analyse : version robuste avec fallback si colonnes af_feedback différentes
+  function headers(extra={}){ if(typeof window.getAuthHeaders==='function') return window.getAuthHeaders(extra); const cfg=window.KADDU_SUPABASE||{}; return {apikey:cfg.anonKey,Authorization:'Bearer '+cfg.anonKey,'Content-Type':'application/json',...extra}; }
+  const SUPA=String(window.KADDU_SUPABASE?.url||'').replace(/\/$/,'');
+  async function saveFeedback(panel){
+    const verdict=panel.querySelector('[data-verdict].active')?.dataset?.verdict;
+    if(!verdict){ alert('Choisissez Bonne, Moyenne ou Mauvaise avant de valider.'); return; }
+    const row=window._currentDossier || selectedRow();
+    const note=panel.querySelector('.ks-feedback-note')?.value?.trim() || null;
+    const submit=panel.querySelector('.ks-feedback-submit'); const saved=panel.querySelector('.ks-feedback-saved');
+    if(submit){ submit.disabled=true; submit.textContent='Enregistrement…'; }
+    const full={dossier_id:row?.id||null,dossier_nom:row?.nom||null,bien:row?.bien||null,verdict,decision_reelle:null,commentaire:note,analysis_kind:panel.dataset.kind||'analyse',analysis_ref:panel.dataset.ref||null,conseiller_email:window.currentSession?.user?.email||null,created_at:new Date().toISOString()};
+    const minimal={dossier_id:full.dossier_id,dossier_nom:full.dossier_nom,bien:full.bien,verdict:full.verdict,decision_reelle:null,commentaire:full.commentaire,conseiller_email:full.conseiller_email};
+    let ok=false, lastErr='';
+    try{ let res=await fetch(`${SUPA}/rest/v1/af_feedback`,{method:'POST',headers:headers({'Prefer':'return=minimal'}),body:JSON.stringify(full)}); if(!res.ok){ lastErr=await res.text(); res=await fetch(`${SUPA}/rest/v1/af_feedback`,{method:'POST',headers:headers({'Prefer':'return=minimal'}),body:JSON.stringify(minimal)}); if(!res.ok) throw new Error(await res.text()||lastErr||'Sauvegarde af_feedback impossible'); } ok=true; }
+    catch(err){ lastErr=err.message; try{ const ev={dossier_id:row?.id||null,event_type:'analysis_feedback_added',old_value:null,new_value:verdict,comment:`${panel.dataset.kind||'analyse'} ${panel.dataset.ref||''}${note?' — '+note:''}`,created_by:window.currentSession?.user?.email||'admin'}; const r=await fetch(`${SUPA}/rest/v1/dossier_events`,{method:'POST',headers:headers({'Prefer':'return=minimal'}),body:JSON.stringify(ev)}); if(!r.ok) throw new Error(await r.text()||lastErr); ok=true; }catch(e2){ lastErr=e2.message; } }
+    if(ok){ if(saved){ saved.textContent='✓ Avis enregistré en base.'; saved.classList.add('visible'); } if(typeof showSuccess==='function') showSuccess('Avis d’analyse enregistré.'); }
+    else alert('Avis non enregistré : '+lastErr);
+    if(submit){ submit.disabled=false; submit.textContent='Enregistrer l’avis'; }
+  }
+  document.addEventListener('click',e=>{
+    const choice=e.target.closest('.ks-feedback-choice');
+    if(choice){ const panel=choice.closest('[data-ks131-feedback-panel]'); if(panel){ panel.querySelectorAll('.ks-feedback-choice').forEach(b=>b.classList.remove('active')); choice.classList.add('active'); panel.querySelector('.ks-feedback-saved')?.classList.remove('visible'); } }
+    const submit=e.target.closest('.ks-feedback-submit');
+    if(submit){ const panel=submit.closest('[data-ks131-feedback-panel]'); if(panel){ e.preventDefault(); e.stopImmediatePropagation(); saveFeedback(panel); } }
+  },true);
+
+  // Ouvrir une ancienne analyse au clic sur son ID / carte d’analyse
+  function ensureViewer(){
+    let v=q('ksAnalysisViewer'); if(v) return v;
+    v=document.createElement('div'); v.id='ksAnalysisViewer'; v.className='ks-analysis-viewer';
+    v.innerHTML=`<div class="ks-analysis-viewer-card"><div class="ks-analysis-viewer-head"><div><h3 class="ks-analysis-viewer-title">Analyse sauvegardée</h3><div class="ks-analysis-viewer-sub" id="ksAnalysisViewerSub">—</div></div><button class="ks-analysis-close" type="button">×</button></div><div id="ksAnalysisViewerBody"></div></div>`;
+    document.body.appendChild(v); v.querySelector('.ks-analysis-close').onclick=()=>v.classList.remove('open'); v.addEventListener('click',ev=>{ if(ev.target===v) v.classList.remove('open'); }); return v;
+  }
+  function openAnalysisForRow(rowEl){
+    const audit=window.KADDU_SHIELD_SPRINT_1_2_4?.state?.audit || {}; const exs=audit.extractions||[], checks=audit.checks||[];
+    const name=(rowEl?.querySelector('.ksm-doc-name')?.textContent||'').trim().toLowerCase();
+    const ex=exs.find(x=>String(x.document_name||'').trim().toLowerCase()===name) || exs[0];
+    const v=ensureViewer(), body=q('ksAnalysisViewerBody'), sub=q('ksAnalysisViewerSub');
+    if(!ex){ body.innerHTML='<div class="ks-audit-empty">Aucune analyse sauvegardée trouvée pour cette ligne.</div>'; sub.textContent='Aucun résultat'; v.classList.add('open'); return; }
+    const ref=ex.analysis_ref || ex.version_ref || ex.id || '—'; const exChecks=checks.filter(c=>c.extraction_id===ex.id || String(c.document_name||'').trim().toLowerCase()===String(ex.document_name||'').trim().toLowerCase());
+    sub.textContent=`${ex.document_name||'Document'} · ${fmt(ex.created_at)} · ID ${ref}`;
+    body.innerHTML=`<div class="ks-analysis-viewer-grid"><div class="ks-analysis-viewer-metric"><span>Document</span><strong>${esc(ex.document_name||'—')}</strong></div><div class="ks-analysis-viewer-metric"><span>Type détecté</span><strong>${esc(ex.type_detected||ex.document_type||'—')}</strong></div><div class="ks-analysis-viewer-metric"><span>Contrôles</span><strong>${exChecks.length}</strong></div></div><div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#d7a84f;font-weight:900;margin:12px 0 8px">Extraction sauvegardée</div><pre class="ks-analysis-viewer-pre">${esc(JSON.stringify(ex.extraction||ex,null,2))}</pre>${exChecks.length?`<div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#d7a84f;font-weight:900;margin:14px 0 8px">Contrôles associés</div><pre class="ks-analysis-viewer-pre">${esc(JSON.stringify(exChecks,null,2))}</pre>`:''}`;
+    v.classList.add('open');
+  }
+  document.addEventListener('click',e=>{
+    const target=e.target.closest('.ks-analysis-audit-link,.ks-analysis-short-card');
+    if(target){ e.preventDefault(); e.stopImmediatePropagation(); openAnalysisForRow(target.closest('.ksm-doc-row')); }
+  },true);
+
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{ window.__kpPage=1; resetScrolls(); window.renderTable?.(); },900));
+})();
+</script>
+
 </body>
 </html>
